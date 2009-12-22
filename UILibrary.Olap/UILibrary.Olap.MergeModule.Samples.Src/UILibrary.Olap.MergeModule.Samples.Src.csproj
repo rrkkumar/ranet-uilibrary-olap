@@ -1,0 +1,74 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputNameSuffix>.Samples.Src</OutputNameSuffix>
+    <ProjectGuid>{BEE645E7-D12A-4FC7-A622-4EA7DF7DD8A9}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UILibrary.Olap.MergeModule.Samples.Src</RootNamespace>
+    <AssemblyName>UILibrary.Olap.MergeModule.Samples.Src</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Directories.wxs" />
+    <Compile Include="Files.wxs" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AssemblyInfo.cs" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\Program.cs" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\Properties\AssemblyInfo.cs" />
+    <Compile Include="MergeModule.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.html" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AppManifest.xml" />
+    <Content Include="INSTALLDIR\Samples\Ranet.UILibrary.Olap.Samples.sln" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\TestKey.snk" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxSample.mdx" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\TestKey.snk" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\AppManifest.xaml" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.SilverLight.csproj" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxFormatter.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shortcuts.wxs" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
+  <!--Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

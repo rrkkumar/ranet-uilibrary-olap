@@ -1,0 +1,3241 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ranet.AgOlap</name>
+    </assembly>
+    <members>
+        <member name="M:Ranet.AgOlap.Controls.General.CustomPanel.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.ObjectDescriptionControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.StyleContainer.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.UpdateablePivotGridControl.CellsControl_UndoCellChanges(System.Object,System.EventArgs)">
+            <summary>
+            Выполняет откат изменений для указанной ячейки
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.UpdateablePivotGridControl.GetDataSourceInfo(Ranet.Olap.Core.Providers.ClientServer.UpdateEntry)">
+            <summary>
+            В случае необходимости выводит диалог с запросом на сохранение изменений
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.UpdateablePivotGridControl.m_CellChanges">
+            <summary>
+            Кэш измененных ячеек
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.UpdateablePivotGridControl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.RowsIsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.ColumnsIsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.UseRowsAreaHint">
+            <summary>
+            Использование подсказки в области строк
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.UseColumnsAreaHint">
+            <summary>
+            Использование подсказки в области колонок
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.UseCellsAreaHint">
+            <summary>
+            Использование подсказки в области ячеек
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.UpdateablePivotGridControl.UseNavigationButtons">
+            <summary>
+            Управляет отображением кнопок навигации в сводной таблице
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Filters.FilterBuilderControl.UseFilterControl">
+            <summary>
+            Использовать контрол для построения фильтра (Top, Value, Label). Этот контрол не нужен для элементов из области фильтров
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Filters.FilterControl.Filter">
+            <summary>
+            Фильтр (Top, по значению либо по подписи)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Composite_FilterWrapper.MembersFilter">
+            <summary>
+            Фильтр по элементам
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Composite_FilterWrapper.Filter">
+            <summary>
+            Фильтр (Top, по значению либо по подписи)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Filtered_AreaItemWrapper.CompositeFilter">
+            <summary>
+            Фильтр
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Filter_FilterWrapper.CurrentFilter">
+            <summary>
+            Тип текущего фильтра
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Filter_FilterWrapper.TopFilter">
+            <summary>
+            Фильтр Top
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Filter_FilterWrapper.ValueFilter">
+            <summary>
+            Фильтр по значению
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Filter_FilterWrapper.LabelFilter">
+            <summary>
+            Фильтр по подписи
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Label_FilterWrapper.FilterType">
+            <summary>
+            Тип фильтра
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Label_FilterWrapper.Text1">
+            <summary>
+            Значение - 1
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Label_FilterWrapper.Text2">
+            <summary>
+            Значение - 1
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Label_FilterWrapper.LevelPropertyName">
+            <summary>
+            Название свойства уровня
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Members_FilterWrapper.m_SelectedInfo">
+            <summary>
+            Коллекция для хранения информации о выбранных элементах
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Members_FilterWrapper.SelectedInfo">
+            <summary>
+            Информация о выбранных элементах
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Members_FilterWrapper.FilterSet">
+            <summary>
+            Set, сформированный из выбранных элементов
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Top_FilterWrapper">
+            <summary>
+            Фильтр "Top N"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Top_FilterWrapper.FilterType">
+            <summary>
+            Тип фильтра
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Top_FilterWrapper.Count">
+            <summary>
+            Число элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Top_FilterWrapper.FilterTarget">
+            <summary>
+            Отбираемые объекты
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Top_FilterWrapper.MeasureUniqueName">
+            <summary>
+            Уникальное имя меры
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Value_FilterWrapper">
+            <summary>
+            Фильтр по значению
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Value_FilterWrapper.FilterType">
+            <summary>
+            Тип фильтра
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Value_FilterWrapper.Num1">
+            <summary>
+            Число - 1
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Value_FilterWrapper.Num2">
+            <summary>
+            Число - 2
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MdxDesigner.Wrappers.Value_FilterWrapper.MeasureUniqueName">
+            <summary>
+            Уникальное имя меры
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.CellChangesCache.FindLastChange(Ranet.Olap.Core.Providers.CellInfo)">
+            <summary>
+            Ищет в кэше изменений ячейку
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.CellChangesCache.FindChange(Ranet.AgOlap.Controls.PivotGrid.Controls.CellValueChangedEventArgs)">
+            <summary>
+            Ищет в кэше изменений ячейку
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.CellChangesCache.CellChanges">
+            <summary>
+            Кэш измененных ячеек
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotGrid.Controls.CellControl.m_CustomCellCondidtions">
+            <summary>
+            Условия, под которые попадает ячейка
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotGrid.Controls.CellControl.m_CustomCellAppearance">
+            <summary>
+            Суммарные свойства ячейки с учетом наложения нескольких условий
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.ExpanderControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.m_Refresh_Timer">
+            <summary>
+            Таймер для обновления
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.EndEdit">
+            <summary>
+            Применяет изменения, внесенные в контрол редактирования
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.BuildColumnsArea">
+            <summary>
+            Настраивает область колонок. Создаются колонки и устанавливается их ширина
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.RefreshSelectedCells">
+            <summary>
+            Обновляет состояние элементов для ячеек, чтобы выбранные ячейки были выделены
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.TestCellToInteractive(Ranet.Olap.Core.Providers.CellInfo,System.Int32,Ranet.Olap.Core.Providers.ClientServer.MemberActionType)">
+            <summary>
+            Проверяет возможность выполнения для указанной ячейки дрилл-операций по указанной оси
+            </summary>
+            <param name="cell"></param>
+            <param name="axis"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.m_PrevAreaBorderCell">
+            <summary>
+            Ячейка, которая была текущей пока удерживался Shift и нажимались кнопки навигации
+            Она поможет сохранить предыдущую границу области для множественного выбора ячеек
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.ProcessCellsArea(Ranet.Olap.Core.Providers.CellInfo,Ranet.Olap.Core.Providers.CellInfo)">
+            <summary>
+            Формирует список ячеек, попдающих в область, на углах которой указанные ячейки
+            </summary>
+            <param name="cell1"></param>
+            <param name="cell2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Add_VertSplitter(System.Windows.Controls.Grid,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Добавляет в грид сплиттер, который меняет ширину
+            </summary>
+            <param name="grid"></param>
+            <param name="columnIndex"></param>
+            <param name="rowIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Add_HorzSplitter(System.Windows.Controls.Grid,System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Добавляет в грид сплиттер, который меняет высоту
+            </summary>
+            <param name="grid"></param>
+            <param name="columnIndex"></param>
+            <param name="rowIndex"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.IsUpdateable">
+            <summary>
+            Определяет является ли сводная таблица редактируемой
+            Редактируемой она будет только если редактирование разрешено. И задан скрипт обновления!
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Axis0_IsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown для оси 0
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Axis1_IsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown для оси 1
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Columns_IsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown для колонок с учетом возможности поворота осей.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Rows_IsInteractive">
+            <summary>
+            Определяет возможность использования Expand, Collapse, DrillDown для строк с учетом возможности поворота осей.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Cells_UseHint">
+            <summary>
+            Определяет необходимость отображения всплывающей подсказки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Columns_UseHint">
+            <summary>
+            Определяет необходимость отображения всплывающей подсказки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Rows_UseHint">
+            <summary>
+            Определяет необходимость отображения всплывающей подсказки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.EditMode">
+            <summary>
+            Включен ли режим редактирования в данный момент
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Columns_VisibleWidth">
+            <summary>
+            Видимая ширина области колонок
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Rows_VisibleHeight">
+            <summary>
+            Видимая высота области строк
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.SelectionManager">
+            <summary>
+            Менеджер для работы с выделением ячеек
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Selection">
+            <summary>
+            Список выбранных ячеек
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Rows_Max_LovestMember_Index">
+            <summary>
+            Максимальный индекс контрола для элемента в области строк. 
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Columns_Max_LovestMember_Index">
+            <summary>
+            Максимальный индекс контрола для элемента в области колонок. 
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.AxisIsRotated">
+            <summary>
+            Признак поворота осей
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Columns_LastVisibleIndex">
+            <summary>
+            Индекс последней полностью видимой колонки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Controls.PivotGridControl.Rows_LastVisibleIndex">
+            <summary>
+            Индекс последней полностью видимой строки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellAppearanceObject.CustomImage">
+            <summary>
+            Картинка
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellAppearanceObject.PropertyChanged">
+            <summary>
+            Событие - произошло изменение свойств
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellAppearanceOptions.PropertyChanged">
+            <summary>
+            Событие - произошло изменение свойств
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellConditionType">
+            <summary>
+            Тип условия
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellCondition.Appearance">
+            <summary>
+            Настройки отображения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellCondition.ConditionType">
+            <summary>
+            Условие
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellCondition.Value1">
+            <summary>
+            Значение 1
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellCondition.Value2">
+            <summary>
+            Значение 2
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellCondition.PropertyChanged">
+            <summary>
+            Событие - произошло изменение свойств
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellConditionsDescriptor.TestToConditions(System.Double,Ranet.AgOlap.Controls.PivotGrid.Conditions.CellConditionsDescriptor)">
+            <summary>
+            Возвращает список условий, который удовлетворяет значение ячейки
+            </summary>
+            <param name="value"></param>
+            <param name="conditions"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellConditionsDescriptor.MemberUniqueName">
+            <summary>
+            Объект, для которого настраиваются условия
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellConditionsDescriptor.Conditions">
+            <summary>
+            Коллекция условий
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.PivotGrid.Conditions.CellProgressBarOptions.PropertyChanged">
+            <summary>
+            Событие - произошло изменение свойств
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotGrid.Controls.MemberControl.UseExpandingCommands">
+            <summary>
+            Признак возможности использования команд "+" и "-" для элемента
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopyDesignerControl.Connection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopyDesignerControl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopyDesignerControl.Query">
+            <summary>
+            MDX запрос, первая ячейка которого будет служить источником координат для копирования
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.CoordinateItem_Wrapper.DimensionUniqueName">
+            <summary>
+            Уникальное имя измерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.CoordinateItem_Wrapper.HierarchyUniqueName">
+            <summary>
+            Уникальное имя иерархии
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.CoordinateItem_Wrapper.DimensionCaption">
+            <summary>
+            Название измерения - используется ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.CoordinateItem_Wrapper.HierarchyCaption">
+            <summary>
+            Название иерархии - используется ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.CoordinateItem_Wrapper.Hierarchy_Custom_AllMemberUniqueName">
+            <summary>
+            Уникальное имя элемента All
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.ValueCopySettingsWrapper.CopyType">
+            <summary>
+            Тип копирования
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.ValueCopySettingsWrapper.Value">
+            <summary>
+            Значение
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.ValueCopySettingsWrapper.Coefficient">
+            <summary>
+            Коэффициент
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.Wrappers.ValueCopySettingsWrapper.CoordinatesList">
+            <summary>
+            Координаты
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.ReverseVertical">
+            <summary>
+            Реверс по вертикали. т.е кнопка ВВЕРХ начинает работать на уменьшение, а ВНИЗ - на увеличение
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.X_MinValue">
+            <summary>
+            Мин. значение по горизонтали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.X_MaxValue">
+            <summary>
+            Макс. значение по горизонтали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.X_CurrentValue">
+            <summary>
+            Текущее значение по горизонтали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.Y_CurrentValue">
+            <summary>
+            Текущее значение по вертикали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.X_DefaultValue">
+            <summary>
+            Значение по умолчанию по горизонтали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.Y_DefaultValue">
+            <summary>
+            Значение по умолчанию по вертикали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.Y_MinValue">
+            <summary>
+            Мин. значение по вертикали
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.XYNavigator.Y_MaxValue">
+            <summary>
+            Макс. значение по вертикали
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuItem.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider">
+            <summary>
+            Класс содержит extension-методы для централизованного подключения
+            контекстного меню.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.ContextMenuProperty">
+            <summary>
+            Attached-свойство, используемое для назначения контекстного меню контролу.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.GetContextMenu(System.Windows.UIElement)">
+            <summary>
+            Возвращает контекстное меню контрола. Если контекстное меню не назначено - возвращает null.
+            </summary>
+            <param name="element">Контрол.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.SetContextMenu(System.Windows.UIElement,Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.GetContextMenuDelegate)">
+            <summary>
+            Устанавливает контестное меню у контрола.
+            </summary>
+            <param name="element">Контрол.</param>
+            <param name="getMenu">Метод, возвращающий текущее контекстное меню для контрола.</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.AttachContextMenu(System.Windows.UIElement,Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.GetContextMenuDelegate,Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode)">
+            <summary>
+            Присваивает контекстное меню контролу.
+            </summary>
+            <param name="element">Контрол.</param>
+            <param name="getMenu">Метод, возвращающий текущее контекстное меню для контрола.</param>
+            <param name="mode">Режим отображения контекстного меню.</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.AttachContextMenu(System.Windows.UIElement,Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.GetContextMenuDelegate)">
+            <summary>
+            Присваивает контекстное меню контролу.
+            </summary>
+            <param name="element">Контрол.</param>
+            <param name="getMenu">Метод, возвращающий текущее контекстное меню для контрола.</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.DetachContextMenu(System.Windows.UIElement)">
+            <summary>
+            Удаляет контекстное меню у контрола.
+            </summary>
+            <param name="element">Контрол.</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.EnableContextMenuSupport(System.Windows.Application)">
+            <summary>
+            Включает централизованную обработку контекстных меню в приложении.
+            </summary>
+            <param name="app"></param>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.ContextMenu.ContextMenuProvider.GetContextMenuDelegate">
+            <summary>
+            Делегат, описывающий метод, возвращающий текущее контекстное меню для контрола.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode">
+            <summary>
+            Режим отображения контекстного меню.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode.None">
+            <summary>
+            Не отображать.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode.OnRightMouseButtonClick">
+            <summary>
+            Отображать по правому клику мыши (если доступен html bridge).
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode.OnCtrlLeftMouseButtonClick">
+            <summary>
+            Отображать по нажатию Ctrl+левый клик мыши.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSupportMode.All">
+            <summary>
+            Отображать по правому клику мыши (если доступен html bridge) и
+            по нажатию Ctrl+левый клик мыши.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.ContextMenuSplitter.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ContextMenu.CustomContextMenu.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.CubeChoiceCtrl.ShowAllCubes">
+            <summary>
+            Указывает необходимость отображать информация о всех типах кубов (Cube, Dimension, Unknown)
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.CubeChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.CubeChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.CubeChoiceCtrl.Raise_CancelSelection">
+            <summary>
+            Генерирует событие "Отмена"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.CubeChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.CubeChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.CubeChoiceCtrl.CancelSelection">
+            <summary>
+            Событие генерируется при нажатии на кнопку Отмена
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.CubeBrowserCtrl.Connection">
+            <summary>
+            ID соединения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.CubeBrowserCtrl.CubeName">
+            <summary>
+            Имя куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.CubeBrowserCtrl.CubeInfo">
+            <summary>
+            Метаинформация о кубе
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DataSourceInfo.DataSourceInfoControl.UpdateScriptVisibility">
+            <summary>
+            Видимость закладки "Скрипт обновления"
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.DateChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DateChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DateChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DateChoiceCtrl.m_DayLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, хранящего дни
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DateChoiceCtrl.m_Dates">
+            <summary>
+            Кэш сгенеренных уникальных имен для дат
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.DateChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoiceCtrl.DayLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, хранящего дни
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoicePopUp.Connection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoicePopUp.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoicePopUp.DayLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, хранящего дни
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DateChoicePopUp.DateToUniqueNameTemplate">
+            <summary>
+            Шаблон для преобразования даты в уникальное имя
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DatePickerCtrl.m_Dates">
+            <summary>
+            Кэш сгенеренных уникальных имен для дат
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DatePickerCtrl.Connection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DatePickerCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DatePickerCtrl.DayLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, хранящего дни
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DatePickerCtrl.DateToUniqueNameTemplate">
+            <summary>
+            Шаблон для преобразования даты в уникальное имя
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DimensionChoiceCtrl.ShowAllCubes">
+            <summary>
+            Указывает необходимость отображать информация о всех типах кубов (Cube, Dimension, Unknown)
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DimensionChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.DimensionChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.DimensionChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.DimensionChoiceCtrl.Raise_CancelSelection">
+            <summary>
+            Генерирует событие "Отмена"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DimensionChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID) 
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.DimensionChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.DimensionChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.DimensionChoiceCtrl.CancelSelection">
+            <summary>
+            Событие генерируется при нажатии на кнопку Отмена
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.PivotGrid.Layout.LayoutItem">
+            <summary>
+            Описатель элемента для расположения в сетке
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.BusyControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.General.OlapCmdUpdateStringFormatter">
+            <summary>
+            Форматирует строку с текстом команды обновления, чтобы она была более читабельной для человека.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.OlapCmdUpdateStringFormatter.Format(System.String)">
+            <summary>
+            Форматировать.
+            </summary>
+            <param name="strUpdateCmd"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.General.Tree.CustomTreeNode.IsInitialized">
+            <summary>
+            Проверяет загружались ли дочерние узлы. 
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.Clear_Choice_Button_Click(System.Object,System.Windows.RoutedEventArgs)">
+            <summary>
+            Очистить выбранные
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_HierarchyName">
+            <summary>
+            Имя иерархии измерения
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.useStepLoading">
+            <summary>
+            Использование частичной загрузки
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_ShowOnlyFirstLevelMembers">
+            <summary>
+            Флажок. Выводить элементы ТОЛЬКО верхнего уровня
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.CreateLevelsInfo">
+            <summary>
+            Создает на основании схемы информацию об уровнях, инициализирует список уровней TreeBarManager
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.RefreshTree(System.Boolean)">
+            <summary>
+            Перерисовывает дерево. Информация о выбранных элементах остается
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.BuildHierarсhyBySelection">
+            <summary>
+            Формирует OlapMemberInfoCollection для указанного Set с учетом иерархии
+            </summary>
+            <param name="Set">Set</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.SetMembersInfoToNewState(Ranet.AgOlap.Controls.MemberChoice.Info.RootOlapMemberInfo,System.Collections.Generic.List{Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings},Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates,Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates)">
+            <summary>
+            Переводит элементы иерархии memberInfoHierarchy, перечисленные в SelectionInfo и находящиеся там в состоянии stateInDictionary, в состояние newState 
+            </summary>
+            <param name="memberInfoHierarchy">Иерархия элементов</param>
+            <param name="SelectionInfo">Коллекция элементов, которые моут быть переведены</param>
+            <param name="stateInDictionary">Состояние в коллекции, которое подлежит переводу в новое</param>
+            <param name="newState">Новое состояние элементов</param>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_OlapMemberInfoHierarchy">
+            <summary>
+            Иерархия OlapMemberInfo
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.mode">
+            <summary>
+            Режим работы 
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_MultiSelect">
+            <summary>
+            Режим выбора: true - множественный выбор, false - одиночный выбор
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_TreeNodes">
+            <summary>
+            Ключ - уникальное имя 
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.AllChildrenMembersAddedToTreeNode(Ranet.AgOlap.Controls.General.Tree.MemberTreeNode)">
+            <summary>
+            Проверяет все ли дочерние мемберы для указанного узла добавлены в дерево
+            </summary>
+            <param name="parent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.BeforeExpandNode(Ranet.AgOlap.Controls.General.Tree.MemberTreeNode)">
+            <summary>
+            Раскрытие узла дерева
+            </summary>
+            <param name="node"></param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.LoadAscendants(System.String)">
+            <summary>
+            Загружает сам элемент и предков вплоть до верхнего уровня ОТОБРАЖАЕМОГО В ДЕРЕВЕ
+            </summary>
+            <param name="uniqueName"></param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.LoadChildren(Ranet.AgOlap.Controls.General.Tree.MemberTreeNode)">
+            <summary>
+            Загружает все дочерние элементы для указанного
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.LoadChildren(Ranet.AgOlap.Controls.General.Tree.MemberTreeNode,System.Int64,System.Int64)">
+            <summary>
+            Загружает <paramref name="count"/> дочерних элементов для элемента с указанным <paramref name="uniqueName"/>, начиная c <paramref name="begin"/>.
+            </summary>
+            <param name="begin">индекс начала</param>
+            <param name="count">количество</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_SelectedSet">
+            <summary>
+            Set, сгенерированный по выбранным элементам
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_SelectedInfo">
+            <summary>
+            Коллекция для хранения информации о выбранных элементах
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.GenerateSetBySelectionState">
+            <summary>
+            Генерирует Set по иерархии элементов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoiceControl.RunSearch">
+            <summary>
+            Выполняет поиск в кубе
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoiceControl.m_CustomSelection">
+            <summary>
+            Коллекция элементов, которые мы руками устанавливаем как выбранные. Используем чтобы при изменении выбранного элемнта дерева очистить выбранные ранее
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.MemberChoiceControl.SelectedInfoChanged">
+            <summary>
+            Событие генерируется при изменении состояния выбранности любого узла дерева
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.SubCube">
+            <summary>
+            Выражение для под-куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.HierarchyUniqueName">
+            <summary>
+            Имя иерархии измерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.Step">
+            <summary>
+            Шаг при частичной загрузке
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.UseStepLoading">
+            <summary>
+            Использование частичной загрузки
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.SelectLeafs">
+            <summary>
+            Выбирать только листья
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.StartLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, начиная с которого элементы будут отображаться в дереве
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.ShowOnlyFirstLevelMembers">
+            <summary>
+            Флажок. Выводить элементы ТОЛЬКО верхнего уровня
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.MemberChoiceControl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора элементов иземерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.SelectedSet">
+            <summary>
+            Set, сгенерированный по выбранным элементам
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoiceControl.SelectedInfo">
+            <summary>
+            Информация о выбранных элементах
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.OlapHelper.ConvertToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет [] ели нужно
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.OlapHelper.ConvertToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие [])
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.OlapHelper.ConvertSubCubeToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет () еcли нужно
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.OlapHelper.ConvertSubCubeToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие ())
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.PivotGrid.Layout.LayoutGridWrapper">
+            <summary>
+            Враппер, описывающий сетку расположения элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Layout.LayoutGridWrapper.Columns_Size">
+            <summary>
+            Размер по горизонтали (не все колонки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotGrid.Layout.LayoutGridWrapper.Rows_Size">
+            <summary>
+            Размер по вертикали (не все строки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.PivotGrid.Layout.LayoutCellWrapper">
+            <summary>
+            Описатель для ячейки сетки расположения элементов. В ячейке может быть коллекция элементов
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotMdxDesignerControl.m_DragStart">
+            <summary>
+            Позиция старта таскания
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotMdxDesignerControl.m_PrevDrag">
+            <summary>
+            Предыдущая позиция при перетаскивании
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.PivotMdxDesignerControl.m_FilterDialogs">
+            <summary>
+            Коллекция диалогов для построения фильтра
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.PivotMdxDesignerControl.FindConcurent(Ranet.AgOlap.Controls.MdxDesigner.PivotAreaContainer,System.Windows.Controls.TreeViewItem)">
+            <summary>
+            Возвращает конкурента для элемента в указанной области. Конкурентами считаются элементы, принадлежащие одной иерархии
+            </summary>
+            <param name="container"></param>
+            <param name="node"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotMdxDesignerControl.Connection">
+            <summary>
+            ID соединения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotMdxDesignerControl.CubeName">
+            <summary>
+            Имя куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotMdxDesignerControl.SubCube">
+            <summary>
+            Выражение для под-куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.PivotMdxDesignerControl.UpdateScript">
+            <summary>
+            Скрипт для обновления значений ячеек сводной таблицы
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ToolBar.RanetToolBar.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.Tab.RanetTabControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.Tab.TabToolBar.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.Gauge.Round360Base.m_CurrentValue">
+            <summary>
+            Текущее значение
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.Gauge.Round360Base.m_MeterMargin">
+            <summary>
+            Отступ спидометра от границ в процентах
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.Gauge.Round360Base.DrawCalibration">
+            <summary>
+            Draws the Ruler
+            </summary>
+            <param name="g"></param>
+            <param name="rect"></param>
+            <param name="cX"></param>
+            <param name="cY"></param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.Gauge.Round360Base.GetRadian(System.Double)">
+            <summary>
+            Converts the given degree to radian.
+            </summary>
+            <param name="theta"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.Gauge.Round360Base.RoundedCurrentValue">
+            <summary>
+            Текущее значение, округленное до допустимых границ
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.ButtonCloseForm.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.Forms.FloatingWindowControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.PropertiesListControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.General.Tree.CustomTree.IsInialized">
+            <summary>
+            Проверяет загружались ли дочерние узлы. 
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.General.WaitingIcon">
+            <summary>
+            Represents a Vista busy cursor like control, can be used as a budy indicator.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.General.WaitingIcon.BusyIdleStatesGroupName">
+            <summary>
+            Busy Idle State group name
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.General.WaitingIcon.BusyStateName">
+            <summary>
+            Busy State name
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.General.WaitingIcon.IdleStateName">
+            <summary>
+            Idle state name
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusyProperty">
+            <summary>
+            Identifies the <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusyPropertyChanged(System.Windows.DependencyObject,System.Windows.DependencyPropertyChangedEventArgs)">
+            <summary>
+            The <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> property changed callback function.
+            </summary>
+            <param name="d">The <see cref="T:Ranet.AgOlap.Controls.General.WaitingIcon"/> control whose <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> property changed.</param>
+            <param name="e">The DependencyPropertyChangedEventArgs contains old and new value.</param>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.General.WaitingIcon.StrokeThicknessProperty">
+            <summary>
+            Identifies the <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.StrokeThickness"/> dependency property. 
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.WaitingIcon.#ctor">
+            <summary>
+            Initialize a new instance of <see cref="T:Ranet.AgOlap.Controls.General.WaitingIcon"/> class.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.WaitingIcon.OnApplyTemplate">
+            <summary>
+            Apply new template
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusyChanged(System.Boolean,System.Boolean)">
+            <summary>
+            The <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> property changed.
+            </summary>
+            <param name="oldValue">The old value of the <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> property.</param>
+            <param name="newValue">The new  value of the <see cref="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy"/> property.</param>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.General.WaitingIcon.IsBusy">
+            <summary>
+            Gets or sets a value indicating is busy or not
+            </summary>
+            <value>A value indicating whether the control is in busy state or not.
+            <para>The default value is <c>false</c>.</para></value>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.General.WaitingIcon.StrokeThickness">
+            <summary>
+            Gets or sets the width of the <see cref="T:Ranet.AgOlap.Controls.General.WaitingIcon"/> stroke outline. 
+            </summary>
+            <value>The width of the <see cref="T:Ranet.AgOlap.Controls.General.WaitingIcon"/>  outline, in pixels. 
+            The default value is 0. </value>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.General.Tree.WaitTreeControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.ShowAllCubes">
+            <summary>
+            Указывает необходимость отображать информация о всех типах кубов (Cube, Dimension, Unknown)
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.Raise_CancelSelection">
+            <summary>
+            Генерирует событие "Отмена"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.DimensionUniqueName">
+            <summary>
+            Имя OLAP измерения
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.HierarchyChoiceCtrl.CancelSelection">
+            <summary>
+            Событие генерируется при нажатии на кнопку Отмена
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.KpiChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.KpiChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.KpiChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.KpiChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.KpiChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.KpiChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.KpiChoicePopUp.AConnection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.KpiChoicePopUp.ACubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.LevelChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.LevelChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.LevelChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoiceCtrl.DimensionUniqueName">
+            <summary>
+            Имя OLAP измерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoiceCtrl.HierarchyUniqueName">
+            <summary>
+            Имя иерархии OLAP измерения
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.LevelChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoicePopUp.AConnection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoicePopUp.ACubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoicePopUp.ADimensionUniqueName">
+            <summary>
+            Имя OLAP измерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.LevelChoicePopUp.AHierarchyUniqueName">
+            <summary>
+            Имя иерархии OLAP измерения
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MeasureChoiceCtrl.m_Connection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MeasureChoiceCtrl.m_CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MeasureChoiceCtrl.Raise_ApplySelection">
+            <summary>
+            Генерирует событие "Выбор окончен"
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MeasureChoiceCtrl.Connection">
+            <summary>
+            Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MeasureChoiceCtrl.CubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.MeasureChoiceCtrl.ApplySelection">
+            <summary>
+            Событие генерируется после окончания выбора
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MeasureChoicePopUp.AConnection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MeasureChoicePopUp.ACubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.ClientServer.MemberChoiceQuery.SubCube">
+            <summary>
+            Подкуб. Подставляется в FROM в виде: (/SubCube/). Если не задан то в выражение FROM подставляется: [/CubeName/]
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Filter.FilterBuilderControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Filter.ItemsSplitter.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Filter.OperationItemControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings.#ctor(Ranet.Olap.Core.Data.MemberDataWrapper,Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates)">
+            <summary>
+            Конструктор объекта, описавающего состояние элемента
+            </summary>
+            <param name="uniqueName">Уникальное имя мембера</param>
+            <param name="caption">Заголовок мембера</param>
+            <param name="state">состояние</param>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings.m_SelectState">
+            <summary>
+            Состояние выбранности элемента
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings.Info">
+            <summary>
+            Информация об элементе
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings.UniqueName">
+            <summary>
+            Уникальное имя мембера
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.MemberChoiceSettings.Caption">
+            <summary>
+            Заголовок мембера
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MemberChoice.Info.Modes">
+            <summary>
+            Режим работы с выделенными элементами
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.Modes.Rows_Area">
+            <summary>
+            Область строк сводной таблицы
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.Modes.Filter_Area">
+            <summary>
+            Область фильтров сводной таблицы
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.Modes.BM">
+            <summary>
+            Элемент выбора для БМ
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates">
+            <summary>
+            Состояние элементов OlapMemberInfo
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Not_Initialized">
+            <summary>
+            Не инизиализирован (начальное состояние)
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Not_Selected">
+            <summary>
+            Не выбран
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_Self">
+            <summary>
+            Выбран сам
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_With_Children">
+            <summary>
+            Выбран с дочерними
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Labeled_As_Parent">
+            <summary>
+            Помечен как родитель
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_By_Parent">
+            <summary>
+            Выбран родителем
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_By_Parent_With_Children">
+            <summary>
+            Выбран родителем с дочерними
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_With_Children_Has_Excluded">
+            <summary>
+            Выбран с дочерними, есть исключенные (Используется только в режиме Filter_Area)
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates.Selected_By_Parent_With_Children_Has_Excluded">
+            <summary>
+            Выбран родителем с дочерними, есть исключенные (Используется только в режиме Filter_Area)
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo">
+            <summary>
+            Информация об узле дерева.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.m_Children">
+            <summary>
+            Коллекция дочерних OlapMemberInfo
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.m_SelectState">
+            <summary>
+            Текущее cостояние "выбранности" OlapMemberInfo
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.m_Parent">
+            <summary>
+            Родительский элемент OlapMemberInfo
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetParentOlapMemberInfo(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Родительский элемент OlapMemberInfo
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.mode">
+            <summary>
+            Режим работы
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.cubeChildrenCount">
+            <summary>
+            ДЛЯ СОВМЕСТИМОСТИ пока загрузка родителей идет через Member.Parent
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Raise_HierarchyStateChanged(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Генерирует событие - изменилось состояние всей иерархии элементов
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Raise_StateChanged">
+            <summary>
+            Генерирует событие - изменилось состояние
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Raise_SetChildrenState(Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates,System.Boolean)">
+            <summary>
+            Устанавливает дочерние элументы в указанное состояние
+            </summary>
+            <param name="state">Новое состояние</param>
+            <param name="recursive">true - процесс идет рекурсивно; false - процесс идет пока меняется состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Raise_ParentSelectStateChanged(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Сообщает дочерним элементам об изменении состояния текущего элемента
+            </summary>
+            <param name="changedMember">элемент, который самым первым изменил свое состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Raise_ChildSelectStateChanged(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Сообщает родительскому элементу об изменении состояния текущего элемента
+            </summary>
+            <param name="changedMember">элемент, который самым первым изменил свое состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetChildrenState(Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates,System.Boolean)">
+            <summary>
+            Устанавливает дочерние элументы в указанное состояние
+            </summary>
+            <param name="state">Новое состояние</param>
+            <param name="recursive">true - процесс идет рекурсивно; false - процесс идет пока меняется состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.ParentSelectStateChanged(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo,Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Функция вызывается родителем для дочерних для сигнализации о том что како-либо родительский OlapMemberInfo переведен в новое состояние
+            </summary>
+            <param name="changedMember">Элемент, который первым изменил состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.ChildSelectStateChanged(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo,Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Функция вызывается дочерним для родителя для сигнализации о том что како-либо дочерний OlapMemberInfo переведен в новое состояние
+            </summary>
+            <param name="changedMember">Элемент, который первым изменил состояние</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.GetChildrenSet(System.Collections.Generic.Dictionary{System.String,Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo})">
+            <summary>
+            Возвращает ArrayList с Set-ами для дочерних элементов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.GetExcludedChildrenSet(System.Collections.Generic.Dictionary{System.String,Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo})">
+            <summary>
+            Возвращает Set из дочерних объектов, которые должны быть исключены
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.GenerateSet(System.Collections.Generic.Dictionary{System.String,Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo})">
+            <summary>
+            Генерирует Set для элемента с учетом дочерних
+            </summary>
+            <returns>null - элемент в Set не попадает</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetState(Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates)">
+            <summary>
+            Устанавливает состояние для элемента.
+            </summary>
+            <param name="newState">Новое состояние</param>
+            <returns>true - состояние изменилось, false - состояние не изменилось</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetNewState(Ranet.AgOlap.Controls.MemberChoice.Info.SelectStates)">
+            <summary>
+            Переводит дынный OlapMemberInfo в новое состояние
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetNextState">
+            <summary>
+            Устанавливает новое состояние в цикле - Не выбран->Выбран сам->Выбран с дочерними
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SetStateByParent">
+            <summary>
+            Устанавливает состояние элемента в соответствии с сотоянием родительского
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.AddChild(Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo)">
+            <summary>
+            Добавляет элемент в коллекцию дочерних OlapMemberInfo
+            </summary>
+            <param name="memberInfo"></param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.GetAscendants(System.Boolean)">
+            <summary>
+            Возвращает родительские элементы иерархии
+            </summary>
+            <param name="useRoot">true - с учетом RootOlapMemberInfo, false - без RootOlapMemberInfo</param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Info">
+            <summary>
+            раппер для элемента измерения, соответствующий данному узлу дерева
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Children">
+            <summary>
+            Коллекция дочерних OlapMemberInfo. Ключ - уник. имя
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.SelectState">
+            <summary>
+            Текущее cостояние "выбранности" OlapMemberInfo
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.UniqueName">
+            <summary>
+            Уникальное имя (member.UniqueName)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.HasChildren">
+            <summary>
+            Возвращает true если есть дочерние элементы, иначе - false
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Parent">
+            <summary>
+            Родительский элемент OlapMemberInfo
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.Mode">
+            <summary>
+            Режим работы
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.HasSelectedChildren">
+            <summary>
+            Возвращает true - элемент имеет выделенные дочерние  
+            либо false - у элемента нет выделенных дочерних  
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.AllChildrenIsSelected">
+            <summary>
+            Возвращает true - если все дочерние элементы выбраны (и кол-во выбранных равно реальному кол-ву мемберов): Листья - "Выбран сам", Не листья - "Выбран с дочерними"  
+            иначе - false;  
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.CubeChildrenCount">
+            <summary>
+            Количество дочерних элементов в кубе
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.LoadedChildrenCount">
+            <summary>
+            Количество дочерних элементов, загруженных в иерархию
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.AllChildrenIsLoaded">
+            <summary>
+            Возвращает true если все дочерние элементы загружены в иерархию, инача - false
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.HasExcludedChildren">
+            <summary>
+            Возвращает true - элемент имеет дочерние, которые не выбраны;
+            либо false - у элемента нет невыбранных дочерних
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.StateChanged">
+            <summary>
+            Событие изменилось состояние 
+            </summary>
+        </member>
+        <member name="E:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.HierarchyStateChanged">
+            <summary>
+            Событие изменилось состояние всей иерархии элементов
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MemberChoice.Info.OlapMemberInfo.StateChangedEventHandler">
+            <summary>
+            Обработчик события изменения состояния.
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Controls.MemberChoice.Info.RootOlapMemberInfo">
+            <summary>
+            Summary description for RootOlapMemberInfo.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Info.RootOlapMemberInfo.AddMemberToHierarchy(Ranet.Olap.Core.Data.MemberDataWrapper)">
+            <summary>
+            Добавляет элемент в иерархию MemberNodeInfo
+            </summary>
+            <param name="member">Member, информация о котором должна быть добавлена в иерархию</param>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.MemberChoicePopUp.m_AMultiSelect">
+            <summary>
+            Режим выбора: true - множественный выбор, false - одиночный выбор
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.SelectedInfo">
+            <summary>
+            Информация о выбранных элементах
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AConnection">
+            <summary>
+            Описание соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.ACubeName">
+            <summary>
+            Имя OLAP куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.ASubCube">
+            <summary>
+            Выражение для под-куба
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AHierarchyName">
+            <summary>
+            Имя иерархии измерения
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AStep">
+            <summary>
+            Шаг при частичной загрузке ("Задает шаг, используемый при частичной загрузке элементов")
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AUseStepLoading">
+            <summary>
+            Использование частичной загрузки ("Флаг указывает необходимость использования частичной загрузки элементов")
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.ASelectLeafs">
+            <summary>
+            Выбирать только листья
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AStartLevelUniqueName">
+            <summary>
+            Уникальное имя уровня, начиная с которого элементы будут отображаться в дереве
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoicePopUp.AShowOnlyFirstLevelMembers">
+            <summary>
+            Флажок. Выводить элементы ТОЛЬКО верхнего уровня
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.OlapHelper.#ctor(System.String)">
+            <summary>
+            Конструктор
+            </summary>
+            <param name="connectioString">Строка соединения с БД OLAP</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.OlapHelper.ConvertToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет [] ели нужно
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.OlapHelper.ConvertToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие [])
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.MemberChoice.OlapHelper.ConnectionString">
+            <summary>
+            Строка соединения с БД
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.General.Tree.MemberTreeNode.IsInitialized">
+            <summary>
+            Проверяет загружались ли дочерние узлы. 
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.MemberChoice.Filter.OperandItemControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ServerExplorerCtrl.ShowAllCubes">
+            <summary>
+            Указывает необходимость отображать информация о всех типах кубов (Cube, Dimension, Unknown)
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ServerExplorerCtrl.Connection">
+            <summary>
+            ID соединения
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ToolBar.RanetToolBarSplitter.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.CoordinateItem.Accessibility">
+            <summary>
+            Состояние координаты. ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.CoordinateItem.StatesList">
+            <summary>
+            Список возможных состояний координат. ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.CoordinateItem.ModifyControlsVisibility">
+            <summary>
+            Видимость контролов для редактирования координаты (Изменение источника, приемника, конки удаления). Используется ТОЛЬКО для управления отображением в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.CoordinateItem.DimensionCaption">
+            <summary>
+            Название измерения - используется ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Controls.ValueCopy.CoordinateItem.HierarchyCaption">
+            <summary>
+            Название иерархии - используется ТОЛЬКО для отображения в гриде
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ValueCopy.CoordinatesControl.m_SourceDialogs">
+            <summary>
+            Кэш диалогов для источников
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Controls.ValueCopy.CoordinatesControl.m_DestDialogs">
+            <summary>
+            Кэш диалогов для приемников
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Controls.ValueCopy.CoordinatesControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Features.Clipboard">
+            <summary>
+                This class is used to access the user's clipboard
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.Clipboard.SetClipboardText(System.String)">
+            <summary>
+                Set the text to the user's clipboard
+            </summary>
+            <param name="text">Text to set in the clipboard</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.Clipboard.GetClipboardText(System.Boolean)">
+            <summary>
+                Get the text from the user's clipboard
+            </summary>
+            <returns>Text present in user's clipboard</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.RichTextExtensions.AddMouseWheelSupport(Ranet.AgOlap.Controls.General.RichTextBox)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.TextBox"/>.
+            As long as the <see cref="T:System.Windows.Controls.TextBox"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="textBox">The text box.</param>
+            <returns>The <see cref="T:System.Windows.Controls.TextBox"/>.</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.RichTextExtensions.AddMouseWheelSupport(Ranet.AgOlap.Controls.General.RichTextBox,System.Double)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.TextBox"/>.
+            As long as the <see cref="T:System.Windows.Controls.TextBox"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="textBox">The text box.</param>
+            <param name="scrollAmount">The amount to scroll by when the mouse wheel is moved.</param>
+            <returns>The <see cref="T:System.Windows.Controls.TextBox"/>.</returns>
+        </member>
+        <member name="T:Ranet.AgOlap.Features.ScrollBarMouseWheelSupport">
+            <summary>
+            Utility class for adding mouse wheel scrolling to ScrollViewer controls
+            in Silverlight 2 Beta 2. See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
+            for more details.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollBarMouseWheelSupport.AddMouseWheelSupport(System.Windows.Controls.Primitives.ScrollBar)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.ScrollViewer"/>.
+            As long as the <see cref="T:System.Windows.Controls.ScrollViewer"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="scrollViewer">The scroll viewer.</param>
+            <returns>The <see cref="T:System.Windows.Controls.ScrollViewer"/>.</returns>
+        </member>
+        <member name="F:Ranet.AgOlap.Features.MouseWheelAssociationMode.OnHover">
+            <summary>
+            The mouse wheel will affect a <see cref="T:System.Windows.Controls.ScrollViewer"/> whenever the cursor rolls over it.
+            </summary>
+        </member>
+        <member name="F:Ranet.AgOlap.Features.MouseWheelAssociationMode.OnFocus">
+            <summary>
+            The mouse wheel will only affect a <see cref="T:System.Windows.Controls.ScrollViewer"/> when it is explicitly assigned focus by a mouse click or a keyboard tab.
+            </summary>
+        </member>
+        <member name="T:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport">
+            <summary>
+            Utility class for adding mouse wheel scrolling to ScrollViewer controls
+            in Silverlight 2 Beta 2. See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
+            for more details.
+            </summary>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.Initialize(System.Windows.FrameworkElement)">
+            <summary>
+            This should be called exactly one time in the constructor of the application's main XAML
+            code behind file, immediately after the call to InitializeComponent().
+            </summary>
+            <param name="applicationRootVisual">The application root visual. Just give a name to the root element of your application and pass it in here.</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.Initialize(System.Windows.FrameworkElement,Ranet.AgOlap.Features.MouseWheelAssociationMode)">
+            <summary>
+            This should be called exactly one time in the constructor of the application's main XAML
+            code behind file, immediately after the call to InitializeComponent().
+            </summary>
+            <param name="applicationRootVisual">The application root visual. Just give a name to the root element of your application and pass it in here.</param>
+            <param name="activationMode">Specifies whether the mouse wheel is associated with a <see cref="T:System.Windows.Controls.ScrollViewer"/> by simply hovering over it (OnHover) or if the user must explicitly assign focus to it before the wheel affects it (OnFocus).</param>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(System.Windows.Controls.ScrollViewer)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.ScrollViewer"/>.
+            As long as the <see cref="T:System.Windows.Controls.ScrollViewer"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="scrollViewer">The scroll viewer.</param>
+            <returns>The <see cref="T:System.Windows.Controls.ScrollViewer"/>.</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(System.Windows.Controls.ScrollViewer,System.Double)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.ScrollViewer"/>.
+            As long as the <see cref="T:System.Windows.Controls.ScrollViewer"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="scrollViewer">The scroll viewer.</param>
+            <param name="scrollAmount">The amount to scroll by when the mouse wheel is moved.</param>
+            <returns>The <see cref="T:System.Windows.Controls.ScrollViewer"/>.</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(System.Windows.Controls.ScrollViewer,System.Windows.Controls.ScrollViewer)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.ScrollViewer"/>.
+            As long as the <see cref="T:System.Windows.Controls.ScrollViewer"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="parentScrollViewer">The parent <see cref="T:System.Windows.Controls.ScrollViewer"/> which contains another <see cref="T:System.Windows.Controls.ScrollViewer"/> which should have mouse wheel scrolling support.</param>
+            <param name="childScrollViewer">A child <see cref="T:System.Windows.Controls.ScrollViewer"/> to add mouse wheel scrolling support to.</param>
+            <returns>The child <see cref="T:System.Windows.Controls.ScrollViewer"/>.</returns>
+        </member>
+        <member name="M:Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(System.Windows.Controls.ScrollViewer,System.Windows.Controls.ScrollViewer,System.Double)">
+            <summary>
+            Adds mouse wheel support to a <see cref="T:System.Windows.Controls.ScrollViewer"/>.
+            As long as the <see cref="T:System.Windows.Controls.ScrollViewer"/> has focus,
+            the mouse wheel can be used to scroll up and down.
+            </summary>
+            <param name="parentScrollViewer">The parent <see cref="T:System.Windows.Controls.ScrollViewer"/> which contains another <see cref="T:System.Windows.Controls.ScrollViewer"/> which should have mouse wheel scrolling support.</param>
+            <param name="childScrollViewer">A child <see cref="T:System.Windows.Controls.ScrollViewer"/> to add mouse wheel scrolling support to.</param>
+            <param name="scrollAmount">The amount to scroll by when the mouse wheel is moved.</param>
+            <returns>The child <see cref="T:System.Windows.Controls.ScrollViewer"/>.</returns>
+        </member>
+        <member name="T:Ranet.AgOlap.Localization">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Apply">
+            <summary>
+              Looks up a localized string similar to Apply.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Clear">
+            <summary>
+              Looks up a localized string similar to Clear.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Clipboard_ClipboardUnavailable">
+            <summary>
+              Looks up a localized string similar to Clipboard is unavailable.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Clipboard_UnableCopy">
+            <summary>
+              Looks up a localized string similar to Unable to copy the text.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Confirmation">
+            <summary>
+              Looks up a localized string similar to Confirmation.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Connection_PropertyDesc">
+            <summary>
+              Looks up a localized string similar to Connection.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ConnectionString">
+            <summary>
+              Looks up a localized string similar to Connection String.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextCmd_Copy">
+            <summary>
+              Looks up a localized string similar to Copy.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextCmd_Cut">
+            <summary>
+              Looks up a localized string similar to Cut.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextCmd_Delete">
+            <summary>
+              Looks up a localized string similar to Delete.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextCmd_Paste">
+            <summary>
+              Looks up a localized string similar to Paste.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextCmd_SelectAll">
+            <summary>
+              Looks up a localized string similar to Select All.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_Copy">
+            <summary>
+              Looks up a localized string similar to Copy.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_CopyValue">
+            <summary>
+              Looks up a localized string similar to Copy value.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_CustomProperties">
+            <summary>
+              Looks up a localized string similar to Custom properties.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_DeliveryValue">
+            <summary>
+              Looks up a localized string similar to Delivery value.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_Paste">
+            <summary>
+              Looks up a localized string similar to Paste.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_Properties">
+            <summary>
+              Looks up a localized string similar to Properties.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ContextMenu_ShowMDX">
+            <summary>
+              Looks up a localized string similar to Show MDX.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ControlPropertyNotInitialized_Message">
+            <summary>
+              Looks up a localized string similar to Property &apos;{0}&apos; for control is not initialized..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ControlSettingsNotInitialized_Message">
+            <summary>
+              Looks up a localized string similar to Settings not initialized: {0}.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.CopyToClipboard_ToolTip">
+            <summary>
+              Looks up a localized string similar to Copy to clipboard.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.CubeBrowserControl_Name">
+            <summary>
+              Looks up a localized string similar to Cube Browser.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.CubeChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Cube choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.CubeName_PropertyDesc">
+            <summary>
+              Looks up a localized string similar to Cube Name.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.CustomPropertiesDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Custom properties....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DataSourceInfo_MovedAxes">
+            <summary>
+              Looks up a localized string similar to MDX Query (2 Axes).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DataSourceInfo_ShowParsedQuery">
+            <summary>
+              Looks up a localized string similar to Show parsed query.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DataSourceInfo_ShowParsedScript">
+            <summary>
+              Looks up a localized string similar to Show parsed script.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DataSourceInfoDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Data source information....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DateChoice_Caption">
+            <summary>
+              Looks up a localized string similar to Date choice.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DateChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Date choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Delete">
+            <summary>
+              Looks up a localized string similar to Delete.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DialogButton_Cancel">
+            <summary>
+              Looks up a localized string similar to Cancel.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DialogButton_Ok">
+            <summary>
+              Looks up a localized string similar to OK.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DimensionChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Dimension choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.DimensionUniqueName_PropertyDesc">
+            <summary>
+              Looks up a localized string similar to Dimension unique name.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Error">
+            <summary>
+              Looks up a localized string similar to Error.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_AddOperand">
+            <summary>
+              Looks up a localized string similar to Add Operand.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_AddOperation">
+            <summary>
+              Looks up a localized string similar to Add Operation.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_BeginWith">
+            <summary>
+              Looks up a localized string similar to Begin with.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Contains">
+            <summary>
+              Looks up a localized string similar to Contains.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Equal">
+            <summary>
+              Looks up a localized string similar to Equal.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Label_And">
+            <summary>
+              Looks up a localized string similar to and.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Label_By">
+            <summary>
+              Looks up a localized string similar to by.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Target_Items">
+            <summary>
+              Looks up a localized string similar to Items.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Target_Percent">
+            <summary>
+              Looks up a localized string similar to Percent.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Target_Sum">
+            <summary>
+              Looks up a localized string similar to Sum.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Type_Bottom">
+            <summary>
+              Looks up a localized string similar to Bottom.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Filter_Type_Top">
+            <summary>
+              Looks up a localized string similar to Top.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.FilterBuilder_Caption">
+            <summary>
+              Looks up a localized string similar to Filter building.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.FilterControl_Caption">
+            <summary>
+              Looks up a localized string similar to Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.FilterControl_Label_FilterSettings">
+            <summary>
+              Looks up a localized string similar to Filter settings:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.FilterControl_Label_FilterType">
+            <summary>
+              Looks up a localized string similar to Filter type:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Find">
+            <summary>
+              Looks up a localized string similar to Find.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.HierarchyChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Hierarchy choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.HierarchyUniqueName_PropertyDesc">
+            <summary>
+              Looks up a localized string similar to Hierarchy unique name.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.KPIChoice_Caption">
+            <summary>
+              Looks up a localized string similar to KPI choice.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.KpiChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to KPI choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_BeginWith">
+            <summary>
+              Looks up a localized string similar to Begin with.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_Contain">
+            <summary>
+              Looks up a localized string similar to Contains.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_EndWith">
+            <summary>
+              Looks up a localized string similar to End with.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_Name">
+            <summary>
+              Looks up a localized string similar to Label Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_NotBeginWith">
+            <summary>
+              Looks up a localized string similar to Does not begin with.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_NotContain">
+            <summary>
+              Looks up a localized string similar to Does not contain.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LabelFilter_NotEndWith">
+            <summary>
+              Looks up a localized string similar to Does not end with.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LevelChoice_Caption">
+            <summary>
+              Looks up a localized string similar to Level choice.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LevelChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Level choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.LoadDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Load From.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Loading">
+            <summary>
+              Looks up a localized string similar to Loading....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ColumnsArea_Caption">
+            <summary>
+              Looks up a localized string similar to Columns.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_CancelFilter">
+            <summary>
+              Looks up a localized string similar to Cancel Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_ChangeFilter">
+            <summary>
+              Looks up a localized string similar to Change Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_MoveDown">
+            <summary>
+              Looks up a localized string similar to Move Down.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_MoveToColumnsArea">
+            <summary>
+              Looks up a localized string similar to Move to Columns.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_MoveToFiltersArea">
+            <summary>
+              Looks up a localized string similar to Move to Filters.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_MoveToRowsArea">
+            <summary>
+              Looks up a localized string similar to Move to Rows.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_MoveUp">
+            <summary>
+              Looks up a localized string similar to Move Up.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_RemoveField">
+            <summary>
+              Looks up a localized string similar to Remove Field.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ContextMenu_TopFilter">
+            <summary>
+              Looks up a localized string similar to Top N.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_CubeMetadata">
+            <summary>
+              Looks up a localized string similar to Cube Metadata.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_DataArea_Caption">
+            <summary>
+              Looks up a localized string similar to Data.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ExecuteQuery">
+            <summary>
+              Looks up a localized string similar to Execute MDX query.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ExportLayout_ToolTip">
+            <summary>
+              Looks up a localized string similar to Export query layout settings.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_FilterArea_Caption">
+            <summary>
+              Looks up a localized string similar to Filters.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ImportLayout_ToolTip">
+            <summary>
+              Looks up a localized string similar to Import query layout settings.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_MdxQuery">
+            <summary>
+              Looks up a localized string similar to MDX Query.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_QueryResult">
+            <summary>
+              Looks up a localized string similar to Query result.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_RowsArea_Caption">
+            <summary>
+              Looks up a localized string similar to Rows.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_RunQueryAutomatic">
+            <summary>
+              Looks up a localized string similar to Run MDX query automatic.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ShowQuery_ToolTip">
+            <summary>
+              Looks up a localized string similar to Show/Hide MDX query.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ShowQueryDesigner_ToolTip">
+            <summary>
+              Looks up a localized string similar to Show/Hide query designer.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MdxDesigner_ValuesNode_Caption">
+            <summary>
+              Looks up a localized string similar to Values.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MDXQuery">
+            <summary>
+              Looks up a localized string similar to MDX Query.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MeasureChoice_Caption">
+            <summary>
+              Looks up a localized string similar to Measure choice.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MeasureChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Measure choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MeasureGroup">
+            <summary>
+              Looks up a localized string similar to Measure Group.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MeasureGroup_All">
+            <summary>
+              Looks up a localized string similar to &lt;All&gt;.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_Caption">
+            <summary>
+              Looks up a localized string similar to Members choice.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_ClearSelection_ToolTip">
+            <summary>
+              Looks up a localized string similar to Clear Selection.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_LoadAll">
+            <summary>
+              Looks up a localized string similar to Load All ....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_LoadNext">
+            <summary>
+              Looks up a localized string similar to Load Next ....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_MembersFound">
+            <summary>
+              Looks up a localized string similar to Members found: .
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_MembersSelected">
+            <summary>
+              Looks up a localized string similar to Members selected: .
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_MultiSelect">
+            <summary>
+              Looks up a localized string similar to &lt;Multi Select&gt;.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_Refresh_ToolTip">
+            <summary>
+              Looks up a localized string similar to Refresh.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_Selected">
+            <summary>
+              Looks up a localized string similar to Selected.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoice_ShowMemberProperties_ToolTip">
+            <summary>
+              Looks up a localized string similar to Show Custom Member Properties.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MemberChoiceControl_Name">
+            <summary>
+              Looks up a localized string similar to Member choice control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Members">
+            <summary>
+              Looks up a localized string similar to Members.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MessageBox_Error">
+            <summary>
+              Looks up a localized string similar to Error....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.MessageBox_Warning">
+            <summary>
+              Looks up a localized string similar to Warning....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectDescriptionControl_Caption">
+            <summary>
+              Looks up a localized string similar to Caption.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectDescriptionControl_Description">
+            <summary>
+              Looks up a localized string similar to Description.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectDescriptionControl_Name">
+            <summary>
+              Looks up a localized string similar to Name.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectLoadDialog_ContentError_Message">
+            <summary>
+              Looks up a localized string similar to The Object is damaged. Loading impossible..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectSaveDialog_NameIsEmpty_Message">
+            <summary>
+              Looks up a localized string similar to Object name is empty. Please fill field &apos;Name&apos;..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ObjectSaveDialog_Replace_Message">
+            <summary>
+              Looks up a localized string similar to Object with such name already exists. Do you want to replace it?.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_BackButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Navigate Backward (Ctrl+Left).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_CancelEditButton_Question">
+            <summary>
+              Looks up a localized string similar to Restore table data in initial state or state before recalculation?.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_CancelEditButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Restore table data in initial state or state before recalculation.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_CellsCopyAreaError">
+            <summary>
+              Looks up a localized string similar to That command cannot be use on multiple selections..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Collapse">
+            <summary>
+              Looks up a localized string similar to Collapse.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Columns_Collapse_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Shift+Minus).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Columns_Drilldown_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Shift+Enter).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Columns_Expand_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Shift+Plus).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ConfirmEditButton_Caption">
+            <summary>
+              Looks up a localized string similar to Recalculate.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ConfirmEditButton_Question">
+            <summary>
+              Looks up a localized string similar to Recalculate table data with current changes?.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ConfirmEditButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Recalculate table data with current changes.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_CopyToClipboardButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Copy selected cells to Clipboard.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_CustomProperties_NotFound">
+            <summary>
+              Looks up a localized string similar to Custom properties for member not found. Possible member is calculated..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_DrillDown">
+            <summary>
+              Looks up a localized string similar to DrillDown.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_EditButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to On/Off Editing Mode.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Expand">
+            <summary>
+              Looks up a localized string similar to Expand.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ExportToExcelButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Export to Microsoft Excel.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ForwardButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Navigate Forward (Ctrl+Right).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_GoToFocusedCellButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Go to Focused Cell.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_HideEmptyColumnsButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Hide Empty Columns.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_HideEmptyRowsButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Hide Empty Rows.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_HideHintsButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Hide members and cells hints.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_PasteFromClipboardButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Paste cells from Clipboard.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_RefreshButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Refresh.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_RestoreDefaultSize_ToolTip">
+            <summary>
+              Looks up a localized string similar to Restore default size for columns and rows members.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_RotateAxesButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Rotate axes.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Rows_Collapse_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Minus).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Rows_Drilldown_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Enter).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_Rows_Expand_ShortCut">
+            <summary>
+              Looks up a localized string similar to (Ctrl+Plus).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_SaveCachedChanges">
+             <summary>
+               Looks up a localized string similar to The operation requires the recalculation given with provision for contributed change. 
+            
+            Please, recalculate data or cancel changes..
+             </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ToBeginButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Navigate To Begin (Ctrl+Shift+Left).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ToEndButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Navigate To End (Ctrl+Shift+Right).
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_UseChangesCasheButton_ToolTip">
+            <summary>
+              Looks up a localized string similar to Use remitted recalculation.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGrid_ZoomingControl_ToolTip">
+            <summary>
+              Looks up a localized string similar to Zoom.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PivotGridControl_Name">
+            <summary>
+              Looks up a localized string similar to Pivot grid.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PropertiesDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Properties....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PropertiesList_PropertyColumn">
+            <summary>
+              Looks up a localized string similar to Property.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.PropertiesList_ValueColumn">
+            <summary>
+              Looks up a localized string similar to Value.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.SaveAsDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Save As.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.SaveDialog_Filter_XlsFiles">
+            <summary>
+              Looks up a localized string similar to Xls Files (.xls)|*.xls.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.SaveDialog_Filter_XmlFiles">
+            <summary>
+              Looks up a localized string similar to Xml Files (.xml)|*.xml.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ServerExplorerControl_Name">
+            <summary>
+              Looks up a localized string similar to Server Explorer control.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Tooltip_Cube">
+            <summary>
+              Looks up a localized string similar to Cube: {0}.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Tooltip_Dimension">
+            <summary>
+              Looks up a localized string similar to Dimension: {0}.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Tooltip_Hierarchy">
+            <summary>
+              Looks up a localized string similar to Hierarchy: {0}.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Tooltip_Level">
+            <summary>
+              Looks up a localized string similar to Level: {0}.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.TopFilter_Name">
+            <summary>
+              Looks up a localized string similar to Top N.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.TopFilterDialog_Caption">
+            <summary>
+              Looks up a localized string similar to &apos;Top N&apos; Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.TreeNode_ErrorLoadingData">
+            <summary>
+              Looks up a localized string similar to Error loading data.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.UpdateScript">
+            <summary>
+              Looks up a localized string similar to Update Script.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.UpdateScript_PropertyDesc">
+            <summary>
+              Looks up a localized string similar to Update script.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Accessibility">
+            <summary>
+              Looks up a localized string similar to Accessibility.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Coordinates">
+            <summary>
+              Looks up a localized string similar to Coordinates:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CoordinateState_Disabled">
+            <summary>
+              Looks up a localized string similar to Hidden.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CoordinateState_Enabled">
+            <summary>
+              Looks up a localized string similar to Full access.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CoordinateState_Readonly">
+            <summary>
+              Looks up a localized string similar to Readonly.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CoordinateState_Unknown">
+            <summary>
+              Looks up a localized string similar to Unknown.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CopyButton_Caption">
+            <summary>
+              Looks up a localized string similar to Copy.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_CopyValueFromSource">
+            <summary>
+              Looks up a localized string similar to Copy value from source.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_DeliveryValuePropotrionalSource">
+            <summary>
+              Looks up a localized string similar to Delivery value proportional by source.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_DestFieldIsAllMember">
+            <summary>
+              Looks up a localized string similar to Receiver filds must not contain elements of the type &apos;All&apos;..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Destination">
+            <summary>
+              Looks up a localized string similar to Receiver.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Dimension">
+            <summary>
+              Looks up a localized string similar to Dimension.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_ExportSettings_ToolTip">
+            <summary>
+              Looks up a localized string similar to Export Settings.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Hierarchy">
+            <summary>
+              Looks up a localized string similar to Hierarchy.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_ImportSettings_ToolTip">
+            <summary>
+              Looks up a localized string similar to Import Settings.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_RunCopyForm_Tooltip">
+            <summary>
+              Looks up a localized string similar to Run copy form.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_ShowNotEmpty_Caption">
+            <summary>
+              Looks up a localized string similar to Source or Receiver is selected.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Source">
+            <summary>
+              Looks up a localized string similar to Source.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_SourceAndDestFieldNotFilled_Warning">
+            <summary>
+              Looks up a localized string similar to Not some field are filled in source and receiver..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_SourceAndDestIsEqual_Warning">
+            <summary>
+              Looks up a localized string similar to Settings for source and receiver must differ..
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_TypeOfCopying">
+            <summary>
+              Looks up a localized string similar to Type of copying:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Value">
+            <summary>
+              Looks up a localized string similar to Value:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyControl_Сoefficient">
+            <summary>
+              Looks up a localized string similar to Сoefficient:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyDesignerControl_Name">
+            <summary>
+              Looks up a localized string similar to Value copy designer.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueCopyDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Value copy settings....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_ChildrenMembers">
+            <summary>
+              Looks up a localized string similar to Children members.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_Delivered">
+            <summary>
+              Looks up a localized string similar to Delivered.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_DeliveredCellSettings">
+            <summary>
+              Looks up a localized string similar to Cell details:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_DeliveryTo">
+            <summary>
+              Looks up a localized string similar to Delivery to:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_Hierarchy">
+            <summary>
+              Looks up a localized string similar to Hierarchy.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_Member">
+            <summary>
+              Looks up a localized string similar to Member.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_MembersToDelivery">
+            <summary>
+              Looks up a localized string similar to Members to delivery:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_NewValue">
+            <summary>
+              Looks up a localized string similar to New value.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_OriginalValue">
+            <summary>
+              Looks up a localized string similar to Original value.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_SelectedMembers">
+            <summary>
+              Looks up a localized string similar to Selected members.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryControl_SiblingsMembers">
+            <summary>
+              Looks up a localized string similar to Siblings members.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryDialog_Caption">
+            <summary>
+              Looks up a localized string similar to Value delivery settings....
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryDialog_Delivered">
+            <summary>
+              Looks up a localized string similar to Delivered:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryDialog_RestToDelivery">
+            <summary>
+              Looks up a localized string similar to Rest to delivery:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueDeliveryDialog_ValueToDelivery">
+            <summary>
+              Looks up a localized string similar to Value to delivery:.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_Between">
+            <summary>
+              Looks up a localized string similar to Is between.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_Equal">
+            <summary>
+              Looks up a localized string similar to Equals.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_Greater">
+            <summary>
+              Looks up a localized string similar to Is greater than.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_GreaterOrEqual">
+            <summary>
+              Looks up a localized string similar to Is greater than or equal to.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_Less">
+            <summary>
+              Looks up a localized string similar to Is less than.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_LessOrEqual">
+            <summary>
+              Looks up a localized string similar to Is less than or equal to.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_Name">
+            <summary>
+              Looks up a localized string similar to Value Filter.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_NotBetween">
+            <summary>
+              Looks up a localized string similar to Is not between.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.ValueFilter_NotEqual">
+            <summary>
+              Looks up a localized string similar to Does not equal.
+            </summary>
+        </member>
+        <member name="P:Ranet.AgOlap.Localization.Warning">
+            <summary>
+              Looks up a localized string similar to Warning.
+            </summary>
+        </member>
+    </members>
+</doc>

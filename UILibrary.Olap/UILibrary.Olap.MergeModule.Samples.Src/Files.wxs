@@ -1,0 +1,249 @@
+<?xml version='1.0' encoding='windows-1251' ?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'
+     xmlns:netfx='http://schemas.microsoft.com/wix/NetFxExtension'
+>
+	<Fragment Id='Files.wxs'>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C249' Guid='82f3c0e8-0ad0-4ca7-bdcd-47fd9d2f6b31'>
+				<File
+					Id='I249'
+					Name='N249'
+					KeyPath='yes'
+					LongName='App.xaml.cs'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml.cs'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C250' Guid='dd286176-e153-47ee-9a21-09a992bb6a2e'>
+				<File
+					Id='I250'
+					Name='N250'
+					KeyPath='yes'
+					LongName='MainPage.xaml.cs'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml.cs'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight_Properties'>
+			<Component Id='C251' Guid='55edb5f8-daa0-423d-ad04-20480e130fdd'>
+				<File
+					Id='I251'
+					Name='N251'
+					KeyPath='yes'
+					LongName='AssemblyInfo.cs'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AssemblyInfo.cs'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
+			<Component Id='C252' Guid='4dcfa792-ce4a-4f0c-8448-0824533c6973'>
+				<File
+					Id='I252'
+					Name='N252'
+					KeyPath='yes'
+					LongName='Program.cs'
+					Source='INSTALLDIR\Samples\MdxFormatter\Program.cs'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter_Properties'>
+			<Component Id='C253' Guid='f542c58c-86fd-40c4-86d0-80f5447521bc'>
+				<File
+					Id='I253'
+					Name='N253'
+					KeyPath='yes'
+					LongName='AssemblyInfo.cs'
+					Source='INSTALLDIR\Samples\MdxFormatter\Properties\AssemblyInfo.cs'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C254' Guid='0d560d3a-6804-4393-bfd3-76add88821e7'>
+				<File
+					Id='I254'
+					Name='N254'
+					KeyPath='yes'
+					LongName='MdxFormatter.html'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.html'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight_Properties'>
+			<Component Id='C255' Guid='1119796e-3b4a-4ce4-b059-d44fd79bc8eb'>
+				<File
+					Id='I255'
+					Name='N255'
+					KeyPath='yes'
+					LongName='AppManifest.xml'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AppManifest.xml'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C256' Guid='b34bbd97-d6ba-49bd-8394-b806e94d9d51'>
+				<File
+					Id='I256'
+					Name='N256'
+					KeyPath='yes'
+					LongName='Ranet.UILibrary.Olap.Samples.sln'
+					Source='INSTALLDIR\Samples\Ranet.UILibrary.Olap.Samples.sln'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C257' Guid='5989f5b1-4c91-49da-974d-ca0836769f38'>
+				<File
+					Id='I257'
+					Name='N257'
+					KeyPath='yes'
+					LongName='TestKey.snk'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\TestKey.snk'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
+			<Component Id='C258' Guid='b8fb98be-bbce-4dcd-a146-7d29f2da5fc1'>
+				<File
+					Id='I258'
+					Name='N258'
+					KeyPath='yes'
+					LongName='MdxSample.mdx'
+					Source='INSTALLDIR\Samples\MdxFormatter\MdxSample.mdx'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
+			<Component Id='C259' Guid='44d9f373-8cdd-4d85-811b-469a67424216'>
+				<File
+					Id='I259'
+					Name='N259'
+					KeyPath='yes'
+					LongName='TestKey.snk'
+					Source='INSTALLDIR\Samples\MdxFormatter\TestKey.snk'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C260' Guid='c9a00681-f975-4145-8f3d-4578abf71077'>
+				<File
+					Id='I260'
+					Name='N260'
+					KeyPath='yes'
+					LongName='App.xaml'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C261' Guid='3147ba62-6778-4836-b1fa-e8e5e4b4091a'>
+				<File
+					Id='I261'
+					Name='N261'
+					KeyPath='yes'
+					LongName='AppManifest.xaml'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\AppManifest.xaml'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C262' Guid='2973ebd9-65cd-40bd-8804-3e2a9326a058'>
+				<File
+					Id='I262'
+					Name='N262'
+					KeyPath='yes'
+					LongName='MainPage.xaml'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
+			<Component Id='C263' Guid='c34cc6d0-8057-484e-b70d-00092f800dd8'>
+				<File
+					Id='I263'
+					Name='N263'
+					KeyPath='yes'
+					LongName='MdxFormatter.SilverLight.csproj'
+					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.SilverLight.csproj'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
+			<Component Id='C264' Guid='8edbe510-6b56-4485-a269-65ee7bb3e216'>
+				<File
+					Id='I264'
+					Name='N264'
+					KeyPath='yes'
+					LongName='MdxFormatter.csproj'
+					Source='INSTALLDIR\Samples\MdxFormatter\MdxFormatter.csproj'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<ComponentGroup Id='all'>
+			<ComponentRef Id='C249'/>
+			<ComponentRef Id='C250'/>
+			<ComponentRef Id='C251'/>
+			<ComponentRef Id='C252'/>
+			<ComponentRef Id='C253'/>
+			<ComponentRef Id='C254'/>
+			<ComponentRef Id='C255'/>
+			<ComponentRef Id='C256'/>
+			<ComponentRef Id='C257'/>
+			<ComponentRef Id='C258'/>
+			<ComponentRef Id='C259'/>
+			<ComponentRef Id='C260'/>
+			<ComponentRef Id='C261'/>
+			<ComponentRef Id='C262'/>
+			<ComponentRef Id='C263'/>
+			<ComponentRef Id='C264'/>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

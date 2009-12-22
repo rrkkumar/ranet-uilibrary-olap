@@ -1,0 +1,68 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputNameSuffix>.Samples</OutputNameSuffix>
+    <ProjectGuid>{0F5C8009-2C7D-4D10-8A14-8CCBB59266C7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UILibrary.Olap.MergeModule.Samples</RootNamespace>
+    <AssemblyName>UILibrary.Olap.MergeModule.Samples</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Directories.wxs" />
+    <Compile Include="Files.wxs" />
+    <Compile Include="MergeModule.wxs" />
+    <Compile Include="Shortcuts.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Binaries\Release\MDXFormatter.exe">
+      <Link>INSTALLDIR\Samples\MDXFormatter.exe</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\MdxFormatter.html">
+      <Link>INSTALLDIR\Samples\MdxFormatter.html</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\MdxFormatter.xap">
+      <Link>INSTALLDIR\Samples\MdxFormatter.xap</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Mdx.dll">
+      <Link>INSTALLDIR\Samples\Ranet.Olap.Mdx.dll</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Binaries\Release\MdxSample.mdx">
+      <Link>INSTALLDIR\Samples\MdxSample.mdx</Link>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
+  <!--Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

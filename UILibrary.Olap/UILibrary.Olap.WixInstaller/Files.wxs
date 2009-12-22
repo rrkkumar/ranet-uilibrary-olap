@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='windows-1251' ?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'
+     xmlns:netfx='http://schemas.microsoft.com/wix/NetFxExtension'
+>
+	<Fragment Id='Files.wxs'>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C2161' Guid='062e93a3-fe0c-4f93-b6a9-2871494f4e74'>
+				<File
+					Id='I2161'
+					Name='N2161'
+					KeyPath='yes'
+					LongName='MdxSample.mdx'
+					Source='..\..\Binaries\Release\MdxSample.mdx'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C2162' Guid='2624867d-b053-414d-b6b0-dbefd221c2c4'>
+				<File
+					Id='I2162'
+					Name='N2162'
+					KeyPath='yes'
+					LongName='MDXFormatter.exe'
+					Source='..\..\Binaries\Release\MDXFormatter.exe'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C2163' Guid='fecd2d5f-0502-415b-ba6f-1024f882408f'>
+				<File
+					Id='I2163'
+					Name='N2163'
+					KeyPath='yes'
+					LongName='MdxFormatter.html'
+					Source='..\..\Binaries\Release\MdxFormatter.html'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C2164' Guid='eb51006e-a4ab-4876-85ef-cad18c96a116'>
+				<File
+					Id='I2164'
+					Name='N2164'
+					KeyPath='yes'
+					LongName='MdxFormatter.xap'
+					Source='..\..\Binaries\Release\MdxFormatter.xap'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR_Samples'>
+			<Component Id='C2165' Guid='bf3e515c-44b4-4d73-9827-cec164ba7700'>
+				<File
+					Id='I2165'
+					Name='N2165'
+					KeyPath='yes'
+					LongName='Ranet.Olap.Mdx.dll'
+					Source='..\..\Binaries\Release\Ranet.Olap.Mdx.dll'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<ComponentGroup Id='all'>
+			<ComponentRef Id='C2161'/>
+			<ComponentRef Id='C2162'/>
+			<ComponentRef Id='C2163'/>
+			<ComponentRef Id='C2164'/>
+			<ComponentRef Id='C2165'/>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

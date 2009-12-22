@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+
+	<Fragment Id="Directories.wxs">
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="GlobalAssemblyCache"/>
+			<Directory Id="INSTALLDIR">
+				<Directory Id="INSTALLDIR_FRAMEWORK" Name="fmwrk" LongName="Framework">
+					<Directory Id="INSTALLDIR_FRAMEWORK_BIN" Name="bin">
+						<Directory Id="INSTALLDIR_FRAMEWORK_BIN_RU" Name="ru"/>
+					</Directory>
+					<Directory Id="INSTALLDIR_FRAMEWORK_SYMBOLS" Name="symbols"/>
+				</Directory>
+				<Directory Id="INSTALLDIR_SILVERLIGHT" Name="sl" LongName="Silverlight">
+					<Directory Id="INSTALLDIR_SILVERLIGHT_BIN" Name="bin">
+						<Directory Id="INSTALLDIR_SILVERLIGHT_BIN_RU" Name="ru"/>
+					</Directory>
+					<Directory Id="INSTALLDIR_SILVERLIGHT_SYMBOLS" Name="symbols"/>
+				</Directory>
+				<Directory Id="INSTALLDIR_Licences" Name="lic" LongName="Licences">
+					<Component Id='MainLic' Guid='771E877F-7D6A-41d4-9BC0-76AF5076AA21'>
+						<File
+							Id='IMainLic'
+							Name='NMainLic'
+							KeyPath='yes'
+							LongName='Ranet.UILibrary.Olap.Licence.rtf'
+							Source='..\UILibrary.Olap.WixInstaller\License.rtf'
+							Checksum='yes'
+							Compressed='yes'
+							DiskId='1'
+						/>
+					</Component>
+				</Directory>
+			</Directory>
+		</Directory>
+	</Fragment>
+</Wix>

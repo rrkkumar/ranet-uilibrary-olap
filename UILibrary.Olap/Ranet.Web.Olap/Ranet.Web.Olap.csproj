@@ -1,0 +1,129 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{36044CEA-3BC8-4A5A-85D5-0BF4CD46A19A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ranet.Web.Olap</RootNamespace>
+    <AssemblyName>Ranet.Web.Olap</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BI_Develop|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\BI_Develop\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dll\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\!ProductInfo\ProductInfo.cs">
+      <Link>ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.AgOlap\Common.cs">
+      <Link>Common.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.AgOlap\Controls\General\ClientServer\MetadataQuery.cs">
+      <Link>MetadataQuery.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.AgOlap\Controls\MemberChoice\ClientServer\MemberChoiceQuery.cs">
+      <Link>MemberChoiceQuery.cs</Link>
+    </Compile>
+    <Compile Include="AdomdConnectionPool.cs" />
+    <Compile Include="DefaultQueryExecuter.cs" />
+    <Compile Include="OlapHelper.cs" />
+    <Compile Include="OlapWebServiceBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PivotGrid\OlapPivotDataManager.cs" />
+    <Compile Include="PivotGrid\PivotTableUpdater.cs" />
+    <Compile Include="XmlUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ranet.Olap.Core\Ranet.Olap.Core.csproj">
+      <Project>{5ED667AE-F7AA-4553-BEE2-A0DD4C83D6D2}</Project>
+      <Name>Ranet.Olap.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ranet.Olap.Mdx\Ranet.Olap.Mdx.csproj">
+      <Project>{42A2C4B9-CBD4-4304-938D-EDD5F3631553}</Project>
+      <Name>Ranet.Olap.Mdx</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">
+      <Link>Galaktika.OpenSource.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'BI_Develop' ">
+      copy $(TargetPath) C:\WINDOWS\assembly\GAC_MSIL\$(TargetName)\9.1.0.0__b5573042f1727a10\$(TargetFileName)
+      copy $(TargetDir)$(TargetName).pdb C:\WINDOWS\assembly\GAC_MSIL\$(TargetName)\9.1.0.0__b5573042f1727a10\$(TargetName).pdb
+
+      copy $(TargetPath) "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Framework\bin\$(TargetFileName)"
+      copy $(TargetDir)$(TargetName).pdb "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Framework\symbols\$(TargetName).pdb"
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

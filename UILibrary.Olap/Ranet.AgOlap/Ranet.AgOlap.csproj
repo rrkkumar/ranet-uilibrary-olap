@@ -1,0 +1,759 @@
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{00583D29-AC6B-4AD1-A66B-F3AD3F81B639}</ProjectGuid>
+    <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ranet.AgOlap</RootNamespace>
+    <AssemblyName>Ranet.AgOlap</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <SilverlightApplication>false</SilverlightApplication>
+    <ValidateXaml>true</ValidateXaml>
+    <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>http://localhost/Ranet.AgOlap/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Bin\Release</OutputPath>
+    <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BI_Develop|AnyCPU' ">
+    <OutputPath>bin\BI_Develop\</OutputPath>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows" />
+    <Reference Include="mscorlib" />
+    <Reference Include="system" />
+    <Reference Include="System.Windows.Controls, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\!ProductInfo\ProductInfo.cs">
+      <Link>ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="Commands\CommandHelper.cs" />
+    <Compile Include="Common.cs" />
+    <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
+    <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <Compile Include="Controls\Forms\ModalDialog.cs" />
+    <Compile Include="Controls\General\ButtonMaximizeForm.cs" />
+    <Compile Include="Controls\General\CheckedHeaderControl.cs" />
+    <Compile Include="Controls\General\CustomPanel.xaml.cs">
+      <DependentUpon>CustomPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\ItemControls\ErrorItemControl.cs" />
+    <Compile Include="Controls\General\ItemControls\MeasureGroupItemControl.cs" />
+    <Compile Include="Controls\General\ItemControls\MeasureItemControl.cs" />
+    <Compile Include="Controls\General\MeasureGroupCombo.cs" />
+    <Compile Include="Controls\General\ObjectDescriptionControl.xaml.cs">
+      <DependentUpon>ObjectDescriptionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\ObjectLoadDialog.cs" />
+    <Compile Include="Controls\General\ObjectSaveAsDialog.cs" />
+    <Compile Include="Controls\General\StorageManager.cs" />
+    <Compile Include="Controls\General\StyleContainer.xaml.cs">
+      <DependentUpon>StyleContainer.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\Tree\TreeNode.cs" />
+    <Compile Include="Controls\MdxDesigner\DesignerPivotGridControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterBuilderControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterControlBase.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterFamilyCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterFamilyItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\FilterFamilyTypes.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\LabelFilterControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\LabelFilterTypeCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\LabelFilterTypeItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\LabelFilterTypes.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\LevelPropertyCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTypeItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTargetCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTargetItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTargetTypes.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTypeCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterTypes.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\MeasuresCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\TopFilterControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\ValueFilterControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\ValueFilterTypeCombo.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\ValueFilterTypeItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Filters\ValueFilterTypes.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Composite_FilterWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Filtered_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\FilterWrapperBase.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Filter_FilterWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Label_FilterWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Members_FilterWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Top_FilterWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Value_FilterWrapper.cs" />
+    <Compile Include="Controls\PivotGrid\CellChangesCache.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\CellControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\ExpanderControl.xaml.cs">
+      <DependentUpon>ExpanderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Controls\PivotGridControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\PivotGridItem.cs" />
+    <Compile Include="Controls\PivotGrid\CustomGridSplitter.cs" />
+    <Compile Include="Controls\PivotGrid\FastCommandHelper.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceObject.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceOptions.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellCondition.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellConditionsDescriptor.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellProgressBarOptions.cs" />
+    <Compile Include="Controls\PivotGrid\ControlActionEventArgs.cs" />
+    <Compile Include="Controls\PivotGrid\ControlActionType.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\CellControlsCache.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\ColumnMemberControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\MemberControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\PivotGridEventArgs.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\PivotGridSizeInfo.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\RowMemberControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\ToolTipControl.cs" />
+    <Compile Include="Controls\PivotGrid\Data\CellValueInfo.cs" />
+    <Compile Include="Controls\PivotGrid\Data\InvisibleMemberInfo.cs" />
+    <Compile Include="Controls\PivotGrid\Editors\ICustomCellEditor.cs" />
+    <Compile Include="Controls\PivotGrid\Editors\TextBoxCellEditor.cs" />
+    <Compile Include="Controls\PivotGrid\MemberInfoWrapper.cs" />
+    <Compile Include="Controls\PivotGrid\SelectionManager.cs" />
+    <Compile Include="Controls\Storage\ObjectDescriptionListControl.cs" />
+    <Compile Include="Controls\ToolBar\AutoHeightPanel.cs" />
+    <Compile Include="Controls\ToolBar\ZoomingToolBarControl.cs" />
+    <Compile Include="Controls\ValueCopyDesignerControl.cs" />
+    <Compile Include="Controls\ValueCopy\ValueCopyTypes.cs" />
+    <Compile Include="Controls\ValueCopy\Wrappers\CoordinateItem_Wrapper.cs" />
+    <Compile Include="Controls\ValueCopy\Wrappers\ValueCopySettingsWrapper.cs" />
+    <Compile Include="Controls\XYNavigator.cs" />
+    <Compile Include="Controls\Buttons\RanetButton.cs" />
+    <Compile Include="Controls\Buttons\RanetHotButton.cs" />
+    <Compile Include="Controls\Buttons\RanetToggleButton.cs" />
+    <Compile Include="Controls\ContextMenu\ContextMenuItem.xaml.cs">
+      <DependentUpon>ContextMenuItem.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContextMenu\ContextMenuProvider.cs" />
+    <Compile Include="Controls\ContextMenu\ContextMenuSplitter.xaml.cs">
+      <DependentUpon>ContextMenuSplitter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContextMenu\CustomContextMenu.xaml.cs">
+      <DependentUpon>CustomContextMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CubeChoiceCtrl.cs" />
+    <Compile Include="Controls\CubeBrowserCtrl.cs" />
+    <Compile Include="Controls\DataSourceInfo\DataSourceInfoControl.cs" />
+    <Compile Include="Controls\DateChoiceCtrl.cs" />
+    <Compile Include="Controls\DateChoicePopUp.cs" />
+    <Compile Include="Controls\DatePickerCtrl.cs" />
+    <Compile Include="Controls\DimensionChoiceCtrl.cs" />
+    <Compile Include="Controls\UpdateablePivotGridControl.cs" />
+    <Compile Include="Controls\PivotGrid\Layout\MemberLayoutItem.cs" />
+    <Compile Include="Controls\General\AgChoiceControlBase.cs" />
+    <Compile Include="Controls\General\AgPopUpControlBase.cs" />
+    <Compile Include="Controls\General\BusyControl.xaml.cs">
+      <DependentUpon>BusyControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\HeaderControl.cs" />
+    <Compile Include="Controls\General\ItemControls\MemberInfoItemControl.cs" />
+    <Compile Include="Controls\General\OlapCmdUpdateStringFormatter.cs" />
+    <Compile Include="Controls\General\PropertiesControl.cs" />
+    <Compile Include="Controls\General\PropertiesDialog.cs" />
+    <Compile Include="Controls\General\RichTextBox.cs" />
+    <Compile Include="Controls\General\Tree\DragDropControl.cs" />
+    <Compile Include="Controls\General\Tree\ErrorTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KpiGoalTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KpiStatusTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KpiTrendTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KpiValueTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\TreeItemControl.cs" />
+    <Compile Include="Controls\General\UiHelper.cs" />
+    <Compile Include="Controls\General\VerticalExpander.cs" />
+    <Compile Include="Controls\MdxDesigner\AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\AreaItemsList.cs" />
+    <Compile Include="Controls\MdxDesigner\FilteredItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Hierarchy_AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\InfoItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Kpi_AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Level_AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Measure_AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\PivotAreaContainer.cs" />
+    <Compile Include="Controls\MdxDesigner\Values_AreaItemControl.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Hierarchy_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Kpi_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Level_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\MdxLayoutWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Measure_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MdxDesigner\Wrappers\Values_AreaItemWrapper.cs" />
+    <Compile Include="Controls\MemberChoiceControl.cs" />
+    <Compile Include="Controls\OlapHelper.cs" />
+    <Compile Include="Controls\PivotGrid\Layout\LayoutGridWrapper.cs" />
+    <Compile Include="Controls\PivotGrid\Layout\LayoutCellWrapper.cs" />
+    <Compile Include="Controls\PivotGrid\Layout\LayoutItem.cs" />
+    <Compile Include="Controls\PivotGrid\Layout\PivotLayoutProvider.cs" />
+    <Compile Include="Controls\PivotMdxDesignerControl.cs" />
+    <Compile Include="Controls\ToolBar\RanetToolBar.xaml.cs">
+      <DependentUpon>RanetToolBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Tab\TabControlEx.cs" />
+    <Compile Include="Controls\Tab\RanetTabControl.xaml.cs">
+      <DependentUpon>RanetTabControl.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\Tab\TabToolBar.xaml.cs">
+      <DependentUpon>TabToolBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Gauge\Round360Base.cs" />
+    <Compile Include="Controls\General\AddButton.cs" />
+    <Compile Include="Controls\General\AgControlBase.cs" />
+    <Compile Include="Controls\General\AgTreeControlBase.cs" />
+    <Compile Include="Controls\General\ButtonCloseForm.xaml.cs">
+      <DependentUpon>ButtonCloseForm.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\ClientServer\MetadataQuery.cs" />
+    <Compile Include="Controls\General\ColorHelper.cs" />
+    <Compile Include="Controls\General\ComboBoxEx.cs" />
+    <Compile Include="Controls\General\ContentResultTypes.cs" />
+    <Compile Include="Controls\Forms\FloatingDialog.cs" />
+    <Compile Include="Controls\Forms\FloatingDialogBase.cs" />
+    <Compile Include="Controls\Forms\FloatingWindowControl.xaml.cs">
+      <DependentUpon>FloatingWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\HotButton.cs" />
+    <Compile Include="Controls\General\ItemControls\ItemControlBase.cs" />
+    <Compile Include="Controls\General\PopUpContainerControl.cs" />
+    <Compile Include="Controls\General\IDataLoader.cs" />
+    <Compile Include="Controls\General\MembersDataLoader.cs" />
+    <Compile Include="Controls\General\MetadataLoader.cs" />
+    <Compile Include="Controls\General\MetadataQueryWrapper.cs" />
+    <Compile Include="Controls\General\PivotDataLoader.cs" />
+    <Compile Include="Controls\General\PopUpQuestionDialog.cs" />
+    <Compile Include="Controls\General\PropertiesListControl.xaml.cs">
+      <DependentUpon>PropertiesListControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\RemoveButton.cs" />
+    <Compile Include="Controls\General\Tree\InfoBaseTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\CubeTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\CustomTree.cs" />
+    <Compile Include="Controls\General\Tree\CustomTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\DimensionTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\FolderTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\HierarchyTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KPIsFolderTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\KpiTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\LevelTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\LoadAllTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\LoadNextTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\MeasuresFolderTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\MeasureTreeNode.cs" />
+    <Compile Include="Controls\General\Tree\ReloadAllTreeNode.cs" />
+    <Compile Include="Controls\General\WaitingIcon.cs" />
+    <Compile Include="Controls\General\Tree\WaitTreeControl.xaml.cs">
+      <DependentUpon>WaitTreeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\Tree\WaitTreeNode.cs" />
+    <Compile Include="Controls\HierarchyChoiceCtrl.cs" />
+    <Compile Include="Controls\KpiChoiceCtrl.cs" />
+    <Compile Include="Controls\KpiChoicePopUp.cs" />
+    <Compile Include="Controls\LevelChoiceCtrl.cs" />
+    <Compile Include="Controls\LevelChoicePopUp.cs" />
+    <Compile Include="Controls\MeasureChoiceCtrl.cs" />
+    <Compile Include="Controls\MeasureChoicePopUp.cs" />
+    <Compile Include="Controls\MemberChoice\ClientServer\MemberChoiceQuery.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\ConditionItemControl.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\CustomItemControl.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\FilterBuilderControl.xaml.cs">
+      <DependentUpon>FilterBuilderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MemberChoice\Filter\FilterOperationItemControl.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\FilterTreeNode.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\ItemsSplitter.xaml.cs">
+      <DependentUpon>ItemsSplitter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\ItemControls\LevelPropertyItemControl.cs" />
+    <Compile Include="Controls\General\ItemControls\MemberPropertyItemControl.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\OperandTreeNode.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\OperationItemControl.xaml.cs">
+      <DependentUpon>OperationItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MemberChoice\Filter\OperationTreeNode.cs" />
+    <Compile Include="Controls\MemberChoice\Info\MemberChoiceSettings.cs" />
+    <Compile Include="Controls\MemberChoice\Info\OlapMemberInfo.cs" />
+    <Compile Include="Controls\MemberChoice\Info\RootOlapMemberInfo.cs" />
+    <Compile Include="Controls\General\ItemControls\LevelItemControl.cs" />
+    <Compile Include="Controls\MemberChoicePopUp.cs" />
+    <Compile Include="Controls\MemberChoice\MemberChoiceQueryWrapper.cs" />
+    <Compile Include="Controls\General\ItemControls\MemberItemControl.cs" />
+    <Compile Include="Controls\MemberChoice\MembersListControl.cs" />
+    <Compile Include="Controls\MemberChoice\OlapHelper.cs" />
+    <Compile Include="Controls\General\Tree\MemberTreeNode.cs" />
+    <Compile Include="Controls\MemberChoice\Filter\OperandItemControl.xaml.cs">
+      <DependentUpon>OperandItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\General\ItemControls\CubeItemControl.cs" />
+    <Compile Include="Controls\ServerExplorerCtrl.cs" />
+    <Compile Include="Controls\ToolBar\RanetToolBarButton.cs" />
+    <Compile Include="Controls\ToolBar\RanetToolBarSplitter.xaml.cs">
+      <DependentUpon>RanetToolBarSplitter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UriResources.cs" />
+    <Compile Include="Controls\ValueCopy\DeleteButton.cs" />
+    <Compile Include="Controls\ValueCopy\IChoiceDialog.cs" />
+    <Compile Include="Controls\ValueCopy\CoordinateItem.cs" />
+    <Compile Include="Controls\ValueCopy\CoordinatesControl.xaml.cs">
+      <DependentUpon>CoordinatesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ValueCopy\MeasureChoiceDialog.cs" />
+    <Compile Include="Controls\ValueCopy\MemberChoiceDialog.cs" />
+    <Compile Include="Controls\ValueCopy\MemberWrap.cs" />
+    <Compile Include="Controls\ValueCopy\ValueCopyControl.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\ValueDelivery\CellTupleControl.cs" />
+    <Compile Include="Controls\ValueDelivery\ValueDeliveryControl.cs" />
+    <Compile Include="Features\BrowserHelper.cs" />
+    <Compile Include="Features\Clipboard.cs" />
+    <Compile Include="Features\CustomMouseWheelSupport.cs" />
+    <Compile Include="Features\MouseWheelSupport.cs" />
+    <Compile Include="Features\RichTextExtensions.cs" />
+    <Compile Include="Features\ScrollBarMouseWheelSupport.cs" />
+    <Compile Include="Features\ScrollViewerMouseWheelSupport.cs" />
+    <Compile Include="Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Service References\OlapWebService\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\ContextMenu\ContextMenuItem.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ContextMenu\ContextMenuSplitter.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ContextMenu\CustomContextMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\General\BusyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\General\CustomPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\General\ObjectDescriptionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\General\StyleContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Controls\ExpanderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\ToolBar\RanetToolBar.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Tab\RanetTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Tab\TabToolBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\General\ButtonCloseForm.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\Forms\FloatingWindowControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\General\PropertiesListControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\General\Tree\WaitTreeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MemberChoice\Filter\FilterBuilderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MemberChoice\Filter\ItemsSplitter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MemberChoice\Filter\OperationItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MemberChoice\Filter\OperandItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ToolBar\RanetToolBarSplitter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ValueCopy\CoordinatesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Resource Include="Themes\Generic.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\MemberChoice\Images\States\HasExcludedChildren.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\HasSelectedChildren.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\LoadAll.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\LoadNext.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\NotSelected.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\Selected.png" />
+    <Resource Include="Controls\MemberChoice\Images\States\SelectedChildren.png" />
+    <Resource Include="Controls\PivotGrid\Images\ActionNode.png" />
+    <Resource Include="Controls\PivotGrid\Images\Minus.png" />
+    <Resource Include="Controls\PivotGrid\Images\Plus.png" />
+    <Resource Include="Controls\PivotGrid\Images\Refresh.png" />
+    <Resource Include="Controls\PivotGrid\Images\HideEmptyColumns.png" />
+    <Resource Include="Controls\PivotGrid\Images\HideEmptyRows.png" />
+    <Resource Include="Controls\MemberChoice\Images\ToolBar\ClearChoice.png" />
+    <Resource Include="Controls\PivotGrid\Images\Edit.png" />
+    <Resource Include="Controls\PivotGrid\Images\CancelEdit.png" />
+    <Resource Include="Controls\PivotGrid\Images\ConfirmEdit.png" />
+    <Resource Include="Controls\PivotGrid\Images\UseChangesCache.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcgroupand.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcgroupor.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcallremove.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcgroupaddcondition.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcgroupaddgroup.png" />
+    <Resource Include="Controls\MemberChoice\Images\Fcgroupremove.png" />
+    <Resource Include="Controls\Images\OLAP\LevelProperty.png" />
+    <Resource Include="Controls\Images\OLAP\MemberProperty.png" />
+    <Resource Include="Controls\Images\Fcadd.png" />
+    <Resource Include="Controls\Images\Fcaddhot.png" />
+    <Resource Include="Controls\Images\Fcremove.png" />
+    <Resource Include="Controls\Images\Fcremovehot.png" />
+    <Resource Include="Controls\Images\OLAP\Member.png" />
+    <Resource Include="Controls\Images\MDX.png" />
+    <Resource Include="Controls\PivotGrid\Images\Back.png" />
+    <Resource Include="Controls\PivotGrid\Images\Forward.png" />
+    <Resource Include="Controls\PivotGrid\Images\ToBegin.png" />
+    <Resource Include="Controls\PivotGrid\Images\ToEnd.png" />
+    <Resource Include="Controls\Images\Copy.png" />
+    <None Include="Service References\OlapWebService\OlapWebService.disco" />
+    <None Include="Service References\OlapWebService\configuration91.svcinfo" />
+    <None Include="Service References\OlapWebService\configuration.svcinfo" />
+    <None Include="Service References\OlapWebService\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <Resource Include="Controls\PivotGrid\Images\RestoreDefaultSize.png" />
+    <Resource Include="Controls\Images\Paste.png" />
+    <Resource Include="Controls\Images\Error.png" />
+    <Resource Include="Controls\Images\Info.png" />
+    <Resource Include="Controls\Images\Warning.png" />
+    <Resource Include="Controls\Images\Cut.png" />
+    <Resource Include="Controls\Images\Delete.png" />
+    <Resource Include="Controls\Images\B_Down.png" />
+    <Resource Include="Controls\Images\B_Up.png" />
+    <Resource Include="Controls\Images\PivotTable.png" />
+    <Resource Include="Controls\Images\Run.png" />
+    <Resource Include="Controls\MdxDesigner\Images\ChangeFilter.png" />
+    <Resource Include="Controls\Images\Back_double.png" />
+    <Resource Include="Controls\Images\Forward_double.png" />
+    <Resource Include="Controls\Images\AutoRun.png" />
+    <Resource Include="Controls\Images\ExportToEXCEL.png" />
+    <Resource Include="Controls\Images\B_Left.png" />
+    <Resource Include="Controls\Images\B_Right.png" />
+    <Resource Include="Controls\PivotGrid\Images\ToFocused.png" />
+    <Resource Include="Controls\Images\FileExport.png" />
+    <Resource Include="Controls\Images\FileImport.png" />
+    <Resource Include="Controls\PivotGrid\Images\RotateAxes.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Bottom.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Checked.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Items.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Top.png" />
+    <Resource Include="Controls\Images\MemberChoiceControl.png" />
+    <Resource Include="Controls\Images\Logic\Fcopbetween.png" />
+    <Resource Include="Controls\Images\Logic\Fcopequal.png" />
+    <Resource Include="Controls\Images\Logic\Fcopgreater.png" />
+    <Resource Include="Controls\Images\Logic\Fcopgreaterorequal.png" />
+    <Resource Include="Controls\Images\Logic\Fcopless.png" />
+    <Resource Include="Controls\Images\Logic\Fcoplessorequal.png" />
+    <Resource Include="Controls\Images\Logic\Fcopnotbetween.png" />
+    <Resource Include="Controls\Images\Logic\Fcopnotequal.png" />
+    <Resource Include="Controls\Images\Logic\Fcopbegin.png" />
+    <Resource Include="Controls\Images\Logic\Fcopend.png" />
+    <Resource Include="Controls\Images\Logic\Fcopcontain.png" />
+    <Resource Include="Controls\Images\Logic\Fcopnotcontain.png" />
+    <Resource Include="Controls\MdxDesigner\Images\LabelFilter.png" />
+    <Resource Include="Controls\MdxDesigner\Images\TopFilter.png" />
+    <Resource Include="Controls\MdxDesigner\Images\ValueFilter.png" />
+    <Resource Include="Controls\Images\Logic\Fcopbeginnot.png" />
+    <Resource Include="Controls\Images\Logic\Fcopendnot.png" />
+    <Resource Include="Controls\Images\FileExtension.png" />
+    <Resource Include="Controls\Images\OLAP\MeasureGroup.png" />
+    <Resource Include="Controls\Images\OLAP\DataMember.png" />
+    <Resource Include="Controls\PivotGrid\Images\CloseHint.png" />
+    <Content Include="ServiceReferences.ClientConfig" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Controls\Images\Calc\Divide.png" />
+    <Resource Include="Controls\Images\Calc\Equal.png" />
+    <Resource Include="Controls\Images\Calc\Function.png" />
+    <Resource Include="Controls\Images\Calc\FunctionDivide.png" />
+    <Resource Include="Controls\Images\Calc\FunctionEqual.png" />
+    <Resource Include="Controls\Images\Calc\FunctionMinus.png" />
+    <Resource Include="Controls\Images\Calc\FunctionMultiply.png" />
+    <Resource Include="Controls\Images\Calc\FunctionPercent.png" />
+    <Resource Include="Controls\Images\Calc\FunctionPlus.png" />
+    <Resource Include="Controls\Images\Calc\FunctionTilde.png" />
+    <Resource Include="Controls\Images\Calc\Minus.png" />
+    <Resource Include="Controls\Images\Calc\Multiply.png" />
+    <Resource Include="Controls\Images\Calc\Percent.png" />
+    <Resource Include="Controls\Images\Calc\Plus.png" />
+    <Resource Include="Controls\Images\Calc\Tilde.png" />
+    <Resource Include="Controls\Images\FileError.png" />
+    <Resource Include="Controls\Images\Menu.png" />
+    <Resource Include="Controls\Images\OLAP\AttributeHierarchy.png" />
+    <Resource Include="Controls\Images\OLAP\Cube.png" />
+    <Resource Include="Controls\Images\OLAP\Dimension.png" />
+    <Resource Include="Controls\Images\Folder.png" />
+    <Resource Include="Controls\Images\FolderOpen.png" />
+    <Resource Include="Controls\Images\OLAP\KPI.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.00.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.01.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.02.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.03.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.04.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.05.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.06.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.07.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.08.png" />
+    <Resource Include="Controls\Images\OLAP\Levels\item.09.png" />
+    <Resource Include="Controls\Images\OLAP\Measures.png" />
+    <Resource Include="Controls\Images\OLAP\MeasuresCalc.png" />
+    <Resource Include="Controls\Images\OLAP\ParentChildHierarchy.png" />
+    <Resource Include="Controls\Images\OLAP\UnknownMember.png" />
+    <Resource Include="Controls\Images\OLAP\UserHierarchy.png" />
+    <Resource Include="Controls\MdxDesigner\Images\CancelFilter.png" />
+    <Resource Include="Controls\MdxDesigner\Images\ColumnsArea.png" />
+    <Resource Include="Controls\MdxDesigner\Images\DataArea.png" />
+    <Resource Include="Controls\MdxDesigner\Images\FiltersArea.png" />
+    <Resource Include="Controls\MdxDesigner\Images\MiniFilter.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Percent.png" />
+    <Resource Include="Controls\MdxDesigner\Images\RowsArea.png" />
+    <Resource Include="Controls\MdxDesigner\Images\Sum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization.ru.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\OlapWebService\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">
+      <Link>Galaktika.OpenSource.snk</Link>
+    </None>
+    <None Include="Service References\OlapWebService\OlapWebService.wsdl" />
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.ExecuteQueryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.GetMembersDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.GetMetaDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.GetPivotDataResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.GetToolBarInfoResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.PerformMemberActionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.PerformServiceCommandResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.PerformStorageActionResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.RunExcelResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\OlapWebService\Ranet.AgOlap.OlapWebService.UpdateCubeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Ranet.AgOlap.Core\Ranet.AgOlap.Core.csproj">
+      <Project>{9BC5FB19-403A-4221-919B-7000334A03CD}</Project>
+      <Name>Ranet.AgOlap.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\Tmp\" />
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight\v3.0\Microsoft.Silverlight.CSharp.targets" Condition="" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{A1591282-1198-4647-A2B1-27E5FF5F6F3B}">
+        <SilverlightProjectProperties />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'BI_Develop' ">
+      copy $(TargetPath) "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Silverlight\bin\$(TargetFileName)"
+      copy $(TargetDir)$(TargetName).pdb "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Silverlight\bin\$(TargetName).pdb"
+
+      copy $(TargetDir)\ru\$(TargetName).resources.dll "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Silverlight\bin\ru\$(TargetName).resources.dll"
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

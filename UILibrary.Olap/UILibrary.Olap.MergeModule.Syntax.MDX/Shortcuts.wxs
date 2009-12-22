@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Fragment Id="Directories.wxs">
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramMenuFolder" Name="PMenu" LongName="Programs" >
+				<Directory Id="Galaktika" Name="PMenuGal" LongName="Galaktika" >
+					<Directory Id="Shortcuts.RANET_UILIBRARY_OLAP" Name="ROILOLAP" LongName="$(var.ProductName).$(var.FileVersionBuild).$(var.FileVersionRevision)">
+						<Component Id='CRANET_UILIBRARY_OLAP_Syntax.MDX_LNK' Guid='E17D133F-839F-47d4-8575-60C66D6AB640'>
+							<Shortcut
+								Id="Syntax.MDX"
+								Directory="Shortcuts.RANET_UILIBRARY_OLAP"
+								Name="Syntax.MDX"
+								LongName="Syntax.MDX"
+								Description="MDX Syntax"
+								Show="normal"
+								Target="[INSTALLDIR_Syntax.MDX]"
+								WorkingDirectory="INSTALLDIR_Syntax.MDX"
+							/>
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

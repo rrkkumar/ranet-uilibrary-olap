@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi">
+	<Product
+	 	Name="$(var.ProductName)"
+		Language="0"
+		Codepage="1251"
+		Version="$(var.FileVersion)"
+		Manufacturer="$(var.Manufacturer)"
+		Id="$(var.ProductId)"
+    UpgradeCode="$(var.UpgradeCode)"
+	>
+		<Package Id="????????-????-????-????-????????????"
+			Description="$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+			Comments= "$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+			InstallerVersion="200"
+			Compressed="yes"
+			Keywords="msi,installer"
+			Manufacturer="$(var.Manufacturer)"
+			SummaryCodepage="1251"
+			ShortNames="no"
+			ReadOnly="yes"
+		/>
+		<Media Id="1" EmbedCab="yes" Cabinet="cabinet.cab"/>
+		<Upgrade Id="$(var.UpgradeCode)">
+			<UpgradeVersion
+        Property="NEWERPRODUCTFOUND"
+        Minimum="0.0.0.0"
+        OnlyDetect="no"
+        MigrateFeatures="no"
+        IgnoreRemoveFailure="yes"
+        RemoveFeatures="yes"
+			/>
+			<!--Property Id="NEWERPRODUCTFOUND" Value="nnn"  Secure="no"/-->
+		</Upgrade>
+		<InstallExecuteSequence>
+			<MigrateFeatureStates Suppress="yes" />
+			<RemoveExistingProducts After="InstallInitialize" />
+		</InstallExecuteSequence>
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="CommonFilesFolder" Name="CFiles">
+				<Directory Id="MModuls" Name="MModuls" LongName="Merge Modules">
+					<Component Id='CUILibraryR' Guid='{BF562442-8621-431c-A7A5-D5D2708A4E34}'>
+						<File
+							Id='RUILOR'
+							Name='RUILOR'
+							KeyPath='yes'
+							LongName='$(var.ProductName).msm'
+							Source='..\..\Binaries\Release\$(var.ProductName).Runtime.msm'
+							Checksum='yes'
+							Compressed='yes'
+							DiskId='1'
+						/>
+					</Component>
+					<Component Id='CSmpl' Guid='{6C850D7F-6980-46c9-8091-A84DB277CA3B}'>
+						<File
+						Id='Smpl'
+						Name='Smpl'
+						KeyPath='yes'
+						LongName='$(var.ProductName).Samples.msm'
+						Source='..\..\Binaries\Release\$(var.ProductName).Samples.msm'
+						Checksum='yes'
+						Compressed='yes'
+						DiskId='1'
+						/>
+					</Component>
+					<Component Id='CSmplSrc' Guid='{AB5A13AC-14A2-4672-A84B-0769C912FE93}'>
+						<File
+						Id='SmplSrc'
+						Name='SmplSrc'
+						KeyPath='yes'
+						LongName='$(var.ProductName).Samples.Src.msm'
+						Source='..\..\Binaries\Release\$(var.ProductName).Samples.Src.msm'
+						Checksum='yes'
+						Compressed='yes'
+						DiskId='1'
+						/>
+					</Component>
+					<Component Id='CSynMDX' Guid='{773D3335-9918-42fc-83F8-AFC661C5DCFB}'>
+						<File
+						Id='SynMDX'
+						Name='SynMDX'
+						KeyPath='yes'
+						LongName='$(var.ProductName).Syntax.MDX.msm'
+						Source='..\..\Binaries\Release\$(var.ProductName).Syntax.MDX.msm'
+						Checksum='yes'
+						Compressed='yes'
+						DiskId='1'
+						/>
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="GALAKTIKA" Name="GalDir" LongName="$(var.Manufacturer)">
+					<Directory Id="INSTALLDIR" Name="UILib" LongName="$(var.ProductName).$(var.FileVersionBuild).$(var.FileVersionRevision)">
+						<Merge Language="0" Id="Main" SourceFile="..\..\Binaries\Release\$(var.ProductName).Runtime.msm" DiskId="1"/>
+						<Merge Language="0" Id="Samples" SourceFile="..\..\Binaries\Release\$(var.ProductName).Samples.msm" DiskId="1"/>
+						<Merge Language="0" Id="SamplesSrc" SourceFile="..\..\Binaries\Release\$(var.ProductName).Samples.Src.msm" DiskId="1"/>
+						<Merge Language="0" Id="Syntax.MDX" SourceFile="..\..\Binaries\Release\$(var.ProductName).Syntax.MDX.msm" DiskId="1"/>
+					</Directory>
+				</Directory>
+			</Directory>
+		</Directory>
+		<Feature Id="All" Level="1" Title="All"  Display="expand" Description="All" ConfigurableDirectory="INSTALLDIR">
+			<ComponentGroupRef Id="all"/>
+			<ComponentRef Id="CUILibraryR"/>
+			<ComponentRef Id="CRANET_UILIBRARY_OLAP_Lic_LNK"/>
+			<MergeRef Id="Main" Primary="yes"/>
+			<Feature Id="Syntax.MDX" Level="1" Title="MDX Syntax"  Description="MDX Syntax" ConfigurableDirectory="INSTALLDIR">
+				<MergeRef Id="Syntax.MDX" Primary="yes"/>
+				<ComponentRef Id="CSynMDX"/>
+			</Feature>
+			<Feature Id="Samples" Level="1" Title="Samples"  Description="Samples" ConfigurableDirectory="INSTALLDIR">
+				<MergeRef Id="Samples" Primary="yes"/>
+				<ComponentRef Id="CSmpl"/>
+			</Feature>
+			<Feature Id="SamplesSrc" Level="1" Title="Samples Source"  Description="Samples Source" ConfigurableDirectory="INSTALLDIR">
+				<MergeRef Id="SamplesSrc" Primary="yes"/>
+				<ComponentRef Id="CSmplSrc"/>
+			</Feature>
+		</Feature>
+		<UIRef Id="WixUI_FeatureTree" />
+		<UIRef Id="WixUI_ErrorProgressText" />
+	</Product>
+</Wix>

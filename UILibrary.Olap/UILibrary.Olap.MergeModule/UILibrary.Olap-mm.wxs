@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+>
+	<Module
+  Language="0"
+  Codepage="1251"
+  Version="$(var.FileVersion)"
+  Guid="{C1867D08-786A-4d99-AC1E-D84395890D67}"
+  Id="$(var.MainProduct).$(var.SubProduct)_$(var.MajorMinorVersion)"
+	>
+		<Package Id="????????-????-????-????-????????????"
+			Description="$(var.ProductName)"
+			Comments= "$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+			InstallerVersion="200"
+			Compressed="yes"
+			Keywords="msi,installer"
+			Manufacturer="TopSoft"
+			SummaryCodepage="1251"
+			ShortNames="no"
+			ReadOnly="yes"
+		/>
+		
+		<ComponentGroupRef Id="all"/>
+		<!-- ComponentGroupRef Id="GAC"/ -->
+    <ComponentGroupRef Id="Registry"/>
+		<ComponentRef Id="MainLic"/>
+	</Module>
+</Wix>

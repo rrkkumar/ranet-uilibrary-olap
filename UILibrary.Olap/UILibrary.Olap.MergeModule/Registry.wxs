@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='windows-1251' ?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2003/01/wi'
+     xmlns:netfx='http://schemas.microsoft.com/wix/NetFxExtension'
+>
+	<Fragment Id='Registry.wxs'>
+
+		<DirectoryRef Id='INSTALLDIR'>
+			<Component Id='UIOlapLibReg' Guid='{86126E77-BDBB-431b-BEF6-192FC7DE2393}'>
+				<Registry
+					KeyPath="yes"
+					Root="HKLM"
+					Type="string"
+					Value="[INSTALLDIR]Framework\bin\"
+					Key="SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+							/>
+			</Component>
+			<Component Id='UIOlapLibReg2' Guid='{77D42865-E0F9-4802-99CE-6A79E8308D15}'>
+				<Registry
+					KeyPath="yes"
+					Root="HKLM"
+					Type="string"
+					Value="[INSTALLDIR]Framework\bin\"
+					Key="SOFTWARE\Microsoft\.NETFramework\v3.0\AssemblyFoldersEx\$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+							/>
+			</Component>
+			<Component Id='UIOlapLibReg3' Guid='{73E27F9D-573E-459e-AAAE-DE680A0D959D}'>
+				<Registry
+					KeyPath="yes"
+					Root="HKLM"
+					Type="string"
+					Value="[INSTALLDIR]Silverlight\bin\"
+					Key="SOFTWARE\Microsoft\Microsoft SDKs\Silverlight\v3.0\AssemblyFoldersEx\$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion)"
+							/>
+			</Component>
+		</DirectoryRef>
+		
+		<ComponentGroup Id='Registry'>
+			<ComponentRef Id='UIOlapLibReg'/>
+			<ComponentRef Id='UIOlapLibReg2'/>
+			<ComponentRef Id='UIOlapLibReg3'/>
+		</ComponentGroup>
+	</Fragment>
+</Wix>

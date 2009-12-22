@@ -1,0 +1,193 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{5ED667AE-F7AA-4553-BEE2-A0DD4C83D6D2}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Ranet.Olap.Core</RootNamespace>
+    <AssemblyName>Ranet.Olap.Core</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'BI_Develop|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\BI_Develop\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\dll\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\!ProductInfo\ProductInfo.cs">
+      <Link>ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="Cache2D.cs" />
+    <Compile Include="ConnectionInfo.cs" />
+    <Compile Include="Data\AxisData.cs" />
+    <Compile Include="Data\CellData.cs" />
+    <Compile Include="Data\CellSetData.cs" />
+    <Compile Include="Data\CellValueData.cs" />
+    <Compile Include="Data\DataBase.cs" />
+    <Compile Include="Data\IPropertiesData.cs" />
+    <Compile Include="Data\MemberData.cs" />
+    <Compile Include="Data\MemberDataWrapper.cs" />
+    <Compile Include="Data\PositionData.cs" />
+    <Compile Include="ExportHelper.cs" />
+    <Compile Include="InvokeResultDescriptor.cs" />
+    <Compile Include="Localization.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Localization.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Metadata\CubeDefInfo.cs" />
+    <Compile Include="Metadata\DimensionInfo.cs" />
+    <Compile Include="Metadata\HierarchyInfo.cs" />
+    <Compile Include="Metadata\InfoBase.cs" />
+    <Compile Include="Metadata\InfoHelper.cs" />
+    <Compile Include="Metadata\KpiInfo.cs" />
+    <Compile Include="Metadata\LevelInfo.cs" />
+    <Compile Include="Metadata\LevelPropertyInfo.cs" />
+    <Compile Include="Metadata\MeasureGroupInfo.cs" />
+    <Compile Include="Metadata\MeasureInfo.cs" />
+    <Compile Include="Metadata\MemberPropertyInfo.cs" />
+    <Compile Include="Metadata\MetadataQueryType.cs" />
+    <Compile Include="Metadata\OlapTerms.cs" />
+    <Compile Include="Metadata\OleDbTypeConverter.cs" />
+    <Compile Include="Metadata\PropertyInfo.cs" />
+    <Compile Include="ObjectDescription.cs" />
+    <Compile Include="ObjectStorageFileDescription.cs" />
+    <Compile Include="OlapHelper.cs" />
+    <Compile Include="Providers\CellInfo.cs" />
+    <Compile Include="Providers\CellSetDataProvider.cs" />
+    <Compile Include="Providers\CellSetDescriptionProvider.cs" />
+    <Compile Include="Providers\CellValueInfo.cs" />
+    <Compile Include="Providers\ClientServer\DataSourceInfoArgs.cs" />
+    <Compile Include="Providers\ClientServer\MdxQueryArgs.cs" />
+    <Compile Include="Providers\ClientServer\MemberActionType.cs" />
+    <Compile Include="Providers\ClientServer\PerformMemberActionArgs.cs" />
+    <Compile Include="Providers\ClientServer\PivotGridToolBarInfo.cs" />
+    <Compile Include="Providers\ClientServer\PivotInitializeArgs.cs" />
+    <Compile Include="Providers\ClientServer\ServiceCommandArgs.cs" />
+    <Compile Include="Providers\ClientServer\ShortMemberInfo.cs" />
+    <Compile Include="Providers\ClientServer\UpdateCubeArgs.cs" />
+    <Compile Include="Providers\FilterOperand.cs" />
+    <Compile Include="Providers\FilterOperation.cs" />
+    <Compile Include="Providers\FilterOperationBase.cs" />
+    <Compile Include="Providers\InfoBase.cs" />
+    <Compile Include="Providers\InvisibleMemberInfo.cs" />
+    <Compile Include="Providers\IPivotTableDataProvider.cs" />
+    <Compile Include="Providers\IProperties.cs" />
+    <Compile Include="Providers\IQueryExecuter.cs" />
+    <Compile Include="Providers\MemberActions\DrillActionContainer.cs" />
+    <Compile Include="Providers\MemberActions\HistoryItem.cs" />
+    <Compile Include="Providers\MemberActions\HistoryManager.cs" />
+    <Compile Include="Providers\MemberInfo.cs" />
+    <Compile Include="Providers\MemberInfoCollection.cs" />
+    <Compile Include="Providers\MembersAreaInfo.cs" />
+    <Compile Include="Providers\OlapMetadataProvider.cs" />
+    <Compile Include="Providers\OlapMetadataResponseException.cs" />
+    <Compile Include="Providers\OlapProvider.cs" />
+    <Compile Include="Providers\PivotDataManagerBase.cs" />
+    <Compile Include="Providers\PivotDataProvider.cs" />
+    <Compile Include="Providers\PivotMemberItem.cs" />
+    <Compile Include="Storage\FileStorageProvider.cs" />
+    <Compile Include="Storage\IStorageProvider.cs" />
+    <Compile Include="Storage\StorageActionArgs.cs" />
+    <Compile Include="XmlSerializationUtility.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Localization.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Localization.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization.ru.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\!ProductInfo\!ProductInfo.csproj">
+      <Project>{DDD91AA6-930D-472F-9AD9-852A1CE08AFB}</Project>
+      <Name>!ProductInfo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Ranet.Olap.Mdx\Ranet.Olap.Mdx.csproj">
+      <Project>{42A2C4B9-CBD4-4304-938D-EDD5F3631553}</Project>
+      <Name>Ranet.Olap.Mdx</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">
+      <Link>Galaktika.OpenSource.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup>
+    <PostBuildEvent Condition=" '$(Configuration)' == 'BI_Develop' ">
+      copy $(TargetPath) C:\WINDOWS\assembly\GAC_MSIL\$(TargetName)\9.1.0.0__b5573042f1727a10\$(TargetFileName)
+      copy $(TargetDir)$(TargetName).pdb C:\WINDOWS\assembly\GAC_MSIL\$(TargetName)\9.1.0.0__b5573042f1727a10\$(TargetName).pdb
+      copy $(TargetDir)ru\$(TargetName).resources.dll C:\WINDOWS\assembly\GAC_MSIL\$(TargetName).resources\9.1.0.0_ru_b5573042f1727a10\$(TargetName).resources.dll
+
+      copy $(TargetPath) "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Framework\bin\$(TargetFileName)"
+      copy $(TargetDir)$(TargetName).pdb "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Framework\symbols\$(TargetName).pdb"
+      copy $(TargetDir)ru\$(TargetName).resources.dll "C:\Program Files\Galaktika\Ranet.UILibrary.Olap-1.0\Framework\bin\ru\$(TargetName).resources.dll"
+    </PostBuildEvent>
+  </PropertyGroup>
+</Project>

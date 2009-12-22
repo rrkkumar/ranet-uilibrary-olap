@@ -1,0 +1,61 @@
+﻿<UserControl 
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"  
+    x:Class="Ranet.SampleApplications.MdxFormatter.SilverLight.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    mc:Ignorable="d" d:DesignWidth="640" d:DesignHeight="480">
+	<!--
+/*   
+    Copyright (C) 2009 Galaktika Corporation ZAO
+
+    This file is a part of Ranet.UILibrary.Olap
+ 
+    Ranet.UILibrary.Olap is a free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+      
+    You should have received a copy of the GNU General Public License
+    along with Ranet.UILibrary.Olap.  If not, see <http://www.gnu.org/licenses/>.
+  
+    If GPL v.3 is not suitable for your products or company,
+    Galaktika Corp provides Ranet.UILibrary.Olap under a flexible commercial license
+    designed to meet your specific usage and distribution requirements.
+    If you have already obtained a commercial license from Galaktika Corp,
+    you can use this file under those license terms.
+*/
+ -->
+	<Grid x:Name="LayoutRoot">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="Auto" />
+			<RowDefinition Height="*" />
+		</Grid.RowDefinitions>
+
+		<TextBlock Text="Input MDX statement:" Grid.Row="0" />
+		<TextBox x:Name="txtPlainMdx" 
+                 AcceptsReturn="True" 
+                 Text="SELECT a on X,iif(1=1,{{&lt;%b%&gt;,2},3}, {somethingelse} )on 1FROM[GalaktikaIPMS]"
+                 FontFamily="Courier New"
+                 VerticalScrollBarVisibility="Auto"
+                 Grid.Row="1" />
+		<Grid x:Name="Actions" Grid.Row="2">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="*"/>
+				<ColumnDefinition Width="*"/>
+			</Grid.ColumnDefinitions> 
+			<CheckBox x:Name="ckbIIF_Subst" Content="Try substitute IIF(,,)"	Grid.Column="1"	/>
+			<Button x:Name="btnParseAndGen" Click="btnParseAndGen_Click" Content="Format MDX statement" Grid.Column="0" />
+		</Grid>
+		<TextBlock Text="Formatted MDX statement:" Grid.Row="3" />
+		<TextBox x:Name="txtParsedMdx" 
+                 IsReadOnly="True" 
+                 VerticalScrollBarVisibility="Auto"
+                 FontFamily="Courier New"
+                 Grid.Row="4" />
+	</Grid>
+</UserControl>

@@ -1,0 +1,136 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputNameSuffix>.Syntax.MDX</OutputNameSuffix>
+    <ProjectGuid>{4C605A58-9801-4590-A772-9565CDC30194}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UILibrary.Olap.MergeModule.Syntax.MDX</RootNamespace>
+    <AssemblyName>UILibrary.Olap.MergeModule.Syntax.MDX</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Directories.wxs" />
+    <Compile Include="Files.wxs" />
+    <Compile Include="MergeModule.wxs" />
+    <Compile Include="Shortcuts.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Syntax.MDX\AND.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\AS.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\axis_name.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\axis_specification.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\BY.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CALCULATED.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CALCULATION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CASE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CELL.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CELL_ORDINAL.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\cell_property.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\COMMENT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\compound_id.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\condition.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CREATE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\CUBE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\cube_name.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\cube_specification.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\DIMENSION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\ELSE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\EMPTY.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\END.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expressions_list.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_add.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_and.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_case.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_compare.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_function.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_mult.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_or_xor.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_power.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_property.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_range_is.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_simple.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\expression_unary.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\FLOAT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\FOR.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\FORMATTED_VALUE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\FROM.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\GLOBAL.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\ID.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\identifier.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\INTEGER.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\keyword.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\LINE_COMMENT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\mdx_statement.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\mdx_statement_single.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\MEMBER.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\member_name.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\NON.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\NOT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\ON.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\OR.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\PROPERTIES.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\property.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\property_definition.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\provider_specific_cell_property.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\QUOTED_ID.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\quoted_identifier.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\RANET_EXPRESSION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\SELECT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\select_statement.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\select_statement_subcube.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\SESSION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\SET.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\set_name.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\slicer_specification.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\STRING.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\string_value.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\THEN.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\unquoted_identifier.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\UPDATE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\update_statement.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\USE_EQUAL_ALLOCATION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\USE_EQUAL_INCREMENT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\USE_WEIGHTED_ALLOCATION.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\USE_WEIGHTED_INCREMENT.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\VALUE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\VISUAL.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\weight_value_expression.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\WHEN.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\when_clause.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\WHERE.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\WITH.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\with_clause_single.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\WS.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\XOR.png" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
+  <!--Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

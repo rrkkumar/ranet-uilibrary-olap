@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2003/01/wi"
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension"
+>
+	<Module
+  Language="0"
+  Codepage="1251"
+  Version="$(var.FileVersion)"
+  Guid="{0F5C8009-2C7D-4d10-8A14-8CCBB59266C7}"
+  Id="$(var.MainProduct).$(var.SubProduct)_$(var.MajorMinorVersion).Samples"
+	>
+		<Package Id="????????-????-????-????-????????????"
+			Description="$(var.ProductName).Samples"
+			Comments= "$(var.MainProduct).$(var.SubProduct)-$(var.FileVersion).Samples"
+			InstallerVersion="200"
+			Compressed="yes"
+			Keywords="msi,installer"
+			Manufacturer="$(var.Manufacturer)"
+			SummaryCodepage="1251"
+			ShortNames="no"
+			ReadOnly="yes"
+		/>
+		<ComponentGroupRef Id="all"/>
+		<ComponentRef Id="CRANET_UILIBRARY_OLAP_SAMPLES_LNK"/>
+	</Module>
+</Wix>

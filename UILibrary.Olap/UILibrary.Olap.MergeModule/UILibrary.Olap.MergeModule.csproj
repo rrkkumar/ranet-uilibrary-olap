@@ -1,0 +1,169 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputNameSuffix>.Runtime</OutputNameSuffix>
+    <ProjectGuid>{3CD5A893-074B-499F-B0F8-B1E23ED64612}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UILibrary.Olap.MergeModule</RootNamespace>
+    <AssemblyName>UILibrary.Olap.MergeModule</AssemblyName>
+    <StartupObject>
+    </StartupObject>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+    <PublishUrl>http://localhost/UILibrary.WixMergeModule/</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Web</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>3</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Directories.wxs" />
+    <Compile Include="Files.wxs" />
+    <Compile Include="Registry.wxs" />
+    <Compile Include="UILibrary.Olap-mm.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Core.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.Core.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Core.pdb">
+      <Link>INSTALLDIR\SILVERLIGHT\SYMBOLS\Ranet.AgOlap.Core.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Core.xml">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.Core.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Mdx.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.Mdx.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Mdx.pdb">
+      <Link>INSTALLDIR\SILVERLIGHT\SYMBOLS\Ranet.AgOlap.Mdx.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.Mdx.xml">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.Mdx.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.pdb">
+      <Link>INSTALLDIR\SILVERLIGHT\SYMBOLS\Ranet.AgOlap.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgOlap.xml">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgOlap.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Core.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Olap.Core.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Core.pdb">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.Olap.Core.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Core.xml">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Olap.Core.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Mdx.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Olap.Mdx.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Mdx.pdb">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.Olap.Mdx.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Olap.Mdx.xml">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Olap.Mdx.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Web.Olap.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Web.Olap.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Web.Olap.xml">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.Web.Olap.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\ru\Ranet.AgOlap.resources.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\RU\Ranet.AgOlap.resources.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.Web.Olap.pdb">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.Web.Olap.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\ru\Ranet.Olap.Core.resources.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\RU\Ranet.Olap.Core.resources.dll</Link>
+    </Content>
+    <Content Include="INSTALLDIR\Licences\BSD-Antlr.Runtime.txt" />
+    <Content Include="INSTALLDIR\Licences\GPL v.3.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Licences\Ranet.UILibrary.Olap.License.ru.rtf">
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
+  <!--Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
