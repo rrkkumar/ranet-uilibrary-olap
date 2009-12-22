@@ -26,6 +26,39 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ranet.AgOlap.Mdx", "Ranet.Olap.Mdx\Ranet.AgOlap.Mdx.csproj", "{FA8CC918-2E96-491B-AD8A-BDC5860A2FAC}"
 EndProject
 Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 10
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://dpp-moscowsrv.topsoft.local:8080/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Ranet.AgOlap\\Ranet.AgOlap.csproj
+		SccProjectName1 = Ranet.AgOlap
+		SccLocalPath1 = Ranet.AgOlap
+		SccProjectUniqueName2 = Ranet.AgOlap.Core\\Ranet.AgOlap.Core.csproj
+		SccProjectName2 = Ranet.AgOlap.Core
+		SccLocalPath2 = Ranet.AgOlap.Core
+		SccProjectUniqueName3 = Ranet.Olap.Core\\Ranet.Olap.Core.csproj
+		SccProjectName3 = Ranet.Olap.Core
+		SccLocalPath3 = Ranet.Olap.Core
+		SccProjectUniqueName4 = Ranet.Olap.Mdx\\Ranet.Olap.Mdx.csproj
+		SccProjectName4 = Ranet.Olap.Mdx
+		SccLocalPath4 = Ranet.Olap.Mdx
+		SccProjectUniqueName5 = Ranet.Web.Olap\\Ranet.Web.Olap.csproj
+		SccProjectName5 = Ranet.Web.Olap
+		SccLocalPath5 = Ranet.Web.Olap
+		SccProjectUniqueName6 = !ProductInfo\\!ProductInfo.csproj
+		SccProjectName6 = !ProductInfo
+		SccLocalPath6 = !ProductInfo
+		SccProjectUniqueName7 = UILibrary.Olap.UITestApplication.Web\\UILibrary.Olap.UITestApplication.Web.csproj
+		SccProjectName7 = UILibrary.Olap.UITestApplication.Web
+		SccLocalPath7 = UILibrary.Olap.UITestApplication.Web
+		SccProjectUniqueName8 = UILibrary.Olap.UITestApplication\\UILibrary.Olap.UITestApplication.csproj
+		SccProjectName8 = UILibrary.Olap.UITestApplication
+		SccLocalPath8 = UILibrary.Olap.UITestApplication
+		SccProjectUniqueName9 = Ranet.Olap.Mdx\\Ranet.AgOlap.Mdx.csproj
+		SccProjectName9 = Ranet.Olap.Mdx
+		SccLocalPath9 = Ranet.Olap.Mdx
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		BI_Develop|Any CPU = BI_Develop|Any CPU
 		Debug|Any CPU = Debug|Any CPU

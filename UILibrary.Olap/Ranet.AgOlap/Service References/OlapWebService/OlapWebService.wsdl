@@ -2,331 +2,39 @@
 <wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
   <wsdl:types>
     <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
-      <s:element name="GetMetaData">
+      <s:element name="PerformOlapServiceAction">
         <s:complexType>
           <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="schemaType" type="s:string" />
             <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
           </s:sequence>
         </s:complexType>
       </s:element>
-      <s:element name="GetMetaDataResponse">
+      <s:element name="PerformOlapServiceActionResponse">
         <s:complexType>
           <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMetaDataResult" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="PerformOlapServiceActionResult" type="s:string" />
           </s:sequence>
         </s:complexType>
-      </s:element>
-      <s:element name="GetMembersData">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetMembersDataResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetMembersDataResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetPivotData">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetPivotDataResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetPivotDataResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformMemberAction">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformMemberActionResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="PerformMemberActionResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformStorageAction">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformStorageActionResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="PerformStorageActionResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformServiceCommand">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="PerformServiceCommandResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="PerformServiceCommandResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetToolBarInfo">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="GetToolBarInfoResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="GetToolBarInfoResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="UpdateCube">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="UpdateCubeResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="UpdateCubeResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ExecuteQuery">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="ExecuteQueryResponse">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="ExecuteQueryResult" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RunExcel">
-        <s:complexType>
-          <s:sequence>
-            <s:element minOccurs="0" maxOccurs="1" name="schema" type="s:string" />
-          </s:sequence>
-        </s:complexType>
-      </s:element>
-      <s:element name="RunExcelResponse">
-        <s:complexType />
       </s:element>
     </s:schema>
   </wsdl:types>
-  <wsdl:message name="GetMetaDataSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMetaData" />
+  <wsdl:message name="PerformOlapServiceActionSoapIn">
+    <wsdl:part name="parameters" element="tns:PerformOlapServiceAction" />
   </wsdl:message>
-  <wsdl:message name="GetMetaDataSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMetaDataResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetMembersDataSoapIn">
-    <wsdl:part name="parameters" element="tns:GetMembersData" />
-  </wsdl:message>
-  <wsdl:message name="GetMembersDataSoapOut">
-    <wsdl:part name="parameters" element="tns:GetMembersDataResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetPivotDataSoapIn">
-    <wsdl:part name="parameters" element="tns:GetPivotData" />
-  </wsdl:message>
-  <wsdl:message name="GetPivotDataSoapOut">
-    <wsdl:part name="parameters" element="tns:GetPivotDataResponse" />
-  </wsdl:message>
-  <wsdl:message name="PerformMemberActionSoapIn">
-    <wsdl:part name="parameters" element="tns:PerformMemberAction" />
-  </wsdl:message>
-  <wsdl:message name="PerformMemberActionSoapOut">
-    <wsdl:part name="parameters" element="tns:PerformMemberActionResponse" />
-  </wsdl:message>
-  <wsdl:message name="PerformStorageActionSoapIn">
-    <wsdl:part name="parameters" element="tns:PerformStorageAction" />
-  </wsdl:message>
-  <wsdl:message name="PerformStorageActionSoapOut">
-    <wsdl:part name="parameters" element="tns:PerformStorageActionResponse" />
-  </wsdl:message>
-  <wsdl:message name="PerformServiceCommandSoapIn">
-    <wsdl:part name="parameters" element="tns:PerformServiceCommand" />
-  </wsdl:message>
-  <wsdl:message name="PerformServiceCommandSoapOut">
-    <wsdl:part name="parameters" element="tns:PerformServiceCommandResponse" />
-  </wsdl:message>
-  <wsdl:message name="GetToolBarInfoSoapIn">
-    <wsdl:part name="parameters" element="tns:GetToolBarInfo" />
-  </wsdl:message>
-  <wsdl:message name="GetToolBarInfoSoapOut">
-    <wsdl:part name="parameters" element="tns:GetToolBarInfoResponse" />
-  </wsdl:message>
-  <wsdl:message name="UpdateCubeSoapIn">
-    <wsdl:part name="parameters" element="tns:UpdateCube" />
-  </wsdl:message>
-  <wsdl:message name="UpdateCubeSoapOut">
-    <wsdl:part name="parameters" element="tns:UpdateCubeResponse" />
-  </wsdl:message>
-  <wsdl:message name="ExecuteQuerySoapIn">
-    <wsdl:part name="parameters" element="tns:ExecuteQuery" />
-  </wsdl:message>
-  <wsdl:message name="ExecuteQuerySoapOut">
-    <wsdl:part name="parameters" element="tns:ExecuteQueryResponse" />
-  </wsdl:message>
-  <wsdl:message name="RunExcelSoapIn">
-    <wsdl:part name="parameters" element="tns:RunExcel" />
-  </wsdl:message>
-  <wsdl:message name="RunExcelSoapOut">
-    <wsdl:part name="parameters" element="tns:RunExcelResponse" />
+  <wsdl:message name="PerformOlapServiceActionSoapOut">
+    <wsdl:part name="parameters" element="tns:PerformOlapServiceActionResponse" />
   </wsdl:message>
   <wsdl:portType name="OlapWebServiceSoap">
-    <wsdl:operation name="GetMetaData">
-      <wsdl:input message="tns:GetMetaDataSoapIn" />
-      <wsdl:output message="tns:GetMetaDataSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetMembersData">
-      <wsdl:input message="tns:GetMembersDataSoapIn" />
-      <wsdl:output message="tns:GetMembersDataSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetPivotData">
-      <wsdl:input message="tns:GetPivotDataSoapIn" />
-      <wsdl:output message="tns:GetPivotDataSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="PerformMemberAction">
-      <wsdl:input message="tns:PerformMemberActionSoapIn" />
-      <wsdl:output message="tns:PerformMemberActionSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="PerformStorageAction">
-      <wsdl:input message="tns:PerformStorageActionSoapIn" />
-      <wsdl:output message="tns:PerformStorageActionSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="PerformServiceCommand">
-      <wsdl:input message="tns:PerformServiceCommandSoapIn" />
-      <wsdl:output message="tns:PerformServiceCommandSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="GetToolBarInfo">
-      <wsdl:input message="tns:GetToolBarInfoSoapIn" />
-      <wsdl:output message="tns:GetToolBarInfoSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="UpdateCube">
-      <wsdl:input message="tns:UpdateCubeSoapIn" />
-      <wsdl:output message="tns:UpdateCubeSoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="ExecuteQuery">
-      <wsdl:input message="tns:ExecuteQuerySoapIn" />
-      <wsdl:output message="tns:ExecuteQuerySoapOut" />
-    </wsdl:operation>
-    <wsdl:operation name="RunExcel">
-      <wsdl:input message="tns:RunExcelSoapIn" />
-      <wsdl:output message="tns:RunExcelSoapOut" />
+    <wsdl:operation name="PerformOlapServiceAction">
+      <wsdl:input message="tns:PerformOlapServiceActionSoapIn" />
+      <wsdl:output message="tns:PerformOlapServiceActionSoapOut" />
     </wsdl:operation>
   </wsdl:portType>
   <wsdl:binding name="OlapWebServiceSoap" type="tns:OlapWebServiceSoap">
     <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetMetaData">
-      <soap:operation soapAction="http://tempuri.org/GetMetaData" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMembersData">
-      <soap:operation soapAction="http://tempuri.org/GetMembersData" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetPivotData">
-      <soap:operation soapAction="http://tempuri.org/GetPivotData" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformMemberAction">
-      <soap:operation soapAction="http://tempuri.org/PerformMemberAction" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformStorageAction">
-      <soap:operation soapAction="http://tempuri.org/PerformStorageAction" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformServiceCommand">
-      <soap:operation soapAction="http://tempuri.org/PerformServiceCommand" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetToolBarInfo">
-      <soap:operation soapAction="http://tempuri.org/GetToolBarInfo" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="UpdateCube">
-      <soap:operation soapAction="http://tempuri.org/UpdateCube" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ExecuteQuery">
-      <soap:operation soapAction="http://tempuri.org/ExecuteQuery" style="document" />
-      <wsdl:input>
-        <soap:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RunExcel">
-      <soap:operation soapAction="http://tempuri.org/RunExcel" style="document" />
+    <wsdl:operation name="PerformOlapServiceAction">
+      <soap:operation soapAction="http://tempuri.org/PerformOlapServiceAction" style="document" />
       <wsdl:input>
         <soap:body use="literal" />
       </wsdl:input>
@@ -337,89 +45,8 @@
   </wsdl:binding>
   <wsdl:binding name="OlapWebServiceSoap12" type="tns:OlapWebServiceSoap">
     <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
-    <wsdl:operation name="GetMetaData">
-      <soap12:operation soapAction="http://tempuri.org/GetMetaData" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetMembersData">
-      <soap12:operation soapAction="http://tempuri.org/GetMembersData" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetPivotData">
-      <soap12:operation soapAction="http://tempuri.org/GetPivotData" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformMemberAction">
-      <soap12:operation soapAction="http://tempuri.org/PerformMemberAction" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformStorageAction">
-      <soap12:operation soapAction="http://tempuri.org/PerformStorageAction" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="PerformServiceCommand">
-      <soap12:operation soapAction="http://tempuri.org/PerformServiceCommand" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="GetToolBarInfo">
-      <soap12:operation soapAction="http://tempuri.org/GetToolBarInfo" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="UpdateCube">
-      <soap12:operation soapAction="http://tempuri.org/UpdateCube" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="ExecuteQuery">
-      <soap12:operation soapAction="http://tempuri.org/ExecuteQuery" style="document" />
-      <wsdl:input>
-        <soap12:body use="literal" />
-      </wsdl:input>
-      <wsdl:output>
-        <soap12:body use="literal" />
-      </wsdl:output>
-    </wsdl:operation>
-    <wsdl:operation name="RunExcel">
-      <soap12:operation soapAction="http://tempuri.org/RunExcel" style="document" />
+    <wsdl:operation name="PerformOlapServiceAction">
+      <soap12:operation soapAction="http://tempuri.org/PerformOlapServiceAction" style="document" />
       <wsdl:input>
         <soap12:body use="literal" />
       </wsdl:input>

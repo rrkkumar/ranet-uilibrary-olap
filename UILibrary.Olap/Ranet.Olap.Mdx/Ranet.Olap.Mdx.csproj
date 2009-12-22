@@ -14,14 +14,6 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -151,7 +143,6 @@
     <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">
       <Link>Galaktika.OpenSource.snk</Link>
     </None>
-    <None Include="Compiler\Parser\mdx.g" />
     <None Include="Properties\1.1" />
   </ItemGroup>
   <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />

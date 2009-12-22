@@ -31,7 +31,6 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Text;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using Ranet.Olap.Core.Data;
 using Ranet.AgOlap.Controls.MemberChoice.Info;
@@ -198,7 +197,7 @@ namespace Ranet.AgOlap.Controls
                 //CancelButton.Click += new RoutedEventHandler(CancelButton_Click);
                 //buttonsPanel.Children.Add(CancelButton);
 
-                membersTree.SpecialNodeExpanded += new EventHandler(node_SpecialNodeExpanded);
+                membersTree.Special_MouseDoubleClick += new EventHandler<CustomEventArgs<CustomTreeNode>>(node_SpecialNodeExpanded);
 
                 // Закладка ПОИСК
                 Grid findTab_LayoutRoot = new Grid();
@@ -460,7 +459,7 @@ namespace Ranet.AgOlap.Controls
                     m_CurrentMemberControl.IsLoading = true;
                     MemberChoiceQuery args = CommandHelper.CreateGetMemberArgs(Connection, CubeName, SubCube, m_CurrentMember.UniqueName);
                     args.Properties = m_Properties;
-                    Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+                    OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
                 }
                 else
                 {
@@ -741,7 +740,7 @@ namespace Ranet.AgOlap.Controls
             Levels_ComboBox.IsWaiting = true;
 
             MetadataQuery args = CommandHelper.CreateGetLevelsQueryArgs(Connection, CubeName, String.Empty, HierarchyUniqueName);
-            MetadataLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         void InitLevelsList(List<LevelInfo> levels)
@@ -799,52 +798,51 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        IDataLoader m_Loader = null;
-        public IDataLoader Loader
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
         {
             set
             {
-                if (m_Loader != null)
-                {
-                    m_Loader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-                }
-                m_Loader = value;
-                m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                m_OlapDataLoader = value;
+                m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
             }
             get
             {
-                if (m_Loader == null)
+                if (m_OlapDataLoader == null)
                 {
-                    m_Loader = new MembersDataLoader(URL);
-                    m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                    m_OlapDataLoader = new OlapDataLoader(URL);
+                    m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
                 }
-                return m_Loader;
-            }
-        }
-
-        IDataLoader m_MetadataLoader = null;
-        public IDataLoader MetadataLoader
-        {
-            set
-            {
-                m_MetadataLoader = value;
-                m_MetadataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MetadataLoader_DataLoaded);
-            }
-            get
-            {
-                if (m_MetadataLoader == null)
-                {
-                    m_MetadataLoader = new MetadataLoader(URL);
-                    m_MetadataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MetadataLoader_DataLoaded);
-                }
-                return m_MetadataLoader;
+                return m_OlapDataLoader;
             }
         }
 
         List<LevelPropertyInfo> m_Properties = null;
 
-        void MetadataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
+        void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
+            MemberTreeNode parentNode = null;
+            UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode> wrapper = e.UserState as UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>;
+            if (wrapper != null)
+            {
+                if (wrapper.Schema.QueryType != MemberChoiceQueryType.GetAscendants &&
+                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMember &&
+                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMembers &&
+                    wrapper.Schema.QueryType != MemberChoiceQueryType.LoadSetWithAscendants &&
+                    wrapper.Schema.QueryType != MemberChoiceQueryType.FindMembers)
+                {
+                    parentNode = wrapper.UserData;
+                    if (parentNode != null)
+                    {
+                        parentNode.IsWaiting = false;
+                    }
+                    else
+                    {
+                        membersTree.IsWaiting = false;
+                    }
+                }
+            }
+
             MetadataQuery args = e.UserState as MetadataQuery;
 
             if (e.Error != null)
@@ -899,42 +897,6 @@ namespace Ranet.AgOlap.Controls
 
                         break;
                 }
-            }
-        }
-
-        void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            MemberTreeNode parentNode = null;
-            MemberChoiceQueryWrapper<MemberTreeNode> wrapper = e.UserState as MemberChoiceQueryWrapper<MemberTreeNode>;
-            if (wrapper != null)
-            {
-                if (wrapper.Schema.QueryType != MemberChoiceQueryType.GetAscendants &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMember &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMembers &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.LoadSetWithAscendants &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.FindMembers)
-                {
-                    parentNode = wrapper.UserData;
-                    if (parentNode != null)
-                    {
-                        parentNode.IsWaiting = false;
-                    }
-                    else
-                    {
-                        membersTree.IsWaiting = false;
-                    }
-                }
-            }
-
-            if (e.Error != null)
-            {
-                LogManager.LogException(Localization.MemberChoiceControl_Name, e.Error);
-                return;
-            }
-
-            if (e.Result.ContentType == InvokeContentType.Error)
-            {
-                LogManager.LogMessage(Localization.MemberChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
             }
 
             if (wrapper != null)
@@ -1050,7 +1012,7 @@ namespace Ranet.AgOlap.Controls
             membersTree.IsWaiting = true;
 
             MemberChoiceQuery args = CommandHelper.CreateGetRootMembersCountArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
         }
 
         void ClearTree()
@@ -1100,7 +1062,7 @@ namespace Ranet.AgOlap.Controls
             membersTree.IsWaiting = true;
 
             MemberChoiceQuery args = CommandHelper.CreateGetRootMembersArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, begin, count);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
         }
 
         void SelectNode(MemberTreeNode node)
@@ -1215,7 +1177,7 @@ namespace Ranet.AgOlap.Controls
             {
                 //Читаем данные о предках
                 MemberChoiceQuery args = CommandHelper.CreateLoadSetWithAscendantsArgs(Connection, CubeName, SubCube, HierarchyUniqueName, Set);
-                Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+                OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
                 return true;
             }
             return false;
@@ -1246,7 +1208,7 @@ namespace Ranet.AgOlap.Controls
                 {
                     //Читаем данные о выбранных элементах
                     MemberChoiceQuery args = CommandHelper.CreateGetMembersArgs(Connection, CubeName, SubCube, m_SelectedSet);
-                    Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+                    OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
                 }
                 else
                 {
@@ -1485,7 +1447,7 @@ namespace Ranet.AgOlap.Controls
                     // Создание нового узла для добавления в дерево
                     node = new MemberTreeNode(info, MultiSelect);
                     node.MemberVisualizationType = MemberVisualizationType;
-                    node.Special_MouseDoubleClick += new MouseDoubleClickEventHandler(node_SpecialNodeExpanded);
+                    node.Special_MouseDoubleClick += new EventHandler<CustomEventArgs<CustomTreeNode>>(node_SpecialNodeExpanded);
                     node.Expanded += new RoutedEventHandler(MemberNode_Expanded);
                     m_TreeNodes[info.UniqueName] = node;
 
@@ -1579,10 +1541,10 @@ namespace Ranet.AgOlap.Controls
             membersTree.UpdateLayout();
         }
 
-        void node_SpecialNodeExpanded(object sender, EventArgs e)
+        void node_SpecialNodeExpanded(object sender, CustomEventArgs<CustomTreeNode> e)
         {
             LoadNextTreeNode loadNext = null;
-            TreeViewItem node = sender as TreeViewItem;
+            TreeViewItem node = e.Args as TreeViewItem;
             if (node == null)
                 return;
             //Количество загруженных узлов - это количество узлов - 2 (узел "Загрузить далее", узел "Загрузить все")
@@ -1633,7 +1595,7 @@ namespace Ranet.AgOlap.Controls
                 step = 1;
             }
 
-            loadNext = sender as LoadNextTreeNode;
+            loadNext = e.Args as LoadNextTreeNode;
             if (loadNext != null)
             {
                 if (parent != null)
@@ -1830,7 +1792,7 @@ namespace Ranet.AgOlap.Controls
         private void LoadAscendants(String uniqueName)
         {
             MemberChoiceQuery args = CommandHelper.CreateGetAscendantsArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, uniqueName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
         }
 
         private void LoadLevelProperties()
@@ -1842,7 +1804,7 @@ namespace Ranet.AgOlap.Controls
             findResultTree.Items.Clear();
 
             MetadataQuery args = CommandHelper.CreateLoadLevelPropertiesArgs(Connection, CubeName, String.Empty, HierarchyUniqueName, String.Empty);
-            MetadataLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         /// <summary>
@@ -1866,7 +1828,7 @@ namespace Ranet.AgOlap.Controls
             OlapMemberInfo info = item.MemberInfo;
 
             MemberChoiceQuery args = CommandHelper.CreateGetChildrenMembersQueryArgs(Connection, CubeName, SubCube, HierarchyUniqueName, info.UniqueName, StartLevelUniqueName, begin, count);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, item));
+            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, item));
         }
 
         void Service_GetChildrenMembersCompleted(DataLoaderEventArgs e, MemberTreeNode parentNode)
@@ -2172,7 +2134,7 @@ namespace Ranet.AgOlap.Controls
             //if (!String.IsNullOrEmpty(strToSearch))
             //{
             MemberChoiceQuery args = CommandHelper.CreateFindMembersArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, filter);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberChoiceQueryWrapper<MemberTreeNode>(args, null));
+            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
             //}
         }
 
@@ -2244,7 +2206,7 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            MemberChoiceQueryWrapper<MemberTreeNode> wrapper = e.UserState as MemberChoiceQueryWrapper<MemberTreeNode>;
+            UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode> wrapper = e.UserState as UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>;
             if (wrapper == null)
                 return;
 
@@ -2279,7 +2241,7 @@ namespace Ranet.AgOlap.Controls
                     node = new MemberTreeNode(info, MultiSelect);
                     node.MemberVisualizationType = MemberVisualizationType;
                     node.IsPreloaded = true;
-                    node.Special_MouseDoubleClick += new MouseDoubleClickEventHandler(node_SpecialNodeExpanded);
+                    node.Special_MouseDoubleClick += new EventHandler<CustomEventArgs<CustomTreeNode>>(node_SpecialNodeExpanded);
                     node.Expanded += new RoutedEventHandler(MemberNode_Expanded);
 
                     //Если есть дочерние, то добавляем фиктивный узел для отображения [+] напротив данного узла

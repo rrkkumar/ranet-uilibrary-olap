@@ -82,30 +82,12 @@ namespace Ranet.AgOlap.Controls
         public String Query { get; set; }
 
         #region Загрузчики
-        IPivotDataLoader m_PivotLoader = null;
-        public IPivotDataLoader PivotLoader
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
         {
             get
             {
-                return m_PivotLoader;
-            }
-        }
-
-        IDataLoader m_MetaLoader = null;
-        public IDataLoader MetaLoader
-        {
-            get
-            {
-                return m_MetaLoader;
-            }
-        }
-
-        IDataLoader m_MembersLoader = null;
-        public IDataLoader MembersLoader
-        {
-            get
-            {
-                return m_MembersLoader;
+                return m_OlapDataLoader;
             }
         }
 
@@ -118,19 +100,9 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        protected virtual IDataLoader GetMembersDataLoader()
+        protected virtual IDataLoader GetOlapDataLoader()
         {
-            return new MembersDataLoader(URL);
-        }
-
-        protected virtual IDataLoader GetMetadataLoader()
-        {
-            return new MetadataLoader(URL);
-        }
-
-        protected virtual IPivotDataLoader GetPivotDataLoader()
-        {
-            return new PivotDataLoader(URL);
+            return new OlapDataLoader(URL);
         }
 
         protected virtual IStorageManager GetStorageManager()
@@ -183,14 +155,11 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(m_PreviewButton, Localization.ValueCopyControl_RunCopyForm_Tooltip);
             m_ToolBar.AddItem(m_PreviewButton);
 
-            m_PivotLoader = GetPivotDataLoader();
-            m_MetaLoader = GetMetadataLoader();
-            m_MembersLoader = GetMembersDataLoader();
+            m_OlapDataLoader = GetOlapDataLoader();
             m_StorageManager = GetStorageManager();
 
             m_StorageManager.InvokeCompleted += new EventHandler<DataLoaderEventArgs>(StorageManager_ActionCompleted);
-            m_PivotLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(PivotLoader_DataLoaded);
-            m_MetaLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MetaLoader_DataLoaded);
+            m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
 
             grdIsWaiting = new Grid() { Background = new SolidColorBrush(Color.FromArgb(125, 0xFF, 0xFF, 0xFF)) };
             grdIsWaiting.Visibility = Visibility.Collapsed;
@@ -243,8 +212,7 @@ namespace Ranet.AgOlap.Controls
             ValueCopyControl CopyControl = new ValueCopyControl();
             CopyControl.CubeName = CubeName;
             CopyControl.ConnectionID = Connection;
-            CopyControl.GetMembersLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMembersLoader);
-            CopyControl.GetMetadataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
+            CopyControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetOlapDataLoader);
             CopyControl.LogManager = this.LogManager;
             CopyControl.Initialize(m_CopyControl.GetCopySettings());
             dlg.Content = CopyControl;
@@ -252,15 +220,9 @@ namespace Ranet.AgOlap.Controls
             dlg.Show();
         }
 
-        void CopyControl_GetMetadataLoader(object sender, GetIDataLoaderArgs e)
+        void CopyControl_GetOlapDataLoader(object sender, GetIDataLoaderArgs e)
         {
-            e.Loader = GetMetadataLoader();
-            e.Handled = true;
-        }
-
-        void CopyControl_GetMembersLoader(object sender, GetIDataLoaderArgs e)
-        {
-            e.Loader = GetMembersDataLoader();
+            e.Loader = GetOlapDataLoader();
             e.Handled = true;
         }
 
@@ -278,7 +240,7 @@ namespace Ranet.AgOlap.Controls
                         MdxQueryArgs args = FastCommandHelper.CreateMdxQueryArgs(Connection, query);
                         args.PivotID = this.GetHashCode().ToString();
                         args.Type = QueryExecutingType.NonQuery;
-                        PivotLoader.ExecuteQuery(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), sender);
+                        OlapDataLoader.LoadData(args, sender);
                     }
                     else
                     {
@@ -353,7 +315,7 @@ namespace Ranet.AgOlap.Controls
         }
         #endregion Экспорт-импорт настроек
 
-        void MetaLoader_DataLoaded(object sender, DataLoaderEventArgs e)
+        void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
             bool stopWaiting = true;
             try
@@ -428,7 +390,7 @@ namespace Ranet.AgOlap.Controls
                 // Зачитываем метаданне куба в целом
                 stopWaiting = false;
                 MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
-                MetaLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), null);
+                OlapDataLoader.LoadData(args, null);
             }
             finally
             {
@@ -441,33 +403,26 @@ namespace Ranet.AgOlap.Controls
         {
             m_CopyControl.CubeName = CubeName;
             m_CopyControl.ConnectionID = Connection;
-            m_CopyControl.GetMembersLoader += new EventHandler<GetIDataLoaderArgs>(m_CopyControl_GetMembersLoader);
-            m_CopyControl.GetMetadataLoader += new EventHandler<GetIDataLoaderArgs>(m_CopyControl_GetMetadataLoader);
+            m_CopyControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(m_CopyControl_GetOlapDataLoader);
 
             IsWaiting = true;
             // MDX запрос может служить источником Tuple. Если запрос задан, то пытаемся его выполнить и в качестве Tuple будем использовать координаты первой ячейки.
             if (!String.IsNullOrEmpty(Query))
             {
                 MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, Query);
-                PivotLoader.ExecuteQuery(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), null);
+                OlapDataLoader.LoadData(args, null);
             }
             else
             {
                 // Зачитываем метаданне куба в целом
                 MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
-                MetaLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), null);
+                OlapDataLoader.LoadData(args, null);
             }
         }
 
-        void m_CopyControl_GetMetadataLoader(object sender, GetIDataLoaderArgs e)
+        void m_CopyControl_GetOlapDataLoader(object sender, GetIDataLoaderArgs e)
         {
-            e.Loader = GetMetadataLoader();
-            e.Handled = true;
-        }
-
-        void m_CopyControl_GetMembersLoader(object sender, GetIDataLoaderArgs e)
-        {
-            e.Loader = GetMembersDataLoader();
+            e.Loader = GetOlapDataLoader();
             e.Handled = true;
         }
 

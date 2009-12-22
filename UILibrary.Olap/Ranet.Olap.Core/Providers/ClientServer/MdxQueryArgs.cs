@@ -30,8 +30,13 @@ namespace Ranet.Olap.Core.Providers.ClientServer
         NonQuery
     }
     
-    public class MdxQueryArgs
+    public class MdxQueryArgs : OlapActionBase
     {
+        public MdxQueryArgs()
+        {
+            ActionType = OlapActionTypes.ExecuteQuery;
+        }
+
         public String PivotID = String.Empty;
         public String Connection = String.Empty;
         public String Query = String.Empty;

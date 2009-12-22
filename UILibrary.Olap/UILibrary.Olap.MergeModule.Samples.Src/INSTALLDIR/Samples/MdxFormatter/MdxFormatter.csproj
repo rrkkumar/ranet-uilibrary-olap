@@ -61,18 +61,6 @@
     <None Include="MdxSample02.mdx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="MdxSample03.mdx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="MdxSample03_0.mdx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="MdxSample03_1.mdx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="MdxSample03_2.mdx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="MdxSample00.mdx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

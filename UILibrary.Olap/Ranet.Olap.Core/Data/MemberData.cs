@@ -201,7 +201,7 @@ namespace Ranet.Olap.Core.Data
                         key0 = prop.Value.ToString();
                     else
                     {
-                        // в режиме отображения кодов вместо null нужно светить Caption,  а то получается когда в таблице несколько вычисляемых элементов у всех их светится null (Лещенок Петр)
+                        // в режиме отображения кодов вместо null нужно светить Caption,  а то получается когда в таблице несколько вычисляемых элементов у всех их светится null (ПФ)
                         // key0 = "null";
                     }
                 }
@@ -214,25 +214,41 @@ namespace Ranet.Olap.Core.Data
                     res = Caption;
                     break;
                 case MemberVisualizationTypes.Key:
-                    //Если ключ в запросе не получался, то выводим просто Caption
-                    if (!String.IsNullOrEmpty(key0))
+                    // Для элементов уровня ALL вместо ключа 0 (который никак нельзя поменять) отображаем Caption
+                    if (LevelDepth == 0 && !String.IsNullOrEmpty(LevelName) && LevelName.ToLower().Contains(".[(all)]"))
                     {
-                        res = key0;
+                        res = Caption;
                     }
                     else
                     {
-                        res = Caption;
+                        //Если ключ в запросе не получался, то выводим просто Caption
+                        if (!String.IsNullOrEmpty(key0))
+                        {
+                            res = key0;
+                        }
+                        else
+                        {
+                            res = Caption;
+                        }
                     }
                     break;
                 case MemberVisualizationTypes.KeyAndCaption:
-                    //Если ключ в запросе не получался, то выводим просто Caption
-                    if (!String.IsNullOrEmpty(key0))
+                    // Для элементов уровня ALL вместо ключа 0 (который никак нельзя поменять) отображаем Caption
+                    if (LevelDepth == 0 && !String.IsNullOrEmpty(LevelName) && LevelName.ToLower().Contains(".[(all)]"))
                     {
-                        res = key0 + " " + Caption;
+                        res = Caption;
                     }
                     else
                     {
-                        res = Caption;
+                        //Если ключ в запросе не получался, то выводим просто Caption
+                        if (!String.IsNullOrEmpty(key0))
+                        {
+                            res = key0 + " " + Caption;
+                        }
+                        else
+                        {
+                            res = Caption;
+                        }
                     }
                     break;
                 case MemberVisualizationTypes.UniqueName:

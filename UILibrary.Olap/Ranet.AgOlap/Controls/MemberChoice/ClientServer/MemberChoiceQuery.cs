@@ -23,6 +23,8 @@ using System.Net;
 using System.Collections.Generic;
 using Ranet.Olap.Core.Metadata;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Controls.General.ClientServer;
+using Ranet.Olap.Core.Providers.ClientServer;
 
 namespace Ranet.AgOlap.Controls.MemberChoice.ClientServer
 {
@@ -38,8 +40,13 @@ namespace Ranet.AgOlap.Controls.MemberChoice.ClientServer
         LoadSetWithAscendants
     }
 
-    public class MemberChoiceQuery
+    public class MemberChoiceQuery : OlapActionBase
     {
+        public MemberChoiceQuery()
+        {
+            ActionType = OlapActionTypes.GetMembers;
+        }
+
         public MemberChoiceQueryType QueryType = MemberChoiceQueryType.GetRootMembers;
 
         public String Connection = String.Empty;

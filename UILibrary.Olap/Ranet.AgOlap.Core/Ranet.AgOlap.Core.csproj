@@ -16,14 +16,6 @@
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -143,6 +135,9 @@
     <Compile Include="..\Ranet.Olap.Core\Metadata\MetadataQueryType.cs">
       <Link>Metadata\MetadataQueryType.cs</Link>
     </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Metadata\NamedSetInfo.cs">
+      <Link>Metadata\NamedSetInfo.cs</Link>
+    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Metadata\OlapTerms.cs">
       <Link>Metadata\OlapTerms.cs</Link>
     </Compile>
@@ -172,6 +167,9 @@
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\MemberActionType.cs">
       <Link>Providers\ClientServer\MemberActionType.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\OlapActionBase.cs">
+      <Link>Providers\ClientServer\OlapActionBase.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\PerformMemberActionArgs.cs">
       <Link>Providers\ClientServer\PerformMemberActionArgs.cs</Link>
@@ -232,6 +230,9 @@
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\MembersAreaInfo.cs">
       <Link>Providers\MembersAreaInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Providers\OlapMetadataResponseException.cs">
+      <Link>Providers\OlapMetadataResponseException.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\PivotDataManagerBase.cs">
       <Link>Providers\PivotDataManagerBase.cs</Link>

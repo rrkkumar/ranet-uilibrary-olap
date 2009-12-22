@@ -40,8 +40,13 @@ namespace Ranet.Olap.Core.Providers.ClientServer
         RotateAxes
     }
 
-    public class PivotGridToolBarInfo
+    public class PivotGridToolBarInfo : OlapActionBase
     {
+        public PivotGridToolBarInfo()
+        {
+            ActionType = OlapActionTypes.GetToolBarInfo;
+        }
+
         public int HistorySize = 0;
         public int CurrentHistoryIndex = -1;
 

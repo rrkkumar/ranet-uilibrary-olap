@@ -47,22 +47,12 @@ namespace Ranet.AgOlap.Controls.ValueCopy
         public String CubeName = String.Empty;
         public String ConnectionID = String.Empty;
 
-        public event EventHandler<GetIDataLoaderArgs> GetMetadataLoader;
-        public event EventHandler<GetIDataLoaderArgs> GetMembersLoader;
+        public event EventHandler<GetIDataLoaderArgs> GetOlapDataLoader;
         public ILogService LogManager = null;
         
-        void Raise_GetMetadataLoader(GetIDataLoaderArgs args)
+        void Raise_GetOlapDataLoader(GetIDataLoaderArgs args)
         {
-            EventHandler<GetIDataLoaderArgs> handler = this.GetMetadataLoader;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-
-        void Raise_GetMembersLoader(GetIDataLoaderArgs args)
-        {
-            EventHandler<GetIDataLoaderArgs> handler = this.GetMembersLoader;
+            EventHandler<GetIDataLoaderArgs> handler = this.GetOlapDataLoader;
             if (handler != null)
             {
                 handler(this, args);
@@ -237,9 +227,9 @@ namespace Ranet.AgOlap.Controls.ValueCopy
                             dialog.ChoiceControl.Connection = ConnectionID;
                             dialog.ChoiceControl.LogManager = LogManager;
                             GetIDataLoaderArgs args = new GetIDataLoaderArgs();
-                            Raise_GetMetadataLoader(args);
+                            Raise_GetOlapDataLoader(args);
                             if (args.Handled)
-                                dialog.ChoiceControl.Loader = args.Loader;
+                                dialog.ChoiceControl.OlapDataLoader = args.Loader;
                             dialog.Tag = item;
                             dialog.DialogOk += new EventHandler(Dialog_DialogOk);
                             dialog.DialogCancel += new EventHandler(dlg_DialogCancel);
@@ -264,14 +254,9 @@ namespace Ranet.AgOlap.Controls.ValueCopy
                             dialog.ChoiceControl.LogManager = LogManager;
 
                             GetIDataLoaderArgs args = new GetIDataLoaderArgs();
-                            Raise_GetMetadataLoader(args);
+                            Raise_GetOlapDataLoader(args);
                             if (args.Handled)
-                                dialog.ChoiceControl.MetadataLoader = args.Loader;
-
-                            args = new GetIDataLoaderArgs();
-                            Raise_GetMembersLoader(args);
-                            if (args.Handled)
-                                dialog.ChoiceControl.Loader = args.Loader;
+                                dialog.ChoiceControl.OlapDataLoader = args.Loader;
 
                             dialog.Tag = item;
                             dialog.DialogOk += new EventHandler(Dialog_DialogOk);

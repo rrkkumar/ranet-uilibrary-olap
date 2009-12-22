@@ -69,14 +69,7 @@ namespace Ranet.Olap.Mdx
 		{
 			get
 			{
-				switch (m_Kind)
-				{
-					case MdxConstantKind.String:
-						return string.Format("'{0}'", m_Value);
-					default:
-						return m_Value;
-
-				}
+				return m_Value;
 			}
 		}
 		public override string SelfToken

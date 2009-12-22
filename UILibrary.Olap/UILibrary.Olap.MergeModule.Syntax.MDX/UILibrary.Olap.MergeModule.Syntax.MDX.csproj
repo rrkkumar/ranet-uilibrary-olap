@@ -1,5 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
+    <LocalizedStringFile>en</LocalizedStringFile>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -12,14 +13,6 @@
     <AssemblyName>UILibrary.Olap.MergeModule.Syntax.MDX</AssemblyName>
     <StartupObject>
     </StartupObject>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
@@ -79,6 +72,7 @@
     <Content Include="INSTALLDIR\Syntax.MDX\ID.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\identifier.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\INTEGER.png" />
+    <Content Include="INSTALLDIR\Syntax.MDX\IS.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\keyword.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\LINE_COMMENT.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\mdx_statement.png" />
@@ -102,9 +96,7 @@
     <Content Include="INSTALLDIR\Syntax.MDX\SESSION.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\SET.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\set_name.png" />
-    <Content Include="INSTALLDIR\Syntax.MDX\slicer_specification.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\STRING.png" />
-    <Content Include="INSTALLDIR\Syntax.MDX\string_value.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\THEN.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\unquoted_identifier.png" />
     <Content Include="INSTALLDIR\Syntax.MDX\UPDATE.png" />

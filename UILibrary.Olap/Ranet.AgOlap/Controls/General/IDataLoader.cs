@@ -30,24 +30,14 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.Olap.Core;
+using Ranet.AgOlap.Controls.General.ClientServer;
+using Ranet.Olap.Core.Providers.ClientServer;
 
 namespace Ranet.AgOlap.Controls.General
 {
     public interface IDataLoader
     {
-        void LoadData(object schema, object state);
-        event EventHandler<DataLoaderEventArgs> DataLoaded;
-    }
-
-    public interface IPivotDataLoader
-    {
-        void LoadPivotData(object schema, object state);
-        void ChangeDataSource(object schema, object state);
-        void PerformMemberAction(object schema, object state);
-        void PerformServiceCommand(object schema, object state);
-        void GetToolBarInfo(object schema, object state);
-        void UpdateCube(object schema, object state);
-        void ExecuteQuery(object schema, object state);
+        void LoadData(OlapActionBase schema, object state);
         event EventHandler<DataLoaderEventArgs> DataLoaded;
     }
 

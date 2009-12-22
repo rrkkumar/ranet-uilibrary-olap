@@ -205,7 +205,7 @@ namespace Ranet.AgOlap.Controls
             }
 
             MetadataQuery args = CommandHelper.CreateGetDimensionsQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, cubeNode));
+            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, cubeNode));
         }
         
         void GetDimensions_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
@@ -235,7 +235,7 @@ namespace Ranet.AgOlap.Controls
             if (dimNode != null && !dimNode.IsInitialized)
             {
                 MetadataQuery args = CommandHelper.CreateGetHierarchiesQueryArgs(Connection, CurrentCubeName, (dimNode.Info as DimensionInfo).UniqueName);
-                Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, dimNode));
+                Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, dimNode));
             }
         }
 
@@ -331,7 +331,7 @@ namespace Ranet.AgOlap.Controls
             }
 
             MetadataQuery args = CommandHelper.CreateGetLevelsQueryArgs(Connection, CurrentCubeName, dimUniqueName, hierarchyUniqueName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, node));
+            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
         }
 
         void GetLevels_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
@@ -374,7 +374,7 @@ namespace Ranet.AgOlap.Controls
         private void GetKPIs(KPIsFolderTreeNode node)
         {
             MetadataQuery args = CommandHelper.CreateGetKPIsQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, node));
+            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
         }
 
         void GetKPIs_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
@@ -458,7 +458,7 @@ namespace Ranet.AgOlap.Controls
         private void GetMeasures(MeasuresFolderTreeNode node)
         {
             MetadataQuery args = CommandHelper.CreateGetMeasuresQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, node));
+            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
         }
 
         void GetMeasures_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
@@ -525,7 +525,7 @@ namespace Ranet.AgOlap.Controls
             {
                 if (m_Loader == null)
                 {
-                    m_Loader = new MetadataLoader(URL);
+                    m_Loader = new OlapDataLoader(URL);
                     m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
                 }
                 return m_Loader;
@@ -547,7 +547,7 @@ namespace Ranet.AgOlap.Controls
         void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
             CustomTreeNode parentNode = null;
-            MetadataQueryWrapper<CustomTreeNode> wrapper = e.UserState as MetadataQueryWrapper<CustomTreeNode>;
+            UserSchemaWrapper<MetadataQuery, CustomTreeNode> wrapper = e.UserState as UserSchemaWrapper<MetadataQuery, CustomTreeNode>;
             if (wrapper != null)
             {
                 parentNode = wrapper.UserData;
@@ -627,7 +627,7 @@ namespace Ranet.AgOlap.Controls
             Cubes_ComboBox.Combo.SelectedIndex = 0;
 
             MetadataQuery args = CommandHelper.CreateGetCubesQueryArgs(Connection);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, null));
+            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, null));
         }
 
         void GetCubes_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)

@@ -58,10 +58,13 @@ namespace Ranet.AgOlap.Controls.ToolBar
 
                 curX += child.DesiredSize.Width;
                 if (child.DesiredSize.Height > curLineHeight)
-                    curLineHeight = child.DesiredSize.Height + 2/*чтобы между рядами было расстояние*/;
+                    curLineHeight = child.DesiredSize.Height + 2 /*чтобы между рядами было расстояние*/;
             }
 
-            curY += curLineHeight - 2;
+            if (curLineHeight > 0) 
+            {
+                curY += curLineHeight - 2; /*чтобы между рядами было расстояние*/
+            }
 
             Size resultSize = new Size();
             resultSize.Width = double.IsPositiveInfinity(availableSize.Width) ? curX : availableSize.Width;

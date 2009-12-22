@@ -39,7 +39,6 @@
 		<TextBlock Text="Input MDX statement:" Grid.Row="0" />
 		<TextBox x:Name="txtPlainMdx" 
                  AcceptsReturn="True" 
-                 Text="SELECT a on X,iif(1=1,{{&lt;%b%&gt;,2},3}, {somethingelse} )on 1FROM[GalaktikaIPMS]"
                  FontFamily="Courier New"
                  VerticalScrollBarVisibility="Auto"
                  Grid.Row="1" />
@@ -47,7 +46,7 @@
 			<Grid.ColumnDefinitions>
 				<ColumnDefinition Width="*"/>
 				<ColumnDefinition Width="*"/>
-			</Grid.ColumnDefinitions> 
+			</Grid.ColumnDefinitions>
 			<CheckBox x:Name="ckbIIF_Subst" Content="Try substitute IIF(,,)"	Grid.Column="1"	/>
 			<Button x:Name="btnParseAndGen" Click="btnParseAndGen_Click" Content="Format MDX statement" Grid.Column="0" />
 		</Grid>

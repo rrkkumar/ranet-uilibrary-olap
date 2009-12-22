@@ -39,37 +39,26 @@ using System.Collections.Generic;
 
 namespace Ranet.AgOlap.Controls
 {
-    public class DimensionChoiceCtrl : AgTreeControlBase
+    public class DimensionChoiceCtrl : OlapBrowserControl, IChoiceControl
     {
-        /// <summary>
-        /// Указывает необходимость отображать информация о всех типах кубов (Cube, Dimension, Unknown)
-        /// </summary>
-        public bool ShowAllCubes;
-
-        CustomTree Tree = null;
-
         public DimensionChoiceCtrl()
         {
-            Tree = new CustomTree();
-
-            Grid LayoutRoot = new Grid();
-            base.Content = LayoutRoot;
-            LayoutRoot.Children.Add(Tree);
-            Tree.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(Tree_SelectedItemChanged);
         }
 
-        void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        protected override void RefreshTree()
         {
-            InfoBase info = null;
-            DimensionTreeNode node = e.NewValue as DimensionTreeNode;
-            if (node != null)
-            {
-                info = node.Info;
-            }
+            base.RefreshTree();
 
+            // Создаем измерения
+            CreateDimensions(null, CubeInfo, false);
+        }
+
+        protected override void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            DimensionTreeNode node = e.NewValue as DimensionTreeNode;
             m_IsReadyToSelection = node != null;
 
-            Raise_SelectedItemChanged(info);
+            base.Tree_SelectedItemChanged(sender, e);
         }
 
         bool m_IsReadyToSelection = false;
@@ -81,224 +70,34 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        #region Свойства для настройки на OLAP
-        /// <summary>
-        /// 
-        /// </summary>
-        private String m_Connection = String.Empty;
-        /// <summary>
-        /// Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID) 
-        /// </summary>
-        public String Connection
-        {
-            get
-            {
-                return m_Connection;
-            }
-            set 
-            {
-                m_Connection = value;
-            }
-        }
-
-        /// <summary>
-        /// Имя OLAP куба
-        /// </summary>
-        String m_CubeName = String.Empty;
-        /// <summary>
-        /// Имя OLAP куба
-        /// </summary>
-        public String CubeName
-        {
-            get
-            {
-                return this.m_CubeName;
-            }
-            set
-            {
-                m_CubeName = value;
-            }
-        }
-
-        #endregion Свойства для настройки на OLAP
-
-        private DimensionInfo m_SelectedInfo = null;
         public DimensionInfo SelectedInfo
         {
-            get {
-                return m_SelectedInfo;
-            }
-        }
-
-        public void Initialize()
-        {
-            RefreshTree();
-        }
-
-        private void RefreshTree()
-        {
-            Tree.Items.Clear();
-
-            if (String.IsNullOrEmpty(CubeName))
-            {
-                LogManager.LogMessage(Localization.DimensionChoiceControl_Name, Localization.Error + "! " + String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.CubeName_PropertyDesc));
-                return;
-            }
-
-            CreateRootCubeNode();
-        }
-
-        void CreateRootCubeNode()
-        {
-            //Будем выводить информацию для всего куба
-            CustomTreeNode cubeNode = new CustomTreeNode();
-            cubeNode.Text = CubeName;
-            cubeNode.Icon = UriResources.Images.Cube16;
-            Tree.Items.Add(cubeNode);
-            cubeNode.Expanded += new RoutedEventHandler(cubeNode_Expanded);
-            cubeNode.IsWaiting = true;
-            cubeNode.IsExpanded = true;
-        }
-
-        void cubeNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            CustomTreeNode cubeNode = sender as CustomTreeNode;
-            if (cubeNode != null && !cubeNode.IsInitialized)
-            {
-                if (String.IsNullOrEmpty(CubeName))
-                {
-                    cubeNode.IsWaiting = false;
-                    LogManager.LogMessage(Localization.DimensionChoiceControl_Name, Localization.Error + "! " + String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.CubeName_PropertyDesc));
-                    return;
-                }
-
-                cubeNode.IsWaiting = true;
-
-                MetadataQuery args = CommandHelper.CreateGetDimensionsQueryArgs(Connection, CubeName);
-                Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MetadataQueryWrapper<CustomTreeNode>(args, cubeNode));
-            }
-        }
-
-        void GetDimensions_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<DimensionInfo> dimensions = XmlSerializationUtility.XmlStr2Obj<List<DimensionInfo>>(e.Result.Content);
-            if (dimensions != null)
-            {
-                foreach (DimensionInfo info in dimensions)
-                {
-                    if (info.DimensionType != DimensionInfoTypeEnum.Measure)
-                    {
-                        DimensionTreeNode dimNode = new DimensionTreeNode(info);
-                        // Измерения будут конечными узлами. Двойной клик на них будет равнозначен выбору
-                        dimNode.Expanded += new RoutedEventHandler(node_Expanded);
-                        dimNode.Collapsed += new RoutedEventHandler(node_Collapsed);
-                        if (parentNode == null)
-                            Tree.Items.Add(dimNode);
-                        else
-                            parentNode.Items.Add(dimNode);
-                    }
-                }
-            }
-        }
-
-        IDataLoader m_Loader = null;
-        public IDataLoader Loader
-        {
-            set
-            {
-                if (m_Loader != null)
-                {
-                    m_Loader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-                }
-                m_Loader = value;
-                m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-            }
             get
             {
-                if (m_Loader == null)
+                DimensionTreeNode node = null;
+                node = SelectedNode as DimensionTreeNode;
+                if (node != null)
                 {
-                    m_Loader = new MetadataLoader(URL);
-                    m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                    //Запоминаем выбранный элемент
+                    return node.Info as DimensionInfo;
                 }
-                return m_Loader;
+
+                return null;
             }
         }
 
-        void ShowErrorInTree(CustomTreeNode parentNode)
+        protected override void TreeNode_MouseDoubleClick(object sender, CustomEventArgs<CustomTreeNode> e)
         {
-            if (parentNode != null)
-            {
-                parentNode.IsError = true;
-            }
-            else
-            {
-                Tree.IsError = true;
-            }
-        }
-
-        void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            CustomTreeNode parentNode = null;
-            MetadataQueryWrapper<CustomTreeNode> wrapper = e.UserState as MetadataQueryWrapper<CustomTreeNode>;
-            if (wrapper != null)
-            {
-                parentNode = wrapper.UserData;
-                if (parentNode != null)
-                {
-                    parentNode.IsWaiting = false;
-                }
-                else
-                {
-                    Tree.IsWaiting = false;
-                }
-            }
-
-            if (e.Error != null)
-            {
-                ShowErrorInTree(parentNode);
-                LogManager.LogException(Localization.DimensionChoiceControl_Name, e.Error);
-                return;
-            }
-
-            if (e.Result.ContentType == InvokeContentType.Error)
-            {
-                ShowErrorInTree(parentNode);
-                LogManager.LogMessage(Localization.DimensionChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
-                return;
-            }
-
-            if (wrapper != null)
-            {
-                switch (wrapper.Schema.QueryType)
-                {
-                    case MetadataQueryType.GetDimensions:
-                        GetDimensions_InvokeCommandCompleted(e, parentNode);
-                        break;
-                }
-            }
-        }
-
-        void node_Collapsed(object sender, RoutedEventArgs e)
-        {
-            ApplyItemsSelection();
-            Raise_ApplySelection();
-        }
-
-        void node_Expanded(object sender, RoutedEventArgs e)
-        {
-            ApplyItemsSelection();
-            Raise_ApplySelection();
+            // Измерения будут конечными узлами. Двойной клик на них будет равнозначен выбору
+            DimensionTreeNode node = e.Args as DimensionTreeNode;
+            if (node != null)
+                Raise_ApplySelection();
         }
 
         /// <summary>
         /// Событие генерируется после окончания выбора
         /// </summary>
         public event EventHandler ApplySelection;
-
-        /// <summary>
-        /// Событие генерируется при нажатии на кнопку Отмена
-        /// </summary>
-        public event EventHandler CancelSelection;
 
         /// <summary>
         /// Генерирует событие "Выбор окончен"
@@ -308,40 +107,6 @@ namespace Ranet.AgOlap.Controls
             EventHandler handler = ApplySelection;
             if (handler != null)
                 handler(this, EventArgs.Empty);
-        }
-
-        /// <summary>
-        /// Генерирует событие "Отмена"
-        /// </summary>
-        private void Raise_CancelSelection()
-        {
-            EventHandler handler = CancelSelection;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
-
-        private void OkButton_Click(object sender, RoutedEventArgs e)
-        {
-            ApplyItemsSelection();
-            Raise_ApplySelection();
-        }
-
-        private void CancelButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Генерируем событие - Отмена
-            Raise_CancelSelection();
-        }
-
-        private void ApplyItemsSelection()
-        {
-            DimensionTreeNode node = null;
-            node = Tree.SelectedItem as DimensionTreeNode;
-
-            if (node != null)
-            {
-                //Запоминаем выбранный элемент
-                m_SelectedInfo = node.Info as DimensionInfo;
-            }
         }
     }
 }

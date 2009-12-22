@@ -52,6 +52,34 @@ namespace Ranet.Olap.Core.Metadata
             return info;
         }
 
+        public static NamedSetInfo CreateNamedSetInfo(NamedSet set)
+        {
+            if (set == null)
+                return null;
+            NamedSetInfo info = new NamedSetInfo();
+
+            info.Caption = set.Caption;
+            info.Description = set.Description;
+            info.Name = set.Name;
+            info.DisplayFolder = set.DisplayFolder;
+            info.Expression = set.Expression;
+
+            // Информация о предках
+            if (set.ParentCube != null)
+            {
+                info.ParentCubeId = set.ParentCube.Name;
+                info.CustomProperties.Add(new PropertyInfo(InfoBase.CUBE_CAPTION, set.ParentCube.Caption));
+            }
+
+            // Свойства
+            foreach (Property prop in set.Properties)
+            {
+                PropertyInfo pi = new PropertyInfo(prop.Name, prop.Value);
+                info.Properties.Add(pi);
+            }
+            return info;
+        }
+
         public static DimensionInfo CreateDimensionInfo(Dimension dim)
         {
             if (dim == null)

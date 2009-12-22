@@ -179,6 +179,7 @@ namespace Ranet.AgOlap.Controls
                     }
                     this.IsEnabled = !value;
                     m_IsWaiting = value;
+                    this.UpdateLayout();
                 }
             }
         }
@@ -225,7 +226,7 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(EditButton, Localization.PivotGrid_EditButton_ToolTip);
             EditButton.Checked += new RoutedEventHandler(EditButton_Click);
             EditButton.Unchecked += new RoutedEventHandler(EditButton_Click);
-            EditButton.Content = UiHelper.CreateIcon(UriResources.Images.Edit16);
+            EditButton.Content = UiHelper.CreateIcon(UriResources.Images.EditCells16);
 
             UseChangesCasheButton = new RanetToggleButton();
             ToolTipService.SetToolTip(UseChangesCasheButton, Localization.PivotGrid_UseChangesCasheButton_ToolTip);
@@ -355,14 +356,8 @@ namespace Ranet.AgOlap.Controls
             PivotGrid.Cells_PerformControlAction += new EventHandler<ControlActionEventArgs<CellInfo>>(CellsControl_PerformControlAction);
             PivotGrid.Members_PerformControlAction += new EventHandler<ControlActionEventArgs<MemberInfo>>(MembersArea_PerformControlAction);
 
-            m_MembersLoader = GetMembersDataLoader();
-            m_MembersLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MembersLoader_DataLoaded);
-
-            m_MetaLoader = GetMetadataLoader();
-            m_MetaLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MetaDataLoader_DataLoaded);
-
-            m_PivotLoader = GetPivotDataLoader();
-            m_PivotLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+            m_OlapDataLoader = GetOlapDataLoader();
+            m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
 
             // Метод Initialize необходимо вызывать для RotVisual элемента
             // всего приложения. Перенес его в ClientApp.
@@ -428,19 +423,9 @@ namespace Ranet.AgOlap.Controls
             PivotGrid.Cells_UseHint = PivotGrid.Rows_UseHint = PivotGrid.Columns_UseHint = !HideHintsButton.IsChecked.Value;
         }
 
-        protected virtual IDataLoader GetMetadataLoader()
+        protected virtual IDataLoader GetOlapDataLoader()
         {
-            return new MetadataLoader(URL);
-        }
-
-        protected virtual IDataLoader GetMembersDataLoader()
-        {
-            return new MembersDataLoader(URL);
-        }
-
-        protected virtual IPivotDataLoader GetPivotDataLoader()
-        {
-            return new PivotDataLoader(URL);
+            return new OlapDataLoader(URL);
         }
 
         protected virtual PivotGridControl GetPivotGridControl()
@@ -471,22 +456,11 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 base.URL = value;
-                MembersDataLoader membersLoader = MembersLoader as MembersDataLoader;
-                if(membersLoader != null)
-                {
-                    membersLoader.URL = value;
-                }
 
-                MetadataLoader metadataLoader = MetaLoader as MetadataLoader;
+                OlapDataLoader metadataLoader = OlapDataLoader as OlapDataLoader;
                 if (metadataLoader != null)
                 {
                     metadataLoader.URL = value;
-                }
-
-                PivotDataLoader pivotDataLoader = PivotLoader as PivotDataLoader;
-                if (pivotDataLoader != null)
-                {
-                    pivotDataLoader.URL = value;
                 }
             }
         }
@@ -526,13 +500,19 @@ namespace Ranet.AgOlap.Controls
             CopyCellsToClipboard();
         }
 
+        protected bool ExportToExcelFile = true;
+
         void ExportToExcelButton_Click(object sender, RoutedEventArgs e)
         {
             OnExportToExcelClick();
             try
             {
-                //bool? ret = SaveFileDialog.ShowDialog();
-                //if (ret.HasValue && ret.Value == true)
+                bool? ret = new bool?(true);
+                if (ExportToExcelFile)
+                {
+                    ret = SaveFileDialog.ShowDialog();
+                }
+                if (ret.HasValue && ret.Value == true)
                 {
                     RunServiceCommand(ServiceCommandType.ExportToExcel);
                 }
@@ -593,6 +573,10 @@ namespace Ranet.AgOlap.Controls
                         panel.Children.Add(dlg.Dlg.PopUpControl);
                     }
 
+                    // На время убираем контекстное меню сводной таблицы
+                    dlg.Dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                    PivotGrid.UseContextMenu = false;
+
                     dlg.Show();
                     break;
                 case ControlActionType.ShowAttributes:
@@ -611,7 +595,7 @@ namespace Ranet.AgOlap.Controls
                 {
                     IsWaiting = true;
                     MetadataQuery args = FastCommandHelper.CreateLoadLevelPropertiesArgs(Connection, m_CSDescr.CubeName, String.Empty, member.HierarchyUniqueName, String.Empty);
-                    MetaLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberInfoWrapper<MetadataQuery>(member, args));
+                    OlapDataLoader.LoadData(args, new MemberInfoWrapper<MetadataQuery>(member, args));
                 }
                 else
                 {
@@ -640,7 +624,7 @@ namespace Ranet.AgOlap.Controls
             IsWaiting = true;
             MemberChoiceQuery args = FastCommandHelper.CreateGetMemberArgs(Connection, m_CSDescr.CubeName, String.Empty, member.UniqueName);
             args.Properties = properties;
-            MembersLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), new MemberInfoWrapper<MemberChoiceQuery>(member, args));
+            OlapDataLoader.LoadData(args, new MemberInfoWrapper<MemberChoiceQuery>(member, args));
         }
 
 
@@ -697,6 +681,10 @@ namespace Ranet.AgOlap.Controls
                         panel.Children.Add(dlg.Dlg.PopUpControl);
                     }
 
+                    // На время убираем контекстное меню сводной таблицы
+                    dlg.Dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                    PivotGrid.UseContextMenu = false;
+
                     dlg.Show();
                     break;
                 case ControlActionType.ValueDelivery:
@@ -718,7 +706,7 @@ namespace Ranet.AgOlap.Controls
         void PasteCellsFromClipboard(CellInfo cell)
         {
             // На всякий случай проверим
-            if (!IsUpdateable || !PivotGrid.EditMode)
+            if (!PivotGrid.CanEdit || !PivotGrid.EditMode)
                 return;
 
             String text = Clipboard.GetClipboardText();
@@ -999,11 +987,14 @@ namespace Ranet.AgOlap.Controls
                 CopyControl.CubeName = m_CSDescr.CubeName;
                 CopyControl.ConnectionID = m_CSDescr.Connection.ConnectionID;
                 CopyControl.LoadMetaData += new EventHandler(ValueCopyControl_LoadMetaData);
-                CopyControl.GetMembersLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMembersLoader);
-                CopyControl.GetMetadataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
+                CopyControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
                 CopyControl.LogManager = this.LogManager;
                 CopyControl.Initialize(slice, cell.Value);
                 dlg.Content = CopyControl;
+
+                // На время убираем контекстное меню сводной таблицы
+                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                PivotGrid.UseContextMenu = false;
 
                 dlg.Show();
             }
@@ -1011,13 +1002,7 @@ namespace Ranet.AgOlap.Controls
 
         void CopyControl_GetMetadataLoader(object sender, GetIDataLoaderArgs e)
         {
-            e.Loader = GetMetadataLoader();
-            e.Handled = true;
-        }
-
-        void CopyControl_GetMembersLoader(object sender, GetIDataLoaderArgs e)
-        {
-            e.Loader = GetMembersDataLoader();
+            e.Loader = GetOlapDataLoader();
             e.Handled = true;
         }
 
@@ -1032,7 +1017,7 @@ namespace Ranet.AgOlap.Controls
                 {
                     copyControl.IsBusy = true;
                     MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, m_CSDescr.CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
-                    MetaLoader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), sender);
+                    OlapDataLoader.LoadData(args, sender);
                 }
                 else
                 {
@@ -1057,7 +1042,7 @@ namespace Ranet.AgOlap.Controls
                         args.PivotID = this.GetHashCode().ToString();
                         args.Type = QueryExecutingType.NonQuery;
                         IsWaiting = true;
-                        PivotLoader.ExecuteQuery(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), sender);
+                        OlapDataLoader.LoadData(args, "ValueCopyDialog_OkButton");
                     }
                     else
                     {
@@ -1094,7 +1079,11 @@ namespace Ranet.AgOlap.Controls
                 DeliveryControl.LoadMembers += new EventHandler<QueryEventArgs>(DeliveryControl_LoadMembers);
                 DeliveryControl.Initialize(cell);
                 dlg.Content = DeliveryControl;
-                
+
+                // На время убираем контекстное меню сводной таблицы
+                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                PivotGrid.UseContextMenu = false;
+
                 dlg.Show();
             }
         }
@@ -1167,7 +1156,7 @@ namespace Ranet.AgOlap.Controls
             {
                 MdxQueryArgs args = FastCommandHelper.CreateMdxQueryArgs(Connection, e.Query);
                 args.PivotID = this.GetHashCode().ToString();
-                PivotLoader.ExecuteQuery(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), sender);
+                OlapDataLoader.LoadData(args, sender);
             }
         }
         #endregion Разноска данных
@@ -1185,11 +1174,20 @@ namespace Ranet.AgOlap.Controls
 
                 DataSourceInfoControl DSInfo = new DataSourceInfoControl();
                 dlg.Content = DSInfo;
-                DSInfo.UpdateScriptVisibility = IsUpdateable;
+                DSInfo.UpdateScriptVisibility = PivotGrid.CanEdit;
                 DSInfo.Initialize(args);
-                
+
+                // На время убираем контекстное меню сводной таблицы
+                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                PivotGrid.UseContextMenu = false;
+
                 dlg.Show();
             }
+        }
+
+        void Dlg_DialogClosed(object sender, DialogResultArgs e)
+        {
+            PivotGrid.UseContextMenu = true;
         }
 
         /// <summary>
@@ -1213,7 +1211,7 @@ namespace Ranet.AgOlap.Controls
             ServiceCommandArgs args = new ServiceCommandArgs(ServiceCommandType.GetDataSourceInfo, userData);
             args.PivotID = this.GetHashCode().ToString();
             IsWaiting = true;
-            PivotLoader.PerformServiceCommand(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         void dlg_CloseDialog(DialogResult e)
@@ -1451,7 +1449,7 @@ namespace Ranet.AgOlap.Controls
             UpdateCubeArgs args = FastCommandHelper.CreateUpdateCubeArgs(connectionString, cubeName, entries);
             args.PivotID = this.GetHashCode().ToString();
             IsWaiting = true;
-            PivotLoader.UpdateCube(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         protected void UpdateButtons()
@@ -1460,7 +1458,7 @@ namespace Ranet.AgOlap.Controls
             PivotGridToolBarInfo args = new PivotGridToolBarInfo();
             args.PivotID = this.GetHashCode().ToString();
             IsWaiting = true;
-            PivotLoader.GetToolBarInfo(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         void UpdateToolbarButtons(PivotGridToolBarInfo info)
@@ -1521,173 +1519,59 @@ namespace Ranet.AgOlap.Controls
                 member, e.Axis, e.Action, list);
             args.PivotID = this.GetHashCode().ToString();
             IsWaiting = true;
-            PivotLoader.PerformMemberAction(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
-        IPivotDataLoader m_PivotLoader = null;
-        public IPivotDataLoader PivotLoader
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
         {
             set
             {
-                if (m_PivotLoader != null)
+                if (m_OlapDataLoader != null)
                 {
-                    m_PivotLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                    m_OlapDataLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
                 }
-                m_PivotLoader = value;
-                m_PivotLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+
+                m_OlapDataLoader = value;
+                m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
             }
             get
             {
-                return m_PivotLoader;
+                return m_OlapDataLoader;
             }
         }
 
-        IDataLoader m_MetaLoader = null;
-        public IDataLoader MetaLoader
-        {
-            set
-            {
-                if (m_MetaLoader != null)
-                {
-                    m_MetaLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(MetaDataLoader_DataLoaded);
-                }
-                m_MetaLoader = value;
-                m_MetaLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MetaDataLoader_DataLoaded);
-            }
-            get
-            {
-                return m_MetaLoader;
-            }
-        }
-
-        IDataLoader m_MembersLoader = null;
-        public IDataLoader MembersLoader
-        {
-            set
-            {
-                if (m_MembersLoader != null)
-                {
-                    m_MembersLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(MembersLoader_DataLoaded);
-                }
-
-                m_MembersLoader = value;
-                m_MembersLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(MembersLoader_DataLoaded);
-            }
-            get
-            {
-                return m_MembersLoader;
-            }
-        }
-
-        void MembersLoader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            IsWaiting = false;
-            if (e.Error != null)
-            {
-                LogManager.LogException(Localization.PivotGridControl_Name, e.Error);
-                return;
-            }
-
-            if (e.Result.ContentType == InvokeContentType.Error)
-            {
-                LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + e.Result.Content);
-                return;
-            }
-
-            MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
-            if (member_args != null)
-            {
-                switch (member_args.UserData.QueryType)
-                {
-                    case MemberChoiceQueryType.GetMember:
-                        MemberDataWrapper member = null;
-                        if (!String.IsNullOrEmpty(e.Result.Content))
-                        {
-                            try
-                            {
-                                member = XmlSerializationUtility.XmlStr2Obj<MemberDataWrapper>(e.Result.Content);
-                            }
-                            catch
-                            {
-                            }
-                        }
-
-                        if (member != null)
-                        {
-                            ShowMemberAttributes(member);
-                        }
-                        else
-                        {
-                            MessageBox.Show(Localization.PivotGrid_CustomProperties_NotFound, Localization.Warning, MessageBoxButton.OK);
-                        }
-                        break;
-                }
-            }
-        }
-
-        void MetaDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            IsWaiting = false;
-            if (e.Error != null)
-            {
-                LogManager.LogException(Localization.PivotGridControl_Name, e.Error);
-                return;
-            }
-
-            if (e.Result.ContentType == InvokeContentType.Error)
-            {
-                LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + e.Result.Content);
-                return;
-            }
-            ValueCopyControl copyControl = e.UserState as ValueCopyControl;
-            if (copyControl != null)
-            {
-                CubeDefInfo cs_descr = XmlSerializationUtility.XmlStr2Obj<CubeDefInfo>(e.Result.Content);
-                m_CubeMetaData = cs_descr;
-                copyControl.IsBusy = false;
-                copyControl.InitializeMetadata(cs_descr);
-            }
-
-            MemberInfoWrapper<MetadataQuery> metadata_args = e.UserState as MemberInfoWrapper<MetadataQuery>;
-            if (metadata_args != null)
-            {
-                switch (metadata_args.UserData.QueryType)
-                {
-                    case MetadataQueryType.GetLevelProperties:
-                        List<LevelPropertyInfo> properties = XmlSerializationUtility.XmlStr2Obj<List<LevelPropertyInfo>>(e.Result.Content);
-                        m_LevelProperties[metadata_args.Member.HierarchyUniqueName] = properties;
-                        LoadMemberAttributes(metadata_args.Member, properties);
-                        break;
-                }
-            }
-        }
-
-        void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
+        void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
             bool stopWaiting = true;
+
             try
             {
-                PivotGrid.Focus();
-
+                // Exception
                 if (e.Error != null)
                 {
                     LogManager.LogException(Localization.PivotGridControl_Name, e.Error);
                     return;
                 }
 
+                // Exception or Message from Olap-Service
                 if (e.Result.ContentType == InvokeContentType.Error)
                 {
                     LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + e.Result.Content);
                     return;
                 }
 
-                ValueCopyControl copy = e.UserState as ValueCopyControl;
-                if (copy != null)
+                PivotGrid.Focus();
+
+                if (e.UserState != null && e.UserState.ToString() == "ValueCopyDialog_OkButton")
+                //ValueCopyControl copy = e.UserState as ValueCopyControl;
+                //if (copy != null)
                 {
                     stopWaiting = false;
                     RunServiceCommand(ServiceCommandType.Refresh);
                     return;
                 }
+
 
                 ValueDeliveryControl dilivery = e.UserState as ValueDeliveryControl;
                 if (dilivery != null)
@@ -1715,7 +1599,6 @@ namespace Ranet.AgOlap.Controls
                         Initialize(null);
                     }
                     stopWaiting = false;
-                    UpdateButtons();
                     return;
                 }
 
@@ -1723,7 +1606,7 @@ namespace Ranet.AgOlap.Controls
                 if (action_args != null)
                 {
                     stopWaiting = false;
-                    MemberActionCompleted(e); 
+                    MemberActionCompleted(e);
                     return;
                 }
 
@@ -1741,12 +1624,12 @@ namespace Ranet.AgOlap.Controls
                         return;
                     }
 
-                    //////////////////////////////////////////////
-                    //if (actionType == ServiceCommandType.ExportToExcel)
-                    //{
-                    //    SaveToFile(e.Result);
-                    //    return;
-                    //}
+                    // Save to File
+                    if (actionType == ServiceCommandType.ExportToExcel && ExportToExcelFile)
+                    {
+                        SaveToFile(e.Result.Content);
+                        return;
+                    }
 
                     if (!string.IsNullOrEmpty(e.Result.Content))
                     {
@@ -1783,8 +1666,61 @@ namespace Ranet.AgOlap.Controls
                     //this.Focus();
                     return;
                 }
+
+                ValueCopyControl copyControl = e.UserState as ValueCopyControl;
+                if (copyControl != null)
+                {
+                    CubeDefInfo cs_descr = XmlSerializationUtility.XmlStr2Obj<CubeDefInfo>(e.Result.Content);
+                    m_CubeMetaData = cs_descr;
+                    copyControl.IsBusy = false;
+                    copyControl.InitializeMetadata(cs_descr);
+                }
+
+                MemberInfoWrapper<MetadataQuery> metadata_args = e.UserState as MemberInfoWrapper<MetadataQuery>;
+                if (metadata_args != null)
+                {
+                    switch (metadata_args.UserData.QueryType)
+                    {
+                        case MetadataQueryType.GetLevelProperties:
+                            List<LevelPropertyInfo> properties = XmlSerializationUtility.XmlStr2Obj<List<LevelPropertyInfo>>(e.Result.Content);
+                            m_LevelProperties[metadata_args.Member.HierarchyUniqueName] = properties;
+                            LoadMemberAttributes(metadata_args.Member, properties);
+                            break;
+                    }
+                }
+
+                MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
+                if (member_args != null)
+                {
+                    switch (member_args.UserData.QueryType)
+                    {
+                        case MemberChoiceQueryType.GetMember:
+                            MemberDataWrapper member = null;
+                            if (!String.IsNullOrEmpty(e.Result.Content))
+                            {
+                                try
+                                {
+                                    member = XmlSerializationUtility.XmlStr2Obj<MemberDataWrapper>(e.Result.Content);
+                                }
+                                catch
+                                {
+                                }
+                            }
+
+                            if (member != null)
+                            {
+                                ShowMemberAttributes(member);
+                            }
+                            else
+                            {
+                                MessageBox.Show(Localization.PivotGrid_CustomProperties_NotFound, Localization.Warning, MessageBoxButton.OK);
+                            }
+                            break;
+                    }
+                }
             }
-            finally {
+            finally
+            {
                 if (stopWaiting)
                     IsWaiting = false;
             }
@@ -1809,11 +1745,15 @@ namespace Ranet.AgOlap.Controls
         {
             try
             {
-                using (Stream stream = SaveFileDialog.OpenFile())
-                {
-                    byte[] info = (new UTF8Encoding(true)).GetBytes(str);
-                    stream.Write(info, 0, info.Length);
-                }
+                //bool? ret = SaveFileDialog.ShowDialog();
+                //if (ret.HasValue && ret.Value == true)
+                //{
+                    using (Stream stream = SaveFileDialog.OpenFile())
+                    {
+                        byte[] info = (new UTF8Encoding(true)).GetBytes(str);
+                        stream.Write(info, 0, info.Length);
+                    }
+                //}
             }
             catch (Exception ex)
             {
@@ -1843,22 +1783,40 @@ namespace Ranet.AgOlap.Controls
             UpdateButtons();
         }
 
+        void ResetSettings()
+        {
+            m_CSDescr = null;
+            m_CubeMetaData = null;
+            m_CellSetProvider = null;
+            UpdateToolbarButtons(null);
+            UpdateEditToolBarButtons();
+        }
+
         public void Initialize()
         {
             // Отжимаем кнопку "Повернуть оси"
             RotateAxesButton.Click -= new RoutedEventHandler(RotateAxesButton_Click);
-            RotateAxesButton.IsChecked = false;
+            RotateAxesButton.IsChecked = new bool?(false);
             PivotGrid.AxisIsRotated = false;
             RotateAxesButton.Click += new RoutedEventHandler(RotateAxesButton_Click);
 
-            m_CubeMetaData = null;
-            UpdateToolbarButtons(null);
-            UpdateEditToolBarButtons();
+            // Устанавливаем значение кнопки Редактирование в соответствии с возможностью редактирования
+            EditButton.IsChecked = IsUpdateable;
 
-            PivotInitializeArgs args = FastCommandHelper.CreatePivotInitializeArgs(Connection, Query, UpdateScript);
-            args.PivotID = this.GetHashCode().ToString();
-            IsWaiting = true;
-            PivotLoader.LoadPivotData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            ResetSettings();
+
+            // Если запрос пустой, то данные с сервера не читаем
+            if (!String.IsNullOrEmpty(Query))
+            {
+                PivotInitializeArgs args = FastCommandHelper.CreatePivotInitializeArgs(Connection, Query, UpdateScript);
+                args.PivotID = this.GetHashCode().ToString();
+                IsWaiting = true;
+                OlapDataLoader.LoadData(args, args);
+            }
+            else
+            {
+                Initialize(null);
+            }
         }
 
         private CellSetData m_CSDescr = null;
@@ -1872,25 +1830,24 @@ namespace Ranet.AgOlap.Controls
         {
             try
             {
+                ResetSettings();
+
                 IsWaiting = true;
-                m_CellSetProvider = null;
                 DateTime start = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine("PivotGrid initializing start: " + start.ToString());
-                m_CubeMetaData = null;
-                //IsWaiting = true;
+                //System.Diagnostics.Debug.WriteLine("UpdateablePivotGrid initializing start: " + start.ToString());
+
                 m_CSDescr = cs_descr;
                 if (cs_descr != null)
                 {
                     m_CellSetProvider = new CellSetDataProvider(cs_descr);
-                    //PivotPanelControl.Initialize(provider);
                     ImportSizeInfo();
                 }
                 PivotGrid.Initialize(m_CellSetProvider);
                 UpdateButtons();
 
                 DateTime stop = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine("PivotGrid initializing stop: " + stop.ToString());
-                System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
+                //System.Diagnostics.Debug.WriteLine("UpdateablePivotGrid initializing stop: " + stop.ToString());
+                System.Diagnostics.Debug.WriteLine("UpdateablePivotGrid initializing time: " + (stop - start).ToString());
             }
             finally
             {
@@ -1926,7 +1883,7 @@ namespace Ranet.AgOlap.Controls
             ServiceCommandArgs args = new ServiceCommandArgs(actionType);
             args.PivotID = this.GetHashCode().ToString();
             IsWaiting = true;
-            PivotLoader.PerformServiceCommand(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            OlapDataLoader.LoadData(args, args);
         }
 
         public CellControl FocusedCell
@@ -1998,15 +1955,9 @@ namespace Ranet.AgOlap.Controls
             }
             set
             {
-                // Кнопки управления редактированием делаем видимыми только для таблицы, которая поддерживает редактирование
-                EditButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                //CopyToClipboardButton;
-                PasteFromClipboardButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                UseChangesCasheButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                ConfirmEditButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-                CancelEditButton.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
-
                 PivotGrid.IsUpdateable = value;
+                // Устанавливаем значение кнопки Редактирование в соответствии с возможностью редактирования
+                EditButton.IsChecked = IsUpdateable;
                 UpdateEditToolBarButtons();
             }
         }
@@ -2046,46 +1997,57 @@ namespace Ranet.AgOlap.Controls
         
         void UpdateEditToolBarButtons(bool skipEditModeButton)
         {
-            if (!skipEditModeButton)
+            // Кнопки управления редактированием делаем видимыми только для таблицы, которая поддерживает редактирование
+            EditButton.Visibility = PivotGrid.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+            //CopyToClipboardButton;
+            PasteFromClipboardButton.Visibility = PivotGrid.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+            UseChangesCasheButton.Visibility = PivotGrid.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+            ConfirmEditButton.Visibility = PivotGrid.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+            CancelEditButton.Visibility = PivotGrid.CanEdit ? Visibility.Visible : Visibility.Collapsed;
+
+            if (PivotGrid.CanEdit)
             {
-                // Кнопка "Редактирование"
-                if (EditButton.IsChecked.HasValue && EditButton.IsChecked.Value != PivotGrid.IsUpdateable)
+                if (!skipEditModeButton)
                 {
-                    EditButton.IsChecked = new bool?(PivotGrid.IsUpdateable);
+                    // Кнопка "Редактирование"
+                    if (EditButton.IsChecked.HasValue && EditButton.IsChecked.Value != PivotGrid.EditMode)
+                    {
+                        EditButton.IsChecked = new bool?(PivotGrid.EditMode);
+                    }
                 }
+
+                //if (IsUpdateable)
+                //{
+                    // Делаем кнопки видимыми
+                    // EditButton.Visibility = UseChangesCasheButton.Visibility = ConfirmEditButton.Visibility = CancelEditButton.Visibility = Visibility.Visible;
+                    EditButton.IsEnabled = true;
+
+                    // Если кнопка btnEdit не нажата, то делаем недоступными кнопки btnUseChangesCache, btnSave, btnCancel
+                    UseChangesCasheButton.IsEnabled = EditButton.IsChecked.Value;
+                    PasteFromClipboardButton.IsEnabled = EditButton.IsChecked.Value;
+
+                    if (EditButton.IsChecked.Value)
+                    {
+                        ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled =
+                            m_CellChanges.CellChanges.Count > 0/* || m_AllocationArgs.Count > 0*/;
+                        /*btnModifications.Enabled = true;*/
+                    }
+                    else
+                    {
+                        ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled = EditButton.IsChecked.Value;
+                        //btnModifications.Enabled = false;
+                    }
+                //}
+                //else
+                //{
+                //    // Делаем кнопки невидимыми
+                //    // EditButton.Visibility = UseChangesCasheButton.Visibility = ConfirmEditButton.Visibility = CancelEditButton.Visibility = Visibility.Collapsed;
+                //    EditButton.IsEnabled = UseChangesCasheButton.IsEnabled = PasteFromClipboardButton.IsEnabled = ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled = false;
+                //}
+
+                //EditButton.IsChecked = new bool?(IsUpdateable);
+                //UseChangesCasheButton.IsChecked = new bool?(UseChangesCashe);
             }
-
-            if (IsUpdateable)
-            {
-                // Делаем кнопки видимыми
-                // EditButton.Visibility = UseChangesCasheButton.Visibility = ConfirmEditButton.Visibility = CancelEditButton.Visibility = Visibility.Visible;
-                EditButton.IsEnabled = true;
-
-                // Если кнопка btnEdit не нажата, то делаем недоступными кнопки btnUseChangesCache, btnSave, btnCancel
-                UseChangesCasheButton.IsEnabled = EditButton.IsChecked.Value;
-                PasteFromClipboardButton.IsEnabled = EditButton.IsChecked.Value;
-
-                if (EditButton.IsChecked.Value)
-                {
-                    ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled =
-                        m_CellChanges.CellChanges.Count > 0/* || m_AllocationArgs.Count > 0*/;
-                    /*btnModifications.Enabled = true;*/
-                }
-                else
-                {
-                    ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled = EditButton.IsChecked.Value;
-                    //btnModifications.Enabled = false;
-                }
-            }
-            else
-            {
-                // Делаем кнопки невидимыми
-                // EditButton.Visibility = UseChangesCasheButton.Visibility = ConfirmEditButton.Visibility = CancelEditButton.Visibility = Visibility.Collapsed;
-                EditButton.IsEnabled = UseChangesCasheButton.IsEnabled = PasteFromClipboardButton.IsEnabled = ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled = false;
-            }
-
-            //EditButton.IsChecked = new bool?(IsUpdateable);
-            //UseChangesCasheButton.IsChecked = new bool?(UseChangesCashe);
         }
 
         #endregion Управление возможностью редактирования ячеек

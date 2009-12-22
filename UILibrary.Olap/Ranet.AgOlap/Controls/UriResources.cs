@@ -78,7 +78,7 @@ namespace Ranet.AgOlap.Controls
             const string CANCEL_EDIT_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/CancelEdit.png";
             const string CONFIRM_EDIT_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/ConfirmEdit.png";
             const string USE_CHANGES_CASHE_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/UseChangesCache.png";
-            const string EDIT_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/Edit.png";
+            const string EDIT_CELLS_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/EditCells.png";
             const string RESTORE_SIZE_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/RestoreDefaultSize.png";
             const string HIDE_EMPTY_COLUMNS_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/HideEmptyColumns.png";
             const string HIDE_EMPTY_ROWS_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/HideEmptyRows.png";
@@ -167,11 +167,11 @@ namespace Ranet.AgOlap.Controls
                 }
             }
 
-            public static BitmapImage Edit16
+            public static BitmapImage EditCells16
             {
                 get
                 {
-                    return UriResources.GetImage(EDIT_16);
+                    return UriResources.GetImage(EDIT_CELLS_16);
                 }
             }
 
@@ -389,7 +389,9 @@ namespace Ranet.AgOlap.Controls
             const string CUBE_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/Cube.png";
             const string MEASURE_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/Measures.png";
             const string MEMBER_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/Member.png";
+            const string MEMBER_SMALL_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/MemberSmall.png";
             const string DIMENSION_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/Dimension.png";
+            const string NAMED_SET_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/NamedSet.png";
             const string MEASURE_CALC_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/MeasuresCalc.png";
             const string KPI_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/KPI.png";
             const string ATTRIBUTE_HIERARCHY_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/AttributeHierarchy.png";
@@ -408,15 +410,52 @@ namespace Ranet.AgOlap.Controls
 
             const string FOLDER_16 = "/Ranet.AgOlap;component/Controls/Images/Folder.png";
             const string FOLDER_OPEN_16 = "/Ranet.AgOlap;component/Controls/Images/FolderOpen.png";
+            const string MEASURES_FOLDER_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/MeasuresFolder.png";
+            const string MEASURES_FOLDER_OPEN_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/MeasuresFolderOpen.png";
             const string MEASURE_GROUP_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/MeasureGroup.png";
             const string DATA_MEMBER_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/DataMember.png";
             const string UNKNOWN_MEMBER_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/UnknownMember.png";
+            const string CUSTOM_MEASURE_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/CustomMeasure.png";
+            const string CUSTOM_NAMED_SET_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/CustomNamedSet.png";
+            const string CUSTOM_CALCULATIONS_16 = "/Ranet.AgOlap;component/Controls/Images/OLAP/CustomCalculations.png";
+
+            public static BitmapImage CustomCalculations16
+            {
+                get
+                {
+                    return UriResources.GetImage(CUSTOM_CALCULATIONS_16);
+                }
+            }
+
+            public static BitmapImage CustomMeasure16
+            {
+                get
+                {
+                    return UriResources.GetImage(CUSTOM_MEASURE_16);
+                }
+            }
+
+            public static BitmapImage CustomNamedSet16
+            {
+                get
+                {
+                    return UriResources.GetImage(CUSTOM_NAMED_SET_16);
+                }
+            }
 
             public static BitmapImage UnknownMember16
             {
                 get
                 {
                     return UriResources.GetImage(UNKNOWN_MEMBER_16);
+                }
+            }
+
+            public static BitmapImage NamedSet16
+            {
+                get
+                {
+                    return UriResources.GetImage(NAMED_SET_16);
                 }
             }
 
@@ -436,11 +475,35 @@ namespace Ranet.AgOlap.Controls
                 }
             }
 
+            public static BitmapImage MemberSmall16
+            {
+                get
+                {
+                    return UriResources.GetImage(MEMBER_SMALL_16);
+                }
+            }
+
             public static BitmapImage Member16
             {
                 get
                 {
                     return UriResources.GetImage(MEMBER_16);
+                }
+            }
+
+            public static BitmapImage MeasuresFolder16
+            {
+                get
+                {
+                    return UriResources.GetImage(MEASURES_FOLDER_16);
+                }
+            }
+
+            public static BitmapImage MeasuresFolderOpen16
+            {
+                get
+                {
+                    return UriResources.GetImage(MEASURES_FOLDER_OPEN_16);
                 }
             }
 
@@ -678,6 +741,24 @@ namespace Ranet.AgOlap.Controls
             const string LABEL_FILTER_16 = "/Ranet.AgOlap;component/Controls/MdxDesigner/Images/LabelFilter.png";
             const string VALUE_FILTER_16 = "/Ranet.AgOlap;component/Controls/MdxDesigner/Images/ValueFilter.png";
             const string TOP_FILTER_16 = "/Ranet.AgOlap;component/Controls/MdxDesigner/Images/TopFilter.png";
+            const string ADD_MEASURE_16 = "/Ranet.AgOlap;component/Controls/MdxDesigner/Images/AddMeasure.png";
+            const string ADD_NAMED_SET_16 = "/Ranet.AgOlap;component/Controls/MdxDesigner/Images/AddNamedSet.png";
+
+            public static BitmapImage AddMeasure16
+            {
+                get
+                {
+                    return UriResources.GetImage(ADD_MEASURE_16);
+                }
+            }
+
+            public static BitmapImage AddNamedSet16
+            {
+                get
+                {
+                    return UriResources.GetImage(ADD_NAMED_SET_16);
+                }
+            }
 
             public static BitmapImage TopFilter16
             {
@@ -1080,6 +1161,7 @@ namespace Ranet.AgOlap.Controls
             const string PASTE_16 = "/Ranet.AgOlap;component/Controls/Images/Paste.png";
             const string CUT_16 = "/Ranet.AgOlap;component/Controls/Images/Cut.png";
             const string DELETE_16 = "/Ranet.AgOlap;component/Controls/Images/Delete.png";
+            const string EDIT_16 = "/Ranet.AgOlap;component/Controls/Images/Edit.png";
             const string ERROR_16 = "/Ranet.AgOlap;component/Controls/Images/Error.png";
             const string INFO_16 = "/Ranet.AgOlap;component/Controls/Images/Info.png";
             const string WARNING_16 = "/Ranet.AgOlap;component/Controls/Images/Warning.png";
@@ -1102,6 +1184,25 @@ namespace Ranet.AgOlap.Controls
 
             const string FILE_EXTENSION_16 = "/Ranet.AgOlap;component/Controls/Images/FileExtension.png";
             const string FILE_ERROR_16 = "/Ranet.AgOlap;component/Controls/Images/FileError.png";
+
+            const string REMOVE_CROSS_16 = "/Ranet.AgOlap;component/Controls/Images/Remove.png";
+            const string REMOVE_ALL_CROSS_16 = "/Ranet.AgOlap;component/Controls/Images/RemoveAll.png";
+
+            public static BitmapImage RemoveAllCross16
+            {
+                get
+                {
+                    return UriResources.GetImage(REMOVE_ALL_CROSS_16);
+                }
+            }
+
+            public static BitmapImage RemoveCross16
+            {
+                get
+                {
+                    return UriResources.GetImage(REMOVE_CROSS_16);
+                }
+            }
 
             public static BitmapImage FileError16
             {
@@ -1284,6 +1385,14 @@ namespace Ranet.AgOlap.Controls
                 get
                 {
                     return UriResources.GetImage(DELETE_16);
+                }
+            }
+
+            public static BitmapImage Edit16
+            {
+                get
+                {
+                    return UriResources.GetImage(EDIT_16);
                 }
             }
         }

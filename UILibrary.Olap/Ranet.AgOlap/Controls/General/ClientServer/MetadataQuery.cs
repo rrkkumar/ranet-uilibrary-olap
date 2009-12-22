@@ -21,11 +21,17 @@
 using System;
 using System.Net;
 using Ranet.Olap.Core.Metadata;
+using Ranet.Olap.Core.Providers.ClientServer;
 
 namespace Ranet.AgOlap.Controls.General.ClientServer
 {
-    public class MetadataQuery
+    public class MetadataQuery : OlapActionBase
     {
+        public MetadataQuery()
+        {
+            ActionType = OlapActionTypes.GetMetadata;
+        }
+
         public MetadataQueryType QueryType = MetadataQueryType.GetMeasures;
 
         public String Connection = String.Empty;

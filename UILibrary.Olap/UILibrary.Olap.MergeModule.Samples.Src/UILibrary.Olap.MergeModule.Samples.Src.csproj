@@ -50,6 +50,9 @@
   <ItemGroup>
     <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\TestKey.snk" />
     <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxSample.mdx" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxSample00.mdx" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxSample01.mdx" />
+    <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxSample02.mdx" />
     <Content Include="INSTALLDIR\Samples\MdxFormatter\TestKey.snk" />
   </ItemGroup>
   <ItemGroup>
@@ -58,9 +61,66 @@
     <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml" />
     <Content Include="INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.SilverLight.csproj" />
     <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxFormatter.csproj" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Properties\AppManifest.xml" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\UITest.Silverlight.csproj" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Silverlight.js" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\UITest.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Page.xaml.cs">
+      <DependentUpon>Page.xaml</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Properties\AssemblyInfo.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx.cs">
+      <DependentUpon>InitializeWebService.asmx</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx.cs">
+      <DependentUpon>OlapWebService.asmx</DependentUpon>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Properties\AssemblyInfo.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Config.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evPivotGrid.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evChoices.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evConfig.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evGauge.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evMdxDesigner.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evServerExplorer.cs" />
     <Compile Include="Shortcuts.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\App.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Page.xaml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\ServiceReferences.ClientConfig" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration.svcinfo" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration91.svcinfo" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.disco" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.svcmap">
+    </Content>
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Default.htm" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.wsdl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="INSTALLDIR\Samples\UITest.Web\App_Data\" />
+    <Folder Include="INSTALLDIR\Samples\UITest.Web\ClientBin\" />
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
   <!--Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" /-->

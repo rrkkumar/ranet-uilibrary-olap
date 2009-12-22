@@ -365,7 +365,7 @@ namespace Ranet.AgOlap.Controls.Gauge
             calibration_ellipse1.SetValue(Canvas.TopProperty, m_MeterTop + outerSize - 1);
             calibration_ellipse1.SetValue(Canvas.LeftProperty, m_MeterLeft + outerSize - 1);
             LayoutRoot.Children.Add(calibration_ellipse1);
-            calibration_ellipse1.Effect = new System.Windows.Media.Effects.DropShadowEffect();
+            // calibration_ellipse1.Effect = new System.Windows.Media.Effects.DropShadowEffect();
 
             // Центр спидометра
             double cX = m_MeterSize / 2;

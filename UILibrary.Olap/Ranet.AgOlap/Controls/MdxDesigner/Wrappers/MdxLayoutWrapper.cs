@@ -30,6 +30,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
 {
@@ -89,6 +90,34 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
                 return m_Data;
             }
             set { m_Data = value; }
+        }
+
+        List<CalcMemberInfo> m_CalculatedMembers;
+        public List<CalcMemberInfo> CalculatedMembers
+        {
+            get
+            {
+                if (m_CalculatedMembers == null)
+                {
+                    m_CalculatedMembers = new List<CalcMemberInfo>();
+                }
+                return m_CalculatedMembers;
+            }
+            set { m_CalculatedMembers = value; }
+        }
+
+        List<CalculatedNamedSetInfo> m_CalculatedNamedSets;
+        public List<CalculatedNamedSetInfo> CalculatedNamedSets
+        {
+            get
+            {
+                if (m_CalculatedNamedSets == null)
+                {
+                    m_CalculatedNamedSets = new List<CalculatedNamedSetInfo>();
+                }
+                return m_CalculatedNamedSets;
+            }
+            set { m_CalculatedNamedSets = value; }
         }
 
         public MdxLayoutWrapper()

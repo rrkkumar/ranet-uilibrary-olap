@@ -43,7 +43,11 @@ namespace Ranet.AgOlap.Controls.General
         #region ILogService Members
         public void LogException(String caption, Exception ex)
         {
-            throw ex;
+            //throw ex;
+            if (ex != null)
+            {
+                MessageBox.Show(ex.Message, caption, MessageBoxButton.OK);
+            }
         }
 
         public void LogMessage(String caption, string message)

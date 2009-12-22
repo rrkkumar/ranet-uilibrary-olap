@@ -60,16 +60,9 @@ namespace Ranet.AgOlap.Controls
 
         void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
-            InfoBase info = null;
-            CubeTreeNode node = e.NewValue as CubeTreeNode;
-            if (node != null)
-            {
-                info = node.Info;
-            }
-
-            m_IsReadyToSelection = node != null;
-
-            Raise_SelectedItemChanged(info);
+            ApplyItemsSelection();
+            m_IsReadyToSelection = SelectedInfo != null;
+            Raise_SelectedItemChanged(SelectedInfo);
         }
 
         bool m_IsReadyToSelection = false;
@@ -130,7 +123,7 @@ namespace Ranet.AgOlap.Controls
             cubesNode.IsExpanded = true;
             
             MetadataQuery args = CommandHelper.CreateGetCubesQueryArgs(Connection);
-            Loader.LoadData(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), cubesNode);
+            Loader.LoadData(args, cubesNode);
         }
 
         IDataLoader m_Loader = null;
@@ -149,7 +142,7 @@ namespace Ranet.AgOlap.Controls
             {
                 if (m_Loader == null)
                 {
-                    m_Loader = new MetadataLoader(URL);
+                    m_Loader = new OlapDataLoader(URL);
                     m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
                 }
                 return m_Loader;
@@ -273,14 +266,11 @@ namespace Ranet.AgOlap.Controls
 
         private void ApplyItemsSelection()
         {
-           CubeTreeNode node = null;
+            CubeTreeNode node = null;
             node = Tree.SelectedItem as CubeTreeNode;
 
-            if (node != null)
-            {
-                //Запоминаем выбранный элемент
-                m_SelectedInfo = node.Info as CubeDefInfo;
-            }
+            //Запоминаем выбранный элемент
+            m_SelectedInfo = node != null ? node.Info as CubeDefInfo : null;
         }
     }
 }

@@ -47,6 +47,7 @@ using System.IO.IsolatedStorage;
 using Ranet.AgOlap.Controls.MdxDesigner.Filters;
 using Ranet.AgOlap.Controls.Forms;
 using Ranet.Olap.Core.Storage;
+using Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -66,8 +67,10 @@ namespace Ranet.AgOlap.Controls
         UpdateablePivotGridControl m_PivotGrid;
         RanetToggleButton m_ShowMetadataArea;
         RanetToggleButton m_ShowMDXQuery;
+        RanetToggleButton m_EditMDXQuery;
         RanetToggleButton m_RunQueryAutomatic;
         RanetToolBarButton m_ExecuteQuery;
+        RanetToolBarButton m_CalculatedMemberEditor;
         RanetToolBarButton m_ExportLayout;
         RanetToolBarButton m_ImportLayout;
 
@@ -118,7 +121,21 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(m_ShowMDXQuery, Localization.MdxDesigner_ShowQuery_ToolTip);
             m_ToolBar.AddItem(m_ShowMDXQuery);
 
+            m_EditMDXQuery = new RanetToggleButton();
+            m_EditMDXQuery.ClickMode = ClickMode.Press;
+            m_EditMDXQuery.Click += new RoutedEventHandler(m_EditMDXQuery_Click);
+            m_EditMDXQuery.IsChecked = new bool?(false);
+            m_EditMDXQuery.Content = UiHelper.CreateIcon(UriResources.Images.Edit16);
+            ToolTipService.SetToolTip(m_EditMDXQuery, Localization.MdxDesigner_EditQuery_ToolTip);
+            m_ToolBar.AddItem(m_EditMDXQuery);
+
             m_ToolBar.AddItem(new RanetToolBarSplitter());
+
+            m_CalculatedMemberEditor = new RanetToolBarButton();
+            m_CalculatedMemberEditor.Content = UiHelper.CreateIcon(UriResources.Images.CustomCalculations16);
+            m_CalculatedMemberEditor.Click += new RoutedEventHandler(m_CalculatedMemberEditor_Click);
+            ToolTipService.SetToolTip(m_CalculatedMemberEditor, Localization.MdxDesigner_CalculatedMemberEditor);
+            m_ToolBar.AddItem(m_CalculatedMemberEditor);
 
             m_RunQueryAutomatic = new RanetToggleButton();
             m_RunQueryAutomatic.ClickMode = ClickMode.Press;
@@ -332,15 +349,354 @@ namespace Ranet.AgOlap.Controls
 
             //Scroll.Content = LayoutRoot;
 
-            m_MetaLoader = new MetadataLoader(URL);
-            m_PivotLoader = new PivotDataLoader(URL);
-            m_MembersLoader = new MembersDataLoader(URL);
+            m_CubeBrowser.OlapDataLoader = GetOlapDataLoader();
+            m_PivotGrid.OlapDataLoader = GetOlapDataLoader();
             m_StorageManager = GetStorageManager();
             m_StorageManager.InvokeCompleted += new EventHandler<DataLoaderEventArgs>(StorageManager_ActionCompleted);
 
             this.Content = LayoutRoot;
         }
 
+        public bool AutoExecuteQuery
+        {
+            get {
+                if (m_RunQueryAutomatic.IsChecked.HasValue)
+                    return m_RunQueryAutomatic.IsChecked.Value;
+                else
+                    return true;
+            }
+            set { m_RunQueryAutomatic.IsChecked = new bool?(value); }
+        }
+
+        void m_EditMDXQuery_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_EditMDXQuery.IsChecked.HasValue)
+            {
+                m_MdxQuery.IsReadOnly = !m_EditMDXQuery.IsChecked.Value;
+
+                if (m_EditMDXQuery.IsChecked.Value && m_ShowMDXQuery.IsChecked.HasValue && m_ShowMDXQuery.IsChecked.Value == false)
+                {
+                    // Эмулируем нажатие на кнопку Показать MDX
+                    m_ShowMDXQuery.IsChecked = new bool?(true);
+                    m_ShowMDXQuery_Click(sender, e);
+                }
+            }
+        }
+
+        List<CalcMemberInfo> m_CalculatedMembers;
+        /// <summary>
+        /// Список пользовательских вычисляемых элементов
+        /// </summary>
+        public List<CalcMemberInfo> CalculatedMembers
+        {
+            get {
+                if (m_CalculatedMembers == null)
+                {
+                    m_CalculatedMembers = new List<CalcMemberInfo>();
+                }
+                return m_CalculatedMembers;
+            }
+            set {
+                m_CalculatedMembers = value;
+                m_CubeBrowser.CalculatedMembers = value;
+            }
+        }
+
+        List<CalculatedNamedSetInfo> m_CalculatedNamedSets;
+        /// <summary>
+        /// Список пользовательских вычисляемых именованных наборов
+        /// </summary>
+        List<CalculatedNamedSetInfo> CalculatedNamedSets
+        {
+            get
+            {
+                if (m_CalculatedNamedSets == null)
+                {
+                    m_CalculatedNamedSets = new List<CalculatedNamedSetInfo>();
+                }
+                return m_CalculatedNamedSets;
+            }
+            set
+            {
+                m_CalculatedNamedSets = value;
+                m_CubeBrowser.CalculatedNamedSets = value;
+            }
+        }
+
+        List<NamedSet_AreaItemControl> GetUsedNamedSets()
+        {
+            List<NamedSet_AreaItemControl> list = GetUsedNamedSets(m_FilterAreaContainer);
+            List<NamedSet_AreaItemControl> ret = GetUsedNamedSets(m_RowsAreaContainer);
+            foreach (NamedSet_AreaItemControl item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+            ret = GetUsedNamedSets(m_ColumnsAreaContainer);
+            foreach (NamedSet_AreaItemControl item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+            ret = GetUsedNamedSets(m_DataAreaContainer);
+            foreach (NamedSet_AreaItemControl item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+
+            return list;
+        }
+
+        List<NamedSet_AreaItemControl> GetUsedNamedSets(PivotAreaContainer area)
+        {
+            List<NamedSet_AreaItemControl> list = new List<NamedSet_AreaItemControl>();
+            if (area != null)
+            {
+                foreach (AreaItemControl child in area.Items)
+                {
+                    NamedSet_AreaItemControl set_ctrl = child as NamedSet_AreaItemControl;
+                    if (set_ctrl != null)
+                    {
+
+                        if (!list.Contains(set_ctrl))
+                        {
+                            list.Add(set_ctrl);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        List<CalculationInfoBase> GetUsedCalculatedMembers()
+        {
+            List<CalculationInfoBase> list = GetUsedCalculatedMembers(m_FilterAreaContainer);
+            List<CalculationInfoBase> ret = GetUsedCalculatedMembers(m_RowsAreaContainer);
+            foreach (CalculationInfoBase item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+            ret = GetUsedCalculatedMembers(m_ColumnsAreaContainer);
+            foreach (CalculationInfoBase item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+            ret = GetUsedCalculatedMembers(m_DataAreaContainer);
+            foreach (CalculationInfoBase item in ret)
+            {
+                if (!list.Contains(item)) { list.Add(item); }
+            }
+
+            return list;
+        }
+
+        List<CalculationInfoBase> GetUsedCalculatedMembers(PivotAreaContainer area)
+        {
+            List<CalculationInfoBase> list = new List<CalculationInfoBase>();
+            if (area != null)
+            {
+                foreach (AreaItemControl child in area.Items)
+                {
+                    CalculatedMember_AreaItemControl member_ctrl = child as CalculatedMember_AreaItemControl;
+                    if (member_ctrl != null)
+                    {
+                        CalculationInfoBase item = GetCalculatedMember(member_ctrl.CalculatedMember.Name);
+                        if (item != null && !list.Contains(item))
+                        {
+                            list.Add(item);
+                        }
+                    }
+
+                    CalculateNamedSet_AreaItemControl set_ctrl = child as CalculateNamedSet_AreaItemControl;
+                    if (set_ctrl != null)
+                    {
+                        CalculationInfoBase item = GetCalculatedNamedSet(set_ctrl.CalculatedNamedSet.Name);
+                        if (item != null && !list.Contains(item))
+                        {
+                            list.Add(item);
+                        }
+                    }
+                }
+            }
+            return list;
+        }
+
+        ModalDialog m_CalculatedMemberEditorModalDialog = null;
+        CalculationsEditor m_CalculatedItemsEditor = null;
+
+        void m_CalculatedMemberEditor_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_CalculatedMemberEditorModalDialog == null)
+            {
+                m_CalculatedMemberEditorModalDialog = new ModalDialog();
+                m_CalculatedMemberEditorModalDialog.BeforeClosed += new EventHandler<DialogResultArgs>(dlg_BeforeClosed);
+                m_CalculatedMemberEditorModalDialog.DialogClosed += new EventHandler<DialogResultArgs>(dlg_DialogClosed);
+                m_CalculatedMemberEditorModalDialog.DialogOk += new EventHandler<DialogResultArgs>(dlg_DialogOk);
+                m_CalculatedMemberEditorModalDialog.Caption = Localization.CalcMemberEditor_DialogCaption;
+                m_CalculatedMemberEditorModalDialog.MinHeight = 300;
+                m_CalculatedMemberEditorModalDialog.MinWidth = 300;
+                m_CalculatedMemberEditorModalDialog.Height = 500;
+                m_CalculatedMemberEditorModalDialog.Width = 600;
+            }
+
+            if (m_CalculatedItemsEditor == null)
+            {
+                m_CalculatedItemsEditor = new CalculationsEditor();
+                m_CalculatedItemsEditor.EditEnd += (s, args) => { m_CalculatedMemberEditorModalDialog.ListenKeys(true); };
+                m_CalculatedItemsEditor.EditStart += (s, args) => { m_CalculatedMemberEditorModalDialog.ListenKeys(false); };
+                m_CalculatedMemberEditorModalDialog.Content = m_CalculatedItemsEditor;
+                m_CalculatedItemsEditor.CubeBrowser.OlapDataLoader = GetOlapDataLoader();
+            }
+            if(m_CalculatedItemsEditor.CubeBrowser.Connection != Connection)
+                m_CalculatedItemsEditor.CubeBrowser.Connection = Connection;
+            if(m_CalculatedItemsEditor.CubeBrowser.CubeName != CubeName)
+                m_CalculatedItemsEditor.CubeBrowser.CubeName = CubeName;
+            if(m_CalculatedItemsEditor.CubeBrowser.SubCube != SubCube)
+                m_CalculatedItemsEditor.CubeBrowser.SubCube = SubCube;
+
+            Dictionary<String, CalculationInfoBase> members = new Dictionary<string, CalculationInfoBase>();
+            foreach (CalcMemberInfo info in CalculatedMembers)
+            {
+                CalcMemberInfo cloned = info.Clone() as CalcMemberInfo;
+                if (cloned != null && !members.ContainsKey(cloned.Name))
+                    members.Add(cloned.Name, cloned);
+            }
+
+            Dictionary<String, CalculationInfoBase> sets = new Dictionary<string, CalculationInfoBase>();
+            foreach (CalculatedNamedSetInfo info in CalculatedNamedSets)
+            {
+                CalculatedNamedSetInfo cloned = info.Clone() as CalculatedNamedSetInfo;
+                if (cloned != null && !sets.ContainsKey(cloned.Name))
+                    sets.Add(cloned.Name, cloned);
+            }
+
+            m_CalculatedItemsEditor.Initialize(members, sets, m_CubeBrowser.CubeInfo);
+            m_CalculatedMemberEditorModalDialog.Show();
+        }
+
+        void dlg_DialogOk(object sender, DialogResultArgs e)
+        {
+            if (m_CalculatedItemsEditor != null)
+            {
+                m_CalculatedItemsEditor.EndEdit();
+
+                List<CalcMemberInfo> members = new List<CalcMemberInfo>();
+                foreach (CalculationInfoBase info in m_CalculatedItemsEditor.Members.Values)
+                {
+                    CalcMemberInfo memberInfo = info as CalcMemberInfo;
+                    if (memberInfo != null)
+                    {
+                        members.Add(memberInfo);
+                    }
+                }
+
+                List<CalculatedNamedSetInfo> sets = new List<CalculatedNamedSetInfo>();
+                foreach (CalculationInfoBase info in m_CalculatedItemsEditor.Sets.Values)
+                {
+                    CalculatedNamedSetInfo setInfo = info as CalculatedNamedSetInfo;
+                    if (setInfo != null)
+                    {
+                        sets.Add(setInfo);
+                    }
+                }
+
+                CalculatedMembers = members;
+                CalculatedNamedSets = sets;
+
+                RefreshCalculationItems();
+                HighLightCustomNodes();
+                RefreshMdxQuery();
+            }
+        }
+
+        void dlg_BeforeClosed(object sender, DialogResultArgs e)
+        {
+        }
+
+        void dlg_DialogClosed(object sender, DialogResultArgs e)
+        {
+        }
+
+        /// <summary>
+        /// Обновляет информацию о вычислениях. Удаляет лишние, обновляет информацию у существующих
+        /// </summary>
+        void RefreshCalculationItems()
+        {
+            RefreshCalculationItems(m_FilterAreaContainer);
+            RefreshCalculationItems(m_RowsAreaContainer);
+            RefreshCalculationItems(m_ColumnsAreaContainer);
+            RefreshCalculationItems(m_DataAreaContainer);
+        }
+
+        /// <summary>
+        /// Обновляет информацию о вычислениях. Удаляет лишние, обновляет информацию у существующих
+        /// </summary>
+        /// <param name="area">Область для обновления</param>
+        void RefreshCalculationItems(PivotAreaContainer area)
+        {
+            if (area != null)
+            {
+                List<AreaItemControl> toDelete = new List<AreaItemControl>();
+                foreach (AreaItemControl child in area.Items)
+                {
+                    InfoItemControl info_ctrl = child as InfoItemControl;
+                    if (info_ctrl != null)
+                    {
+                        Calculated_AreaItemWrapper calculated = info_ctrl.Wrapper as Calculated_AreaItemWrapper;
+                        if (calculated != null)
+                        {
+                            CalculationInfoBase item = null;
+                            if (calculated is CalculatedMember_AreaItemWrapper)
+                            {
+                                item = GetCalculatedMember(calculated.Name);
+                            }
+                            if (calculated is CalculatedNamedSet_AreaItemWrapper)
+                            {
+                                item = GetCalculatedNamedSet(calculated.Name);
+                            }
+
+                            if (item == null)
+                            {
+                                toDelete.Add(child);
+                            }
+                            else
+                            {
+                                info_ctrl.Caption = calculated.Caption;
+                            }
+                        }
+                    }
+                }
+
+                // Удаляем элементы, которые уже удалены в дизайнере
+                foreach (AreaItemControl child in toDelete)
+                {
+                    area.RemoveItem(child);
+                }
+            }
+        }
+
+        void HighLightCustomNodes()
+        {
+            HighLightCustomNodes(m_FilterAreaContainer);
+            HighLightCustomNodes(m_RowsAreaContainer);
+            HighLightCustomNodes(m_ColumnsAreaContainer);
+            HighLightCustomNodes(m_DataAreaContainer);
+        }
+
+        void HighLightCustomNodes(PivotAreaContainer area)
+        {
+            if (area != null)
+            {
+                foreach (AreaItemControl child in area.Items)
+                {
+                    InfoItemControl info_ctrl = child as InfoItemControl;
+                    if (info_ctrl != null)
+                    {
+                        CustomTreeNode node = FindCustomNode(info_ctrl.Wrapper);
+                        if (node != null)
+                            node.UseBoldText = true;
+                    }
+                }
+            }
+        }
         #endregion Конструктор
 
         void StorageManager_ActionCompleted(object sender, DataLoaderEventArgs e)
@@ -376,22 +732,19 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 base.URL = value;
-                MembersDataLoader membersLoader = MembersLoader as MembersDataLoader;
-                if (membersLoader != null)
-                {
-                    membersLoader.URL = value;
-                }
 
-                MetadataLoader metadataLoader = MetaLoader as MetadataLoader;
-                if (metadataLoader != null)
-                {
-                    metadataLoader.URL = value;
-                }
+                m_CubeBrowser.URL = value;
+                m_PivotGrid.URL = value;
 
-                PivotDataLoader pivotDataLoader = PivotLoader as PivotDataLoader;
-                if (pivotDataLoader != null)
+                OlapDataLoader olapDataLoader = m_CubeBrowser.OlapDataLoader as OlapDataLoader;
+                if (olapDataLoader != null)
                 {
-                    pivotDataLoader.URL = value;
+                    olapDataLoader.URL = value;
+                }
+                olapDataLoader = m_PivotGrid.OlapDataLoader as OlapDataLoader;
+                if (olapDataLoader != null)
+                {
+                    olapDataLoader.URL = value;
                 }
             }
         }
@@ -799,6 +1152,96 @@ namespace Ranet.AgOlap.Controls
                 from_Set = inner_from;
 
             StringBuilder builder = new StringBuilder();
+
+            int count = 0;
+            // Именованные сеты из КУБА
+            foreach (NamedSet_AreaItemControl set_ctrl in GetUsedNamedSets())
+            {
+                if (set_ctrl.NamedSet == null)
+                    continue;
+
+                if (!String.IsNullOrEmpty(set_ctrl.NamedSet.Name))
+                {
+                    NamedSetTreeNode node = m_CubeBrowser.FindNamedSet(set_ctrl.NamedSet.Name);
+                    if (node != null)
+                    {
+                        NamedSetInfo setInfo = node.Info as NamedSetInfo;
+                        if (setInfo != null)
+                        {
+                            String script = setInfo.Expression;
+                            //if (!String.IsNullOrEmpty(script))
+                            {
+                                String name = setInfo.Name.Trim();
+                                if (!name.StartsWith("["))
+                                    name = "[" + name;
+                                if (!name.EndsWith("]"))
+                                    name = name + "]";
+
+                                if (count == 0)
+                                    builder.Append("WITH ");
+                                if (count != 0)
+                                    builder.Append(" ");
+                                builder.AppendLine();
+
+                                builder.AppendFormat("SET {0} AS {1}", name, "{" + script + "}");
+
+                                count++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Вычисляемые элементы и сеты
+            foreach (CalculationInfoBase info in GetUsedCalculatedMembers())
+            {
+                if (!String.IsNullOrEmpty(info.Name))
+                {
+                    String script = String.Empty;
+
+                    CalcMemberInfo memberInfo = info as CalcMemberInfo;
+                    if (memberInfo != null)
+                    {
+                        script = memberInfo.GetScript();
+                    }
+
+                    CalculatedNamedSetInfo setInfo = info as CalculatedNamedSetInfo;
+                    if (setInfo != null)
+                    {
+                        script = setInfo.Expression;
+                    }
+
+                    if (memberInfo != null || setInfo != null)
+                    {
+                        //if (!String.IsNullOrEmpty(script))
+                        {
+                            String name = info.Name.Trim();
+                            if (!name.StartsWith("["))
+                                name = "[" + name;
+                            if (!name.EndsWith("]"))
+                                name = name + "]";
+
+                            if (count == 0)
+                                builder.Append("WITH ");
+                            if (count != 0)
+                                builder.Append(" ");
+                            builder.AppendLine();
+                            
+                            if (memberInfo != null)
+                                builder.AppendFormat("MEMBER {0} AS {1}", name, String.IsNullOrEmpty(script) ? "NULL" : script);
+                            if (setInfo != null)
+                                builder.AppendFormat("SET {0} AS {1}", name, "{" + script + "}");
+
+                            count++;
+                        }
+                    }
+                }
+            }
+
+
+            if(!String.IsNullOrEmpty(builder.ToString()))
+                builder.AppendLine(" ");
+
             builder.AppendLine("Select ");
             builder.AppendLine(select_Set + " ");
             builder.AppendLine("FROM ");
@@ -813,8 +1256,7 @@ namespace Ranet.AgOlap.Controls
             m_MdxQuery.Text = mdxQuery;
            
             // Проверяем нужно ли выполнять запрос автоматически
-            if (m_RunQueryAutomatic.IsChecked.HasValue &&
-                m_RunQueryAutomatic.IsChecked.Value == true)
+            if (AutoExecuteQuery)
             {
                 InitializePivotGrid(mdxQuery);
             }
@@ -1077,6 +1519,26 @@ namespace Ranet.AgOlap.Controls
             return result;
         }
 
+        CalculationInfoBase GetCalculatedMember(String name)
+        {
+            foreach (CalculationInfoBase info in CalculatedMembers)
+            {
+                if (info.Name == name)
+                    return info;
+            }
+            return null;
+        }
+
+        CalculationInfoBase GetCalculatedNamedSet(String name)
+        {
+            foreach (CalculationInfoBase info in CalculatedNamedSets)
+            {
+                if (info.Name == name)
+                    return info;
+            }
+            return null;
+        }
+
         String BuildItemSet(AreaItemControl item)
         {
             String result = String.Empty;
@@ -1096,49 +1558,70 @@ namespace Ranet.AgOlap.Controls
                             Hierarchy_AreaItemControl hierarchy_Item = item as Hierarchy_AreaItemControl;
                             if (hierarchy_Item != null)
                             {
-                                result = String.Format(HIERARCHY_MEMBERS_SET_BLANK, hierarchy_Item.Hierarchy.UniqueName);
+                                return String.Format(HIERARCHY_MEMBERS_SET_BLANK, hierarchy_Item.Hierarchy.UniqueName);
                             }
 
                             Level_AreaItemControl level_Item = item as Level_AreaItemControl;
                             if (level_Item != null)
                             {
-                                result = String.Format(LEVEL_MEMBERS_SET_BLANK, level_Item.Level.UniqueName);
+                                return String.Format(LEVEL_MEMBERS_SET_BLANK, level_Item.Level.UniqueName);
                             }
                         }
+                    }
+
+                    CalculatedMember_AreaItemControl calcMember_Item = item as CalculatedMember_AreaItemControl;
+                    if (calcMember_Item != null && calcMember_Item.CalculatedMember != null)
+                    {
+                        CalculationInfoBase info = GetCalculatedMember(calcMember_Item.CalculatedMember.Name);
+                        if (info != null)
+                        {
+                            return info.Name;
+                        }
+                    }
+
+                    CalculateNamedSet_AreaItemControl calculatedSet_Item = item as CalculateNamedSet_AreaItemControl;
+                    if (calculatedSet_Item != null)
+                    {
+                        CalculationInfoBase info = GetCalculatedNamedSet(calculatedSet_Item.CalculatedNamedSet.Name);
+                        if (info != null)
+                        {
+                            return info.Name;
+                        }
+                    }
+
+                    NamedSet_AreaItemControl set_Item = item as NamedSet_AreaItemControl;
+                    if (set_Item != null)
+                    {
+                        return OlapHelper.ConvertToQueryStyle(set_Item.NamedSet.Name);
                     }
 
                     Measure_AreaItemControl measure_Item = item as Measure_AreaItemControl;
                     if (measure_Item != null)
                     {
-                        if (!String.IsNullOrEmpty(result))
-                            result += ",";
-                        result += measure_Item.Measure.UniqueName;
+                        return measure_Item.Measure.UniqueName;
                     }
 
                     Kpi_AreaItemControl kpi_Item = item as Kpi_AreaItemControl;
                     if (kpi_Item != null)
                     {
-                        if (!String.IsNullOrEmpty(result))
-                            result += ",";
-
                         if (kpi_Item.Type == KpiControlType.Goal)
                         {
-                            result += kpi_Item.Kpi.Custom_KpiGoal;
+                            return kpi_Item.Kpi.Custom_KpiGoal;
                         }
 
                         if (kpi_Item.Type == KpiControlType.Value)
                         {
-                            result += kpi_Item.Kpi.Custom_KpiValue;
+                            return kpi_Item.Kpi.Custom_KpiValue;
                         }
 
                         if (kpi_Item.Type == KpiControlType.Status)
                         {
-                            result += kpi_Item.Kpi.Custom_KpiStatus;
+                            return kpi_Item.Kpi.Custom_KpiStatus;
                         }
 
                         if (kpi_Item.Type == KpiControlType.Trend)
                         {
-                            result += kpi_Item.Kpi.Custom_KpiTrend;
+                            return kpi_Item.Kpi.Custom_KpiTrend;
                         }
                     }
                 }
@@ -1149,39 +1632,52 @@ namespace Ranet.AgOlap.Controls
                     result = String.Empty;
                     foreach (AreaItemControl child in m_DataAreaContainer.Items)
                     {
+                        String toAdd = String.Empty;
                         Measure_AreaItemControl measure_Item = child as Measure_AreaItemControl;
                         if (measure_Item != null)
                         {
-                            if (!String.IsNullOrEmpty(result))
-                                result += ",";
-                            result += measure_Item.Measure.UniqueName;
+                            toAdd = measure_Item.Measure.UniqueName;
+                        }
+
+                        CalculatedMember_AreaItemControl calcMember_Item = child as CalculatedMember_AreaItemControl;
+                        if (calcMember_Item != null && calcMember_Item.CalculatedMember != null)
+                        {
+                            CalculationInfoBase info = GetCalculatedMember(calcMember_Item.CalculatedMember.Name);
+                            if (info != null)
+                            {
+                                toAdd = info.Name;
+                            }
                         }
 
                         Kpi_AreaItemControl kpi_Item = item as Kpi_AreaItemControl;
                         if (kpi_Item != null)
                         {
-                            if (!String.IsNullOrEmpty(result))
-                                result += ",";
-
                             if (kpi_Item.Type == KpiControlType.Goal)
                             {
-                                result += kpi_Item.Kpi.Custom_KpiGoal;
+                                toAdd = kpi_Item.Kpi.Custom_KpiGoal;
                             }
 
                             if (kpi_Item.Type == KpiControlType.Value)
                             {
-                                result += kpi_Item.Kpi.Custom_KpiValue;
+                                toAdd = kpi_Item.Kpi.Custom_KpiValue;
                             }
 
                             if (kpi_Item.Type == KpiControlType.Status)
                             {
-                                result += kpi_Item.Kpi.Custom_KpiStatus;
+                                toAdd = kpi_Item.Kpi.Custom_KpiStatus;
                             }
 
                             if (kpi_Item.Type == KpiControlType.Trend)
                             {
-                                result += kpi_Item.Kpi.Custom_KpiTrend;
+                                toAdd = kpi_Item.Kpi.Custom_KpiTrend;
                             }
+                        }
+
+                        if (!String.IsNullOrEmpty(toAdd))
+                        {
+                            if (!String.IsNullOrEmpty(result))
+                                result += ", ";
+                            result += toAdd;
                         }
                     }
                 }
@@ -1197,10 +1693,12 @@ namespace Ranet.AgOlap.Controls
 
         void AreaContainer_ItemRemoved(object sender, AreaItemArgs e)
         {
-            InfoBaseTreeNode info_node = e.ItemControl.UserData as InfoBaseTreeNode;
-            if (info_node != null)
+            InfoItemControl info_ctrl = e.ItemControl as InfoItemControl;
+            if (info_ctrl != null)
             {
-                info_node.UseBoldText = false;
+                CustomTreeNode node = FindCustomNode(info_ctrl.Wrapper);
+                if (node != null)
+                    node.UseBoldText = false;
             }
 
             if (sender == m_DataAreaContainer)
@@ -1266,135 +1764,233 @@ namespace Ranet.AgOlap.Controls
             {
                 TreeViewItem node = e.Node;
 
-                // Если тягается измерение, то подменяем этот узел на первый из узлов иерархий
-                DimensionTreeNode dimNode = node as DimensionTreeNode;
-                if (dimNode != null)
+                // Если кидаем в область MDX запроса
+                if (MDXQueryIsReadyToDrop)
                 {
-                    HierarchyTreeNode hierarchyNode = null;
-
-                    // Для начала ищем иерархию среди дочерних
-                    foreach (TreeViewItem child in dimNode.Items)
+                    String str = m_CubeBrowser.GetNodeString(node as CustomTreeNode);
+                    if(!String.IsNullOrEmpty(str))
                     {
-                        hierarchyNode = child as HierarchyTreeNode;
-                        if (hierarchyNode != null)
+                        m_MdxQuery.Text += " " + str;
+                    }
+                    MDXQueryIsReadyToDrop = false;
+                }
+                else
+                {
+                    // Если тягается измерение, то подменяем этот узел на первый из узлов иерархий
+                    DimensionTreeNode dimNode = node as DimensionTreeNode;
+                    if (dimNode != null)
+                    {
+                        HierarchyTreeNode hierarchyNode = null;
+
+                        // Для начала ищем иерархию среди дочерних
+                        foreach (TreeViewItem child in dimNode.Items)
                         {
-                            node = hierarchyNode;
-                            break;
+                            hierarchyNode = child as HierarchyTreeNode;
+                            if (hierarchyNode != null)
+                            {
+                                node = hierarchyNode;
+                                break;
+                            }
+                        }
+                        if (hierarchyNode == null)
+                        {
+                            // раз иерархии не нашли среди дочерних, то возможно средидочерних есть папки, в которые иерархия может быть вложена
+                            // Значит пытаемся найти рекурсивно
+                            hierarchyNode = FindHierarchy(dimNode);
+                            if (hierarchyNode == null)
+                                return;
+                            else
+                                node = hierarchyNode;
                         }
                     }
-                    if (hierarchyNode == null)
+
+                    // Убиваем конкурентов :D
+                    if (m_RowsAreaContainer.IsReadyToDrop ||
+                        m_ColumnsAreaContainer.IsReadyToDrop ||
+                        m_FilterAreaContainer.IsReadyToDrop ||
+                        m_DataAreaContainer.IsReadyToDrop)
                     {
-                        // раз иерархии не нашли среди дочерних, то возможно средидочерних есть папки, в которые иерархия может быть вложена
-                        // Значит пытаемся найти рекурсивно
-                        hierarchyNode = FindHierarchy(dimNode);
-                        if(hierarchyNode == null)
-                            return;
-                        else
-                            node = hierarchyNode;
+                        AreaItemControl concurent = FindConcurent(m_RowsAreaContainer, node);
+                        m_RowsAreaContainer.RemoveItem(concurent, false);
+
+                        concurent = FindConcurent(m_ColumnsAreaContainer, node);
+                        m_ColumnsAreaContainer.RemoveItem(concurent, false);
+
+                        concurent = FindConcurent(m_FilterAreaContainer, node);
+                        m_FilterAreaContainer.RemoveItem(concurent, false);
+
+                        concurent = FindConcurent(m_DataAreaContainer, node);
+                        m_DataAreaContainer.RemoveItem(concurent, false);
                     }
-                }
 
-                // Убиваем конкурентов :D
-                if (m_RowsAreaContainer.IsReadyToDrop ||
-                    m_ColumnsAreaContainer.IsReadyToDrop ||
-                    m_FilterAreaContainer.IsReadyToDrop)
-                {
-                    AreaItemControl concurent = FindConcurent(m_RowsAreaContainer, node);
-                    m_RowsAreaContainer.RemoveItem(concurent, false);
-                    
-                    concurent = FindConcurent(m_ColumnsAreaContainer, node);
-                    m_ColumnsAreaContainer.RemoveItem(concurent, false);
-                    
-                    concurent = FindConcurent(m_FilterAreaContainer, node);
-                    m_FilterAreaContainer.RemoveItem(concurent, false);
-                }
-
-                InfoBaseTreeNode info_node = node as InfoBaseTreeNode;
-                if (info_node != null)
-                {
-                    HierarchyInfo hierarchyInfo = info_node.Info as HierarchyInfo;
-                    LevelInfo levelInfo = info_node.Info as LevelInfo;
-                    MeasureInfo measureInfo = info_node.Info as MeasureInfo;
-                    KpiInfo kpiInfo = info_node.Info as KpiInfo;
-
-                    // Иерархии и уровни можно кидать только в области: строк, столбцов, фильтров
-                    if (hierarchyInfo != null || levelInfo != null)
+                    #region Узлы для вычисляемых элементов
+                    CalculatedMemberTreeNode calcMemberNode = node as CalculatedMemberTreeNode;
+                    if (calcMemberNode != null && calcMemberNode.Info != null)
                     {
-                        FilteredItemControl ctrl = null;
-                        if(hierarchyInfo != null)
-                            ctrl = new Hierarchy_AreaItemControl(new Hierarchy_AreaItemWrapper(hierarchyInfo), info_node.Icon);
-                        if(levelInfo != null)
-                            ctrl = new Level_AreaItemControl(new Level_AreaItemWrapper(levelInfo), info_node.Icon);
+                        // Вычисляемые элементы могут кидаться только в область данных
+                        AreaItemControl ctrl = new CalculatedMember_AreaItemControl(new CalculatedMember_AreaItemWrapper(calcMemberNode.Info), calcMemberNode.Icon);
+                        ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                        ctrl.UserData = node;
 
-                        ctrl.ShowFilter += new EventHandler(FilteredItem_ShowFilter);
-                        ctrl.CancelFilter += new EventHandler(FilteredItem_CancelFilter);
+
+                        if (m_DataAreaContainer.IsReadyToDrop)
+                        {
+                            int count = m_DataAreaContainer.Items.Count;
+
+                            // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
+                            if (count == 1)
+                            {
+                                AreaItemControl value_ctrl = new Values_AreaItemControl();
+                                value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                                m_ColumnsAreaContainer.ItemsListChanged -= new EventHandler(AreaContainer_ItemsListChanged);
+                                m_ColumnsAreaContainer.AddItem(value_ctrl);
+                                m_ColumnsAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
+                            }
+
+                            m_DataAreaContainer.AddItem(ctrl);
+                            calcMemberNode.UseBoldText = true;
+                        }
+                    }
+                    #endregion Узлы для вычисляемых элементов
+
+                    #region Узлы для именованных наборов
+                    CalculatedNamedSetTreeNode calculatedSetNode = node as CalculatedNamedSetTreeNode;
+                    if (calculatedSetNode != null && calculatedSetNode.Info != null)
+                    {
+                        // Set(ы) могут кидаться только в области строк и столбцов
+                        AreaItemControl ctrl = new CalculateNamedSet_AreaItemControl(new CalculatedNamedSet_AreaItemWrapper(calculatedSetNode.Info), calculatedSetNode.Icon);
                         ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
                         ctrl.UserData = node;
 
                         if (m_RowsAreaContainer.IsReadyToDrop)
                         {
                             m_RowsAreaContainer.AddItem(ctrl);
-                            info_node.UseBoldText = true;
+                            calculatedSetNode.UseBoldText = true;
                         }
 
                         if (m_ColumnsAreaContainer.IsReadyToDrop)
                         {
                             m_ColumnsAreaContainer.AddItem(ctrl);
-                            info_node.UseBoldText = true;
-                        }
-
-                        if (m_FilterAreaContainer.IsReadyToDrop)
-                        {
-                            m_FilterAreaContainer.AddItem(ctrl);
-                            info_node.UseBoldText = true;
+                            calculatedSetNode.UseBoldText = true;
                         }
                     }
 
-                    // меры и Kpi могут кидаться только в область данных
-                    if (measureInfo != null ||
-                        kpiInfo != null)
+                    NamedSetTreeNode setNode = node as NamedSetTreeNode;
+                    if (setNode != null)
                     {
-                        AreaItemControl ctrl = null;
-                        if(measureInfo != null)
-                            ctrl = new Measure_AreaItemControl(new Measure_AreaItemWrapper(measureInfo), info_node.Icon);
-                        if (kpiInfo != null)
+                        NamedSetInfo setInfo = setNode.Info as NamedSetInfo;
+                        if (setInfo != null)
                         {
-                            KpiControlType type = KpiControlType.Value;
-                            if(node is KpiStatusTreeNode)
-                                type = KpiControlType.Status;
-                            if(node is KpiTrendTreeNode)
-                                type = KpiControlType.Trend;
-                            if(node is KpiGoalTreeNode)
-                                type = KpiControlType.Goal;
-
-                            ctrl = new Kpi_AreaItemControl(new Kpi_AreaItemWrapper(kpiInfo, type), info_node.Icon);
-                        }
-
-                        if (ctrl != null)
-                        {
+                            // Set(ы) могут кидаться только в области строк и столбцов
+                            AreaItemControl ctrl = new NamedSet_AreaItemControl(new NamedSet_AreaItemWrapper(setInfo), setNode.Icon);
                             ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
                             ctrl.UserData = node;
 
-                            if (m_DataAreaContainer.IsReadyToDrop)
+                            if (m_RowsAreaContainer.IsReadyToDrop)
                             {
-                                int count = m_DataAreaContainer.Items.Count;
+                                m_RowsAreaContainer.AddItem(ctrl);
+                                setNode.UseBoldText = true;
+                            }
 
-                                // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
-                                if (count == 1)
-                                {
-                                    AreaItemControl value_ctrl = new Values_AreaItemControl();
-                                    value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                    m_ColumnsAreaContainer.ItemsListChanged -= new EventHandler(AreaContainer_ItemsListChanged);
-                                    m_ColumnsAreaContainer.AddItem(value_ctrl);
-                                    m_ColumnsAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
-                                }
-
-                                m_DataAreaContainer.AddItem(ctrl);
-                                info_node.UseBoldText = true;
+                            if (m_ColumnsAreaContainer.IsReadyToDrop)
+                            {
+                                m_ColumnsAreaContainer.AddItem(ctrl);
+                                setNode.UseBoldText = true;
                             }
                         }
                     }
+                    #endregion Узлы для именованных наборов
+
+                    #region Узлы метаданных (InfoBaseTreeNode)
+                    InfoBaseTreeNode info_node = node as InfoBaseTreeNode;
+                    if (info_node != null)
+                    {
+                        HierarchyInfo hierarchyInfo = info_node.Info as HierarchyInfo;
+                        LevelInfo levelInfo = info_node.Info as LevelInfo;
+                        MeasureInfo measureInfo = info_node.Info as MeasureInfo;
+                        KpiInfo kpiInfo = info_node.Info as KpiInfo;
+
+                        // Иерархии и уровни можно кидать только в области: строк, столбцов, фильтров
+                        if (hierarchyInfo != null || levelInfo != null)
+                        {
+                            FilteredItemControl ctrl = null;
+                            if (hierarchyInfo != null)
+                                ctrl = new Hierarchy_AreaItemControl(new Hierarchy_AreaItemWrapper(hierarchyInfo), info_node.Icon);
+                            if (levelInfo != null)
+                                ctrl = new Level_AreaItemControl(new Level_AreaItemWrapper(levelInfo), info_node.Icon);
+
+                            ctrl.ShowFilter += new EventHandler(FilteredItem_ShowFilter);
+                            ctrl.CancelFilter += new EventHandler(FilteredItem_CancelFilter);
+                            ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                            ctrl.UserData = node;
+
+                            if (m_RowsAreaContainer.IsReadyToDrop)
+                            {
+                                m_RowsAreaContainer.AddItem(ctrl);
+                                info_node.UseBoldText = true;
+                            }
+
+                            if (m_ColumnsAreaContainer.IsReadyToDrop)
+                            {
+                                m_ColumnsAreaContainer.AddItem(ctrl);
+                                info_node.UseBoldText = true;
+                            }
+
+                            if (m_FilterAreaContainer.IsReadyToDrop)
+                            {
+                                m_FilterAreaContainer.AddItem(ctrl);
+                                info_node.UseBoldText = true;
+                            }
+                        }
+
+                        // меры и Kpi могут кидаться только в область данных
+                        if (measureInfo != null ||
+                            kpiInfo != null)
+                        {
+                            AreaItemControl ctrl = null;
+                            if (measureInfo != null)
+                                ctrl = new Measure_AreaItemControl(new Measure_AreaItemWrapper(measureInfo), info_node.Icon);
+                            if (kpiInfo != null)
+                            {
+                                KpiControlType type = KpiControlType.Value;
+                                if (node is KpiStatusTreeNode)
+                                    type = KpiControlType.Status;
+                                if (node is KpiTrendTreeNode)
+                                    type = KpiControlType.Trend;
+                                if (node is KpiGoalTreeNode)
+                                    type = KpiControlType.Goal;
+
+                                ctrl = new Kpi_AreaItemControl(new Kpi_AreaItemWrapper(kpiInfo, type), info_node.Icon);
+                            }
+
+                            if (ctrl != null)
+                            {
+                                ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                                ctrl.UserData = node;
+
+                                if (m_DataAreaContainer.IsReadyToDrop)
+                                {
+                                    int count = m_DataAreaContainer.Items.Count;
+
+                                    // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
+                                    if (count == 1)
+                                    {
+                                        AreaItemControl value_ctrl = new Values_AreaItemControl();
+                                        value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                                        m_ColumnsAreaContainer.ItemsListChanged -= new EventHandler(AreaContainer_ItemsListChanged);
+                                        m_ColumnsAreaContainer.AddItem(value_ctrl);
+                                        m_ColumnsAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
+                                    }
+
+                                    m_DataAreaContainer.AddItem(ctrl);
+                                    info_node.UseBoldText = true;
+                                }
+                            }
+                        }
+                    }
+                    #endregion Узлы метаданных (InfoBaseTreeNode)
                 }
+
             }
             
             m_RowsAreaContainer.IsReadyToDrop = false;
@@ -1403,12 +1999,39 @@ namespace Ranet.AgOlap.Controls
             m_DataAreaContainer.IsReadyToDrop = false;
         }
 
+        bool m_MDXQueryIsReadyToDrop = false;
+        bool MDXQueryIsReadyToDrop
+        {
+            get { 
+                return Mdx_Border.Visibility == Visibility.Visible && !m_MdxQuery.IsReadOnly && m_MDXQueryIsReadyToDrop; 
+            }
+            set
+            {
+                if (m_MDXQueryIsReadyToDrop != value)
+                {
+                    m_MDXQueryIsReadyToDrop = value;
+                    if (value)
+                    {
+                        Mdx_Border.BorderBrush = new SolidColorBrush(Color.FromArgb(50, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
+                        Mdx_Border.Background = new SolidColorBrush(Color.FromArgb(20, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
+                    }
+                    else
+                    {
+                        Mdx_Border.BorderBrush = new SolidColorBrush(Colors.DarkGray);
+                        Mdx_Border.Background = new SolidColorBrush(Colors.Transparent);
+                    }
+                }
+            }
+        }
+
+
         void m_CubeBrowser_DragDelta(object sender, DragNodeArgs<DragDeltaEventArgs> e)
         {
             m_RowsAreaContainer.IsReadyToDrop = false;
             m_ColumnsAreaContainer.IsReadyToDrop = false;
             m_FilterAreaContainer.IsReadyToDrop = false;
             m_DataAreaContainer.IsReadyToDrop = false;
+            MDXQueryIsReadyToDrop = false;
 
             Point m_DragDelta = new Point(m_PrevDrag.X + e.Args.HorizontalChange, m_PrevDrag.Y + e.Args.VerticalChange);
 
@@ -1424,38 +2047,67 @@ namespace Ranet.AgOlap.Controls
             //    }
             //}
 
-            // В область данных можно таскать только меры
-            if (e.Node is MeasureTreeNode || 
+            if (Mdx_Border.Visibility == Visibility.Visible && !m_MdxQuery.IsReadOnly)
+            {
+                // Получаем границы поля MDX
+                Rect m_MdxQuery_Bounds = AgControlBase.GetSLBounds(m_MdxQuery);
+                if (m_MdxQuery_Bounds.Contains(m_DragDelta))
+                {
+                    MDXQueryIsReadyToDrop = true;
+                    m_PrevDrag = m_DragDelta;
+                    return;
+                }
+            }
+
+            if (e.Node is MeasureTreeNode ||
                 e.Node is KpiValueTreeNode ||
                 e.Node is KpiStatusTreeNode ||
                 e.Node is KpiTrendTreeNode ||
-                e.Node is KpiGoalTreeNode)
+                e.Node is KpiGoalTreeNode ||
+                e.Node is CalculatedMemberTreeNode ||
+                e.Node is NamedSetTreeNode ||
+                e.Node is CalculatedNamedSetTreeNode ||
+                e.Node is DimensionTreeNode ||
+                e.Node is LevelTreeNode ||
+                e.Node is HierarchyTreeNode)
             {
-
-                Rect m_DataArea_Bounds = AgControlBase.GetSLBounds(m_DataAreaContainer);
-                if (m_DataArea_Bounds.Contains(m_DragDelta))
+                // В область данных можно таскать только меры, KPI и вычисляемые элементы
+                if (e.Node is MeasureTreeNode ||
+                    e.Node is KpiValueTreeNode ||
+                    e.Node is KpiStatusTreeNode ||
+                    e.Node is KpiTrendTreeNode ||
+                    e.Node is KpiGoalTreeNode ||
+                    e.Node is CalculatedMemberTreeNode)
                 {
-                    m_DataAreaContainer.IsReadyToDrop = true;
+                    Rect m_DataArea_Bounds = AgControlBase.GetSLBounds(m_DataAreaContainer);
+                    if (m_DataArea_Bounds.Contains(m_DragDelta))
+                    {
+                        m_DataAreaContainer.IsReadyToDrop = true;
+                    }
                 }
-            }
-            else
-            {
-                Rect m_RowsArea_Bounds = AgControlBase.GetSLBounds(m_RowsAreaContainer);
-                if (m_RowsArea_Bounds.Contains(m_DragDelta))
+                else
                 {
-                    m_RowsAreaContainer.IsReadyToDrop = true;
-                }
+                    Rect m_RowsArea_Bounds = AgControlBase.GetSLBounds(m_RowsAreaContainer);
+                    if (m_RowsArea_Bounds.Contains(m_DragDelta))
+                    {
+                        m_RowsAreaContainer.IsReadyToDrop = true;
+                    }
 
-                Rect m_ColumnsArea_Bounds = AgControlBase.GetSLBounds(m_ColumnsAreaContainer);
-                if (m_ColumnsArea_Bounds.Contains(m_DragDelta))
-                {
-                    m_ColumnsAreaContainer.IsReadyToDrop = true;
-                }
+                    Rect m_ColumnsArea_Bounds = AgControlBase.GetSLBounds(m_ColumnsAreaContainer);
+                    if (m_ColumnsArea_Bounds.Contains(m_DragDelta))
+                    {
+                        m_ColumnsAreaContainer.IsReadyToDrop = true;
+                    }
 
-                Rect m_FilterArea_Bounds = AgControlBase.GetSLBounds(m_FilterAreaContainer);
-                if (m_FilterArea_Bounds.Contains(m_DragDelta))
-                {
-                    m_FilterAreaContainer.IsReadyToDrop = true;
+                    // Set(ы) в фильтры не добавляются
+                    if (!(e.Node is NamedSetTreeNode || e.Node is CalculatedNamedSetTreeNode))
+                    {
+                        Rect m_FilterArea_Bounds = AgControlBase.GetSLBounds(m_FilterAreaContainer);
+                        if (m_FilterArea_Bounds.Contains(m_DragDelta))
+                        {
+                            m_FilterAreaContainer.IsReadyToDrop = true;
+                        }
+                    }
                 }
             }
 
@@ -1544,8 +2196,7 @@ namespace Ranet.AgOlap.Controls
                         filterControl.ChoiceControl.StartLevelUniqueName = level_UniqueName;
                         filterControl.ChoiceControl.MultiSelect = true;
 
-                        filterControl.ChoiceControl.MetadataLoader = GetMetaLoader();
-                        filterControl.ChoiceControl.Loader = GetMembersLoader();
+                        filterControl.ChoiceControl.OlapDataLoader = GetOlapDataLoader();
                         filterControl.CubeInfo = m_CubeBrowser.CubeInfo;
 
                         dialog.Caption = Localization.FilterBuilder_Caption + "...";
@@ -1554,7 +2205,6 @@ namespace Ranet.AgOlap.Controls
                         dialog.Width = 650;
                         dialog.Height = 500;
                         dialog.DialogOk += new EventHandler<DialogResultArgs>(FilterDialog_DialogOk);
-                        dialog.DialogCancel += new EventHandler<DialogResultArgs>(FilterDialog_DialogCancel);
 
                         m_FilterDialogs[item] = dialog;
                     }
@@ -1579,56 +2229,23 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        protected virtual IDataLoader GetMetaLoader()
+        protected virtual IDataLoader GetOlapDataLoader()
         {
-            return new MetadataLoader(URL);
+            return new OlapDataLoader(URL);
         }
 
-        protected virtual IDataLoader GetMembersLoader()
-        {
-            return new MembersDataLoader(URL);
-        }
-
-        IDataLoader m_MetaLoader = null;
-        public IDataLoader MetaLoader
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
         {
             set
             {
-                m_MetaLoader = value;
-                m_CubeBrowser.Loader = m_MetaLoader;
-                m_PivotGrid.MetaLoader = m_MetaLoader;
+                m_OlapDataLoader = value;
+                m_CubeBrowser.OlapDataLoader = m_OlapDataLoader;
+                m_PivotGrid.OlapDataLoader = m_OlapDataLoader;
             }
             get
             {
-                return m_MetaLoader;
-            }
-        }
-
-        IPivotDataLoader m_PivotLoader = null;
-        public IPivotDataLoader PivotLoader
-        {
-            set
-            {
-                m_PivotLoader = value;
-                m_PivotGrid.PivotLoader = m_PivotLoader;
-            }
-            get
-            {
-                return m_PivotLoader;
-            }
-        }
-
-        IDataLoader m_MembersLoader = null;
-        public IDataLoader MembersLoader
-        {
-            set
-            {
-                m_MembersLoader = value;
-                m_PivotGrid.MembersLoader = m_MembersLoader;
-            }
-            get
-            {
-                return m_MembersLoader;
+                return m_OlapDataLoader;
             }
         }
 
@@ -1646,7 +2263,7 @@ namespace Ranet.AgOlap.Controls
             return new StorageManager(URL);
         }
 
-        void FilterDialog_DialogCancel(object sender, DialogResultArgs e)
+        void FilterDialog_DiaogCancel(object sender, DialogResultArgs e)
         {
             
         }
@@ -1897,57 +2514,106 @@ namespace Ranet.AgOlap.Controls
         }
 
         /// <summary>
-        /// Возвращает конкурента для элемента в указанной области. Конкурентами считаются элементы, принадлежащие одной иерархии
+        /// Возвращает конкурента для элемента в указанной области. Конкурентами (для строк, колонок, фильтров) считаются элементы, принадлежащие одной иерархии
+        /// Конкурентами для области данных являются элементы (меры, вычисляемые элементы) с таким же именем
         /// </summary>
         /// <param name="container"></param>
         /// <param name="node"></param>
         /// <returns></returns>
         AreaItemControl FindConcurent(PivotAreaContainer container, TreeViewItem node)
         {
-            InfoBaseTreeNode infoNode = node as InfoBaseTreeNode;
-            if (container != null && infoNode != null)
+            if (container != null)
             {
+                InfoBaseTreeNode infoNode = node as InfoBaseTreeNode;
+                if (container == m_DataAreaContainer)
+                {
+                    CalculatedMemberTreeNode calcMemberNode = node as CalculatedMemberTreeNode;
+                    if (infoNode != null || calcMemberNode != null)
+                    {
+                        KpiInfo kpi = infoNode != null ? infoNode.Info as KpiInfo : null;
+                        MeasureInfo measure = infoNode != null ? infoNode.Info as MeasureInfo : null;
+                        CalcMemberInfo member = calcMemberNode != null ? calcMemberNode.Info : null;
+
+                        List<AreaItemControl> items = container.Items;
+                        foreach (AreaItemControl item in items)
+                        {
+                            Measure_AreaItemControl measure_Item = item as Measure_AreaItemControl;
+                            if (measure_Item != null && measure != null && measure.UniqueName == measure_Item.Measure.UniqueName)
+                            {
+                                return item;
+                            }
+
+                            Kpi_AreaItemControl kpi_Item = item as Kpi_AreaItemControl;
+                            if (kpi_Item != null && kpi != null && kpi.Name == kpi_Item.Kpi.Name)
+                            {
+                                return item;
+                            }
+
+                            CalculatedMember_AreaItemControl member_Item = item as CalculatedMember_AreaItemControl;
+                            if (member_Item != null && member != null && member.Name == member_Item.CalculatedMember.Name)
+                            {
+                                return item;
+                            }
+                        }
+                    }
+                }
+
                 if (container == m_RowsAreaContainer ||
                     container == m_ColumnsAreaContainer ||
                     container == m_FilterAreaContainer)
                 {
-                    // если node - узел иерархии, то ищем по уникальному имени еирархии среди элементов
-                    // если node - узел уровня, то ищем по уникальному имени иерархии, которой этот узел принадлежит
-
-                    HierarchyInfo hierarchy = infoNode.Info as HierarchyInfo;
-                    LevelInfo level = infoNode.Info as LevelInfo;
-
-                    List<AreaItemControl> items = container.Items;
-                    foreach (AreaItemControl item in items)
+                    CalculatedNamedSetTreeNode setNode = node as CalculatedNamedSetTreeNode;
+                    if (infoNode != null || setNode != null)
                     {
-                        Hierarchy_AreaItemControl hierarchy_Item = item as Hierarchy_AreaItemControl;
-                        if (hierarchy_Item != null)
-                        {
-                            if(hierarchy != null)
-                            {
-                                if (hierarchy_Item.Hierarchy.UniqueName == hierarchy.UniqueName)
-                                    return item;
-                            }
-                            if (level != null)
-                            {
-                                if (hierarchy_Item.Hierarchy.UniqueName == level.ParentHirerachyId)
-                                    return item;
-                            }
-                        }
+                        // если node - узел иерархии, то ищем по уникальному имени еирархии среди элементов
+                        // если node - узел уровня, то ищем по уникальному имени иерархии, которой этот узел принадлежит
 
-                        Level_AreaItemControl level_Item = item as Level_AreaItemControl;
-                        if (level_Item != null)
+                        HierarchyInfo hierarchy = infoNode != null ? infoNode.Info as HierarchyInfo : null;
+                        LevelInfo level = infoNode != null ? infoNode.Info as LevelInfo : null;
+                        CalculatedNamedSetInfo calculatedSet = setNode != null ? setNode.Info : null;
+                        NamedSetInfo set = infoNode != null ? infoNode.Info as NamedSetInfo : null;
+
+                        List<AreaItemControl> items = container.Items;
+                        foreach (AreaItemControl item in items)
                         {
-                            if (hierarchy != null)
+                            CalculateNamedSet_AreaItemControl calculatedSet_Item = item as CalculateNamedSet_AreaItemControl;
+                            if (calculatedSet_Item != null && calculatedSet != null && calculatedSet.Name == calculatedSet_Item.CalculatedNamedSet.Name)
                             {
-                                if (level_Item.Level.HierarchyUniqueName == hierarchy.UniqueName)
-                                    return item;
+                                return item;
                             }
-                            if (level != null)
+
+                            NamedSet_AreaItemControl set_Item = item as NamedSet_AreaItemControl;
+                            if (set_Item != null && set != null && set.Name == set_Item.NamedSet.Name)
                             {
-                                if (level_Item.Level.HierarchyUniqueName == level.ParentHirerachyId)
+                                return item;
+                            }
+                            
+                            Hierarchy_AreaItemControl hierarchy_Item = item as Hierarchy_AreaItemControl;
+                            if (hierarchy_Item != null)
+                            {
+                                if (hierarchy != null && hierarchy_Item.Hierarchy.UniqueName == hierarchy.UniqueName)
+                                {
                                     return item;
-                            }                        
+                                }
+
+                                if (level != null && hierarchy_Item.Hierarchy.UniqueName == level.ParentHirerachyId)
+                                {
+                                    return item;
+                                }
+                            }
+
+                            Level_AreaItemControl level_Item = item as Level_AreaItemControl;
+                            if (level_Item != null)
+                            {
+                                if (hierarchy != null && level_Item.Level.HierarchyUniqueName == hierarchy.UniqueName)
+                                {
+                                    return item;
+                                }
+                                if (level != null && level_Item.Level.HierarchyUniqueName == level.ParentHirerachyId)
+                                {
+                                    return item;
+                                }
+                            }
                         }
                     }
                 }
@@ -2052,6 +2718,7 @@ namespace Ranet.AgOlap.Controls
 
             m_FilterDialogs.Clear();
             m_MdxQuery.Text = String.Empty;
+
             InitializePivotGrid(String.Empty);
 
             m_FilterAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
@@ -2065,11 +2732,10 @@ namespace Ranet.AgOlap.Controls
             if (m_CubeBrowser.LogManager != LogManager)
                 m_CubeBrowser.LogManager = LogManager;
 
-            if (m_CubeBrowser.Loader != MetaLoader)
-            {
-                m_CubeBrowser.Loader = MetaLoader;
-            }
+            CalculatedNamedSets.Clear();
+            CalculatedMembers.Clear();
             m_CubeBrowser.Initialize();
+
             Clear();
         }
 
@@ -2089,6 +2755,8 @@ namespace Ranet.AgOlap.Controls
             layout.Rows = GetItemWrappers(m_RowsAreaContainer);
             layout.Columns = GetItemWrappers(m_ColumnsAreaContainer);
             layout.Data = GetItemWrappers(m_DataAreaContainer);
+            layout.CalculatedMembers = CalculatedMembers;
+            layout.CalculatedNamedSets = CalculatedNamedSets;
 
             return XmlSerializationUtility.Obj2XmlStr(layout);
         }
@@ -2106,10 +2774,78 @@ namespace Ranet.AgOlap.Controls
                     BuildFromItemWrappers(m_RowsAreaContainer, layout.Rows);
                     BuildFromItemWrappers(m_ColumnsAreaContainer, layout.Columns);
                     BuildFromItemWrappers(m_DataAreaContainer, layout.Data);
-                    
+                    CalculatedMembers = layout.CalculatedMembers;
+                    CalculatedNamedSets = layout.CalculatedNamedSets;
+
+                    HighLightCustomNodes();
                     RefreshMdxQuery();
                 }
             }
+        }
+
+        CustomTreeNode FindCustomNode(AreaItemWrapper wrapper)
+        {
+            CustomTreeNode nodeInTree = null;
+            if (wrapper != null)
+            {
+                Measure_AreaItemWrapper measures_item = wrapper as Measure_AreaItemWrapper;
+                if (measures_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindMeasureNode(measures_item.UniqueName);
+                }
+
+                CalculatedMember_AreaItemWrapper calcMember_item = wrapper as CalculatedMember_AreaItemWrapper;
+                if (calcMember_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindCalculatedMember(calcMember_item.Name);
+                }
+
+                CalculatedNamedSet_AreaItemWrapper calculatedSet_item = wrapper as CalculatedNamedSet_AreaItemWrapper;
+                if (calculatedSet_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindCalculatedNamedSet(calculatedSet_item.Name);
+                }
+
+                NamedSet_AreaItemWrapper set_item = wrapper as NamedSet_AreaItemWrapper;
+                if (set_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindNamedSet(set_item.Name);
+                }
+
+                Level_AreaItemWrapper level_item = wrapper as Level_AreaItemWrapper;
+                if (level_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindLevelNode(level_item.UniqueName);
+                }
+
+                Hierarchy_AreaItemWrapper hierarchy_item = wrapper as Hierarchy_AreaItemWrapper;
+                if (hierarchy_item != null)
+                {
+                    nodeInTree = m_CubeBrowser.FindHierarchyNode(hierarchy_item.UniqueName);
+                }
+
+                Kpi_AreaItemWrapper kpi_item = wrapper as Kpi_AreaItemWrapper;
+                if (kpi_item != null)
+                {
+                    switch (kpi_item.Type)
+                    {
+                        case KpiControlType.Goal:
+                            nodeInTree = m_CubeBrowser.FindKpiGoalNode(kpi_item.Name);
+                            break;
+                        case KpiControlType.Status:
+                            nodeInTree = m_CubeBrowser.FindKpiStatusNode(kpi_item.Name);
+                            break;
+                        case KpiControlType.Trend:
+                            nodeInTree = m_CubeBrowser.FindKpiTrendNode(kpi_item.Name);
+                            break;
+                        case KpiControlType.Value:
+                            nodeInTree = m_CubeBrowser.FindKpiValueNode(kpi_item.Name);
+                            break;
+                    }
+                }
+            }
+
+            return nodeInTree;
         }
 
         void BuildFromItemWrappers(PivotAreaContainer container, List<AreaItemWrapper> wrappers)
@@ -2124,7 +2860,7 @@ namespace Ranet.AgOlap.Controls
                     foreach (AreaItemWrapper wrapper in wrappers)
                     {
                         AreaItemControl ctrl = null;
-                        CustomTreeNode nodeInTree = null;
+                        CustomTreeNode nodeInTree = FindCustomNode(wrapper);
 
                         Values_AreaItemWrapper values_item = wrapper as Values_AreaItemWrapper;
                         if (values_item != null)
@@ -2136,57 +2872,53 @@ namespace Ranet.AgOlap.Controls
                         if (measures_item != null)
                         {
                             ctrl = new Measure_AreaItemControl(measures_item);
-                            // Пытаемся найти узел в кубе чтобы выделить его
-                            nodeInTree = m_CubeBrowser.FindMeasureNode(measures_item.UniqueName);
+                        }
+
+                        CalculatedMember_AreaItemWrapper calcMember_item = wrapper as CalculatedMember_AreaItemWrapper;
+                        if (calcMember_item != null)
+                        {
+                            ctrl = new CalculatedMember_AreaItemControl(calcMember_item);
+                        }
+
+                        CalculatedNamedSet_AreaItemWrapper calculatedSet_item = wrapper as CalculatedNamedSet_AreaItemWrapper;
+                        if (calculatedSet_item != null)
+                        {
+                            ctrl = new CalculateNamedSet_AreaItemControl(calculatedSet_item);
+                        }
+
+                        NamedSet_AreaItemWrapper set_item = wrapper as NamedSet_AreaItemWrapper;
+                        if (set_item != null)
+                        {
+                            ctrl = new NamedSet_AreaItemControl(set_item);
                         }
 
                         Level_AreaItemWrapper level_item = wrapper as Level_AreaItemWrapper;
                         if (level_item != null)
                         {
                             ctrl = new Level_AreaItemControl(level_item);
-                            // Пытаемся найти узел в кубе чтобы выделить его
-                            nodeInTree = m_CubeBrowser.FindLevelNode(level_item.UniqueName);
                         }
 
                         Hierarchy_AreaItemWrapper hierarchy_item = wrapper as Hierarchy_AreaItemWrapper;
                         if (hierarchy_item != null)
                         {
                             ctrl = new Hierarchy_AreaItemControl(hierarchy_item);
-                            // Пытаемся найти узел в кубе чтобы выделить его
-                            nodeInTree = m_CubeBrowser.FindHierarchyNode(hierarchy_item.UniqueName);
                         }
 
                         Kpi_AreaItemWrapper kpi_item = wrapper as Kpi_AreaItemWrapper;
                         if (kpi_item != null)
                         {
                             ctrl = new Kpi_AreaItemControl(kpi_item);
-                            // Пытаемся найти узел в кубе чтобы выделить его
-                            switch (kpi_item.Type)
-                            { 
-                                case KpiControlType.Goal:
-                                    nodeInTree = m_CubeBrowser.FindKpiGoalNode(kpi_item.Name);
-                                    break;
-                                case KpiControlType.Status:
-                                    nodeInTree = m_CubeBrowser.FindKpiStatusNode(kpi_item.Name);
-                                    break;
-                                case KpiControlType.Trend:
-                                    nodeInTree = m_CubeBrowser.FindKpiTrendNode(kpi_item.Name);
-                                    break;
-                                case KpiControlType.Value:
-                                    nodeInTree = m_CubeBrowser.FindKpiValueNode(kpi_item.Name);
-                                    break;
-                            }
-                        }
-
-                        if (nodeInTree != null)
-                        {
-                            ctrl.UserData = nodeInTree;
-                            ctrl.Icon = nodeInTree.Icon;
-                            nodeInTree.UseBoldText = true;
                         }
 
                         if (ctrl != null)
                         {
+                            if (nodeInTree != null)
+                            {
+                                ctrl.UserData = nodeInTree;
+                                ctrl.Icon = nodeInTree.Icon;
+                                nodeInTree.UseBoldText = true;
+                            }
+
                             container.AddItem(ctrl);
                             ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
 
@@ -2226,6 +2958,27 @@ namespace Ranet.AgOlap.Controls
                     if (measures_item != null)
                     {
                         list.Add(measures_item.Measure);
+                        continue;
+                    }
+
+                    CalculateNamedSet_AreaItemControl calculatedSet_item = item as CalculateNamedSet_AreaItemControl;
+                    if (calculatedSet_item != null)
+                    {
+                        list.Add(calculatedSet_item.CalculatedNamedSet);
+                        continue;
+                    }
+
+                    NamedSet_AreaItemControl set_item = item as NamedSet_AreaItemControl;
+                    if (set_item != null)
+                    {
+                        list.Add(set_item.NamedSet);
+                        continue;
+                    }
+
+                    CalculatedMember_AreaItemControl calcMember_item = item as CalculatedMember_AreaItemControl;
+                    if (calcMember_item != null)
+                    {
+                        list.Add(calcMember_item.CalculatedMember);
                         continue;
                     }
 

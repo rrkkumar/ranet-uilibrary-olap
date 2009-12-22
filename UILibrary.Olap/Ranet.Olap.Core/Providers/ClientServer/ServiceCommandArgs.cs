@@ -23,18 +23,19 @@ using System.Net;
 
 namespace Ranet.Olap.Core.Providers.ClientServer
 {
-    public class ServiceCommandArgs
+    public class ServiceCommandArgs : OlapActionBase
     {
         public String PivotID = String.Empty;
         public ServiceCommandType Command = ServiceCommandType.None;
         public UpdateEntry UserData = null;
 
         public ServiceCommandArgs()
-        { 
-        
+        {
+            ActionType = OlapActionTypes.ServiceCommand;
         }
 
         public ServiceCommandArgs(ServiceCommandType command)
+            :this()
         {
             Command = command;
         }

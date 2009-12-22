@@ -4,10 +4,10 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C156' Guid='0c06164d-eaa5-45a0-af5e-dbb8f4aa8000'>
+			<Component Id='C3288' Guid='2b0674e5-6e71-4a3e-b7b6-b3adaff5ad03'>
 				<File
-					Id='I156'
-					Name='N156'
+					Id='I3288'
+					Name='N3288'
 					KeyPath='yes'
 					LongName='MDXFormatter.exe'
 					Source='..\..\Binaries\Release\MDXFormatter.exe'
@@ -18,10 +18,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C157' Guid='57a4e02b-6dac-4fde-a6ef-708678e37da0'>
+			<Component Id='C3289' Guid='ea021bc0-f366-4bdb-8d55-d8a3a6050c27'>
 				<File
-					Id='I157'
-					Name='N157'
+					Id='I3289'
+					Name='N3289'
 					KeyPath='yes'
 					LongName='MdxFormatter.html'
 					Source='..\..\Binaries\Release\MdxFormatter.html'
@@ -32,10 +32,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C158' Guid='8adfaabc-51ac-4f26-b345-c80443c85c79'>
+			<Component Id='C3290' Guid='40bcce03-7be9-4a37-b791-d86718b819c2'>
 				<File
-					Id='I158'
-					Name='N158'
+					Id='I3290'
+					Name='N3290'
 					KeyPath='yes'
 					LongName='MdxFormatter.xap'
 					Source='..\..\Binaries\Release\MdxFormatter.xap'
@@ -46,10 +46,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C159' Guid='1610834c-cdfd-4955-88b5-ea48144c76ca'>
+			<Component Id='C3291' Guid='8ef0a3ca-457e-4832-9dbf-7519e750ff89'>
 				<File
-					Id='I159'
-					Name='N159'
+					Id='I3291'
+					Name='N3291'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Mdx.dll'
 					Source='..\..\Binaries\Release\Ranet.Olap.Mdx.dll'
@@ -60,10 +60,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C160' Guid='e13dfc58-ba77-48aa-a9da-e2521f2e6a29'>
+			<Component Id='C3292' Guid='09c9765c-81f1-49ff-b2dc-805b92462321'>
 				<File
-					Id='I160'
-					Name='N160'
+					Id='I3292'
+					Name='N3292'
 					KeyPath='yes'
 					LongName='MdxSample.mdx'
 					Source='..\..\Binaries\Release\MdxSample.mdx'
@@ -74,11 +74,11 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C156'/>
-			<ComponentRef Id='C157'/>
-			<ComponentRef Id='C158'/>
-			<ComponentRef Id='C159'/>
-			<ComponentRef Id='C160'/>
+			<ComponentRef Id='C3288'/>
+			<ComponentRef Id='C3289'/>
+			<ComponentRef Id='C3290'/>
+			<ComponentRef Id='C3291'/>
+			<ComponentRef Id='C3292'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

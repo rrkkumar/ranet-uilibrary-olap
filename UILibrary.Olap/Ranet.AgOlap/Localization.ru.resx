@@ -776,4 +776,91 @@
   <data name="PivotGrid_CustomProperties_NotFound" xml:space="preserve">
     <value>Пользовательские свойства для элемента не найдены. Возможно элемент вычисляемый.</value>
   </data>
+  <data name="MdxDesigner_CalculatedMemberEditor" xml:space="preserve">
+    <value>Редактор пользовательских вычислений</value>
+  </data>
+  <data name="CalcMemberEditor_DialogCaption" xml:space="preserve">
+    <value>Редактор пользовательских вычислений</value>
+  </data>
+  <data name="CalcMemberEditor_MemberTab" xml:space="preserve">
+    <value>Элемент</value>
+  </data>
+  <data name="CalcMemberEditor_ScriptTab" xml:space="preserve">
+    <value>Скрипт</value>
+  </data>
+  <data name="CalcMemberEditor_DisplayFolderLabel" xml:space="preserve">
+    <value>Папка:</value>
+  </data>
+  <data name="CalcMemberEditor_ExpressionLabel" xml:space="preserve">
+    <value>Выражение:</value>
+  </data>
+  <data name="CalcMemberEditor_MeasureGroupLabel" xml:space="preserve">
+    <value>Группа мер:</value>
+  </data>
+  <data name="CalcMemberEditor_NameLabel" xml:space="preserve">
+    <value>Имя:</value>
+  </data>
+  <data name="CalcMemberEditor_ScriptLabel" xml:space="preserve">
+    <value>Скрипт:</value>
+  </data>
+  <data name="CalcMemberEditor_AddMember" xml:space="preserve">
+    <value>Добавить вычисляемый элемент</value>
+  </data>
+  <data name="CalcMemberEditor_AddSet" xml:space="preserve">
+    <value>Добавить именованный набор</value>
+  </data>
+  <data name="CalcMemberEditor_DeleteMember" xml:space="preserve">
+    <value>Удалить текущее вычисление</value>
+  </data>
+  <data name="ComboBoxItem_New" xml:space="preserve">
+    <value>&lt;Создать...&gt;</value>
+  </data>
+  <data name="ComboBoxItem_None" xml:space="preserve">
+    <value>Нет</value>
+  </data>
+  <data name="FolderComboBox_NewFolder" xml:space="preserve">
+    <value>Новая папка</value>
+  </data>
+  <data name="CalcMemberEditor_FormatStringLabel" xml:space="preserve">
+    <value>Строка форматирования:</value>
+  </data>
+  <data name="CalcMemberEditor_AddNamedSet" xml:space="preserve">
+    <value>Добавить именованный набор</value>
+  </data>
+  <data name="ComboBoxItem_NewItem" xml:space="preserve">
+    <value>Новый элемент</value>
+  </data>
+  <data name="CalcMemberEditor_MembersNamesMustBeUnique" xml:space="preserve">
+    <value>В списке содержатся вычисляемые элементы с одинаковыми именами. Исправить данную ошибку автоматически?</value>
+  </data>
+  <data name="CalcMemberEditor_NamedSetsNamesMustBeUnique" xml:space="preserve">
+    <value>В списке содержатся именованные наборы с одинаковыми именами. Исправить данную ошибку автоматически?</value>
+  </data>
+  <data name="MdxDesigner_EditQuery_ToolTip" xml:space="preserve">
+    <value>Edit MDX query</value>
+  </data>
+  <data name="CalculationsListControl_CalculatedMembers_TreeNode" xml:space="preserve">
+    <value>Элементы</value>
+  </data>
+  <data name="CalculationsListControl_NamedSets_TreeNode" xml:space="preserve">
+    <value>Наборы</value>
+  </data>
+  <data name="MetadataResponseException_CubeNotFound" xml:space="preserve">
+    <value>Не удалось найти куб с именем '{0}'.</value>
+  </data>
+  <data name="MetadataResponseException_DimensionByUniqueName_InCube_NotFound" xml:space="preserve">
+    <value>Не удалось найти измерение с уникальным именем '{0}' в кубе '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_HierarchyByUniqueName_InCube_NotFound" xml:space="preserve">
+    <value>Не удалось найти иерархию с уникальным именем '{0}' в кубе '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound" xml:space="preserve">
+    <value>Не удалось найти иерархию с уникальным именем '{0}' в измерении '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound" xml:space="preserve">
+    <value>Не удалось найти уровень с уникальным именем '{0}' в иерархии '{1}'.</value>
+  </data>
+  <data name="CalcMemberEditor_Clear" xml:space="preserve">
+    <value>Удалить все вычисления</value>
+  </data>
 </root>

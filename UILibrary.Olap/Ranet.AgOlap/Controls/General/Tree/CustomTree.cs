@@ -33,7 +33,7 @@ using System.Windows.Controls;
 
 namespace Ranet.AgOlap.Controls.General.Tree
 {
-    internal enum SpecialNodes
+    public enum SpecialNodes
     {
         Wait,
         Error,
@@ -107,11 +107,13 @@ namespace Ranet.AgOlap.Controls.General.Tree
                 //TreeViewItem allItem = GetSpecialNode(SpecialNodes.LoadAll);
                 if (value)
                 {
-                    if (nextItem != null)
+                    LoadNextTreeNode next = nextItem as LoadNextTreeNode;
+                    if (next != null)
                     {
-                        nextItem.Expanded -= new RoutedEventHandler(node_Expanded);
+                        next.MouseDoubleClick -= new EventHandler<CustomEventArgs<CustomTreeNode>>(SpecialNode_MouseDoubleClick);
                         Items.Remove(nextItem);
                     }
+
                     //if (allItem != null)
                     //{
                     //    allItem.Expanded -= new RoutedEventHandler(node_Expanded);
@@ -189,8 +191,9 @@ namespace Ranet.AgOlap.Controls.General.Tree
                     node = new WaitTreeNode();
                     break;
                 case SpecialNodes.LoadNext:
-                    node = new LoadNextTreeNode();
-                    node.Expanded += new RoutedEventHandler(node_Expanded);
+                    LoadNextTreeNode new_node = new LoadNextTreeNode();
+                    new_node.MouseDoubleClick += new EventHandler<CustomEventArgs<CustomTreeNode>>(SpecialNode_MouseDoubleClick);
+                    node = new_node;
                     break;
                 case SpecialNodes.Error:
                     node = new ErrorTreeNode();
@@ -212,18 +215,17 @@ namespace Ranet.AgOlap.Controls.General.Tree
             return node;
         }
 
-        public event EventHandler SpecialNodeExpanded;
-
-        void node_Expanded(object sender, RoutedEventArgs e)
+        public event EventHandler<CustomEventArgs<CustomTreeNode>> Special_MouseDoubleClick;
+        protected void SpecialNode_MouseDoubleClick(object sender, EventArgs e)
         {
-            EventHandler handler = this.SpecialNodeExpanded;
+            EventHandler<CustomEventArgs<CustomTreeNode>> handler = this.Special_MouseDoubleClick;
             if (handler != null)
             {
-                handler(sender, EventArgs.Empty);
+                handler(this, new CustomEventArgs<CustomTreeNode>(sender as CustomTreeNode));
             }
         }
 
-        TreeViewItem GetSpecialNode(SpecialNodes nodeType)
+        public TreeViewItem GetSpecialNode(SpecialNodes nodeType)
         {
             foreach (object obj in Items)
             {

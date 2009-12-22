@@ -81,28 +81,17 @@ namespace Ranet.AgOlap.Controls.ValueCopy
             }
         }
 
-        public event EventHandler<GetIDataLoaderArgs> GetMetadataLoader;
-        public event EventHandler<GetIDataLoaderArgs> GetMembersLoader;
+        public event EventHandler<GetIDataLoaderArgs> GetOlapDataLoader;
 
-        void Raise_GetMetadataLoader(GetIDataLoaderArgs args)
+        void Raise_GetOlapDataLoader(GetIDataLoaderArgs args)
         {
-            EventHandler<GetIDataLoaderArgs> handler = this.GetMetadataLoader;
+            EventHandler<GetIDataLoaderArgs> handler = this.GetOlapDataLoader;
             if (handler != null)
             {
                 handler(this, args);
             }
         }
 
-        void Raise_GetMembersLoader(GetIDataLoaderArgs args)
-        {
-            EventHandler<GetIDataLoaderArgs> handler = this.GetMembersLoader;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-
-        
         public ILogService LogManager
         {
             get
@@ -196,8 +185,7 @@ namespace Ranet.AgOlap.Controls.ValueCopy
             Row1_LayoutRoot.Children.Add(Label_Coordinates);
             Grid.SetRow(Label_Coordinates, 0);
             m_Coordinates = new CoordinatesControl();
-            m_Coordinates.GetMembersLoader += new EventHandler<GetIDataLoaderArgs>(m_Coordinates_GetMembersLoader);
-            m_Coordinates.GetMetadataLoader += new EventHandler<GetIDataLoaderArgs>(m_Coordinates_GetMetadataLoader);
+            m_Coordinates.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(m_Coordinates_GetOlapDataLoader);
             m_Coordinates.Margin = new Thickness(5);
 
             Border coordinates_Border = new Border() { Margin = new Thickness(0,5,0,0), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
@@ -376,14 +364,9 @@ namespace Ranet.AgOlap.Controls.ValueCopy
             }
         }
 
-        void m_Coordinates_GetMetadataLoader(object sender, GetIDataLoaderArgs e)
+        void m_Coordinates_GetOlapDataLoader(object sender, GetIDataLoaderArgs e)
         {
-            Raise_GetMetadataLoader(e);
-        }
-
-        void m_Coordinates_GetMembersLoader(object sender, GetIDataLoaderArgs e)
-        {
-            Raise_GetMembersLoader(e);
+            Raise_GetOlapDataLoader(e);
         }
 
         void m_CopyType_SelectionChanged(object sender, SelectionChangedEventArgs e)

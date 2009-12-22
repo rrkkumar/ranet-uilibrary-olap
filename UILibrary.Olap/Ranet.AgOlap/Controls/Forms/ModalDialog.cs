@@ -33,6 +33,12 @@ using Ranet.AgOlap.Controls.Buttons;
 
 namespace Ranet.AgOlap.Controls.Forms
 {
+    public enum ModalDialogStyles
+    { 
+        OK,
+        OKCancel
+    }
+
     public class ModalDialog
     {
         FloatingDialog m_Dialog = null;
@@ -68,6 +74,9 @@ namespace Ranet.AgOlap.Controls.Forms
             set { m_Dialog.Caption = value; }
         }
 
+        RanetButton OkButton;
+        RanetButton CancelButton;
+
         Grid gridContentContainer;
         public ModalDialog()
         {
@@ -82,12 +91,12 @@ namespace Ranet.AgOlap.Controls.Forms
             StackPanel buttonsPanel = new StackPanel() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
             buttonsPanel.Margin = new Thickness(5, 0, 5, 5);
 
-            RanetButton OkButton = new RanetButton() { Width = 75, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, 10, 0) };
+            OkButton = new RanetButton() { Width = 75, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0) };
             OkButton.Content = Localization.DialogButton_Ok;
             OkButton.Click += new RoutedEventHandler(OkButton_Click);
             buttonsPanel.Children.Add(OkButton);
 
-            RanetButton CancelButton = new RanetButton() { Width = 75, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(0, 0, 0, 0) };
+            CancelButton = new RanetButton() { Width = 75, HorizontalAlignment = HorizontalAlignment.Right, Margin = new Thickness(10, 0, 0, 0) };
             CancelButton.Content = Localization.DialogButton_Cancel;
             CancelButton.Click += new RoutedEventHandler(CancelButton_Click);
             buttonsPanel.Children.Add(CancelButton);
@@ -101,9 +110,46 @@ namespace Ranet.AgOlap.Controls.Forms
 
             m_Dialog.SetContent(PopUpLayoutRoot);
             m_Dialog.DialogClosed += new EventHandler<DialogResultArgs>(m_Dialog_DialogClosed);
+            m_Dialog.BeforeClosed += new EventHandler<DialogResultArgs>(m_Dialog_BeforeClosed);
             //m_Dialog.Width = 500;
             m_Dialog.MinWidth = OkButton.Width + CancelButton.Width + 20;
             //m_Dialog.Height = 400;
+        }
+
+        public event EventHandler<DialogResultArgs> BeforeClosed;
+        void Raise_BeforeClosed(DialogResultArgs args)
+        {
+            EventHandler<DialogResultArgs> handler = BeforeClosed;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+
+        void m_Dialog_BeforeClosed(object sender, DialogResultArgs e)
+        {
+            Raise_BeforeClosed(e);
+        }
+
+        ModalDialogStyles m_DialogStyle = ModalDialogStyles.OKCancel;
+        public ModalDialogStyles DialogStyle
+        {
+            get{
+                return m_DialogStyle;
+            }
+            set {
+                m_DialogStyle = value;
+                switch (value)
+                {
+                    case ModalDialogStyles.OK:
+                        OkButton.Visibility = Visibility.Visible;
+                        CancelButton.Visibility = Visibility.Collapsed;
+                        break;
+                    case ModalDialogStyles.OKCancel:
+                        OkButton.Visibility = CancelButton.Visibility = Visibility.Visible;
+                        break;
+                }
+            }
         }
 
         public UIElement Content
@@ -147,16 +193,16 @@ namespace Ranet.AgOlap.Controls.Forms
 
         void m_Dialog_DialogClosed(object sender, DialogResultArgs e)
         {
-            DialogResultArgs args = new DialogResultArgs(DialogResult.Cancel);
-            EventHandler<DialogResultArgs> handler = DialogCancel;
+            EventHandler<DialogResultArgs> handler = DialogClosed;
             if (handler != null)
             {
-                handler(this, args);
+                handler(this, e);
             }
         }
 
         public event EventHandler<DialogResultArgs> DialogOk;
         public event EventHandler<DialogResultArgs> DialogCancel;
+        public event EventHandler<DialogResultArgs> DialogClosed;
 
         DialogResultArgs Raise_DialogOk()
         {
@@ -170,5 +216,10 @@ namespace Ranet.AgOlap.Controls.Forms
         }
 
         public object Tag = null;
+
+        public void ListenKeys(bool value)
+        {
+            m_Dialog.ListenKeys(value);
+        }
     }
 }

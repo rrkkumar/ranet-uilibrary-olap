@@ -65,10 +65,15 @@ namespace Ranet.AgOlap.Controls.General.Tree
             Icon = CollapsedIcon;
         }
 
-        public FolderTreeNode()
+        public FolderTreeNode() 
+            : this(UriResources.Images.FolderOpen16, UriResources.Images.Folder16)
         {
-            ExpandedIcon = UriResources.Images.FolderOpen16;
-            CollapsedIcon = UriResources.Images.Folder16;
+        }
+
+        public FolderTreeNode(BitmapImage expandedIcon, BitmapImage collapsedIcon)
+        {
+            ExpandedIcon = expandedIcon;
+            CollapsedIcon = collapsedIcon;
 
             Icon = CollapsedIcon;
         }

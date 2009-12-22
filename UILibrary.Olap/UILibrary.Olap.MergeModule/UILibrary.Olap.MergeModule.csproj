@@ -1,5 +1,6 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
+    <LocalizedStringFile>en</LocalizedStringFile>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
@@ -12,14 +13,6 @@
     <AssemblyName>UILibrary.Olap.MergeModule</AssemblyName>
     <StartupObject>
     </StartupObject>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
     <PublishUrl>http://localhost/UILibrary.WixMergeModule/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -147,12 +140,11 @@
     <Content Include="..\..\Binaries\Release\ru\Ranet.Olap.Core.resources.dll">
       <Link>INSTALLDIR\FRAMEWORK\BIN\RU\Ranet.Olap.Core.resources.dll</Link>
     </Content>
-    <Content Include="INSTALLDIR\Licences\BSD-Antlr.Runtime.txt" />
-    <Content Include="INSTALLDIR\Licences\GPL v.3.txt" />
+    <Content Include="INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt" />
+    <Content Include="INSTALLDIR\Licenses\GPL v.3.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="INSTALLDIR\Licences\Ranet.UILibrary.Olap.License.ru.rtf">
-    </Content>
+    <Content Include="INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -29,17 +29,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Windows.Controls;
 using Ranet.AgOlap.Controls.MemberChoice.Info;
 using Ranet.AgOlap.Controls.General.Tree;
 using Ranet.Olap.Core.Data;
 
 namespace Ranet.AgOlap.Controls.General.Tree
 {
-    public class MemberTreeNode : TreeViewItem
+    public class MemberTreeNode : CustomTreeNode
     {
-        public const String KEY0_PROPERTY = "KEY0";
-
         OlapMemberInfo m_MemberInfo = null;
         public OlapMemberInfo MemberInfo
         {
@@ -48,25 +45,20 @@ namespace Ranet.AgOlap.Controls.General.Tree
             }
         }
 
-        TreeItemControl item_ctrl;
-
         public MemberTreeNode(OlapMemberInfo info, bool useMultiSelect)
+            : base(useMultiSelect)
         {
             if (info == null)
                 throw new ArgumentNullException("info");
             m_MemberInfo = info;
 
-            item_ctrl = new TreeItemControl(useMultiSelect);
-
             if (info.Info != null && info.Info.Member != null)
-                item_ctrl.Text = MemberInfo.Info.Member.Caption;
+                Text = MemberInfo.Info.Member.Caption;
             else
-                item_ctrl.Text = String.Empty;
+                Text = String.Empty;
 
             // В случае множ. выбора клик на иконке используем для изменения состояния
-            item_ctrl.IconClick += new EventHandler(item_ctrl_IconClick);
-            item_ctrl.MouseDoubleClick += new MouseDoubleClickEventHandler(item_ctrl_MouseDoubleClick);
-            Header = item_ctrl;
+            m_ItemCtrl.IconClick += new EventHandler(item_ctrl_IconClick);
 
             if (useMultiSelect)
             {
@@ -85,25 +77,10 @@ namespace Ranet.AgOlap.Controls.General.Tree
                 m_MemberVisualizationType = value;
                 // Определяем что именно нужно светить в контроле
                 if (MemberInfo.Info != null && MemberInfo.Info.Member != null)
-                    item_ctrl.Text = MemberInfo.Info.Member.GetText(m_MemberVisualizationType);
+                    Text = MemberInfo.Info.Member.GetText(m_MemberVisualizationType);
                 else
-                    item_ctrl.Text = String.Empty;
+                    Text = String.Empty;
             }
-        }
-
-        public event MouseDoubleClickEventHandler MouseDoubleClick;
-        void Raise_MouseDoubleClick(EventArgs e)
-        {
-            MouseDoubleClickEventHandler handler = MouseDoubleClick;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        void item_ctrl_MouseDoubleClick(object sender, EventArgs e)
-        {
-            Raise_MouseDoubleClick(e);
         }
 
         void info_StateChanged(OlapMemberInfo sender)
@@ -129,219 +106,25 @@ namespace Ranet.AgOlap.Controls.General.Tree
             }
         }
 
-        public bool IsWaiting
-        {
-            set
-            {
-                TreeViewItem waitItem = GetSpecialNode(SpecialNodes.Wait);
-                if (!value)
-                {
-                    if (waitItem != null)
-                    {
-                        
-                        Items.Remove(waitItem);
-                    }
-                }
-                else
-                {
-                    if (waitItem == null)
-                        AddSpecialNode(SpecialNodes.Wait);
-                }
-            }
-            get
-            {
-                if (GetSpecialNode(SpecialNodes.Wait) != null)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        //public bool IsReloadAll
-        //{
-        //    set
-        //    {
-        //        TreeViewItem nextItem = GetSpecialNode(SpecialNodes.ReloadAll);
-        //        if (!value)
-        //        {
-        //            if (nextItem != null)
-        //            {
-        //                nextItem.Expanded -= new RoutedEventHandler(node_Expanded);
-        //                Items.Remove(nextItem);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            if (nextItem == null)
-        //                AddSpecialNode(SpecialNodes.ReloadAll);
-        //        }
-        //    }
-        //    get
-        //    {
-        //        if (GetSpecialNode(SpecialNodes.ReloadAll) == null)
-        //            return false;
-        //        else
-        //            return true;
-        //    }
-        //}
-
-        public bool IsFullLoaded
-        {
-            set
-            {
-                TreeViewItem nextItem = GetSpecialNode(SpecialNodes.LoadNext);
-                //TreeViewItem allItem = GetSpecialNode(SpecialNodes.LoadAll);
-                if (value)
-                {
-                    if (nextItem != null)
-                    {
-                        LoadNextTreeNode next = nextItem as LoadNextTreeNode;
-                        if (next != null)
-                        {
-                            next.MouseDoubleClick -= new MouseDoubleClickEventHandler(SpecialNode_MouseDoubleClick);
-                        }
-                        Items.Remove(nextItem);
-                    }
-                    //if (allItem != null)
-                    //{
-                    //    allItem.Expanded -= new RoutedEventHandler(node_Expanded);
-                    //    Items.Remove(allItem);
-                    //}
-                }
-                else
-                {
-                    if (nextItem == null)
-                        AddSpecialNode(SpecialNodes.LoadNext);
-                    //if (allItem == null)
-                    //    AddSpecialNode(SpecialNodes.LoadAll);
-                }
-            }
-            get
-            {
-                if (GetSpecialNode(SpecialNodes.LoadNext) == null/* &&
-                    GetSpecialNode(SpecialNodes.LoadAll) == null*/)
-                    return true;
-                else
-                    return false;
-            }
-        }
-
-        /// <summary>
-        /// Проверяет загружались ли дочерние узлы. 
-        /// </summary>
-        public bool IsInitialized
-        {
-            get
-            {
-                //Если у элемента один дочерний и он "WaitNode", то значит данные не грузились
-                if (Items.Count == 1 && IsWaiting)
-                {
-                    return false;
-                }
-                return true;
-            }
-        }
-
-        private enum SpecialNodes
-        { 
-            Wait,
-            LoadNext/*,
-            LoadAll,
-            ReloadAll*/
-        }
-
         public bool IsPreloaded
         {
             set {
                 if (value)
                 {
-                    item_ctrl.ItemText.FontStyle = FontStyles.Italic;
-                    item_ctrl.ItemText.Foreground = new SolidColorBrush(Colors.DarkGray);
+                    m_ItemCtrl.ItemText.FontStyle = FontStyles.Italic;
+                    m_ItemCtrl.ItemText.Foreground = new SolidColorBrush(Colors.DarkGray);
                 }
                 else
                 {
-                    item_ctrl.ItemText.FontStyle = FontStyles.Normal;
-                    item_ctrl.ItemText.Foreground = new SolidColorBrush(Colors.Black);
+                    m_ItemCtrl.ItemText.FontStyle = FontStyles.Normal;
+                    m_ItemCtrl.ItemText.Foreground = new SolidColorBrush(Colors.Black);
                 }
             }
             get {
-                if (item_ctrl.ItemText.FontStyle != FontStyles.Normal)
+                if (m_ItemCtrl.ItemText.FontStyle != FontStyles.Normal)
                     return true;
                 return false;
             }
         }
-
-        private TreeViewItem AddSpecialNode(SpecialNodes nodeType)
-        {
-            TreeViewItem new_node = null;
-            switch (nodeType)
-            { 
-                case SpecialNodes.Wait:
-                    new_node = new WaitTreeNode();
-                    break;
-                case SpecialNodes.LoadNext:
-                    LoadNextTreeNode node = new LoadNextTreeNode();
-                    node.MouseDoubleClick += new MouseDoubleClickEventHandler(SpecialNode_MouseDoubleClick);
-                    new_node = node;
-                    break;
-                //case SpecialNodes.LoadAll:
-                //    node = new LoadAllTreeNode();
-                //    node.Expanded += new RoutedEventHandler(node_Expanded);
-                //    break;
-                //case SpecialNodes.ReloadAll:
-                //    node = new ReloadAllTreeNode();
-                //    node.Expanded += new RoutedEventHandler(node_Expanded);
-                //    break;
-            }
-            if (new_node != null)
-            {
-                Items.Add(new_node);
-            }
-            return new_node;
-        }
-
-        void SpecialNode_MouseDoubleClick(object sender, EventArgs e)
-        {
-            MouseDoubleClickEventHandler handler = this.Special_MouseDoubleClick;
-            if (handler != null)
-            {
-                handler(sender, EventArgs.Empty);
-            }
-        }
-
-        public event MouseDoubleClickEventHandler Special_MouseDoubleClick;
-
-        TreeViewItem GetSpecialNode(SpecialNodes nodeType)
-        {
-            foreach (object obj in Items)
-            {
-                switch (nodeType)
-                {
-                    case SpecialNodes.Wait:
-                        WaitTreeNode wait = obj as WaitTreeNode;
-                        if (wait != null)
-                            return wait;
-                        break;
-                    case SpecialNodes.LoadNext:
-                        LoadNextTreeNode next = obj as LoadNextTreeNode;
-                        if (next != null)
-                            return next;
-                        break;
-                    //case SpecialNodes.LoadAll:
-                    //    LoadAllTreeNode all = obj as LoadAllTreeNode;
-                    //    if (all != null)
-                    //        return all;
-                    //    break;
-                    //case SpecialNodes.ReloadAll:
-                    //    ReloadAllTreeNode reload = obj as ReloadAllTreeNode;
-                    //    if (reload != null)
-                    //        return reload;
-                    //    break;
-                }
-            }
-            return null;
-        }
-
-
     }
 }

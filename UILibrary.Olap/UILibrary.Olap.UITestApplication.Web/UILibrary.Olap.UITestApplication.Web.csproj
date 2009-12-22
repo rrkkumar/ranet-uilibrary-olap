@@ -12,10 +12,6 @@
     <AssemblyName>UILibrary.Olap.UITestApplication.Web</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SilverlightApplicationList>{B22920B1-7E0D-4D23-8A20-BCC7E44CA0F4}|..\UILibrary.Olap.UITestApplication\UILibrary.Olap.UITestApplication.csproj|ClientBin|False</SilverlightApplicationList>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -59,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClientBin\UILibrary.Olap.UITestApplication.xap" />
-    <Content Include="Default.aspx" />
+    <Content Include="Default.html" />
     <Content Include="InitializeWebService.asmx" />
     <Content Include="OlapWebService.asmx" />
     <Content Include="Silverlight.js" />
@@ -68,13 +64,6 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Default.aspx.cs">
-      <SubType>ASPXCodeBehind</SubType>
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.designer.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
     <Compile Include="InitializeWebService.asmx.cs">
       <DependentUpon>InitializeWebService.asmx</DependentUpon>
       <SubType>Component</SubType>

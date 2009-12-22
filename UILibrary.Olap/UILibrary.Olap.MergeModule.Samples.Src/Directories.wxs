@@ -10,6 +10,17 @@
 					<Directory Id="INSTALLDIR_Samples_MdxFormatter.SilverLight" Name="MdxFrmAg" LongName="MdxFormatter.SilverLight">
 						<Directory Id="INSTALLDIR_Samples_MdxFormatter.SilverLight_Properties" Name="Props" LongName="Properties"/>
 					</Directory>
+					<Directory Id="INSTALLDIR_Samples_UITest.Silverlight" Name="UITestS" LongName="UITest.Silverlight">
+						<Directory Id="INSTALLDIR_Samples_UITest.Silverlight_Properties" Name="Props" LongName="Properties"/>
+						<Directory Id="INSTALLDIR_Samples_UITest.Silverlight_SrvRef" Name="SrvRef">
+							<Directory Id="INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init" Name="Init" />
+						</Directory>
+					</Directory>
+					<Directory Id="INSTALLDIR_Samples_UITest.Web" Name="UITestW" LongName="UITest.Web">
+						<Directory Id="INSTALLDIR_Samples_UITest.Web_Properties" Name="Props" LongName="Properties"/>
+						<Directory Id="INSTALLDIR_Samples_UITest.Web_App_Data" Name="Props" LongName="App_Data"/>
+						<Directory Id="INSTALLDIR_Samples_UITest.Web_ClientBin" Name="Props" LongName="ClientBin"/>
+					</Directory>
 				</Directory>
 			</Directory>
 		</Directory>

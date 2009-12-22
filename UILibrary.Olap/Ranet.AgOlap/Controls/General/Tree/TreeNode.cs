@@ -36,12 +36,12 @@ namespace Ranet.AgOlap.Controls.General.Tree
     public class TreeNode<T> : TreeViewItem
     {
         public readonly T Info = default(T);
-
+        TreeItemControl item_ctrl;
         public TreeNode(String caption, BitmapImage icon, T info)
         {
             Info = info;
 
-            TreeItemControl item_ctrl = new TreeItemControl();
+            item_ctrl = new TreeItemControl();
             item_ctrl.Text = caption;
             item_ctrl.Icon = icon;
             item_ctrl.MouseDoubleClick += new MouseDoubleClickEventHandler(item_ctrl_MouseDoubleClick);
@@ -52,6 +52,12 @@ namespace Ranet.AgOlap.Controls.General.Tree
         void item_ctrl_MouseDoubleClick(object sender, EventArgs e)
         {
             Raise_MouseDoubleClick(e);
+        }
+
+        public String Text
+        {
+            get { return item_ctrl.Text; }
+            set { item_ctrl.Text = value; }
         }
 
         public event MouseDoubleClickEventHandler MouseDoubleClick;

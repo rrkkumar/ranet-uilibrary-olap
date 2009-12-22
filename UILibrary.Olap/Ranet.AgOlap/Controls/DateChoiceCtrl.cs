@@ -284,37 +284,37 @@ namespace Ranet.AgOlap.Controls
                 IsBusy = true;
 
                 MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, query);
-                Loader.ExecuteQuery(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), null);
+                OlapDataLoader.LoadData(args, null);
             }
         }
 
         #region Загрузчики
-        IPivotDataLoader m_Loader = null;
-        public IPivotDataLoader Loader
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
         {
             set
             {
-                if (m_Loader != null)
+                if (m_OlapDataLoader != null)
                 {
-                    m_Loader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                    m_OlapDataLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
                 }
-                m_Loader = value;
-                m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                m_OlapDataLoader = value;
+                m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
             }
             get
             {
-                if (m_Loader == null)
+                if (m_OlapDataLoader == null)
                 {
-                    m_Loader = GetDataLoader();
-                    m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
+                    m_OlapDataLoader = GetDataLoader();
+                    m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
                 }
-                return m_Loader;
+                return m_OlapDataLoader;
             }
         }
 
-        protected virtual IPivotDataLoader GetDataLoader()
+        protected virtual IDataLoader GetDataLoader()
         {
-            return new PivotDataLoader(URL);
+            return new OlapDataLoader(URL);
         }
         #endregion Загрузчики
 

@@ -37,139 +37,27 @@ using System.Windows.Media.Imaging;
 
 namespace Ranet.AgOlap.Controls.Storage
 {
-    public class ObjectDescriptionListControl : UserControl
+    public class ObjectDescriptionListControl : ObjectsListControlBase<ObjectStorageFileDescription>
     {
-        CustomTree m_Tree;
-        ObjectDescriptionControl m_Description;
-        Grid grdIsWaiting;
-
-        public ObjectDescriptionListControl()
+        public override TreeNode<ObjectStorageFileDescription> BuildTreeNode(ObjectStorageFileDescription item)
         {
-            Grid LayoutRoot = new Grid();
-            
-            m_Tree = new CustomTree() { BorderBrush = new SolidColorBrush(Colors.DarkGray) };
-            m_Tree.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(m_Tree_SelectedItemChanged);
-            LayoutRoot.Children.Add(m_Tree);
-
-            grdIsWaiting = new Grid() { Background = new SolidColorBrush(Color.FromArgb(125, 0xFF, 0xFF, 0xFF)) };
-            grdIsWaiting.Visibility = Visibility.Collapsed;
-            BusyControl m_Waiting = new BusyControl();
-            m_Waiting.Text = Localization.Loading;
-            grdIsWaiting.Children.Add(m_Waiting);
-            LayoutRoot.Children.Add(grdIsWaiting);
-            Grid.SetColumnSpan(grdIsWaiting, LayoutRoot.ColumnDefinitions.Count > 0 ? LayoutRoot.ColumnDefinitions.Count : 1);
-            Grid.SetRowSpan(grdIsWaiting, LayoutRoot.RowDefinitions.Count > 0 ? LayoutRoot.RowDefinitions.Count : 1);
-
-            this.Content = LayoutRoot;
+            BitmapImage icon = UriResources.Images.FileExtension16;
+            if (String.IsNullOrEmpty(item.ContentFileName))
+                icon = UriResources.Images.FileError16;
+            return new TreeNode<ObjectStorageFileDescription>(item.Description.Caption, icon, item);
         }
 
-        public event EventHandler<CustomEventArgs<ObjectStorageFileDescription>> SelectionChanged;
-        public event EventHandler<CustomEventArgs<ObjectStorageFileDescription>> ObjectSelected;
-
-        void m_Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        public override bool Contains(string name)
         {
-            TreeNode<ObjectStorageFileDescription> node = e.NewValue as TreeNode<ObjectStorageFileDescription>;
-            ObjectStorageFileDescription descr = null;
-            if (node != null)
-                descr = node.Info;
-
-            EventHandler<CustomEventArgs<ObjectStorageFileDescription>> handler = SelectionChanged;
-            if (handler != null)
+            if (List != null)
             {
-                handler(this, new CustomEventArgs<ObjectStorageFileDescription>(descr));
-            }
-        }
-
-        public ObjectStorageFileDescription CurrentObject
-        {
-            get
-            {
-                TreeNode<ObjectStorageFileDescription> node = m_Tree.SelectedItem as TreeNode<ObjectStorageFileDescription>;
-                if(node != null)
-                {
-                    return node.Info;
-                }
-                return null;
-            }
-        }
-
-        bool m_IsWaiting = false;
-        public bool IsWaiting
-        {
-            get { return m_IsWaiting; }
-            set
-            {
-                if (m_IsWaiting != value)
-                {
-                    if (value)
-                    {
-                        this.Cursor = Cursors.Wait;
-                        grdIsWaiting.Visibility = Visibility.Visible;
-                    }
-                    else
-                    {
-                        this.Cursor = Cursors.Arrow;
-                        grdIsWaiting.Visibility = Visibility.Collapsed;
-                    }
-                    this.IsEnabled = !value;
-                    m_IsWaiting = value;
-                }
-            }
-        }
-
-        List<ObjectStorageFileDescription> m_List = null;
-        public void Initialize(List<ObjectStorageFileDescription> list)
-        {
-            m_List = list;
-            m_Tree.Items.Clear();
-            if (list != null)
-            {
-                foreach (ObjectStorageFileDescription descr in list)
-                {
-                    BitmapImage icon = UriResources.Images.FileExtension16;
-                    if (String.IsNullOrEmpty(descr.ContentFileName))
-                        icon = UriResources.Images.FileError16;
-                    TreeNode<ObjectStorageFileDescription> node = new TreeNode<ObjectStorageFileDescription>(descr.Description.Caption, icon, descr);
-                    node.MouseDoubleClick += new MouseDoubleClickEventHandler(node_MouseDoubleClick);
-                    m_Tree.Items.Add(node);
-                }
-            }
-        }
-
-        void node_MouseDoubleClick(object sender, EventArgs e)
-        {
-            TreeNode<ObjectStorageFileDescription> node = sender as TreeNode<ObjectStorageFileDescription>;
-            if (node != null && node.Info != null)
-            {
-                EventHandler<CustomEventArgs<ObjectStorageFileDescription>> handler = ObjectSelected;
-                if (handler != null)
-                {
-                    handler(this, new CustomEventArgs<ObjectStorageFileDescription>(node.Info));
-                }
-            }
-        }
-
-        public bool Contains(String name)
-        {
-            if (m_List != null)
-            {
-                foreach (ObjectStorageFileDescription descr in m_List)
+                foreach (ObjectStorageFileDescription descr in List)
                 {
                     if (descr.Description.Name == name)
                         return true;
                 }
             }
             return false;
-        }
-    }
-
-    public class CustomEventArgs<T> : EventArgs
-    {
-        public readonly T Args;
-
-        public CustomEventArgs(T args)
-        {
-            Args = args;
         }
     }
 }

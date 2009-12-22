@@ -42,7 +42,7 @@ namespace Ranet.Olap.Core.Storage
             {
                 string path = Path.Combine(folder, name);
 
-                using (var sw = new StreamWriter(File.OpenWrite(path)))
+                using (var sw = new StreamWriter(File.Open(path, FileMode.Create)))
                 {
                     sw.Write(content);
                     sw.Close();

@@ -24,15 +24,18 @@ using System.Collections.Generic;
 
 namespace Ranet.Olap.Core.Providers.ClientServer
 {
-    public class PerformMemberActionArgs : EventArgs
+    public class PerformMemberActionArgs : OlapActionBase
     {
-        public PerformMemberActionArgs() { }
+        public PerformMemberActionArgs() {
+            ActionType = OlapActionTypes.MemberAction;
+        }
 
         public PerformMemberActionArgs(
             ShortMemberInfo member,
             int axisIndex,
             MemberActionType action,
             List<ShortMemberInfo> ascendants)
+            :this()
         {
             this.Member = member;
             this.AxisIndex = axisIndex;

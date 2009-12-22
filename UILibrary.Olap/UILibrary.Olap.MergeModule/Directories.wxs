@@ -17,13 +17,13 @@
 					</Directory>
 					<Directory Id="INSTALLDIR_SILVERLIGHT_SYMBOLS" Name="symbols"/>
 				</Directory>
-				<Directory Id="INSTALLDIR_Licences" Name="lic" LongName="Licences">
+				<Directory Id="INSTALLDIR_Licenses" Name="lic" LongName="Licenses">
 					<Component Id='MainLic' Guid='771E877F-7D6A-41d4-9BC0-76AF5076AA21'>
 						<File
 							Id='IMainLic'
 							Name='NMainLic'
 							KeyPath='yes'
-							LongName='Ranet.UILibrary.Olap.Licence.rtf'
+							LongName='Ranet.UILibrary.Olap.License.rtf'
 							Source='..\UILibrary.Olap.WixInstaller\License.rtf'
 							Checksum='yes'
 							Compressed='yes'

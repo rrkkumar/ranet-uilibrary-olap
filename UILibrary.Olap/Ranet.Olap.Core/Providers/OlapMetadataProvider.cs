@@ -452,6 +452,12 @@ namespace Ranet.Olap.Core.Providers
                     cube_info.Measures.Add(measure_info);
                 }
 
+                foreach (NamedSet set in cube.NamedSets)
+                {
+                    NamedSetInfo set_info = InfoHelper.CreateNamedSetInfo(set);
+                    cube_info.NamedSets.Add(set_info);
+                }
+
                 if (type == MetadataQueryType.GetCubeMetadata_AllMembers)
                 {
                     AdomdConnection conn = GetConnection(ConnectionString);

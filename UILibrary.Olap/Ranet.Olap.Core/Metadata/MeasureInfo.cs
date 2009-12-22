@@ -73,5 +73,17 @@ namespace Ranet.Olap.Core.Metadata
             get { return m_Units; }
             set { m_Units = value; }
         }
+
+        public String MeasureGroup
+        {
+            get {
+                PropertyInfo pi = GetProperty("MEASUREGROUP_NAME");
+                if (pi != null && pi.Value != null)
+                {
+                    return pi.Value.ToString();
+                }
+                return null;
+            }
+        }
     }
 }

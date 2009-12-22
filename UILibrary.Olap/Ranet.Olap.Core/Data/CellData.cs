@@ -93,6 +93,38 @@ namespace Ranet.Olap.Core.Data
             }
         }
 
+        int m_ForeColor = int.MaxValue;
+        public int ForeColor
+        {
+            get
+            {
+                object obj = null;
+                if (!Value.IsError)
+                {
+                    try
+                    {
+                        if (m_ForeColor == int.MaxValue)
+                        {
+                            obj = Value.GetPropertyValue("FORE_COLOR");
+                            if (obj != null)
+                            {
+                                m_ForeColor = Convert.ToInt32(obj);
+                            }
+                            else
+                            {
+                                m_ForeColor = int.MinValue;
+                            }
+                        }
+                        return m_ForeColor;
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+                return int.MinValue;
+            }
+        }
+
         public String FormatString
         {
             get

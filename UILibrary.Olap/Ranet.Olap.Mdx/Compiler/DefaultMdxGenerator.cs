@@ -84,14 +84,22 @@ namespace Ranet.Olap.Mdx.Compiler
 			return MdxObject;
 
 		}
+		static string ConstAsString(MdxConstantExpression cnst)
+		{
+			var result=cnst.Value;
+			if (result==null)
+				return null;
+			
+			if(cnst.Kind!=MdxConstantKind.String)
+				return result;
+			return result.Substring(1,result.Length-2);
+		}
 		MdxObject tryReduceIIF(MdxObject MdxObject)
 		{
 			var tuple= MdxObject as MdxTupleExpression;
 			if (tuple!=null)
-			{
 				if (tuple.Members.Count==1)
-					MdxObject=tuple.Members[0];
-			}
+					return tryReduceIIF(tuple.Members[0]);
 			
 			if (!options.EvaluateConstantExpressions)
 				return MdxObject;
@@ -106,17 +114,26 @@ namespace Ranet.Olap.Mdx.Compiler
 				return MdxObject;
 			if (Func.Arguments.Count != 3)
 				return MdxObject;
-			var cond = Func.Arguments[0] as MdxBinaryExpression;
+				
+			var cond = tryReduceIIF(Func.Arguments[0]) as MdxBinaryExpression;
 			if (cond == null)
 				return MdxObject;
 			if (cond.Operator != "=")
 				return MdxObject;
-			if (cond.Left.ChildTokens != null)
+				
+			var left=tryReduceIIF(cond.Left) as MdxConstantExpression;
+			if (left == null)
 				return MdxObject;
-			if (cond.Right.ChildTokens != null)
+			var right = tryReduceIIF(cond.Right) as MdxConstantExpression;
+			if (right == null)
 				return MdxObject;
 
-			if (cond.Left.SelfToken == cond.Right.SelfToken)
+			if (left.Value == null)
+				return MdxObject;
+			if (right.Value == null)
+				return MdxObject;
+
+			if (ConstAsString(left) == ConstAsString(right))
 				return tryReduceIIF(Func.Arguments[1]);
 			else
 				return tryReduceIIF(Func.Arguments[2]);

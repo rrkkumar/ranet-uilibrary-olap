@@ -1,0 +1,81 @@
+﻿<UserControl x:Class="Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers.CalcMemberControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:swc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:general="clr-namespace:Ranet.AgOlap.Controls.General"
+    xmlns:calc_members="clr-namespace:Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers"
+    xmlns:combo="clr-namespace:Ranet.AgOlap.Controls.Combo"
+    >
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <swc:TabControl x:Name="TabCtrl">
+            <swc:TabItem x:Name="tabMemberTab" Header="Member View">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    
+                    <!-- Имя -->
+                    <TextBlock Grid.Row="0" x:Name="lblName" Text="Name:"></TextBlock>
+                    <TextBox Grid.Row="1" x:Name="txtName" Margin="0,3,0,0"></TextBox>
+                    
+                   
+                    <!-- Выражение -->
+                    <Border x:Name="brdExpression" Grid.Row="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="2" Padding="0">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"></RowDefinition>
+                                <RowDefinition></RowDefinition>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" x:Name="lblExpression" Text="Expression:" Margin="0,3,0,0"></TextBlock>
+                            <TextBox Grid.Row="1" x:Name="txtExpression" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0"></TextBox>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Строка форматирования -->
+                    <Grid Grid.Row="3" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="lblFormatString" Text="Format String:" ></TextBlock>
+                        <general:EditableComboBox Grid.Column="1" x:Name="comboFormatString" Margin="5,0,0,0"></general:EditableComboBox>
+                    </Grid>
+
+                    <!-- Non-Empty Behavior -->
+                    <Grid Grid.Row="4" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="lblNonEmptyBehavior" Text="Non-empty Behavior:" ></TextBlock>
+                        <combo:CheckedComboBox Grid.Column="1" x:Name="comboNonEmptyBehavior" Margin="5,0,0,0"></combo:CheckedComboBox>
+                    </Grid>
+
+                </Grid>
+            </swc:TabItem>
+            <swc:TabItem x:Name="tabScriptTab" Header="Script View">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition></RowDefinition>
+                    </Grid.RowDefinitions>
+
+                    <!-- Имя -->
+                    <TextBlock Grid.Row="0" x:Name="lblName1" Text="Name:"></TextBlock>
+                    <TextBox Grid.Row="1" x:Name="txtName1" Margin="0,3,0,0" IsReadOnly="True"></TextBox>
+                    <!-- Скрипт -->
+                    <TextBlock Grid.Row="2" x:Name="lblScript" Text="Script:" Margin="0,3,0,0"></TextBlock>
+                    <TextBox Grid.Row="3" x:Name="txtScript" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0" IsReadOnly="True"></TextBox>
+                </Grid>
+            </swc:TabItem>
+        </swc:TabControl>
+    </Grid>
+</UserControl>

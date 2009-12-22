@@ -44,20 +44,20 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int T__62 = 62;
 		public const int T__63 = 63;
 		public const int NON = 19;
-		public const int CASE = 35;
+		public const int CASE = 36;
 		public const int UPDATE = 4;
 		public const int FOR = 18;
 		public const int CELL = 9;
-		public const int FLOAT = 34;
+		public const int FLOAT = 35;
 		public const int NOT = 32;
 		public const int USE_WEIGHTED_INCREMENT = 49;
 		public const int USE_WEIGHTED_ALLOCATION = 48;
-		public const int ID = 40;
+		public const int ID = 41;
 		public const int AND = 31;
 		public const int T__61 = 61;
 		public const int EOF = -1;
 		public const int T__60 = 60;
-		public const int QUOTED_ID = 41;
+		public const int QUOTED_ID = 42;
 		public const int VISUAL = 24;
 		public const int T__55 = 55;
 		public const int T__56 = 56;
@@ -65,7 +65,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int T__57 = 57;
 		public const int CREATE = 43;
 		public const int T__58 = 58;
-		public const int THEN = 39;
+		public const int THEN = 40;
 		public const int T__53 = 53;
 		public const int T__54 = 54;
 		public const int IS = 33;
@@ -81,7 +81,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int XOR = 29;
 		public const int LINE_COMMENT = 51;
 		public const int CELL_ORDINAL = 26;
-		public const int ELSE = 36;
+		public const int ELSE = 37;
 		public const int USE_EQUAL_ALLOCATION = 46;
 		public const int ON = 22;
 		public const int SET = 6;
@@ -94,18 +94,17 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int T__72 = 72;
 		public const int T__70 = 70;
 		public const int CUBE = 5;
-		public const int WHEN = 38;
+		public const int WHEN = 39;
 		public const int USE_EQUAL_INCREMENT = 47;
 		public const int OR = 30;
 		public const int CALCULATION = 17;
 		public const int FROM = 12;
-		public const int T__76 = 76;
-		public const int END = 37;
+		public const int END = 38;
 		public const int GLOBAL = 44;
 		public const int T__75 = 75;
 		public const int T__74 = 74;
 		public const int T__73 = 73;
-		public const int STRING = 42;
+		public const int STRING = 34;
 
 		// delegates
 		// delegators
@@ -302,10 +301,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__60;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:17:7: ( '\\'' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:17:9: '\\''
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:17:7: ( '.' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:17:9: '.'
 				{
-					Match('\'');
+					Match('.');
 
 				}
 
@@ -325,10 +324,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__61;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:18:7: ( '.' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:18:9: '.'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:18:7: ( '(' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:18:9: '('
 				{
-					Match('.');
+					Match('(');
 
 				}
 
@@ -348,10 +347,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__62;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:19:7: ( '(' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:19:9: '('
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:19:7: ( ')' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:19:9: ')'
 				{
-					Match('(');
+					Match(')');
 
 				}
 
@@ -371,10 +370,11 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__63;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:20:7: ( ')' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:20:9: ')'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:20:7: ( '<>' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:20:9: '<>'
 				{
-					Match(')');
+					Match("<>");
+
 
 				}
 
@@ -394,11 +394,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__64;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:21:7: ( '<>' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:21:9: '<>'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:21:7: ( '<' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:21:9: '<'
 				{
-					Match("<>");
-
+					Match('<');
 
 				}
 
@@ -418,10 +417,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__65;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:22:7: ( '<' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:22:9: '<'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:22:7: ( '>' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:22:9: '>'
 				{
-					Match('<');
+					Match('>');
 
 				}
 
@@ -441,10 +440,11 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__66;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:23:7: ( '>' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:23:9: '>'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:23:7: ( '<=' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:23:9: '<='
 				{
-					Match('>');
+					Match("<=");
+
 
 				}
 
@@ -464,10 +464,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__67;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:24:7: ( '<=' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:24:9: '<='
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:24:7: ( '>=' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:24:9: '>='
 				{
-					Match("<=");
+					Match(">=");
 
 
 				}
@@ -488,11 +488,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__68;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:25:7: ( '>=' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:25:9: '>='
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:25:7: ( '+' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:25:9: '+'
 				{
-					Match(">=");
-
+					Match('+');
 
 				}
 
@@ -512,10 +511,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__69;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:26:7: ( '+' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:26:9: '+'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:26:7: ( '-' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:26:9: '-'
 				{
-					Match('+');
+					Match('-');
 
 				}
 
@@ -535,10 +534,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__70;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:27:7: ( '-' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:27:9: '-'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:27:7: ( '/' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:27:9: '/'
 				{
-					Match('-');
+					Match('/');
 
 				}
 
@@ -558,10 +557,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__71;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:28:7: ( '/' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:28:9: '/'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:28:7: ( '^' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:28:9: '^'
 				{
-					Match('/');
+					Match('^');
 
 				}
 
@@ -581,10 +580,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__72;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:29:7: ( '^' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:29:9: '^'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:29:7: ( ':' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:29:9: ':'
 				{
-					Match('^');
+					Match(':');
 
 				}
 
@@ -604,10 +603,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__73;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:30:7: ( ':' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:30:9: ':'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:30:7: ( '&' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:30:9: '&'
 				{
-					Match(':');
+					Match('&');
 
 				}
 
@@ -627,10 +626,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__74;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:31:7: ( '&' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:31:9: '&'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:31:7: ( '{' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:31:9: '{'
 				{
-					Match('&');
+					Match('{');
 
 				}
 
@@ -650,31 +649,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 				int _type = T__75;
 				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:32:7: ( '{' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:32:9: '{'
-				{
-					Match('{');
-
-				}
-
-				state.type = _type;
-				state.channel = _channel;
-			}
-			finally
-			{
-			}
-		}
-		// $ANTLR end "T__75"
-
-		// $ANTLR start "T__76"
-		public void mT__76() // throws RecognitionException [2]
-		{
-			try
-			{
-				int _type = T__76;
-				int _channel = DEFAULT_TOKEN_CHANNEL;
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:33:7: ( '}' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:33:9: '}'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:32:7: ( '}' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:32:9: '}'
 				{
 					Match('}');
 
@@ -687,7 +663,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			{
 			}
 		}
-		// $ANTLR end "T__76"
+		// $ANTLR end "T__75"
 
 		// $ANTLR start "AND"
 		public void mAND() // throws RecognitionException [2]
@@ -5569,8 +5545,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 		override public void mTokens() // throws RecognitionException 
 		{
-			// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:8: ( T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | AND | AS | BY | CASE | CALCULATED | CALCULATION | CELL | CELL_ORDINAL | CREATE | CUBE | DIMENSION | ELSE | EMPTY | END | FORMATTED_VALUE | FOR | FROM | SELECT | IS | GLOBAL | MEMBER | NON | NOT | ON | OR | PROPERTIES | SESSION | SET | THEN | UPDATE | VALUE | USE_EQUAL_ALLOCATION | USE_EQUAL_INCREMENT | USE_WEIGHTED_ALLOCATION | USE_WEIGHTED_INCREMENT | VISUAL | WITH | WHEN | WHERE | XOR | FLOAT | INTEGER | ID | QUOTED_ID | STRING | RANET_EXPRESSION | WS | LINE_COMMENT | COMMENT )
-			int alt15 = 73;
+			// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:8: ( T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | AND | AS | BY | CASE | CALCULATED | CALCULATION | CELL | CELL_ORDINAL | CREATE | CUBE | DIMENSION | ELSE | EMPTY | END | FORMATTED_VALUE | FOR | FROM | SELECT | IS | GLOBAL | MEMBER | NON | NOT | ON | OR | PROPERTIES | SESSION | SET | THEN | UPDATE | VALUE | USE_EQUAL_ALLOCATION | USE_EQUAL_INCREMENT | USE_WEIGHTED_ALLOCATION | USE_WEIGHTED_INCREMENT | VISUAL | WITH | WHEN | WHERE | XOR | FLOAT | INTEGER | ID | QUOTED_ID | STRING | RANET_EXPRESSION | WS | LINE_COMMENT | COMMENT )
+			int alt15 = 72;
 			alt15 = dfa15.Predict(input);
 			switch (alt15)
 			{
@@ -5736,350 +5712,343 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					}
 					break;
 				case 24:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:148: T__76
-					{
-						mT__76();
-
-					}
-					break;
-				case 25:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:154: AND
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:148: AND
 					{
 						mAND();
 
 					}
 					break;
-				case 26:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:158: AS
+				case 25:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:152: AS
 					{
 						mAS();
 
 					}
 					break;
-				case 27:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:161: BY
+				case 26:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:155: BY
 					{
 						mBY();
 
 					}
 					break;
-				case 28:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:164: CASE
+				case 27:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:158: CASE
 					{
 						mCASE();
 
 					}
 					break;
-				case 29:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:169: CALCULATED
+				case 28:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:163: CALCULATED
 					{
 						mCALCULATED();
 
 					}
 					break;
-				case 30:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:180: CALCULATION
+				case 29:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:174: CALCULATION
 					{
 						mCALCULATION();
 
 					}
 					break;
-				case 31:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:192: CELL
+				case 30:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:186: CELL
 					{
 						mCELL();
 
 					}
 					break;
-				case 32:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:197: CELL_ORDINAL
+				case 31:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:191: CELL_ORDINAL
 					{
 						mCELL_ORDINAL();
 
 					}
 					break;
-				case 33:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:210: CREATE
+				case 32:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:204: CREATE
 					{
 						mCREATE();
 
 					}
 					break;
-				case 34:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:217: CUBE
+				case 33:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:211: CUBE
 					{
 						mCUBE();
 
 					}
 					break;
-				case 35:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:222: DIMENSION
+				case 34:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:216: DIMENSION
 					{
 						mDIMENSION();
 
 					}
 					break;
-				case 36:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:232: ELSE
+				case 35:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:226: ELSE
 					{
 						mELSE();
 
 					}
 					break;
-				case 37:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:237: EMPTY
+				case 36:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:231: EMPTY
 					{
 						mEMPTY();
 
 					}
 					break;
-				case 38:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:243: END
+				case 37:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:237: END
 					{
 						mEND();
 
 					}
 					break;
-				case 39:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:247: FORMATTED_VALUE
+				case 38:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:241: FORMATTED_VALUE
 					{
 						mFORMATTED_VALUE();
 
 					}
 					break;
-				case 40:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:263: FOR
+				case 39:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:257: FOR
 					{
 						mFOR();
 
 					}
 					break;
-				case 41:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:267: FROM
+				case 40:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:261: FROM
 					{
 						mFROM();
 
 					}
 					break;
-				case 42:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:272: SELECT
+				case 41:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:266: SELECT
 					{
 						mSELECT();
 
 					}
 					break;
-				case 43:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:279: IS
+				case 42:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:273: IS
 					{
 						mIS();
 
 					}
 					break;
-				case 44:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:282: GLOBAL
+				case 43:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:276: GLOBAL
 					{
 						mGLOBAL();
 
 					}
 					break;
-				case 45:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:289: MEMBER
+				case 44:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:283: MEMBER
 					{
 						mMEMBER();
 
 					}
 					break;
-				case 46:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:296: NON
+				case 45:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:290: NON
 					{
 						mNON();
 
 					}
 					break;
-				case 47:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:300: NOT
+				case 46:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:294: NOT
 					{
 						mNOT();
 
 					}
 					break;
-				case 48:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:304: ON
+				case 47:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:298: ON
 					{
 						mON();
 
 					}
 					break;
-				case 49:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:307: OR
+				case 48:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:301: OR
 					{
 						mOR();
 
 					}
 					break;
-				case 50:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:310: PROPERTIES
+				case 49:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:304: PROPERTIES
 					{
 						mPROPERTIES();
 
 					}
 					break;
-				case 51:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:321: SESSION
+				case 50:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:315: SESSION
 					{
 						mSESSION();
 
 					}
 					break;
-				case 52:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:329: SET
+				case 51:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:323: SET
 					{
 						mSET();
 
 					}
 					break;
-				case 53:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:333: THEN
+				case 52:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:327: THEN
 					{
 						mTHEN();
 
 					}
 					break;
-				case 54:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:338: UPDATE
+				case 53:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:332: UPDATE
 					{
 						mUPDATE();
 
 					}
 					break;
-				case 55:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:345: VALUE
+				case 54:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:339: VALUE
 					{
 						mVALUE();
 
 					}
 					break;
-				case 56:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:351: USE_EQUAL_ALLOCATION
+				case 55:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:345: USE_EQUAL_ALLOCATION
 					{
 						mUSE_EQUAL_ALLOCATION();
 
 					}
 					break;
-				case 57:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:372: USE_EQUAL_INCREMENT
+				case 56:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:366: USE_EQUAL_INCREMENT
 					{
 						mUSE_EQUAL_INCREMENT();
 
 					}
 					break;
-				case 58:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:392: USE_WEIGHTED_ALLOCATION
+				case 57:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:386: USE_WEIGHTED_ALLOCATION
 					{
 						mUSE_WEIGHTED_ALLOCATION();
 
 					}
 					break;
-				case 59:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:416: USE_WEIGHTED_INCREMENT
+				case 58:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:410: USE_WEIGHTED_INCREMENT
 					{
 						mUSE_WEIGHTED_INCREMENT();
 
 					}
 					break;
-				case 60:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:439: VISUAL
+				case 59:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:433: VISUAL
 					{
 						mVISUAL();
 
 					}
 					break;
-				case 61:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:446: WITH
+				case 60:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:440: WITH
 					{
 						mWITH();
 
 					}
 					break;
-				case 62:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:451: WHEN
+				case 61:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:445: WHEN
 					{
 						mWHEN();
 
 					}
 					break;
-				case 63:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:456: WHERE
+				case 62:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:450: WHERE
 					{
 						mWHERE();
 
 					}
 					break;
-				case 64:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:462: XOR
+				case 63:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:456: XOR
 					{
 						mXOR();
 
 					}
 					break;
-				case 65:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:466: FLOAT
+				case 64:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:460: FLOAT
 					{
 						mFLOAT();
 
 					}
 					break;
-				case 66:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:472: INTEGER
+				case 65:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:466: INTEGER
 					{
 						mINTEGER();
 
 					}
 					break;
-				case 67:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:480: ID
+				case 66:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:474: ID
 					{
 						mID();
 
 					}
 					break;
-				case 68:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:483: QUOTED_ID
+				case 67:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:477: QUOTED_ID
 					{
 						mQUOTED_ID();
 
 					}
 					break;
-				case 69:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:493: STRING
+				case 68:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:487: STRING
 					{
 						mSTRING();
 
 					}
 					break;
-				case 70:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:500: RANET_EXPRESSION
+				case 69:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:494: RANET_EXPRESSION
 					{
 						mRANET_EXPRESSION();
 
 					}
 					break;
-				case 71:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:517: WS
+				case 70:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:511: WS
 					{
 						mWS();
 
 					}
 					break;
-				case 72:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:520: LINE_COMMENT
+				case 71:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:514: LINE_COMMENT
 					{
 						mLINE_COMMENT();
 
 					}
 					break;
-				case 73:
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:533: COMMENT
+				case 72:
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:1:527: COMMENT
 					{
 						mCOMMENT();
 
@@ -6095,203 +6064,201 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		private void InitializeCyclicDFAs()
 		{
 			this.dfa15 = new DFA15(this);
-			this.dfa15.specialStateTransitionHandler = new DFA.SpecialStateTransitionHandler(DFA15_SpecialStateTransition);
 		}
 
 		const string DFA15_eotS =
-				"\x02\uffff\x01\x26\x02\uffff\x01\x2d\x03\uffff\x01\x31\x01\x33" +
-				"\x01\uffff\x01\x35\x01\x37\x05\uffff\x12\x26\x01\x53\x04\uffff\x03" +
-				"\x26\x0b\uffff\x01\x26\x01\x59\x01\x5a\x0b\x26\x01\x69\x03\x26\x01" +
-				"\x6e\x01\x6f\x07\x26\x02\uffff\x03\x26\x01\x7a\x02\uffff\x08\x26" +
-				"\x01\u0083\x01\u0085\x03\x26\x01\u0089\x01\uffff\x02\x26\x01\u008c" +
-				"\x01\u008d\x02\uffff\x06\x26\x01\u0095\x03\x26\x01\uffff\x01\u009b" +
-				"\x01\x26\x01\u009e\x01\x26\x01\u00a0\x01\x26\x01\u00a2\x01\x26\x01" +
-				"\uffff\x01\x26\x01\uffff\x01\u00a5\x02\x26\x01\uffff\x02\x26\x02" +
-				"\uffff\x01\x26\x01\u00ab\x02\x26\x01\u00ae\x01\u00af\x01\x26\x01" +
-				"\uffff\x05\x26\x01\uffff\x02\x26\x01\uffff\x01\x26\x01\uffff\x01" +
-				"\x26\x01\uffff\x01\u00ba\x01\x26\x01\uffff\x05\x26\x01\uffff\x01" +
-				"\u00c1\x01\x26\x02\uffff\x01\u00c3\x04\x26\x01\u00c8\x02\x26\x01" +
-				"\u00cb\x01\x26\x01\uffff\x01\x26\x01\u00ce\x01\x26\x01\u00d0\x01" +
-				"\u00d1\x01\x26\x01\uffff\x01\u00d3\x01\uffff\x04\x26\x01\uffff\x02" +
-				"\x26\x01\uffff\x02\x26\x01\uffff\x01\u00dc\x02\uffff\x01\x26\x01" +
-				"\uffff\x08\x26\x01\uffff\x08\x26\x01\u00ef\x06\x26\x01\u00f8\x02" +
-				"\x26\x01\uffff\x01\x26\x01\u00fc\x06\x26\x01\uffff\x01\u0103\x02" +
-				"\x26\x01\uffff\x06\x26\x01\uffff\x01\u010c\x07\x26\x01\uffff\x12" +
-				"\x26\x01\u0128\x08\x26\x01\uffff\x12\x26\x01\u0143\x01\u0144\x04" +
-				"\x26\x01\u0149\x01\u014a\x02\uffff\x04\x26\x02\uffff\x06\x26\x01" +
-				"\u0155\x01\u0156\x01\u0157\x01\u0158\x04\uffff";
+				"\x02\uffff\x01\x25\x05\uffff\x01\x2f\x01\x31\x01\uffff\x01\x33" +
+				"\x01\x35\x05\uffff\x12\x25\x01\x52\x04\uffff\x03\x25\x0a\uffff\x01" +
+				"\x25\x01\x57\x01\x58\x0b\x25\x01\x67\x03\x25\x01\x6c\x01\x6d\x07" +
+				"\x25\x02\uffff\x03\x25\x01\x78\x02\uffff\x08\x25\x01\u0081\x01\u0083" +
+				"\x03\x25\x01\u0087\x01\uffff\x02\x25\x01\u008a\x01\u008b\x02\uffff" +
+				"\x06\x25\x01\u0093\x03\x25\x01\uffff\x01\u0099\x01\x25\x01\u009c" +
+				"\x01\x25\x01\u009e\x01\x25\x01\u00a0\x01\x25\x01\uffff\x01\x25\x01" +
+				"\uffff\x01\u00a3\x02\x25\x01\uffff\x02\x25\x02\uffff\x01\x25\x01" +
+				"\u00a9\x02\x25\x01\u00ac\x01\u00ad\x01\x25\x01\uffff\x05\x25\x01" +
+				"\uffff\x02\x25\x01\uffff\x01\x25\x01\uffff\x01\x25\x01\uffff\x01" +
+				"\u00b8\x01\x25\x01\uffff\x05\x25\x01\uffff\x01\u00bf\x01\x25\x02" +
+				"\uffff\x01\u00c1\x04\x25\x01\u00c6\x02\x25\x01\u00c9\x01\x25\x01" +
+				"\uffff\x01\x25\x01\u00cc\x01\x25\x01\u00ce\x01\u00cf\x01\x25\x01" +
+				"\uffff\x01\u00d1\x01\uffff\x04\x25\x01\uffff\x02\x25\x01\uffff\x02" +
+				"\x25\x01\uffff\x01\u00da\x02\uffff\x01\x25\x01\uffff\x08\x25\x01" +
+				"\uffff\x08\x25\x01\u00ed\x06\x25\x01\u00f6\x02\x25\x01\uffff\x01" +
+				"\x25\x01\u00fa\x06\x25\x01\uffff\x01\u0101\x02\x25\x01\uffff\x06" +
+				"\x25\x01\uffff\x01\u010a\x07\x25\x01\uffff\x12\x25\x01\u0126\x08" +
+				"\x25\x01\uffff\x12\x25\x01\u0141\x01\u0142\x04\x25\x01\u0147\x01" +
+				"\u0148\x02\uffff\x04\x25\x02\uffff\x06\x25\x01\u0153\x01\u0154\x01" +
+				"\u0155\x01\u0156\x04\uffff";
 		const string DFA15_eofS =
-				"\u0159\uffff";
+				"\u0157\uffff";
 		const string DFA15_minS =
-				"\x01\x09\x01\uffff\x01\x50\x02\uffff\x01\x00\x03\uffff\x01\x25" +
-				"\x01\x3d\x01\uffff\x01\x2d\x01\x2a\x05\uffff\x01\x4e\x01\x59\x01" +
-				"\x41\x01\x49\x01\x4c\x01\x4f\x01\x45\x01\x53\x01\x4c\x01\x45\x01" +
-				"\x4f\x01\x4e\x01\x52\x01\x48\x01\x50\x01\x41\x01\x48\x01\x4f\x01" +
-				"\x2e\x04\uffff\x01\x45\x01\x44\x01\x45\x0b\uffff\x01\x44\x02\x30" +
-				"\x02\x4c\x01\x45\x01\x42\x01\x4d\x01\x53\x01\x50\x01\x44\x01\x52" +
-				"\x01\x4f\x01\x4c\x01\x30\x01\x4f\x01\x4d\x01\x4e\x02\x30\x01\x4f" +
-				"\x01\x45\x01\x4c\x01\x53\x01\x54\x01\x45\x01\x52\x02\uffff\x02\x5f" +
-				"\x01\x41\x01\x30\x02\uffff\x01\x45\x01\x43\x01\x4c\x01\x41\x03\x45" +
-				"\x01\x54\x02\x30\x01\x4d\x01\x45\x01\x53\x01\x30\x01\uffff\x02\x42" +
-				"\x02\x30\x02\uffff\x01\x50\x01\x4e\x02\x55\x01\x48\x01\x4e\x01\x30" +
-				"\x02\x45\x01\x54\x01\uffff\x01\x30\x01\x55\x01\x30\x01\x54\x01\x30" +
-				"\x01\x4e\x01\x30\x01\x59\x01\uffff\x01\x41\x01\uffff\x01\x30\x01" +
-				"\x43\x01\x49\x01\uffff\x01\x41\x01\x45\x02\uffff\x01\x45\x01\x30" +
-				"\x01\x45\x01\x41\x02\x30\x01\x45\x01\uffff\x01\x51\x01\x45\x01\x51" +
-				"\x02\x45\x01\uffff\x01\x4c\x01\x4f\x01\uffff\x01\x45\x01\uffff\x01" +
-				"\x53\x01\uffff\x01\x30\x01\x54\x01\uffff\x01\x54\x01\x4f\x01\x4c" +
-				"\x02\x52\x01\uffff\x01\x30\x01\x4c\x02\uffff\x01\x30\x02\x55\x02" +
-				"\x49\x01\x30\x01\x41\x01\x52\x01\x30\x01\x49\x01\uffff\x01\x54\x01" +
-				"\x30\x01\x4e\x02\x30\x01\x54\x01\uffff\x01\x30\x01\uffff\x02\x41" +
-				"\x02\x47\x01\uffff\x01\x54\x01\x44\x01\uffff\x01\x4f\x01\x45\x01" +
-				"\uffff\x01\x30\x02\uffff\x01\x49\x01\uffff\x02\x4c\x02\x48\x01\x45" +
-				"\x01\x49\x01\x4e\x01\x44\x01\uffff\x01\x45\x02\x5f\x02\x54\x01\x44" +
-				"\x01\x4f\x01\x4e\x01\x30\x01\x5f\x01\x53\x02\x41\x02\x45\x01\x30" +
-				"\x01\x4e\x01\x41\x01\uffff\x01\x56\x01\x30\x01\x4c\x02\x4e\x01\x4c" +
-				"\x02\x44\x01\uffff\x01\x30\x01\x4c\x01\x41\x01\uffff\x02\x4c\x02" +
-				"\x43\x02\x5f\x01\uffff\x01\x30\x01\x4c\x02\x4f\x02\x52\x02\x41\x01" +
-				"\uffff\x01\x55\x02\x43\x02\x45\x01\x4c\x01\x4e\x01\x4c\x01\x4e\x01" +
-				"\x45\x02\x41\x02\x4d\x02\x4c\x02\x43\x01\x30\x02\x54\x02\x45\x02" +
-				"\x4f\x02\x52\x01\uffff\x02\x49\x02\x4e\x02\x43\x02\x45\x02\x4f\x02" +
-				"\x54\x02\x41\x02\x4d\x02\x4e\x02\x30\x02\x54\x02\x45\x02\x30\x02" +
-				"\uffff\x02\x49\x02\x4e\x02\uffff\x02\x4f\x02\x54\x02\x4e\x04\x30" +
-				"\x04\uffff";
+				"\x01\x09\x01\uffff\x01\x50\x05\uffff\x01\x25\x01\x3d\x01\uffff" +
+				"\x01\x2d\x01\x2a\x05\uffff\x01\x4e\x01\x59\x01\x41\x01\x49\x01\x4c" +
+				"\x01\x4f\x01\x45\x01\x53\x01\x4c\x01\x45\x01\x4f\x01\x4e\x01\x52" +
+				"\x01\x48\x01\x50\x01\x41\x01\x48\x01\x4f\x01\x2e\x04\uffff\x01\x45" +
+				"\x01\x44\x01\x45\x0a\uffff\x01\x44\x02\x30\x02\x4c\x01\x45\x01\x42" +
+				"\x01\x4d\x01\x53\x01\x50\x01\x44\x01\x52\x01\x4f\x01\x4c\x01\x30" +
+				"\x01\x4f\x01\x4d\x01\x4e\x02\x30\x01\x4f\x01\x45\x01\x4c\x01\x53" +
+				"\x01\x54\x01\x45\x01\x52\x02\uffff\x02\x5f\x01\x41\x01\x30\x02\uffff" +
+				"\x01\x45\x01\x43\x01\x4c\x01\x41\x03\x45\x01\x54\x02\x30\x01\x4d" +
+				"\x01\x45\x01\x53\x01\x30\x01\uffff\x02\x42\x02\x30\x02\uffff\x01" +
+				"\x50\x01\x4e\x02\x55\x01\x48\x01\x4e\x01\x30\x02\x45\x01\x54\x01" +
+				"\uffff\x01\x30\x01\x55\x01\x30\x01\x54\x01\x30\x01\x4e\x01\x30\x01" +
+				"\x59\x01\uffff\x01\x41\x01\uffff\x01\x30\x01\x43\x01\x49\x01\uffff" +
+				"\x01\x41\x01\x45\x02\uffff\x01\x45\x01\x30\x01\x45\x01\x41\x02\x30" +
+				"\x01\x45\x01\uffff\x01\x51\x01\x45\x01\x51\x02\x45\x01\uffff\x01" +
+				"\x4c\x01\x4f\x01\uffff\x01\x45\x01\uffff\x01\x53\x01\uffff\x01\x30" +
+				"\x01\x54\x01\uffff\x01\x54\x01\x4f\x01\x4c\x02\x52\x01\uffff\x01" +
+				"\x30\x01\x4c\x02\uffff\x01\x30\x02\x55\x02\x49\x01\x30\x01\x41\x01" +
+				"\x52\x01\x30\x01\x49\x01\uffff\x01\x54\x01\x30\x01\x4e\x02\x30\x01" +
+				"\x54\x01\uffff\x01\x30\x01\uffff\x02\x41\x02\x47\x01\uffff\x01\x54" +
+				"\x01\x44\x01\uffff\x01\x4f\x01\x45\x01\uffff\x01\x30\x02\uffff\x01" +
+				"\x49\x01\uffff\x02\x4c\x02\x48\x01\x45\x01\x49\x01\x4e\x01\x44\x01" +
+				"\uffff\x01\x45\x02\x5f\x02\x54\x01\x44\x01\x4f\x01\x4e\x01\x30\x01" +
+				"\x5f\x01\x53\x02\x41\x02\x45\x01\x30\x01\x4e\x01\x41\x01\uffff\x01" +
+				"\x56\x01\x30\x01\x4c\x01\x4e\x01\x4c\x01\x4e\x02\x44\x01\uffff\x01" +
+				"\x30\x01\x4c\x01\x41\x01\uffff\x02\x4c\x02\x43\x02\x5f\x01\uffff" +
+				"\x01\x30\x01\x4c\x02\x4f\x02\x52\x02\x41\x01\uffff\x01\x55\x02\x43" +
+				"\x02\x45\x01\x4c\x01\x4e\x01\x4c\x01\x4e\x01\x45\x02\x41\x02\x4d" +
+				"\x02\x4c\x02\x43\x01\x30\x02\x54\x02\x45\x02\x4f\x02\x52\x01\uffff" +
+				"\x02\x49\x02\x4e\x02\x43\x02\x45\x02\x4f\x02\x54\x02\x41\x02\x4d" +
+				"\x02\x4e\x02\x30\x02\x54\x02\x45\x02\x30\x02\uffff\x02\x49\x02\x4e" +
+				"\x02\uffff\x02\x4f\x02\x54\x02\x4e\x04\x30\x04\uffff";
 		const string DFA15_maxS =
-				"\x01\u0451\x01\uffff\x01\x73\x02\uffff\x01\uffff\x03\uffff\x01" +
-				"\x3e\x01\x3d\x01\uffff\x01\x2d\x01\x2f\x05\uffff\x01\x73\x01\x79" +
-				"\x01\x75\x01\x69\x01\x6e\x01\x72\x01\x65\x01\x73\x01\x6c\x01\x65" +
-				"\x01\x6f\x02\x72\x01\x68\x01\x73\x02\x69\x01\x6f\x01\x39\x04\uffff" +
-				"\x01\x65\x01\x64\x01\x65\x0b\uffff\x01\x64\x02\u0451\x01\x73\x01" +
-				"\x6c\x01\x65\x01\x62\x01\x6d\x01\x73\x01\x70\x01\x64\x01\x72\x01" +
-				"\x6f\x01\x74\x01\u0451\x01\x6f\x01\x6d\x01\x74\x02\u0451\x01\x6f" +
-				"\x01\x65\x01\x6c\x01\x73\x01\x74\x01\x65\x01\x72\x02\uffff\x02\x5f" +
-				"\x01\x61\x01\u0451\x02\uffff\x01\x65\x01\x63\x01\x6c\x01\x61\x03" +
-				"\x65\x01\x74\x02\u0451\x01\x6d\x01\x65\x01\x73\x01\u0451\x01\uffff" +
-				"\x02\x62\x02\u0451\x02\uffff\x01\x70\x01\x6e\x02\x75\x01\x68\x01" +
-				"\x72\x01\u0451\x02\x77\x01\x74\x01\uffff\x01\u0451\x01\x75\x01\u0451" +
-				"\x01\x74\x01\u0451\x01\x6e\x01\u0451\x01\x79\x01\uffff\x01\x61\x01" +
-				"\uffff\x01\u0451\x01\x63\x01\x69\x01\uffff\x01\x61\x01\x65\x02\uffff" +
-				"\x01\x65\x01\u0451\x01\x65\x01\x61\x02\u0451\x01\x65\x01\uffff\x01" +
-				"\x71\x01\x65\x01\x71\x02\x65\x01\uffff\x01\x6c\x01\x6f\x01\uffff" +
-				"\x01\x65\x01\uffff\x01\x73\x01\uffff\x01\u0451\x01\x74\x01\uffff" +
-				"\x01\x74\x01\x6f\x01\x6c\x02\x72\x01\uffff\x01\u0451\x01\x6c\x02" +
-				"\uffff\x01\u0451\x02\x75\x02\x69\x01\u0451\x01\x61\x01\x72\x01\u0451" +
-				"\x01\x69\x01\uffff\x01\x74\x01\u0451\x01\x6e\x02\u0451\x01\x74\x01" +
-				"\uffff\x01\u0451\x01\uffff\x02\x61\x02\x67\x01\uffff\x01\x74\x01" +
-				"\x64\x01\uffff\x01\x6f\x01\x65\x01\uffff\x01\u0451\x02\uffff\x01" +
-				"\x69\x01\uffff\x02\x6c\x02\x68\x02\x69\x01\x6e\x01\x64\x01\uffff" +
-				"\x01\x65\x02\x5f\x02\x74\x01\x64\x01\x6f\x01\x6e\x01\u0451\x01\x5f" +
-				"\x01\x73\x02\x69\x02\x65\x01\u0451\x01\x6e\x01\x61\x01\uffff\x01" +
-				"\x76\x01\u0451\x01\x6c\x02\x6e\x01\x6c\x02\x64\x01\uffff\x01\u0451" +
-				"\x01\x6c\x01\x61\x01\uffff\x02\x6c\x02\x63\x02\x5f\x01\uffff\x01" +
-				"\u0451\x01\x6c\x02\x6f\x02\x72\x02\x69\x01\uffff\x01\x75\x02\x63" +
-				"\x02\x65\x01\x6c\x01\x6e\x01\x6c\x01\x6e\x01\x65\x02\x61\x02\x6d" +
-				"\x02\x6c\x02\x63\x01\u0451\x02\x74\x02\x65\x02\x6f\x02\x72\x01\uffff" +
-				"\x02\x69\x02\x6e\x02\x63\x02\x65\x02\x6f\x02\x74\x02\x61\x02\x6d" +
-				"\x02\x6e\x02\u0451\x02\x74\x02\x65\x02\u0451\x02\uffff\x02\x69\x02" +
-				"\x6e\x02\uffff\x02\x6f\x02\x74\x02\x6e\x04\u0451\x04\uffff";
+				"\x01\u0451\x01\uffff\x01\x73\x05\uffff\x01\x3e\x01\x3d\x01\uffff" +
+				"\x01\x2d\x01\x2f\x05\uffff\x01\x73\x01\x79\x01\x75\x01\x69\x01\x6e" +
+				"\x01\x72\x01\x65\x01\x73\x01\x6c\x01\x65\x01\x6f\x02\x72\x01\x68" +
+				"\x01\x73\x02\x69\x01\x6f\x01\x39\x04\uffff\x01\x65\x01\x64\x01\x65" +
+				"\x0a\uffff\x01\x64\x02\u0451\x01\x73\x01\x6c\x01\x65\x01\x62\x01" +
+				"\x6d\x01\x73\x01\x70\x01\x64\x01\x72\x01\x6f\x01\x74\x01\u0451\x01" +
+				"\x6f\x01\x6d\x01\x74\x02\u0451\x01\x6f\x01\x65\x01\x6c\x01\x73\x01" +
+				"\x74\x01\x65\x01\x72\x02\uffff\x02\x5f\x01\x61\x01\u0451\x02\uffff" +
+				"\x01\x65\x01\x63\x01\x6c\x01\x61\x03\x65\x01\x74\x02\u0451\x01\x6d" +
+				"\x01\x65\x01\x73\x01\u0451\x01\uffff\x02\x62\x02\u0451\x02\uffff" +
+				"\x01\x70\x01\x6e\x02\x75\x01\x68\x01\x72\x01\u0451\x02\x77\x01\x74" +
+				"\x01\uffff\x01\u0451\x01\x75\x01\u0451\x01\x74\x01\u0451\x01\x6e" +
+				"\x01\u0451\x01\x79\x01\uffff\x01\x61\x01\uffff\x01\u0451\x01\x63" +
+				"\x01\x69\x01\uffff\x01\x61\x01\x65\x02\uffff\x01\x65\x01\u0451\x01" +
+				"\x65\x01\x61\x02\u0451\x01\x65\x01\uffff\x01\x71\x01\x65\x01\x71" +
+				"\x02\x65\x01\uffff\x01\x6c\x01\x6f\x01\uffff\x01\x65\x01\uffff\x01" +
+				"\x73\x01\uffff\x01\u0451\x01\x74\x01\uffff\x01\x74\x01\x6f\x01\x6c" +
+				"\x02\x72\x01\uffff\x01\u0451\x01\x6c\x02\uffff\x01\u0451\x02\x75" +
+				"\x02\x69\x01\u0451\x01\x61\x01\x72\x01\u0451\x01\x69\x01\uffff\x01" +
+				"\x74\x01\u0451\x01\x6e\x02\u0451\x01\x74\x01\uffff\x01\u0451\x01" +
+				"\uffff\x02\x61\x02\x67\x01\uffff\x01\x74\x01\x64\x01\uffff\x01\x6f" +
+				"\x01\x65\x01\uffff\x01\u0451\x02\uffff\x01\x69\x01\uffff\x02\x6c" +
+				"\x02\x68\x02\x69\x01\x6e\x01\x64\x01\uffff\x01\x65\x02\x5f\x02\x74" +
+				"\x01\x64\x01\x6f\x01\x6e\x01\u0451\x01\x5f\x01\x73\x02\x69\x02\x65" +
+				"\x01\u0451\x01\x6e\x01\x61\x01\uffff\x01\x76\x01\u0451\x01\x6c\x01" +
+				"\x6e\x01\x6c\x01\x6e\x02\x64\x01\uffff\x01\u0451\x01\x6c\x01\x61" +
+				"\x01\uffff\x02\x6c\x02\x63\x02\x5f\x01\uffff\x01\u0451\x01\x6c\x02" +
+				"\x6f\x02\x72\x02\x69\x01\uffff\x01\x75\x02\x63\x02\x65\x01\x6c\x01" +
+				"\x6e\x01\x6c\x01\x6e\x01\x65\x02\x61\x02\x6d\x02\x6c\x02\x63\x01" +
+				"\u0451\x02\x74\x02\x65\x02\x6f\x02\x72\x01\uffff\x02\x69\x02\x6e" +
+				"\x02\x63\x02\x65\x02\x6f\x02\x74\x02\x61\x02\x6d\x02\x6e\x02\u0451" +
+				"\x02\x74\x02\x65\x02\u0451\x02\uffff\x02\x69\x02\x6e\x02\uffff\x02" +
+				"\x6f\x02\x74\x02\x6e\x04\u0451\x04\uffff";
 		const string DFA15_acceptS =
-				"\x01\uffff\x01\x01\x01\uffff\x01\x06\x01\x07\x01\uffff\x01\x09" +
-				"\x01\x0a\x01\x0b\x02\uffff\x01\x11\x02\uffff\x01\x14\x01\x15\x01" +
-				"\x16\x01\x17\x01\x18\x13\uffff\x01\x43\x01\x44\x01\x45\x01\x47\x03" +
-				"\uffff\x01\x08\x01\x0c\x01\x0f\x01\x46\x01\x0d\x01\x10\x01\x0e\x01" +
-				"\x48\x01\x12\x01\x49\x01\x13\x1b\uffff\x01\x42\x01\x41\x04\uffff" +
-				"\x01\x1a\x01\x1b\x0e\uffff\x01\x2b\x04\uffff\x01\x30\x01\x31\x0a" +
-				"\uffff\x01\x19\x08\uffff\x01\x26\x01\uffff\x01\x28\x03\uffff\x01" +
-				"\x34\x02\uffff\x01\x2e\x01\x2f\x07\uffff\x01\x40\x05\uffff\x01\x1c" +
-				"\x02\uffff\x01\x1f\x01\uffff\x01\x22\x01\uffff\x01\x24\x02\uffff" +
-				"\x01\x29\x05\uffff\x01\x35\x02\uffff\x01\x3d\x01\x3e\x0a\uffff\x01" +
-				"\x25\x06\uffff\x01\x37\x01\uffff\x01\x3f\x04\uffff\x01\x36\x02\uffff" +
-				"\x01\x21\x02\uffff\x01\x2a\x01\uffff\x01\x2c\x01\x2d\x01\uffff\x01" +
-				"\x3c\x08\uffff\x01\x33\x12\uffff\x01\x23\x08\uffff\x01\x1d\x03\uffff" +
-				"\x01\x32\x06\uffff\x01\x1e\x08\uffff\x01\x20\x1b\uffff\x01\x27\x1a" +
-				"\uffff\x01\x03\x01\x39\x04\uffff\x01\x02\x01\x38\x0a\uffff\x01\x05" +
-				"\x01\x3b\x01\x04\x01\x3a";
+				"\x01\uffff\x01\x01\x01\uffff\x01\x06\x01\x07\x01\x08\x01\x09\x01" +
+				"\x0a\x02\uffff\x01\x10\x02\uffff\x01\x13\x01\x14\x01\x15\x01\x16" +
+				"\x01\x17\x13\uffff\x01\x42\x01\x43\x01\x44\x01\x46\x03\uffff\x01" +
+				"\x0b\x01\x0e\x01\x45\x01\x0c\x01\x0f\x01\x0d\x01\x47\x01\x11\x01" +
+				"\x48\x01\x12\x1b\uffff\x01\x40\x01\x41\x04\uffff\x01\x19\x01\x1a" +
+				"\x0e\uffff\x01\x2a\x04\uffff\x01\x2f\x01\x30\x0a\uffff\x01\x18\x08" +
+				"\uffff\x01\x25\x01\uffff\x01\x27\x03\uffff\x01\x33\x02\uffff\x01" +
+				"\x2d\x01\x2e\x07\uffff\x01\x3f\x05\uffff\x01\x1b\x02\uffff\x01\x1e" +
+				"\x01\uffff\x01\x21\x01\uffff\x01\x23\x02\uffff\x01\x28\x05\uffff" +
+				"\x01\x34\x02\uffff\x01\x3c\x01\x3d\x0a\uffff\x01\x24\x06\uffff\x01" +
+				"\x36\x01\uffff\x01\x3e\x04\uffff\x01\x35\x02\uffff\x01\x20\x02\uffff" +
+				"\x01\x29\x01\uffff\x01\x2b\x01\x2c\x01\uffff\x01\x3b\x08\uffff\x01" +
+				"\x32\x12\uffff\x01\x22\x08\uffff\x01\x1c\x03\uffff\x01\x31\x06\uffff" +
+				"\x01\x1d\x08\uffff\x01\x1f\x1b\uffff\x01\x26\x1a\uffff\x01\x03\x01" +
+				"\x38\x04\uffff\x01\x02\x01\x37\x0a\uffff\x01\x05\x01\x3a\x01\x04" +
+				"\x01\x39";
 		const string DFA15_specialS =
-				"\x05\uffff\x01\x00\u0153\uffff}>";
+				"\u0157\uffff}>";
 		static readonly string[] DFA15_transitionS = {
-            "\x02\x29\x01\uffff\x02\x29\x12\uffff\x01\x29\x01\uffff\x01"+
-            "\x28\x01\uffff\x01\x26\x01\uffff\x01\x10\x01\x05\x01\x07\x01"+
-            "\x08\x01\x04\x01\x0b\x01\x03\x01\x0c\x01\x06\x01\x0d\x0a\x25"+
-            "\x01\x0f\x01\uffff\x01\x09\x01\x01\x01\x0a\x02\uffff\x01\x13"+
-            "\x01\x14\x01\x15\x01\x16\x01\x17\x01\x18\x01\x1b\x01\x26\x01"+
-            "\x1a\x03\x26\x01\x1c\x01\x1d\x01\x1e\x01\x1f\x02\x26\x01\x19"+
-            "\x01\x20\x01\x02\x01\x22\x01\x23\x01\x24\x02\x26\x01\x27\x02"+
-            "\uffff\x01\x0e\x01\x26\x01\uffff\x01\x13\x01\x14\x01\x15\x01"+
-            "\x16\x01\x17\x01\x18\x01\x1b\x01\x26\x01\x1a\x03\x26\x01\x1c"+
-            "\x01\x1d\x01\x1e\x01\x1f\x02\x26\x01\x19\x01\x20\x01\x21\x01"+
-            "\x22\x01\x23\x01\x24\x02\x26\x01\x11\x01\uffff\x01\x12\x22\uffff"+
-            "\x01\x29\u036f\uffff\x42\x26",
+            "\x02\x28\x01\uffff\x02\x28\x12\uffff\x01\x28\x01\uffff\x01"+
+            "\x27\x01\uffff\x01\x25\x01\uffff\x01\x0f\x01\x27\x01\x06\x01"+
+            "\x07\x01\x04\x01\x0a\x01\x03\x01\x0b\x01\x05\x01\x0c\x0a\x24"+
+            "\x01\x0e\x01\uffff\x01\x08\x01\x01\x01\x09\x02\uffff\x01\x12"+
+            "\x01\x13\x01\x14\x01\x15\x01\x16\x01\x17\x01\x1a\x01\x25\x01"+
+            "\x19\x03\x25\x01\x1b\x01\x1c\x01\x1d\x01\x1e\x02\x25\x01\x18"+
+            "\x01\x1f\x01\x02\x01\x21\x01\x22\x01\x23\x02\x25\x01\x26\x02"+
+            "\uffff\x01\x0d\x01\x25\x01\uffff\x01\x12\x01\x13\x01\x14\x01"+
+            "\x15\x01\x16\x01\x17\x01\x1a\x01\x25\x01\x19\x03\x25\x01\x1b"+
+            "\x01\x1c\x01\x1d\x01\x1e\x02\x25\x01\x18\x01\x1f\x01\x20\x01"+
+            "\x21\x01\x22\x01\x23\x02\x25\x01\x10\x01\uffff\x01\x11\x22\uffff"+
+            "\x01\x28\u036f\uffff\x42\x25",
             "",
-            "\x01\x2b\x02\uffff\x01\x2a\x1c\uffff\x01\x2b\x02\uffff\x01"+
-            "\x2c",
-            "",
-            "",
-            "\x00\x28",
+            "\x01\x2a\x02\uffff\x01\x29\x1c\uffff\x01\x2a\x02\uffff\x01"+
+            "\x2b",
             "",
             "",
             "",
-            "\x01\x30\x17\uffff\x01\x2f\x01\x2e",
+            "",
+            "",
+            "\x01\x2e\x17\uffff\x01\x2d\x01\x2c",
+            "\x01\x30",
+            "",
             "\x01\x32",
-            "",
-            "\x01\x34",
-            "\x01\x36\x04\uffff\x01\x34",
+            "\x01\x34\x04\uffff\x01\x32",
             "",
             "",
             "",
             "",
             "",
-            "\x01\x38\x04\uffff\x01\x39\x1a\uffff\x01\x38\x04\uffff\x01"+
-            "\x39",
-            "\x01\x3a\x1f\uffff\x01\x3a",
-            "\x01\x3b\x03\uffff\x01\x3c\x0c\uffff\x01\x3d\x02\uffff\x01"+
-            "\x3e\x0b\uffff\x01\x3b\x03\uffff\x01\x3c\x0c\uffff\x01\x3d\x02"+
-            "\uffff\x01\x3e",
-            "\x01\x3f\x1f\uffff\x01\x3f",
-            "\x01\x40\x01\x41\x01\x42\x1d\uffff\x01\x40\x01\x41\x01\x42",
-            "\x01\x43\x02\uffff\x01\x44\x1c\uffff\x01\x43\x02\uffff\x01"+
-            "\x44",
+            "\x01\x36\x04\uffff\x01\x37\x1a\uffff\x01\x36\x04\uffff\x01"+
+            "\x37",
+            "\x01\x38\x1f\uffff\x01\x38",
+            "\x01\x39\x03\uffff\x01\x3a\x0c\uffff\x01\x3b\x02\uffff\x01"+
+            "\x3c\x0b\uffff\x01\x39\x03\uffff\x01\x3a\x0c\uffff\x01\x3b\x02"+
+            "\uffff\x01\x3c",
+            "\x01\x3d\x1f\uffff\x01\x3d",
+            "\x01\x3e\x01\x3f\x01\x40\x1d\uffff\x01\x3e\x01\x3f\x01\x40",
+            "\x01\x41\x02\uffff\x01\x42\x1c\uffff\x01\x41\x02\uffff\x01"+
+            "\x42",
+            "\x01\x43\x1f\uffff\x01\x43",
+            "\x01\x44\x1f\uffff\x01\x44",
             "\x01\x45\x1f\uffff\x01\x45",
             "\x01\x46\x1f\uffff\x01\x46",
             "\x01\x47\x1f\uffff\x01\x47",
-            "\x01\x48\x1f\uffff\x01\x48",
-            "\x01\x49\x1f\uffff\x01\x49",
-            "\x01\x4a\x03\uffff\x01\x4b\x1b\uffff\x01\x4a\x03\uffff\x01"+
-            "\x4b",
-            "\x01\x4c\x1f\uffff\x01\x4c",
-            "\x01\x4d\x1f\uffff\x01\x4d",
-            "\x01\x2b\x02\uffff\x01\x2c\x1c\uffff\x01\x2b\x02\uffff\x01"+
-            "\x2c",
-            "\x01\x4e\x07\uffff\x01\x4f\x17\uffff\x01\x4e\x07\uffff\x01"+
-            "\x4f",
-            "\x01\x51\x01\x50\x1e\uffff\x01\x51\x01\x50",
-            "\x01\x52\x1f\uffff\x01\x52",
-            "\x01\x54\x01\uffff\x0a\x25",
+            "\x01\x48\x03\uffff\x01\x49\x1b\uffff\x01\x48\x03\uffff\x01"+
+            "\x49",
+            "\x01\x4a\x1f\uffff\x01\x4a",
+            "\x01\x4b\x1f\uffff\x01\x4b",
+            "\x01\x2a\x02\uffff\x01\x2b\x1c\uffff\x01\x2a\x02\uffff\x01"+
+            "\x2b",
+            "\x01\x4c\x07\uffff\x01\x4d\x17\uffff\x01\x4c\x07\uffff\x01"+
+            "\x4d",
+            "\x01\x4f\x01\x4e\x1e\uffff\x01\x4f\x01\x4e",
+            "\x01\x50\x1f\uffff\x01\x50",
+            "\x01\x51\x01\uffff\x0a\x24",
             "",
             "",
             "",
             "",
-            "\x01\x55\x1f\uffff\x01\x56",
-            "\x01\x57\x1f\uffff\x01\x57",
+            "\x01\x53\x1f\uffff\x01\x54",
+            "\x01\x55\x1f\uffff\x01\x55",
+            "\x01\x54\x1f\uffff\x01\x54",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
             "\x01\x56\x1f\uffff\x01\x56",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "",
-            "\x01\x58\x1f\uffff\x01\x58",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\x5c\x06\uffff\x01\x5b\x18\uffff\x01\x5c\x06\uffff\x01"+
-            "\x5b",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\x5a\x06\uffff\x01\x59\x18\uffff\x01\x5a\x06\uffff\x01"+
+            "\x59",
+            "\x01\x5b\x1f\uffff\x01\x5b",
+            "\x01\x5c\x1f\uffff\x01\x5c",
             "\x01\x5d\x1f\uffff\x01\x5d",
             "\x01\x5e\x1f\uffff\x01\x5e",
             "\x01\x5f\x1f\uffff\x01\x5f",
@@ -6299,260 +6266,260 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
             "\x01\x61\x1f\uffff\x01\x61",
             "\x01\x62\x1f\uffff\x01\x62",
             "\x01\x63\x1f\uffff\x01\x63",
-            "\x01\x64\x1f\uffff\x01\x64",
-            "\x01\x65\x1f\uffff\x01\x65",
-            "\x01\x66\x06\uffff\x01\x67\x01\x68\x17\uffff\x01\x66\x06\uffff"+
-            "\x01\x67\x01\x68",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\x6a\x1f\uffff\x01\x6a",
-            "\x01\x6b\x1f\uffff\x01\x6b",
-            "\x01\x6c\x05\uffff\x01\x6d\x19\uffff\x01\x6c\x05\uffff\x01"+
-            "\x6d",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x01\x64\x06\uffff\x01\x65\x01\x66\x17\uffff\x01\x64\x06\uffff"+
+            "\x01\x65\x01\x66",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\x68\x1f\uffff\x01\x68",
+            "\x01\x69\x1f\uffff\x01\x69",
+            "\x01\x6a\x05\uffff\x01\x6b\x19\uffff\x01\x6a\x05\uffff\x01"+
+            "\x6b",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\x6e\x1f\uffff\x01\x6e",
+            "\x01\x6f\x1f\uffff\x01\x6f",
             "\x01\x70\x1f\uffff\x01\x70",
             "\x01\x71\x1f\uffff\x01\x71",
             "\x01\x72\x1f\uffff\x01\x72",
             "\x01\x73\x1f\uffff\x01\x73",
             "\x01\x74\x1f\uffff\x01\x74",
-            "\x01\x75\x1f\uffff\x01\x75",
-            "\x01\x76\x1f\uffff\x01\x76",
             "",
             "",
-            "\x01\x77",
-            "\x01\x78",
+            "\x01\x75",
+            "\x01\x76",
+            "\x01\x77\x1f\uffff\x01\x77",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "",
+            "",
             "\x01\x79\x1f\uffff\x01\x79",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "",
-            "",
+            "\x01\x7a\x1f\uffff\x01\x7a",
             "\x01\x7b\x1f\uffff\x01\x7b",
             "\x01\x7c\x1f\uffff\x01\x7c",
             "\x01\x7d\x1f\uffff\x01\x7d",
             "\x01\x7e\x1f\uffff\x01\x7e",
             "\x01\x7f\x1f\uffff\x01\x7f",
             "\x01\u0080\x1f\uffff\x01\u0080",
-            "\x01\u0081\x1f\uffff\x01\u0081",
-            "\x01\u0082\x1f\uffff\x01\u0082",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x0c\x26\x01\u0084\x0d\x26\x04\uffff\x01"+
-            "\x26\x01\uffff\x0c\x26\x01\u0084\x0d\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x0c\x25\x01\u0082\x0d\x25\x04\uffff\x01"+
+            "\x25\x01\uffff\x0c\x25\x01\u0082\x0d\x25\u0395\uffff\x42\x25",
+            "\x01\u0084\x1f\uffff\x01\u0084",
+            "\x01\u0085\x1f\uffff\x01\u0085",
             "\x01\u0086\x1f\uffff\x01\u0086",
-            "\x01\u0087\x1f\uffff\x01\u0087",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "",
             "\x01\u0088\x1f\uffff\x01\u0088",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "",
-            "\x01\u008a\x1f\uffff\x01\u008a",
-            "\x01\u008b\x1f\uffff\x01\u008b",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x01\u0089\x1f\uffff\x01\u0089",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "",
             "",
+            "\x01\u008c\x1f\uffff\x01\u008c",
+            "\x01\u008d\x1f\uffff\x01\u008d",
             "\x01\u008e\x1f\uffff\x01\u008e",
             "\x01\u008f\x1f\uffff\x01\u008f",
             "\x01\u0090\x1f\uffff\x01\u0090",
-            "\x01\u0091\x1f\uffff\x01\u0091",
-            "\x01\u0092\x1f\uffff\x01\u0092",
-            "\x01\u0093\x03\uffff\x01\u0094\x1b\uffff\x01\u0093\x03\uffff"+
-            "\x01\u0094",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u0096\x11\uffff\x01\u0097\x0d\uffff\x01\u0098\x11\uffff"+
-            "\x01\u0099",
-            "\x01\u0098\x11\uffff\x01\u0099\x0d\uffff\x01\u0098\x11\uffff"+
-            "\x01\u0099",
+            "\x01\u0091\x03\uffff\x01\u0092\x1b\uffff\x01\u0091\x03\uffff"+
+            "\x01\u0092",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u0094\x11\uffff\x01\u0095\x0d\uffff\x01\u0096\x11\uffff"+
+            "\x01\u0097",
+            "\x01\u0096\x11\uffff\x01\u0097\x0d\uffff\x01\u0096\x11\uffff"+
+            "\x01\u0097",
+            "\x01\u0098\x1f\uffff\x01\u0098",
+            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u009a\x1f\uffff\x01\u009a",
-            "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u009c\x1f\uffff\x01\u009c",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\u009d\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\u009b\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u009d\x1f\uffff\x01\u009d",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u009f\x1f\uffff\x01\u009f",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00a1\x1f\uffff\x01\u00a1",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00a3\x1f\uffff\x01\u00a3",
             "",
+            "\x01\u00a2\x1f\uffff\x01\u00a2",
+            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00a4\x1f\uffff\x01\u00a4",
+            "\x01\u00a5\x1f\uffff\x01\u00a5",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
             "\x01\u00a6\x1f\uffff\x01\u00a6",
             "\x01\u00a7\x1f\uffff\x01\u00a7",
             "",
+            "",
             "\x01\u00a8\x1f\uffff\x01\u00a8",
-            "\x01\u00a9\x1f\uffff\x01\u00a9",
-            "",
-            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00aa\x1f\uffff\x01\u00aa",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00ac\x1f\uffff\x01\u00ac",
-            "\x01\u00ad\x1f\uffff\x01\u00ad",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00b0\x1f\uffff\x01\u00b0",
+            "\x01\u00ab\x1f\uffff\x01\u00ab",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u00ae\x1f\uffff\x01\u00ae",
             "",
+            "\x01\u00af\x1f\uffff\x01\u00b0",
             "\x01\u00b1\x1f\uffff\x01\u00b2",
-            "\x01\u00b3\x1f\uffff\x01\u00b4",
+            "\x01\u00b0\x1f\uffff\x01\u00b0",
             "\x01\u00b2\x1f\uffff\x01\u00b2",
+            "\x01\u00b3\x1f\uffff\x01\u00b3",
+            "",
             "\x01\u00b4\x1f\uffff\x01\u00b4",
             "\x01\u00b5\x1f\uffff\x01\u00b5",
             "",
             "\x01\u00b6\x1f\uffff\x01\u00b6",
+            "",
             "\x01\u00b7\x1f\uffff\x01\u00b7",
             "",
-            "\x01\u00b8\x1f\uffff\x01\u00b8",
-            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00b9\x1f\uffff\x01\u00b9",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x01\u00ba\x1f\uffff\x01\u00ba",
             "\x01\u00bb\x1f\uffff\x01\u00bb",
-            "",
             "\x01\u00bc\x1f\uffff\x01\u00bc",
             "\x01\u00bd\x1f\uffff\x01\u00bd",
             "\x01\u00be\x1f\uffff\x01\u00be",
-            "\x01\u00bf\x1f\uffff\x01\u00bf",
+            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00c0\x1f\uffff\x01\u00c0",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00c2\x1f\uffff\x01\u00c2",
             "",
-            "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u00c2\x1f\uffff\x01\u00c3",
+            "\x01\u00c3\x1f\uffff\x01\u00c3",
             "\x01\u00c4\x1f\uffff\x01\u00c5",
             "\x01\u00c5\x1f\uffff\x01\u00c5",
-            "\x01\u00c6\x1f\uffff\x01\u00c7",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00c7\x1f\uffff\x01\u00c7",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00c9\x1f\uffff\x01\u00c9",
+            "\x01\u00c8\x1f\uffff\x01\u00c8",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00ca\x1f\uffff\x01\u00ca",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00cc\x1f\uffff\x01\u00cc",
             "",
+            "\x01\u00cb\x1f\uffff\x01\u00cb",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00cd\x1f\uffff\x01\u00cd",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00cf\x1f\uffff\x01\u00cf",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00d2\x1f\uffff\x01\u00d2",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u00d0\x1f\uffff\x01\u00d0",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "",
+            "\x01\u00d2\x1f\uffff\x01\u00d3",
+            "\x01\u00d3\x1f\uffff\x01\u00d3",
             "\x01\u00d4\x1f\uffff\x01\u00d5",
             "\x01\u00d5\x1f\uffff\x01\u00d5",
-            "\x01\u00d6\x1f\uffff\x01\u00d7",
+            "",
+            "\x01\u00d6\x1f\uffff\x01\u00d6",
             "\x01\u00d7\x1f\uffff\x01\u00d7",
             "",
             "\x01\u00d8\x1f\uffff\x01\u00d8",
             "\x01\u00d9\x1f\uffff\x01\u00d9",
             "",
-            "\x01\u00da\x1f\uffff\x01\u00da",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "",
+            "",
             "\x01\u00db\x1f\uffff\x01\u00db",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "",
-            "",
+            "\x01\u00dc\x1f\uffff\x01\u00dd",
             "\x01\u00dd\x1f\uffff\x01\u00dd",
-            "",
             "\x01\u00de\x1f\uffff\x01\u00df",
             "\x01\u00df\x1f\uffff\x01\u00df",
-            "\x01\u00e0\x1f\uffff\x01\u00e1",
-            "\x01\u00e1\x1f\uffff\x01\u00e1",
-            "\x01\u00e2\x03\uffff\x01\u00e3\x1b\uffff\x01\u00e2\x03\uffff"+
-            "\x01\u00e3",
+            "\x01\u00e0\x03\uffff\x01\u00e1\x1b\uffff\x01\u00e0\x03\uffff"+
+            "\x01\u00e1",
+            "\x01\u00e2\x1f\uffff\x01\u00e2",
+            "\x01\u00e3\x1f\uffff\x01\u00e3",
             "\x01\u00e4\x1f\uffff\x01\u00e4",
-            "\x01\u00e5\x1f\uffff\x01\u00e5",
-            "\x01\u00e6\x1f\uffff\x01\u00e6",
             "",
-            "\x01\u00e7\x1f\uffff\x01\u00e7",
-            "\x01\u00e8",
-            "\x01\u00e9",
-            "\x01\u00ea\x1f\uffff\x01\u00eb",
+            "\x01\u00e5\x1f\uffff\x01\u00e5",
+            "\x01\u00e6",
+            "\x01\u00e7",
+            "\x01\u00e8\x1f\uffff\x01\u00e9",
+            "\x01\u00e9\x1f\uffff\x01\u00e9",
+            "\x01\u00ea\x1f\uffff\x01\u00ea",
             "\x01\u00eb\x1f\uffff\x01\u00eb",
             "\x01\u00ec\x1f\uffff\x01\u00ec",
-            "\x01\u00ed\x1f\uffff\x01\u00ed",
-            "\x01\u00ee\x1f\uffff\x01\u00ee",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00f0",
-            "\x01\u00f1\x1f\uffff\x01\u00f1",
-            "\x01\u00f2\x07\uffff\x01\u00f3\x17\uffff\x01\u00f5\x07\uffff"+
-            "\x01\u00f4",
-            "\x01\u00f5\x07\uffff\x01\u00f4\x17\uffff\x01\u00f5\x07\uffff"+
-            "\x01\u00f4",
-            "\x01\u00f6\x1f\uffff\x01\u00f7",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u00ee",
+            "\x01\u00ef\x1f\uffff\x01\u00ef",
+            "\x01\u00f0\x07\uffff\x01\u00f1\x17\uffff\x01\u00f2\x07\uffff"+
+            "\x01\u00f3",
+            "\x01\u00f2\x07\uffff\x01\u00f3\x17\uffff\x01\u00f2\x07\uffff"+
+            "\x01\u00f3",
+            "\x01\u00f4\x1f\uffff\x01\u00f5",
+            "\x01\u00f5\x1f\uffff\x01\u00f5",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u00f7\x1f\uffff\x01\u00f7",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u00f9\x1f\uffff\x01\u00f9",
-            "\x01\u00fa\x1f\uffff\x01\u00fa",
+            "\x01\u00f8\x1f\uffff\x01\u00f8",
             "",
-            "\x01\u00fb\x1f\uffff\x01\u00fb",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x01\u00f9\x1f\uffff\x01\u00f9",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u00fb\x1f\uffff\x01\u00fc",
             "\x01\u00fd\x1f\uffff\x01\u00fe",
+            "\x01\u00fc\x1f\uffff\x01\u00fc",
+            "\x01\u00fe\x1f\uffff\x01\u00fe",
             "\x01\u00ff\x1f\uffff\x01\u0100",
             "\x01\u0100\x1f\uffff\x01\u0100",
-            "\x01\u00fe\x1f\uffff\x01\u00fe",
-            "\x01\u0101\x1f\uffff\x01\u0102",
+            "",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "\x01\u0102\x1f\uffff\x01\u0102",
+            "\x01\u0103\x1f\uffff\x01\u0103",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x01\u0104\x1f\uffff\x01\u0104",
+            "\x01\u0104\x1f\uffff\x01\u0105",
             "\x01\u0105\x1f\uffff\x01\u0105",
-            "",
             "\x01\u0106\x1f\uffff\x01\u0107",
             "\x01\u0107\x1f\uffff\x01\u0107",
-            "\x01\u0108\x1f\uffff\x01\u0109",
-            "\x01\u0109\x1f\uffff\x01\u0109",
-            "\x01\u010a",
-            "\x01\u010b",
+            "\x01\u0108",
+            "\x01\u0109",
             "",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u010b\x1f\uffff\x01\u010b",
+            "\x01\u010c\x1f\uffff\x01\u010d",
             "\x01\u010d\x1f\uffff\x01\u010d",
             "\x01\u010e\x1f\uffff\x01\u010f",
             "\x01\u010f\x1f\uffff\x01\u010f",
-            "\x01\u0110\x1f\uffff\x01\u0111",
-            "\x01\u0111\x1f\uffff\x01\u0111",
-            "\x01\u0112\x07\uffff\x01\u0113\x17\uffff\x01\u0114\x07\uffff"+
-            "\x01\u0115",
-            "\x01\u0114\x07\uffff\x01\u0115\x17\uffff\x01\u0114\x07\uffff"+
-            "\x01\u0115",
+            "\x01\u0110\x07\uffff\x01\u0111\x17\uffff\x01\u0112\x07\uffff"+
+            "\x01\u0113",
+            "\x01\u0112\x07\uffff\x01\u0113\x17\uffff\x01\u0112\x07\uffff"+
+            "\x01\u0113",
             "",
+            "\x01\u0114\x1f\uffff\x01\u0114",
+            "\x01\u0115\x1f\uffff\x01\u0116",
             "\x01\u0116\x1f\uffff\x01\u0116",
             "\x01\u0117\x1f\uffff\x01\u0118",
             "\x01\u0118\x1f\uffff\x01\u0118",
             "\x01\u0119\x1f\uffff\x01\u011a",
-            "\x01\u011a\x1f\uffff\x01\u011a",
             "\x01\u011b\x1f\uffff\x01\u011c",
-            "\x01\u011d\x1f\uffff\x01\u011e",
+            "\x01\u011a\x1f\uffff\x01\u011a",
             "\x01\u011c\x1f\uffff\x01\u011c",
-            "\x01\u011e\x1f\uffff\x01\u011e",
+            "\x01\u011d\x1f\uffff\x01\u011d",
+            "\x01\u011e\x1f\uffff\x01\u011f",
             "\x01\u011f\x1f\uffff\x01\u011f",
             "\x01\u0120\x1f\uffff\x01\u0121",
             "\x01\u0121\x1f\uffff\x01\u0121",
@@ -6560,19 +6527,19 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
             "\x01\u0123\x1f\uffff\x01\u0123",
             "\x01\u0124\x1f\uffff\x01\u0125",
             "\x01\u0125\x1f\uffff\x01\u0125",
-            "\x01\u0126\x1f\uffff\x01\u0127",
-            "\x01\u0127\x1f\uffff\x01\u0127",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u0127\x1f\uffff\x01\u0128",
+            "\x01\u0128\x1f\uffff\x01\u0128",
             "\x01\u0129\x1f\uffff\x01\u012a",
             "\x01\u012a\x1f\uffff\x01\u012a",
             "\x01\u012b\x1f\uffff\x01\u012c",
             "\x01\u012c\x1f\uffff\x01\u012c",
             "\x01\u012d\x1f\uffff\x01\u012e",
             "\x01\u012e\x1f\uffff\x01\u012e",
+            "",
             "\x01\u012f\x1f\uffff\x01\u0130",
             "\x01\u0130\x1f\uffff\x01\u0130",
-            "",
             "\x01\u0131\x1f\uffff\x01\u0132",
             "\x01\u0132\x1f\uffff\x01\u0132",
             "\x01\u0133\x1f\uffff\x01\u0134",
@@ -6589,42 +6556,40 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
             "\x01\u013e\x1f\uffff\x01\u013e",
             "\x01\u013f\x1f\uffff\x01\u0140",
             "\x01\u0140\x1f\uffff\x01\u0140",
-            "\x01\u0141\x1f\uffff\x01\u0142",
-            "\x01\u0142\x1f\uffff\x01\u0142",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x01\u0143\x1f\uffff\x01\u0144",
+            "\x01\u0144\x1f\uffff\x01\u0144",
             "\x01\u0145\x1f\uffff\x01\u0146",
             "\x01\u0146\x1f\uffff\x01\u0146",
-            "\x01\u0147\x1f\uffff\x01\u0148",
-            "\x01\u0148\x1f\uffff\x01\u0148",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "",
             "",
+            "\x01\u0149\x1f\uffff\x01\u014a",
+            "\x01\u014a\x1f\uffff\x01\u014a",
             "\x01\u014b\x1f\uffff\x01\u014c",
             "\x01\u014c\x1f\uffff\x01\u014c",
+            "",
+            "",
             "\x01\u014d\x1f\uffff\x01\u014e",
             "\x01\u014e\x1f\uffff\x01\u014e",
-            "",
-            "",
             "\x01\u014f\x1f\uffff\x01\u0150",
             "\x01\u0150\x1f\uffff\x01\u0150",
             "\x01\u0151\x1f\uffff\x01\u0152",
             "\x01\u0152\x1f\uffff\x01\u0152",
-            "\x01\u0153\x1f\uffff\x01\u0154",
-            "\x01\u0154\x1f\uffff\x01\u0154",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
-            "\x0a\x26\x07\uffff\x1a\x26\x04\uffff\x01\x26\x01\uffff\x1a"+
-            "\x26\u0395\uffff\x42\x26",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
+            "\x0a\x25\x07\uffff\x1a\x25\x04\uffff\x01\x25\x01\uffff\x1a"+
+            "\x25\u0395\uffff\x42\x25",
             "",
             "",
             "",
@@ -6657,35 +6622,11 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			override public string Description
 			{
-				get { return "1:1: Tokens : ( T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | T__76 | AND | AS | BY | CASE | CALCULATED | CALCULATION | CELL | CELL_ORDINAL | CREATE | CUBE | DIMENSION | ELSE | EMPTY | END | FORMATTED_VALUE | FOR | FROM | SELECT | IS | GLOBAL | MEMBER | NON | NOT | ON | OR | PROPERTIES | SESSION | SET | THEN | UPDATE | VALUE | USE_EQUAL_ALLOCATION | USE_EQUAL_INCREMENT | USE_WEIGHTED_ALLOCATION | USE_WEIGHTED_INCREMENT | VISUAL | WITH | WHEN | WHERE | XOR | FLOAT | INTEGER | ID | QUOTED_ID | STRING | RANET_EXPRESSION | WS | LINE_COMMENT | COMMENT );"; }
+				get { return "1:1: Tokens : ( T__53 | T__54 | T__55 | T__56 | T__57 | T__58 | T__59 | T__60 | T__61 | T__62 | T__63 | T__64 | T__65 | T__66 | T__67 | T__68 | T__69 | T__70 | T__71 | T__72 | T__73 | T__74 | T__75 | AND | AS | BY | CASE | CALCULATED | CALCULATION | CELL | CELL_ORDINAL | CREATE | CUBE | DIMENSION | ELSE | EMPTY | END | FORMATTED_VALUE | FOR | FROM | SELECT | IS | GLOBAL | MEMBER | NON | NOT | ON | OR | PROPERTIES | SESSION | SET | THEN | UPDATE | VALUE | USE_EQUAL_ALLOCATION | USE_EQUAL_INCREMENT | USE_WEIGHTED_ALLOCATION | USE_WEIGHTED_INCREMENT | VISUAL | WITH | WHEN | WHERE | XOR | FLOAT | INTEGER | ID | QUOTED_ID | STRING | RANET_EXPRESSION | WS | LINE_COMMENT | COMMENT );"; }
 			}
 
 		}
 
-
-		protected internal int DFA15_SpecialStateTransition(DFA dfa, int s, IIntStream _input) //throws NoViableAltException
-		{
-			IIntStream input = _input;
-			int _s = s;
-			switch (s)
-			{
-
-				case 0:
-					int LA15_5 = input.LA(1);
-
-					s = -1;
-					if (((LA15_5 >= '\u0000' && LA15_5 <= '\uFFFF'))) { s = 40; }
-
-					else s = 45;
-
-					if (s >= 0) return s;
-					break;
-			}
-			NoViableAltException nvae15 =
-					new NoViableAltException(dfa.Description, 15, _s, input);
-			dfa.Error(nvae15);
-			throw nvae15;
-		}
 
 
 	}

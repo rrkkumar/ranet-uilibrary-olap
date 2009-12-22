@@ -35,6 +35,10 @@ using System.Collections.Generic;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
 {
+    [XmlInclude(typeof(NamedSet_AreaItemWrapper))]
+    [XmlInclude(typeof(Calculated_AreaItemWrapper))]
+    [XmlInclude(typeof(CalculatedNamedSet_AreaItemWrapper))]
+    [XmlInclude(typeof(CalculatedMember_AreaItemWrapper))]
     [XmlInclude(typeof(Level_AreaItemWrapper))]
     [XmlInclude(typeof(Hierarchy_AreaItemWrapper))]
     [XmlInclude(typeof(Measure_AreaItemWrapper))]
@@ -44,6 +48,9 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
     public class AreaItemWrapper
     {
         private List<PropertyInfo> m_CustomProperties = null;
+        /// <summary>
+        /// Свойства
+        /// </summary>
         public List<PropertyInfo> CustomProperties
         {
             set { m_CustomProperties = value; }

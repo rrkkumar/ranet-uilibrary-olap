@@ -402,7 +402,7 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
             }
         }
 
-        public IPivotDataLoader Loader;
+        public IDataLoader Loader;
 
         public event EventHandler<QueryEventArgs> LoadMembers;
         void Raise_LoadMembers(QueryEventArgs args)

@@ -131,6 +131,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             if (IsInteractive)
             {
+                // Текст отображаем подчеркнутым чтобы использовать как гиперссылку
+                CaptionText.TextDecorations = TextDecorations.Underline;
+                CaptionText.MouseLeftButtonDown += new MouseButtonEventHandler(CaptionText_MouseLeftButtonDown);
+
                 ExpanderControl expander = new ExpanderControl();
                 expander.Height = expander.Width = Math.Max(5, 9 * Scale);
               
@@ -307,6 +311,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             this.Content = m_Border;
         }
 
+        void CaptionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            Raise_DrillDownMember(MemberActionType.DrillDown);
+        }
+
         TextBlock m_EllipsisText = null;
 
         void MemberControl_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -381,7 +390,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 if (m_CaptionText == null)
                 {
-                    double scale = 1;
                     m_CaptionText = new TextBlock();
                     m_CaptionText.Margin = new Thickness(2, 0, 3, 0);
                     m_CaptionText.TextAlignment = TextAlignment.Left;

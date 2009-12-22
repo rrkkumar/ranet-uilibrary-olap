@@ -206,7 +206,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             m_MembersBorder = new SolidColorBrush(Colors.DarkGray);
 
-            ItemsLayoutRoot.AttachContextMenu(p => GetCurrentContextMenu(p));
+            //ItemsLayoutRoot.AttachContextMenu(p => GetCurrentContextMenu(p));
+            UseContextMenu = true;
 
             this.KeyDown += new KeyEventHandler(SpanCellsAreaControl_KeyDown);
             ItemsLayoutRoot.KeyDown += new KeyEventHandler(SpanCellsAreaControl_KeyDown);
@@ -227,6 +228,24 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_VericalMouseWhellSupport.AddMouseWheelSupport(m_VerticalScroll);
 
             m_TooltipController = new TooltipController(this);
+        }
+
+        bool m_UseContextMenu = true;
+        public bool UseContextMenu
+        {
+            get { return m_UseContextMenu; }
+            set 
+            {
+                m_UseContextMenu = value;
+                if (value)
+                {
+                    ItemsLayoutRoot.AttachContextMenu(p => GetCurrentContextMenu(p));
+                }
+                else
+                {
+                    ItemsLayoutRoot.DetachContextMenu();
+                }
+            }
         }
 
         TooltipController m_TooltipController = null;
@@ -398,14 +417,21 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         bool m_IsUpdateable = false;
         /// <summary>
         /// Определяет является ли сводная таблица редактируемой
-        /// Редактируемой она будет только если редактирование разрешено. И задан скрипт обновления!
         /// </summary>
         public bool IsUpdateable
         {
             get { 
-                return m_IsUpdateable & !String.IsNullOrEmpty(UpdateScript); 
+                return m_IsUpdateable; 
             }
             set { m_IsUpdateable = value; }
+        }
+
+        /// <summary>
+        /// Определяет может ли таблица редактироваться. Редактируемой она будет только если редактирование разрешено. И задан скрипт обновления!
+        /// </summary>
+        public bool CanEdit
+        {
+            get { return IsUpdateable & !String.IsNullOrEmpty(UpdateScript); }
         }
 
         public String UpdateScript { get; set; }
@@ -893,7 +919,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
 
             DateTime stop = DateTime.Now;
-            System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
+            System.Diagnostics.Debug.WriteLine("PivotGrid refreshing time: " + (stop - start).ToString());
         }
 
         //void RefreshByColumnsArea()
@@ -1027,7 +1053,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_MemberControls_Dict.Clear();
 
             DateTime start = DateTime.Now;
-            System.Diagnostics.Debug.WriteLine("PivotGrid initializing start: " + start.ToString());
+            //System.Diagnostics.Debug.WriteLine("PivotGrid initializing start: " + start.TimeOfDay.ToString());
 
             m_CellSetProvider = provider;
             m_LayoutProvider = null;
@@ -1046,8 +1072,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 GoToFocusedCell();
             }
             DateTime stop = DateTime.Now;
-            System.Diagnostics.Debug.WriteLine("PivotGrid initializing stop: " + stop.ToString());
-            System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
+            //System.Diagnostics.Debug.WriteLine("PivotGrid initializing stop: " + stop.TimeOfDay.ToString());
+            //System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
         }
 
         int CellsArea_BeginColumnIndex
@@ -2077,7 +2103,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         }
 
                         m_CopySelectedCellsMenuItem.IsEnabled = (Selection != null && Selection.Count > 0);
-                        m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & IsUpdateable;
+                        m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
                     }
 
                     if (m_ContextMenu != null)
@@ -2227,7 +2253,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
                 m_CopyCellsSplitter = contextMenu.AddMenuSplitter();
 
-                if (!IsUpdateable)
+                if (!CanEdit)
                 {
                     m_PasteSelectedCellsMenuItem.Visibility = Visibility.Collapsed;
                     m_CopyValueMenuItem.Visibility = Visibility.Collapsed;
@@ -2237,7 +2263,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 else
                 {
                     m_CopySelectedCellsMenuItem.IsEnabled = (Selection != null && Selection.Count > 0);
-                    m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & IsUpdateable;
+                    m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
                 }
             }
 

@@ -333,7 +333,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             else
             {
                 // Если ячейка редактируемая
-                if (Owner != null && Owner.IsUpdateable && Cell.IsUpdateable)
+                if (Owner != null && Owner.CanEdit && Cell.IsUpdateable)
                 {
                     if (IsModified)
                     {
@@ -513,6 +513,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_ProgressBar.HorizontalAlignment = HorizontalAlignment.Stretch;
                     m_LayoutPanel.Children.Add(m_ProgressBar);
                     Grid.SetColumnSpan(m_ProgressBar, 3);
+                    
+                    // Текстовое поле поверх прогресса
+                    m_LayoutPanel.Children.Remove(m_Caption_Text);
+                    m_LayoutPanel.Children.Add(m_Caption_Text);
+                    Grid.SetColumn(m_Caption_Text, 1);
                 }
 
                 m_ProgressBar.Minimum = m_CustomCellAppearance.ProgressBarOptions.MinValue;
@@ -559,24 +564,27 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     // Пытаемся отобразить модифицированное значение в том же формате, в котором оно будет отображаться пользователю когда запишется в куб
                     // Модифицированное значение пытаемся преобразовать в число. Если преобразование успешное, то пытаемся применить строку форматирования
                     // В случае, если преобразование в число не получится, то выводим модифицированное значение просто в строку
-                    String text = Cell.ModifiedValue;
-                    if (Cell.CellDescr != null && !String.IsNullOrEmpty(Cell.CellDescr.FormatString))
-                    {
-                        try
-                        {
-                            // Проверяем чтобы в качестве разделителя был допутимый символ (чтобы значение можно было конвертировать).
-                            String modif = Cell.ModifiedValue;
-                            modif = modif.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
-                            modif = modif.Replace(",", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
+                    // String text = Cell.ModifiedValue;
+                    //if (Cell.CellDescr != null && !String.IsNullOrEmpty(Cell.CellDescr.FormatString))
+                    //{
+                    //    // Проверяем чтобы в качестве разделителя был допутимый символ (чтобы значение можно было конвертировать).
+                    //    String modif = Cell.ModifiedValue;
+                    //    modif = modif.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
+                    //    modif = modif.Replace(",", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
 
-                            double value = Convert.ToDouble(modif);
-                            text = value.ToString(Cell.CellDescr.FormatString);
-                        }
-                        catch
-                        {
-                        }
-                    }
-                    m_Caption_Text.Text = text;
+                    //    text = modif;
+                    //    try
+                    //    {
+                    //        double value = Convert.ToDouble(modif);
+                    //        String str = value.ToString(Cell.CellDescr.FormatString);
+                    //        if (str != Cell.CellDescr.FormatString) // Для случаев Currency и т.д.
+                    //            text = str;
+                    //    }
+                    //    catch
+                    //    {
+                    //    }
+                    //}
+                    m_Caption_Text.Text = Cell.ModifiedValue;
                 }
                 else
                 {
@@ -597,7 +605,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
                 else
                 {
-                    m_Caption_Text.Foreground = new SolidColorBrush(Colors.Black);
+                    Brush brush = new SolidColorBrush(Colors.Black);
+                    if (!IsModified && Cell.CellDescr != null)
+                    {
+                        int foreColor = Cell.CellDescr.ForeColor;
+                        if (foreColor != int.MinValue)
+                        {
+                            // Цвет из OLAP (свойства ячейки)
+                            Color color = ColorHelper.FromRgb(foreColor);
+                            brush = new SolidColorBrush(color);
+                        }
+                    }
+                    m_Caption_Text.Foreground = brush;
                 }
             }
             else

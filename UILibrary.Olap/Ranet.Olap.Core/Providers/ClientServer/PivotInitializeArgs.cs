@@ -23,8 +23,13 @@ using System.Net;
 
 namespace Ranet.Olap.Core.Providers.ClientServer
 {
-    public class PivotInitializeArgs
+    public class PivotInitializeArgs : OlapActionBase
     {
+        public PivotInitializeArgs()
+        {
+            ActionType = OlapActionTypes.GetPivotData;
+        }
+
         public String PivotID = String.Empty;
         public String Connection = String.Empty;
         public String Query = String.Empty;

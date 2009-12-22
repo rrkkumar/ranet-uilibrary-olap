@@ -35,10 +35,16 @@ namespace Ranet.AgOlap.Controls.ContextMenu
 {
     /// <summary>
     /// Класс содержит extension-методы для централизованного подключения
-    /// контекстного меню.
+    /// контекстного меню. 
     /// </summary>
     public static class ContextMenuProvider
     {
+        // Для подключения нужно в aspx: 		
+        //  <param name="enableHtmlAccess" value="true" />
+        //  <param name="windowless" value="true" />
+        // и в Application_Startup:
+        //  ContextMenuProvider.EnableContextMenuSupport(this);
+
         /// <summary>
         /// Делегат, описывающий метод, возвращающий текущее контекстное меню для контрола.
         /// </summary>

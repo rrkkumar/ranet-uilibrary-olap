@@ -64,7 +64,7 @@ namespace Ranet.AgOlap.Controls.General
 
         #region IStorageManager Members
 
-        void service_PerformStorageActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformStorageActionCompletedEventArgs e)
+        void service_PerformStorageActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e)
         {
             InvokeResultDescriptor result = XmlSerializationUtility.XmlStr2Obj<InvokeResultDescriptor>(e.Result);
             if (result != null)
@@ -95,8 +95,8 @@ namespace Ranet.AgOlap.Controls.General
 
             OlapWebService.OlapWebServiceSoapClient service = new Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient();
             ModifyEndPoint(service);
-            service.PerformStorageActionCompleted += new EventHandler<Ranet.AgOlap.OlapWebService.PerformStorageActionCompletedEventArgs>(service_PerformStorageActionCompleted);
-            service.PerformStorageActionAsync(schema.ToString(), state);
+            service.PerformOlapServiceActionCompleted += service_PerformStorageActionCompleted;
+            service.PerformOlapServiceActionAsync("Storage" ,schema.ToString(), state);
         }
 
         public event EventHandler<DataLoaderEventArgs> InvokeCompleted;

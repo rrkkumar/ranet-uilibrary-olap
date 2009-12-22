@@ -89,6 +89,16 @@ namespace Ranet.AgOlap.Controls.Forms
             Application.Current.Host.Content.Resized += OnPluginSizeChanged;
         }
 
+        public event EventHandler<DialogResultArgs> BeforeClosed;
+        void Raise_BeforeClosed(DialogResultArgs args)
+        {
+            EventHandler<DialogResultArgs> handler = BeforeClosed;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+
         public event EventHandler<DialogResultArgs> DialogClosed;
         void Raise_DialogClosed(DialogResult result)
         {
@@ -106,13 +116,19 @@ namespace Ranet.AgOlap.Controls.Forms
 
         public void Close(DialogResult result)
         {
-            _isShowing = false;
-            if (_popup != null)
+            // Даем возможность отменить закрытие
+            DialogResultArgs args = new DialogResultArgs(result);
+            Raise_BeforeClosed(args);
+            if (!args.Cancel)
             {
-                _popup.IsOpen = false;
-                Application.Current.Host.Content.Resized -= OnPluginSizeChanged;
+                _isShowing = false;
+                if (_popup != null)
+                {
+                    _popup.IsOpen = false;
+                    Application.Current.Host.Content.Resized -= OnPluginSizeChanged;
+                }
+                Raise_DialogClosed(result);
             }
-            Raise_DialogClosed(result);
         }
 
         // Override this method to add your content to the dialog
@@ -186,32 +202,44 @@ namespace Ranet.AgOlap.Controls.Forms
         {
             if (e != null && e.CharacterCode == 27) //Escape
             {
-                IsShowing = false;
+                Close(DialogResult.Cancel);
+            }
+        }
+
+        public void ListenKeys(bool value)
+        {
+            if (value)
+            {
+                if (BrowserHelper.IsMozilla)
+                {
+                    HtmlPage.Document.AttachEvent("onkeydown", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
+                }
+                else
+                {
+                    HtmlPage.Document.AttachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
+                }
+            }
+            else
+            {
+                if (BrowserHelper.IsMozilla)
+                {
+                    HtmlPage.Document.DetachEvent("onkeydown", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
+                }
+                else
+                {
+                    HtmlPage.Document.DetachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
+                }
             }
         }
 
         void _popup_Opened(object sender, EventArgs e)
         {
-            if (BrowserHelper.IsMozilla)
-            {
-                HtmlPage.Document.AttachEvent("onkeydown", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
-            }
-            else
-            {
-                HtmlPage.Document.AttachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
-            }
+            ListenKeys(true);
         }
 
         void _popup_Closed(object sender, EventArgs e)
         {
-            if (BrowserHelper.IsMozilla)
-            {
-                HtmlPage.Document.DetachEvent("onkeydown", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
-            }
-            else
-            {
-                HtmlPage.Document.DetachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
-            }
+            ListenKeys(false);
         }
 
         void _canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

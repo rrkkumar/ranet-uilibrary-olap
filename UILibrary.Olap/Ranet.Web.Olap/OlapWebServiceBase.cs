@@ -61,6 +61,63 @@ namespace Ranet.Web.Olap
 
         bool UseCompress = true;
 
+        public String PerformOlapServiceAction(String schemaType, String schema)
+        {
+            try
+            {
+                object type = OlapActionTypes.Parse(typeof(OlapActionTypes), schemaType, true);
+                if (type != null)
+                {
+                    OlapActionTypes actionType = (OlapActionTypes)type;
+                    switch (actionType)
+                    {
+                        case OlapActionTypes.GetMetadata:
+                            return GetMetaData(schema);
+                        case OlapActionTypes.GetMembers:
+                            return GetMembersData(schema);
+                        case OlapActionTypes.GetPivotData:
+                            return GetPivotData(schema);
+                        case OlapActionTypes.MemberAction:
+                            return PerformMemberAction(schema);
+                        case OlapActionTypes.StorageAction:
+                            return PerformStorageAction(schema);
+                        case OlapActionTypes.ServiceCommand:
+                            return PerformServiceCommand(schema);
+                        case OlapActionTypes.GetToolBarInfo:
+                            return GetToolBarInfo(schema);
+                        case OlapActionTypes.UpdateCube:
+                            return UpdateCube(schema);
+                        case OlapActionTypes.ExecuteQuery:
+                            return ExecuteQuery(schema);
+                    }
+                }
+
+                // Metadata
+                //OlapActionBase metadata_args = XmlUtility.XmlStr2Obj<OlapActionBase>(schema);
+                //if (metadata_args != null && metadata_args.ActionType == OlapActionTypes.GetMetadata)
+                //{
+                //    return GetMetaData(schema);
+                //}
+
+                //// Members
+                //OlapActionBase members_args = XmlUtility.XmlStr2Obj<OlapActionBase>(schema);
+                //if (members_args != null && members_args.ActionType == OlapActionTypes.GetMembers)
+                //{
+                //    return GetMembersData(schema);
+                //}
+
+                InvokeResultDescriptor result = new InvokeResultDescriptor();
+                return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            }
+            catch (Exception ex)
+            {
+                InvokeResultDescriptor result = new InvokeResultDescriptor();
+                result.Content = ex.ToString();
+                result.ContentType = InvokeContentType.Error;
+                return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            }
+        }
+
         #region Загрузка данных для контрола выбора элемента измерения
         public String GetMembersData(String schema)
         {
@@ -453,23 +510,31 @@ namespace Ranet.Web.Olap
 
                 if (args != null)
                 {
-                    //OlapDataManager dataManager = this.Application[OLAP_DATA_MANAGER] as OlapDataManager;
-                    //if (dataManager == null)
-                    //{
-                    String connStr = GetConnectionString(args.Connection);
-                    OlapPivotDataManager dataManager = new OlapPivotDataManager(GetConnection(args.Connection), args.Query, args.UpdateScript);
-                    if (!String.IsNullOrEmpty(args.PivotID))
+                    if (!String.IsNullOrEmpty(args.Query))
                     {
-                        this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] = dataManager;
-                    }
-                    //}
+                        //OlapDataManager dataManager = this.Application[OLAP_DATA_MANAGER] as OlapDataManager;
+                        //if (dataManager == null)
+                        //{
+                        String connStr = GetConnectionString(args.Connection);
+                        OlapPivotDataManager dataManager = new OlapPivotDataManager(GetConnection(args.Connection), args.Query, args.UpdateScript);
+                        if (!String.IsNullOrEmpty(args.PivotID))
+                        {
+                            this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] = dataManager;
+                        }
+                        //}
 
-                    DefaultQueryExecuter manager = new DefaultQueryExecuter(GetConnection(args.Connection));
-                    if(!String.IsNullOrEmpty(args.Query))
-                    {
-                        CellSetData cs_descr = manager.ExecuteQuery(args.Query);
-                        res = CellSetData.Serialize(cs_descr);
-                        //res = XmlUtility.Obj2XmlStr(cs_descr, Common.Namespace);
+                        DefaultQueryExecuter manager = new DefaultQueryExecuter(GetConnection(args.Connection));
+                        if (!String.IsNullOrEmpty(args.Query))
+                        {
+                            CellSetData cs_descr = manager.ExecuteQuery(args.Query);
+                            res = CellSetData.Serialize(cs_descr);
+                            //res = XmlUtility.Obj2XmlStr(cs_descr, Common.Namespace);
+                        }
+                    }
+                    else
+                    { 
+                        // Пустой запрос
+                        res = CellSetData.Serialize(new CellSetData());
                     }
                 }
 

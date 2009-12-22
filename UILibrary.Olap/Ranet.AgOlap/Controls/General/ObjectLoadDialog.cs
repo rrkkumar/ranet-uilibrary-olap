@@ -77,7 +77,7 @@ namespace Ranet.AgOlap.Controls.General
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
 
             m_List = new ObjectDescriptionListControl();
-            m_List.SelectionChanged += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_SelectionChanged);
+            m_List.SelectionChanged += new EventHandler<SelectionChangedEventArgs<ObjectStorageFileDescription>>(m_List_SelectionChanged);
             m_List.ObjectSelected += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_ObjectSelected);
             LayoutRoot.Children.Add(m_List);
 
@@ -121,7 +121,7 @@ namespace Ranet.AgOlap.Controls.General
             }
         }
 
-        void m_List_SelectionChanged(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
+        void m_List_SelectionChanged(object sender, SelectionChangedEventArgs<ObjectStorageFileDescription> e)
         {
             // Выводим информацию о текущем выбранном элементе
             if (CurrentObject != null)

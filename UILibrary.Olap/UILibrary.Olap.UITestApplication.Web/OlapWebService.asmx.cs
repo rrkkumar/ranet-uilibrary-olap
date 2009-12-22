@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using Ranet.AgOlap.Controls.General.ClientServer;
 
 namespace UILibrary.Olap.UITestApplication.Web
 {
@@ -17,67 +18,91 @@ namespace UILibrary.Olap.UITestApplication.Web
     public class OlapWebService : Ranet.Web.Olap.OlapWebServiceBase
     {
         [WebMethod]
+        public String PerformOlapServiceAction(String schemaType, String schema)
+        {
+            return base.PerformOlapServiceAction(schemaType, schema);
+        }
+
+        #region Obsolete
+
+        [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String GetMetaData(String schema)
         {
-            return base.GetMetaData(schema);
+            return PerformOlapServiceAction("GetMetadata",schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String GetMembersData(String schema)
         {
-            return base.GetMembersData(schema);
+            return PerformOlapServiceAction("GetMembers", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String GetPivotData(String schema)
         {
-            return base.GetPivotData(schema);
+            return PerformOlapServiceAction("GetPivotData",schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String PerformMemberAction(String schema)
         {
-            return base.PerformMemberAction(schema);
+            return PerformOlapServiceAction("MemberAction", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String PerformStorageAction(String schema)
         {
-            return base.PerformStorageAction(schema);
+            return PerformOlapServiceAction("StorageAction", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String PerformServiceCommand(String schema)
         {
-            return base.PerformServiceCommand(schema);
+            return PerformOlapServiceAction("ServiceCommand", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String GetToolBarInfo(String schema)
         {
-            return base.GetToolBarInfo(schema);
+            return PerformOlapServiceAction("GetToolBarInfo", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String UpdateCube(String schema)
         {
-            return base.UpdateCube(schema);
+            return PerformOlapServiceAction("UpdateCube", schema);
         }
 
         [WebMethod]
+        [Obsolete("Use PerformOlapServiceAction")]
         public String ExecuteQuery(String schema)
         {
-            return base.ExecuteQuery(schema);
+            return PerformOlapServiceAction("ExecuteQuery", schema);
         }
+        #endregion Obsolete
 
         [WebMethod]
         public void RunExcel(String schema)
         {
-            String res = base.PerformServiceCommand(schema);
+            String res = PerformOlapServiceAction("ServiceCommand", schema);
             this.Context.Response.ClearContent();
             this.Context.Response.Buffer = true;
             this.Context.Response.ContentType = "application/vnd.ms-excel";
             this.Context.Response.Write(res);
+        }
+        
+        [WebMethod]
+        public String About()
+        {
+            return "Web Service for Visual OLAP Controls Library";
         }
     }
 }

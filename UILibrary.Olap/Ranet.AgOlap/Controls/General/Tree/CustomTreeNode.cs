@@ -29,7 +29,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 using System.Windows.Controls.Primitives;
 
@@ -88,15 +87,36 @@ namespace Ranet.AgOlap.Controls.General.Tree
         public event DragDeltaEventHandler DragDelta;
         public event DragStartedEventHandler DragStarted;
 
-        TreeItemControl m_ItemCtrl = null;
+        protected TreeItemControl m_ItemCtrl = null;
 
-        public CustomTreeNode()
+        public CustomTreeNode(bool useIcon)
         {
-            m_ItemCtrl = new TreeItemControl();
+            m_ItemCtrl = new TreeItemControl(useIcon);
             m_ItemCtrl.DragStarted += new DragStartedEventHandler(m_ItemCtrl_DragStarted);
             m_ItemCtrl.DragDelta += new DragDeltaEventHandler(m_ItemCtrl_DragDelta);
             m_ItemCtrl.DragCompleted += new DragCompletedEventHandler(m_ItemCtrl_DragCompleted);
+            m_ItemCtrl.MouseDoubleClick += new MouseDoubleClickEventHandler(m_ItemCtrl_MouseDoubleClick);
             Header = m_ItemCtrl;
+        }
+
+        public CustomTreeNode()
+            : this(true)
+        {
+        }
+
+        void m_ItemCtrl_MouseDoubleClick(object sender, EventArgs e)
+        {
+            Raise_MouseDoubleClick(e);
+        }
+
+        public event EventHandler<CustomEventArgs<CustomTreeNode>> MouseDoubleClick;
+        void Raise_MouseDoubleClick(EventArgs e)
+        {
+            EventHandler<CustomEventArgs<CustomTreeNode>> handler = MouseDoubleClick;
+            if (handler != null)
+            {
+                handler(this, new CustomEventArgs<CustomTreeNode>(this));
+            }
         }
 
         void m_ItemCtrl_DragCompleted(object sender, DragCompletedEventArgs e)
@@ -183,6 +203,38 @@ namespace Ranet.AgOlap.Controls.General.Tree
             }
         }
 
+        public bool IsFullLoaded
+        {
+            set
+            {
+                TreeViewItem nextItem = GetSpecialNode(SpecialNodes.LoadNext);
+                if (value)
+                {
+                    if (nextItem != null)
+                    {
+                        LoadNextTreeNode next = nextItem as LoadNextTreeNode;
+                        if (next != null)
+                        {
+                            next.MouseDoubleClick -= new EventHandler<CustomEventArgs<CustomTreeNode>>(SpecialNode_MouseDoubleClick);
+                        }
+                        Items.Remove(nextItem);
+                    }
+                }
+                else
+                {
+                    if (nextItem == null)
+                        AddSpecialNode(SpecialNodes.LoadNext);
+                }
+            }
+            get
+            {
+                if (GetSpecialNode(SpecialNodes.LoadNext) == null)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
         /// <summary>
         /// Проверяет загружались ли дочерние узлы. 
         /// </summary>
@@ -199,7 +251,7 @@ namespace Ranet.AgOlap.Controls.General.Tree
             }
         }
 
-        private TreeViewItem AddSpecialNode(SpecialNodes nodeType)
+        protected TreeViewItem AddSpecialNode(SpecialNodes nodeType)
         {
             TreeViewItem node = null;
             switch (nodeType)
@@ -210,6 +262,11 @@ namespace Ranet.AgOlap.Controls.General.Tree
                 case SpecialNodes.Error:
                     node = new ErrorTreeNode();
                     break;
+                case SpecialNodes.LoadNext:
+                    LoadNextTreeNode new_node = new LoadNextTreeNode();
+                    new_node.MouseDoubleClick += new EventHandler<CustomEventArgs<CustomTreeNode>>(SpecialNode_MouseDoubleClick);
+                    node = new_node;
+                    break;
             }
             if (node != null)
             {
@@ -218,17 +275,17 @@ namespace Ranet.AgOlap.Controls.General.Tree
             return node;
         }
 
-        public event EventHandler SpecialNodeExpanded;
-        void node_Expanded(object sender, RoutedEventArgs e)
+        public event EventHandler<CustomEventArgs<CustomTreeNode>> Special_MouseDoubleClick;
+        protected void SpecialNode_MouseDoubleClick(object sender, EventArgs e)
         {
-            EventHandler handler = this.SpecialNodeExpanded;
+            EventHandler<CustomEventArgs<CustomTreeNode>> handler = this.Special_MouseDoubleClick;
             if (handler != null)
             {
-                handler(sender, EventArgs.Empty);
+                handler(this, new CustomEventArgs<CustomTreeNode>(sender as CustomTreeNode));
             }
         }
 
-        TreeViewItem GetSpecialNode(SpecialNodes nodeType)
+        public TreeViewItem GetSpecialNode(SpecialNodes nodeType)
         {
             foreach (object obj in Items)
             {
@@ -243,6 +300,11 @@ namespace Ranet.AgOlap.Controls.General.Tree
                         ErrorTreeNode error = obj as ErrorTreeNode;
                         if (error != null)
                             return error;
+                        break;
+                    case SpecialNodes.LoadNext:
+                        LoadNextTreeNode next = obj as LoadNextTreeNode;
+                        if (next != null)
+                            return next;
                         break;
                 }
             }

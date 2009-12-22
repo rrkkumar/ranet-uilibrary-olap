@@ -69,6 +69,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		"AND", 
 		"NOT", 
 		"IS", 
+		"STRING", 
 		"FLOAT", 
 		"CASE", 
 		"ELSE", 
@@ -77,7 +78,6 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		"THEN", 
 		"ID", 
 		"QUOTED_ID", 
-		"STRING", 
 		"CREATE", 
 		"GLOBAL", 
 		"SESSION", 
@@ -95,7 +95,6 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		"'USE_WEIGHTED_INCREMENT'", 
 		"','", 
 		"'*'", 
-		"'\\''", 
 		"'.'", 
 		"'('", 
 		"')'", 
@@ -126,20 +125,20 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int PROPERTIES = 10;
 		public const int T__63 = 63;
 		public const int NON = 19;
-		public const int CASE = 35;
+		public const int CASE = 36;
 		public const int UPDATE = 4;
 		public const int FOR = 18;
 		public const int CELL = 9;
-		public const int FLOAT = 34;
+		public const int FLOAT = 35;
 		public const int NOT = 32;
 		public const int USE_WEIGHTED_INCREMENT = 49;
 		public const int USE_WEIGHTED_ALLOCATION = 48;
-		public const int ID = 40;
+		public const int ID = 41;
 		public const int AND = 31;
 		public const int T__61 = 61;
 		public const int T__60 = 60;
 		public const int EOF = -1;
-		public const int QUOTED_ID = 41;
+		public const int QUOTED_ID = 42;
 		public const int VISUAL = 24;
 		public const int T__55 = 55;
 		public const int T__56 = 56;
@@ -147,7 +146,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int T__57 = 57;
 		public const int CREATE = 43;
 		public const int T__58 = 58;
-		public const int THEN = 39;
+		public const int THEN = 40;
 		public const int T__53 = 53;
 		public const int T__54 = 54;
 		public const int IS = 33;
@@ -163,7 +162,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int XOR = 29;
 		public const int LINE_COMMENT = 51;
 		public const int CELL_ORDINAL = 26;
-		public const int ELSE = 36;
+		public const int ELSE = 37;
 		public const int USE_EQUAL_ALLOCATION = 46;
 		public const int ON = 22;
 		public const int SET = 6;
@@ -176,18 +175,17 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public const int CALCULATED = 14;
 		public const int T__70 = 70;
 		public const int CUBE = 5;
-		public const int WHEN = 38;
+		public const int WHEN = 39;
 		public const int USE_EQUAL_INCREMENT = 47;
 		public const int OR = 30;
 		public const int CALCULATION = 17;
 		public const int GLOBAL = 44;
-		public const int END = 37;
-		public const int T__76 = 76;
+		public const int END = 38;
 		public const int FROM = 12;
 		public const int T__75 = 75;
 		public const int T__74 = 74;
 		public const int T__73 = 73;
-		public const int STRING = 42;
+		public const int STRING = 34;
 
 		// delegates
 		// delegators
@@ -805,7 +803,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					{
 						alt12 = 1;
 					}
-					else if ((LA12_0 == PROPERTIES || LA12_0 == NON || LA12_0 == DIMENSION || LA12_0 == INTEGER || LA12_0 == RANET_EXPRESSION || LA12_0 == NOT || (LA12_0 >= FLOAT && LA12_0 <= CASE) || (LA12_0 >= ID && LA12_0 <= STRING) || LA12_0 == 62 || (LA12_0 >= 69 && LA12_0 <= 70) || LA12_0 == 75))
+					else if ((LA12_0 == PROPERTIES || LA12_0 == NON || LA12_0 == DIMENSION || LA12_0 == INTEGER || LA12_0 == RANET_EXPRESSION || LA12_0 == NOT || (LA12_0 >= STRING && LA12_0 <= CASE) || (LA12_0 >= ID && LA12_0 <= QUOTED_ID) || LA12_0 == 61 || (LA12_0 >= 68 && LA12_0 <= 69) || LA12_0 == 74))
 					{
 						alt12 = 2;
 					}
@@ -916,15 +914,13 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "with_clause_single"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:96:1: with_clause_single returns [MdxWithClauseItem value] : ( ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) ( '\\'' e1= expression '\\'' | e2= expression ) ( ',' p1= property_definition )* | SET set_name AS ( '\\'' e1= expression '\\'' | e2= expression ) );
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:96:1: with_clause_single returns [MdxWithClauseItem value] : ( ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) e2= expression ( ',' p1= property_definition )* | SET set_name AS e2= expression );
 		public MdxWithClauseItem with_clause_single() // throws RecognitionException [1]
 		{
 
 			MdxWithClauseItem value = default(MdxWithClauseItem);
 
 			MdxExpression e3 = default(MdxExpression);
-
-			MdxExpression e1 = default(MdxExpression);
 
 			MdxExpression e2 = default(MdxExpression);
 
@@ -937,29 +933,29 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:97:2: ( ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) ( '\\'' e1= expression '\\'' | e2= expression ) ( ',' p1= property_definition )* | SET set_name AS ( '\\'' e1= expression '\\'' | e2= expression ) )
-				int alt19 = 2;
-				int LA19_0 = input.LA(1);
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:97:2: ( ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) e2= expression ( ',' p1= property_definition )* | SET set_name AS e2= expression )
+				int alt17 = 2;
+				int LA17_0 = input.LA(1);
 
-				if ((LA19_0 == CELL || (LA19_0 >= CALCULATED && LA19_0 <= MEMBER)))
+				if ((LA17_0 == CELL || (LA17_0 >= CALCULATED && LA17_0 <= MEMBER)))
 				{
-					alt19 = 1;
+					alt17 = 1;
 				}
-				else if ((LA19_0 == SET))
+				else if ((LA17_0 == SET))
 				{
-					alt19 = 2;
+					alt17 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d19s0 =
-							new NoViableAltException("", 19, 0, input);
+					NoViableAltException nvae_d17s0 =
+							new NoViableAltException("", 17, 0, input);
 
-					throw nvae_d19s0;
+					throw nvae_d17s0;
 				}
-				switch (alt19)
+				switch (alt17)
 				{
 					case 1:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:97:3: ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) ( '\\'' e1= expression '\\'' | e2= expression ) ( ',' p1= property_definition )*
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:97:3: ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS ) e2= expression ( ',' p1= property_definition )*
 						{
 							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:97:3: ( ( CALCULATED )? MEMBER member_name AS | CELL CALCULATION FOR e3= expression AS )
 							int alt15 = 2;
@@ -1033,73 +1029,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 							}
 
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:102:3: ( '\\'' e1= expression '\\'' | e2= expression )
-							int alt16 = 2;
-							int LA16_0 = input.LA(1);
+							PushFollow(FOLLOW_expression_in_with_clause_single584);
+							e2 = expression();
+							state.followingStackPointer--;
 
-							if ((LA16_0 == 60))
-							{
-								alt16 = 1;
-							}
-							else if ((LA16_0 == PROPERTIES || LA16_0 == DIMENSION || LA16_0 == INTEGER || LA16_0 == RANET_EXPRESSION || LA16_0 == NOT || (LA16_0 >= FLOAT && LA16_0 <= CASE) || (LA16_0 >= ID && LA16_0 <= STRING) || LA16_0 == 62 || (LA16_0 >= 69 && LA16_0 <= 70) || LA16_0 == 75))
-							{
-								alt16 = 2;
-							}
-							else
-							{
-								NoViableAltException nvae_d16s0 =
-										new NoViableAltException("", 16, 0, input);
-
-								throw nvae_d16s0;
-							}
-							switch (alt16)
-							{
-								case 1:
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:102:5: '\\'' e1= expression '\\''
-									{
-										Match(input, 60, FOLLOW_60_in_with_clause_single580);
-										PushFollow(FOLLOW_expression_in_with_clause_single584);
-										e1 = expression();
-										state.followingStackPointer--;
-
-										Match(input, 60, FOLLOW_60_in_with_clause_single586);
-										if (value != null) value.Expression = e1;
-
-									}
-									break;
-								case 2:
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:104:5: e2= expression
-									{
-										PushFollow(FOLLOW_expression_in_with_clause_single601);
-										e2 = expression();
-										state.followingStackPointer--;
-
-										if (value != null) value.Expression = e2;
-
-									}
-									break;
-
-							}
-
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:107:3: ( ',' p1= property_definition )*
+							if (value != null) value.Expression = e2;
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:108:3: ( ',' p1= property_definition )*
 							do
 							{
-								int alt17 = 2;
-								int LA17_0 = input.LA(1);
+								int alt16 = 2;
+								int LA16_0 = input.LA(1);
 
-								if ((LA17_0 == 58))
+								if ((LA16_0 == 58))
 								{
-									alt17 = 1;
+									alt16 = 1;
 								}
 
 
-								switch (alt17)
+								switch (alt16)
 								{
 									case 1:
-										// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:107:4: ',' p1= property_definition
+										// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:108:4: ',' p1= property_definition
 										{
-											Match(input, 58, FOLLOW_58_in_with_clause_single616);
-											PushFollow(FOLLOW_property_definition_in_with_clause_single620);
+											Match(input, 58, FOLLOW_58_in_with_clause_single596);
+											PushFollow(FOLLOW_property_definition_in_with_clause_single600);
 											p1 = property_definition();
 											state.followingStackPointer--;
 
@@ -1109,73 +1062,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										break;
 
 									default:
-										goto loop17;
+										goto loop16;
 								}
 							} while (true);
 
-						loop17:
-							;	// Stops C# compiler whining that label 'loop17' has no statements
+						loop16:
+							;	// Stops C# compiler whining that label 'loop16' has no statements
 
 
 						}
 						break;
 					case 2:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:108:4: SET set_name AS ( '\\'' e1= expression '\\'' | e2= expression )
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:109:4: SET set_name AS e2= expression
 						{
-							Match(input, SET, FOLLOW_SET_in_with_clause_single632);
-							PushFollow(FOLLOW_set_name_in_with_clause_single634);
+							Match(input, SET, FOLLOW_SET_in_with_clause_single612);
+							PushFollow(FOLLOW_set_name_in_with_clause_single614);
 							set_name9 = set_name();
 							state.followingStackPointer--;
 
-							Match(input, AS, FOLLOW_AS_in_with_clause_single636);
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:109:3: ( '\\'' e1= expression '\\'' | e2= expression )
-							int alt18 = 2;
-							int LA18_0 = input.LA(1);
+							Match(input, AS, FOLLOW_AS_in_with_clause_single616);
+							PushFollow(FOLLOW_expression_in_with_clause_single626);
+							e2 = expression();
+							state.followingStackPointer--;
 
-							if ((LA18_0 == 60))
-							{
-								alt18 = 1;
-							}
-							else if ((LA18_0 == PROPERTIES || LA18_0 == DIMENSION || LA18_0 == INTEGER || LA18_0 == RANET_EXPRESSION || LA18_0 == NOT || (LA18_0 >= FLOAT && LA18_0 <= CASE) || (LA18_0 >= ID && LA18_0 <= STRING) || LA18_0 == 62 || (LA18_0 >= 69 && LA18_0 <= 70) || LA18_0 == 75))
-							{
-								alt18 = 2;
-							}
-							else
-							{
-								NoViableAltException nvae_d18s0 =
-										new NoViableAltException("", 18, 0, input);
-
-								throw nvae_d18s0;
-							}
-							switch (alt18)
-							{
-								case 1:
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:109:5: '\\'' e1= expression '\\''
-									{
-										Match(input, 60, FOLLOW_60_in_with_clause_single642);
-										PushFollow(FOLLOW_expression_in_with_clause_single646);
-										e1 = expression();
-										state.followingStackPointer--;
-
-										Match(input, 60, FOLLOW_60_in_with_clause_single648);
-										value = new MdxWithSetItem(new MdxObjectReferenceExpression(set_name9), e1, null);
-
-									}
-									break;
-								case 2:
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:112:5: e2= expression
-									{
-										PushFollow(FOLLOW_expression_in_with_clause_single664);
-										e2 = expression();
-										state.followingStackPointer--;
-
-										value = new MdxWithSetItem(new MdxObjectReferenceExpression(set_name9), e2, null);
-
-									}
-									break;
-
-							}
-
+							value = new MdxWithSetItem(new MdxObjectReferenceExpression(set_name9), e2, null);
 
 						}
 						break;
@@ -1196,7 +1106,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "member_name"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:143:1: member_name returns [string value] : compound_id ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:144:1: member_name returns [string value] : compound_id ;
 		public string member_name() // throws RecognitionException [1]
 		{
 
@@ -1207,10 +1117,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:144:2: ( compound_id )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:144:4: compound_id
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:145:2: ( compound_id )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:145:4: compound_id
 				{
-					PushFollow(FOLLOW_compound_id_in_member_name691);
+					PushFollow(FOLLOW_compound_id_in_member_name650);
 					compound_id10 = compound_id();
 					state.followingStackPointer--;
 
@@ -1233,7 +1143,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "property_definition"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:148:1: property_definition returns [MdxCalcProperty value] : identifier '=' expression_or_xor ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:149:1: property_definition returns [MdxCalcProperty value] : identifier '=' expression_or_xor ;
 		public MdxCalcProperty property_definition() // throws RecognitionException [1]
 		{
 
@@ -1246,15 +1156,15 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:149:2: ( identifier '=' expression_or_xor )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:149:4: identifier '=' expression_or_xor
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:150:2: ( identifier '=' expression_or_xor )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:150:4: identifier '=' expression_or_xor
 				{
-					PushFollow(FOLLOW_identifier_in_property_definition710);
+					PushFollow(FOLLOW_identifier_in_property_definition669);
 					identifier11 = identifier();
 					state.followingStackPointer--;
 
-					Match(input, 53, FOLLOW_53_in_property_definition712);
-					PushFollow(FOLLOW_expression_or_xor_in_property_definition714);
+					Match(input, 53, FOLLOW_53_in_property_definition671);
+					PushFollow(FOLLOW_expression_or_xor_in_property_definition673);
 					expression_or_xor12 = expression_or_xor();
 					state.followingStackPointer--;
 
@@ -1277,7 +1187,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "set_name"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:153:1: set_name returns [string value] : compound_id ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:154:1: set_name returns [string value] : compound_id ;
 		public string set_name() // throws RecognitionException [1]
 		{
 
@@ -1288,10 +1198,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:154:2: ( compound_id )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:154:4: compound_id
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:155:2: ( compound_id )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:155:4: compound_id
 				{
-					PushFollow(FOLLOW_compound_id_in_set_name742);
+					PushFollow(FOLLOW_compound_id_in_set_name701);
 					compound_id13 = compound_id();
 					state.followingStackPointer--;
 
@@ -1314,7 +1224,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "compound_id"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:156:1: compound_id returns [string value] : id= identifier ( '.' id2= identifier )* ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:157:1: compound_id returns [string value] : id= identifier ( '.' id2= identifier )* ;
 		public string compound_id() // throws RecognitionException [1]
 		{
 
@@ -1327,33 +1237,33 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:157:2: (id= identifier ( '.' id2= identifier )* )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:157:4: id= identifier ( '.' id2= identifier )*
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:158:2: (id= identifier ( '.' id2= identifier )* )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:158:4: id= identifier ( '.' id2= identifier )*
 				{
-					PushFollow(FOLLOW_identifier_in_compound_id764);
+					PushFollow(FOLLOW_identifier_in_compound_id723);
 					id = identifier();
 					state.followingStackPointer--;
 
 					value = id;
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:158:3: ( '.' id2= identifier )*
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:159:3: ( '.' id2= identifier )*
 					do
 					{
-						int alt20 = 2;
-						int LA20_0 = input.LA(1);
+						int alt18 = 2;
+						int LA18_0 = input.LA(1);
 
-						if ((LA20_0 == 61))
+						if ((LA18_0 == 60))
 						{
-							alt20 = 1;
+							alt18 = 1;
 						}
 
 
-						switch (alt20)
+						switch (alt18)
 						{
 							case 1:
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:158:5: '.' id2= identifier
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:159:5: '.' id2= identifier
 								{
-									Match(input, 61, FOLLOW_61_in_compound_id772);
-									PushFollow(FOLLOW_identifier_in_compound_id776);
+									Match(input, 60, FOLLOW_60_in_compound_id731);
+									PushFollow(FOLLOW_identifier_in_compound_id735);
 									id2 = identifier();
 									state.followingStackPointer--;
 
@@ -1363,12 +1273,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop20;
+								goto loop18;
 						}
 					} while (true);
 
-				loop20:
-					;	// Stops C# compiler whining that label 'loop20' has no statements
+				loop18:
+					;	// Stops C# compiler whining that label 'loop18' has no statements
 
 
 				}
@@ -1388,7 +1298,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "axis_specification"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:161:1: axis_specification returns [MdxAxis value] : ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:162:1: axis_specification returns [MdxAxis value] : ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name ;
 		public MdxAxis axis_specification() // throws RecognitionException [1]
 		{
 
@@ -1405,25 +1315,25 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:162:2: ( ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:162:4: ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:163:2: ( ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:163:4: ( NON EMPTY )? expression ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )? ON an= axis_name
 				{
 					bool NonEmpty = false;
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:163:2: ( NON EMPTY )?
-					int alt21 = 2;
-					int LA21_0 = input.LA(1);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:164:2: ( NON EMPTY )?
+					int alt19 = 2;
+					int LA19_0 = input.LA(1);
 
-					if ((LA21_0 == NON))
+					if ((LA19_0 == NON))
 					{
-						alt21 = 1;
+						alt19 = 1;
 					}
-					switch (alt21)
+					switch (alt19)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:163:3: NON EMPTY
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:164:3: NON EMPTY
 							{
-								Match(input, NON, FOLLOW_NON_in_axis_specification806);
-								Match(input, EMPTY, FOLLOW_EMPTY_in_axis_specification808);
+								Match(input, NON, FOLLOW_NON_in_axis_specification765);
+								Match(input, EMPTY, FOLLOW_EMPTY_in_axis_specification767);
 								NonEmpty = true;
 
 							}
@@ -1431,71 +1341,72 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 					}
 
-					PushFollow(FOLLOW_expression_in_axis_specification817);
+					PushFollow(FOLLOW_expression_in_axis_specification776);
 					expression14 = expression();
 					state.followingStackPointer--;
 
 					value = new MdxAxis(null, expression14, null, null);
+					value.NonEmpty = NonEmpty;
 
 
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:168:3: ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )?
-					int alt24 = 2;
-					int LA24_0 = input.LA(1);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:170:3: ( ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )* )?
+					int alt22 = 2;
+					int LA22_0 = input.LA(1);
 
-					if ((LA24_0 == PROPERTIES || LA24_0 == DIMENSION))
+					if ((LA22_0 == PROPERTIES || LA22_0 == DIMENSION))
 					{
-						alt24 = 1;
+						alt22 = 1;
 					}
-					switch (alt24)
+					switch (alt22)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:168:4: ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )*
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:170:4: ( DIMENSION )? PROPERTIES p1= property ( ',' p2= property )*
 							{
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:168:4: ( DIMENSION )?
-								int alt22 = 2;
-								int LA22_0 = input.LA(1);
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:170:4: ( DIMENSION )?
+								int alt20 = 2;
+								int LA20_0 = input.LA(1);
 
-								if ((LA22_0 == DIMENSION))
+								if ((LA20_0 == DIMENSION))
 								{
-									alt22 = 1;
+									alt20 = 1;
 								}
-								switch (alt22)
+								switch (alt20)
 								{
 									case 1:
-										// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:168:4: DIMENSION
+										// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:170:4: DIMENSION
 										{
-											Match(input, DIMENSION, FOLLOW_DIMENSION_in_axis_specification825);
+											Match(input, DIMENSION, FOLLOW_DIMENSION_in_axis_specification784);
 
 										}
 										break;
 
 								}
 
-								Match(input, PROPERTIES, FOLLOW_PROPERTIES_in_axis_specification828);
-								PushFollow(FOLLOW_property_in_axis_specification832);
+								Match(input, PROPERTIES, FOLLOW_PROPERTIES_in_axis_specification787);
+								PushFollow(FOLLOW_property_in_axis_specification791);
 								p1 = property();
 								state.followingStackPointer--;
 
 								if (value != null) value.DimensionProperties.Add(p1);
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:169:5: ( ',' p2= property )*
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:171:5: ( ',' p2= property )*
 								do
 								{
-									int alt23 = 2;
-									int LA23_0 = input.LA(1);
+									int alt21 = 2;
+									int LA21_0 = input.LA(1);
 
-									if ((LA23_0 == 58))
+									if ((LA21_0 == 58))
 									{
-										alt23 = 1;
+										alt21 = 1;
 									}
 
 
-									switch (alt23)
+									switch (alt21)
 									{
 										case 1:
-											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:169:7: ',' p2= property
+											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:171:7: ',' p2= property
 											{
-												Match(input, 58, FOLLOW_58_in_axis_specification842);
-												PushFollow(FOLLOW_property_in_axis_specification846);
+												Match(input, 58, FOLLOW_58_in_axis_specification801);
+												PushFollow(FOLLOW_property_in_axis_specification805);
 												p2 = property();
 												state.followingStackPointer--;
 
@@ -1505,12 +1416,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 											break;
 
 										default:
-											goto loop23;
+											goto loop21;
 									}
 								} while (true);
 
-							loop23:
-								;	// Stops C# compiler whining that label 'loop23' has no statements
+							loop21:
+								;	// Stops C# compiler whining that label 'loop21' has no statements
 
 
 							}
@@ -1518,14 +1429,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 					}
 
-					Match(input, ON, FOLLOW_ON_in_axis_specification860);
-					PushFollow(FOLLOW_axis_name_in_axis_specification864);
+					Match(input, ON, FOLLOW_ON_in_axis_specification819);
+					PushFollow(FOLLOW_axis_name_in_axis_specification823);
 					an = axis_name();
 					state.followingStackPointer--;
 
-
-					if (value != null) value.Name = an;
-
+					value.Name = an;
 
 				}
 
@@ -1557,30 +1466,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			try
 			{
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:178:2: ( identifier | INTEGER )
-				int alt25 = 2;
-				int LA25_0 = input.LA(1);
+				int alt23 = 2;
+				int LA23_0 = input.LA(1);
 
-				if ((LA25_0 == PROPERTIES || LA25_0 == DIMENSION || (LA25_0 >= ID && LA25_0 <= QUOTED_ID)))
+				if ((LA23_0 == PROPERTIES || LA23_0 == DIMENSION || (LA23_0 >= ID && LA23_0 <= QUOTED_ID)))
 				{
-					alt25 = 1;
+					alt23 = 1;
 				}
-				else if ((LA25_0 == INTEGER))
+				else if ((LA23_0 == INTEGER))
 				{
-					alt25 = 2;
+					alt23 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d25s0 =
-							new NoViableAltException("", 25, 0, input);
+					NoViableAltException nvae_d23s0 =
+							new NoViableAltException("", 23, 0, input);
 
-					throw nvae_d25s0;
+					throw nvae_d23s0;
 				}
-				switch (alt25)
+				switch (alt23)
 				{
 					case 1:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:178:4: identifier
 						{
-							PushFollow(FOLLOW_identifier_in_axis_name888);
+							PushFollow(FOLLOW_identifier_in_axis_name847);
 							identifier15 = identifier();
 							state.followingStackPointer--;
 
@@ -1591,7 +1500,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 2:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:179:4: INTEGER
 						{
-							INTEGER16 = (IToken)Match(input, INTEGER, FOLLOW_INTEGER_in_axis_name895);
+							INTEGER16 = (IToken)Match(input, INTEGER, FOLLOW_INTEGER_in_axis_name854);
 							value = ((INTEGER16 != null) ? INTEGER16.Text : null);
 
 						}
@@ -1627,7 +1536,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:183:2: ( compound_id )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:183:4: compound_id
 				{
-					PushFollow(FOLLOW_compound_id_in_property912);
+					PushFollow(FOLLOW_compound_id_in_property871);
 					compound_id17 = compound_id();
 					state.followingStackPointer--;
 
@@ -1664,30 +1573,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			try
 			{
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:187:2: ( cube_name | ( NON VISUAL )? '(' select_statement_subcube ')' )
-				int alt27 = 2;
-				int LA27_0 = input.LA(1);
+				int alt25 = 2;
+				int LA25_0 = input.LA(1);
 
-				if ((LA27_0 == PROPERTIES || LA27_0 == DIMENSION || LA27_0 == RANET_EXPRESSION || (LA27_0 >= ID && LA27_0 <= QUOTED_ID)))
+				if ((LA25_0 == PROPERTIES || LA25_0 == DIMENSION || LA25_0 == RANET_EXPRESSION || (LA25_0 >= ID && LA25_0 <= QUOTED_ID)))
 				{
-					alt27 = 1;
+					alt25 = 1;
 				}
-				else if ((LA27_0 == NON || LA27_0 == 62))
+				else if ((LA25_0 == NON || LA25_0 == 61))
 				{
-					alt27 = 2;
+					alt25 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d27s0 =
-							new NoViableAltException("", 27, 0, input);
+					NoViableAltException nvae_d25s0 =
+							new NoViableAltException("", 25, 0, input);
 
-					throw nvae_d27s0;
+					throw nvae_d25s0;
 				}
-				switch (alt27)
+				switch (alt25)
 				{
 					case 1:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:187:4: cube_name
 						{
-							PushFollow(FOLLOW_cube_name_in_cube_specification934);
+							PushFollow(FOLLOW_cube_name_in_cube_specification893);
 							cube_name18 = cube_name();
 							state.followingStackPointer--;
 
@@ -1699,32 +1608,32 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:189:4: ( NON VISUAL )? '(' select_statement_subcube ')'
 						{
 							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:189:4: ( NON VISUAL )?
-							int alt26 = 2;
-							int LA26_0 = input.LA(1);
+							int alt24 = 2;
+							int LA24_0 = input.LA(1);
 
-							if ((LA26_0 == NON))
+							if ((LA24_0 == NON))
 							{
-								alt26 = 1;
+								alt24 = 1;
 							}
-							switch (alt26)
+							switch (alt24)
 							{
 								case 1:
 									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:189:6: NON VISUAL
 									{
-										Match(input, NON, FOLLOW_NON_in_cube_specification945);
-										Match(input, VISUAL, FOLLOW_VISUAL_in_cube_specification947);
+										Match(input, NON, FOLLOW_NON_in_cube_specification904);
+										Match(input, VISUAL, FOLLOW_VISUAL_in_cube_specification906);
 
 									}
 									break;
 
 							}
 
-							Match(input, 62, FOLLOW_62_in_cube_specification952);
-							PushFollow(FOLLOW_select_statement_subcube_in_cube_specification954);
+							Match(input, 61, FOLLOW_61_in_cube_specification911);
+							PushFollow(FOLLOW_select_statement_subcube_in_cube_specification913);
 							select_statement_subcube19 = select_statement_subcube();
 							state.followingStackPointer--;
 
-							Match(input, 63, FOLLOW_63_in_cube_specification956);
+							Match(input, 62, FOLLOW_62_in_cube_specification915);
 							value = select_statement_subcube19;
 
 						}
@@ -1759,30 +1668,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			try
 			{
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:194:3: ( compound_id | RANET_EXPRESSION )
-				int alt28 = 2;
-				int LA28_0 = input.LA(1);
+				int alt26 = 2;
+				int LA26_0 = input.LA(1);
 
-				if ((LA28_0 == PROPERTIES || LA28_0 == DIMENSION || (LA28_0 >= ID && LA28_0 <= QUOTED_ID)))
+				if ((LA26_0 == PROPERTIES || LA26_0 == DIMENSION || (LA26_0 >= ID && LA26_0 <= QUOTED_ID)))
 				{
-					alt28 = 1;
+					alt26 = 1;
 				}
-				else if ((LA28_0 == RANET_EXPRESSION))
+				else if ((LA26_0 == RANET_EXPRESSION))
 				{
-					alt28 = 2;
+					alt26 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d28s0 =
-							new NoViableAltException("", 28, 0, input);
+					NoViableAltException nvae_d26s0 =
+							new NoViableAltException("", 26, 0, input);
 
-					throw nvae_d28s0;
+					throw nvae_d26s0;
 				}
-				switch (alt28)
+				switch (alt26)
 				{
 					case 1:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:194:5: compound_id
 						{
-							PushFollow(FOLLOW_compound_id_in_cube_name976);
+							PushFollow(FOLLOW_compound_id_in_cube_name935);
 							compound_id20 = compound_id();
 							state.followingStackPointer--;
 
@@ -1793,7 +1702,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 2:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:195:5: RANET_EXPRESSION
 						{
-							RANET_EXPRESSION21 = (IToken)Match(input, RANET_EXPRESSION, FOLLOW_RANET_EXPRESSION_in_cube_name984);
+							RANET_EXPRESSION21 = (IToken)Match(input, RANET_EXPRESSION, FOLLOW_RANET_EXPRESSION_in_cube_name943);
 							value = ((RANET_EXPRESSION21 != null) ? RANET_EXPRESSION21.Text : null);
 
 						}
@@ -1830,22 +1739,22 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			try
 			{
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:199:2: ( CELL_ORDINAL | VALUE | FORMATTED_VALUE | provider_specific_cell_property )
-				int alt29 = 4;
+				int alt27 = 4;
 				switch (input.LA(1))
 				{
 					case CELL_ORDINAL:
 						{
-							alt29 = 1;
+							alt27 = 1;
 						}
 						break;
 					case VALUE:
 						{
-							alt29 = 2;
+							alt27 = 2;
 						}
 						break;
 					case FORMATTED_VALUE:
 						{
-							alt29 = 3;
+							alt27 = 3;
 						}
 						break;
 					case PROPERTIES:
@@ -1853,22 +1762,22 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case ID:
 					case QUOTED_ID:
 						{
-							alt29 = 4;
+							alt27 = 4;
 						}
 						break;
 					default:
-						NoViableAltException nvae_d29s0 =
-								new NoViableAltException("", 29, 0, input);
+						NoViableAltException nvae_d27s0 =
+								new NoViableAltException("", 27, 0, input);
 
-						throw nvae_d29s0;
+						throw nvae_d27s0;
 				}
 
-				switch (alt29)
+				switch (alt27)
 				{
 					case 1:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:199:4: CELL_ORDINAL
 						{
-							CELL_ORDINAL22 = (IToken)Match(input, CELL_ORDINAL, FOLLOW_CELL_ORDINAL_in_cell_property1004);
+							CELL_ORDINAL22 = (IToken)Match(input, CELL_ORDINAL, FOLLOW_CELL_ORDINAL_in_cell_property963);
 							value = ((CELL_ORDINAL22 != null) ? CELL_ORDINAL22.Text : null);
 
 						}
@@ -1876,7 +1785,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 2:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:200:4: VALUE
 						{
-							VALUE23 = (IToken)Match(input, VALUE, FOLLOW_VALUE_in_cell_property1011);
+							VALUE23 = (IToken)Match(input, VALUE, FOLLOW_VALUE_in_cell_property970);
 							value = ((VALUE23 != null) ? VALUE23.Text : null);
 
 						}
@@ -1884,7 +1793,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 3:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:201:4: FORMATTED_VALUE
 						{
-							FORMATTED_VALUE24 = (IToken)Match(input, FORMATTED_VALUE, FOLLOW_FORMATTED_VALUE_in_cell_property1018);
+							FORMATTED_VALUE24 = (IToken)Match(input, FORMATTED_VALUE, FOLLOW_FORMATTED_VALUE_in_cell_property977);
 							value = ((FORMATTED_VALUE24 != null) ? FORMATTED_VALUE24.Text : null);
 
 						}
@@ -1892,7 +1801,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 4:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:202:4: provider_specific_cell_property
 						{
-							PushFollow(FOLLOW_provider_specific_cell_property_in_cell_property1025);
+							PushFollow(FOLLOW_provider_specific_cell_property_in_cell_property984);
 							provider_specific_cell_property25 = provider_specific_cell_property();
 							state.followingStackPointer--;
 
@@ -1931,7 +1840,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:205:2: ( identifier )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:205:4: identifier
 				{
-					PushFollow(FOLLOW_identifier_in_provider_specific_cell_property1042);
+					PushFollow(FOLLOW_identifier_in_provider_specific_cell_property1001);
 					identifier26 = identifier();
 					state.followingStackPointer--;
 
@@ -1968,7 +1877,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:209:2: (v1= expression_or_xor )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:209:4: v1= expression_or_xor
 				{
-					PushFollow(FOLLOW_expression_or_xor_in_expression1073);
+					PushFollow(FOLLOW_expression_or_xor_in_expression1032);
 					v1 = expression_or_xor();
 					state.followingStackPointer--;
 
@@ -2007,7 +1916,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:213:2: (t1= expression_and ( ( XOR | OR ) t2= expression_and )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:213:4: t1= expression_and ( ( XOR | OR ) t2= expression_and )*
 				{
-					PushFollow(FOLLOW_expression_and_in_expression_or_xor1093);
+					PushFollow(FOLLOW_expression_and_in_expression_or_xor1052);
 					t1 = expression_and();
 					state.followingStackPointer--;
 
@@ -2015,45 +1924,45 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:214:3: ( ( XOR | OR ) t2= expression_and )*
 					do
 					{
-						int alt31 = 2;
-						int LA31_0 = input.LA(1);
+						int alt29 = 2;
+						int LA29_0 = input.LA(1);
 
-						if (((LA31_0 >= XOR && LA31_0 <= OR)))
+						if (((LA29_0 >= XOR && LA29_0 <= OR)))
 						{
-							alt31 = 1;
+							alt29 = 1;
 						}
 
 
-						switch (alt31)
+						switch (alt29)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:215:5: ( XOR | OR ) t2= expression_and
 								{
 									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:215:5: ( XOR | OR )
-									int alt30 = 2;
-									int LA30_0 = input.LA(1);
+									int alt28 = 2;
+									int LA28_0 = input.LA(1);
 
-									if ((LA30_0 == XOR))
+									if ((LA28_0 == XOR))
 									{
-										alt30 = 1;
+										alt28 = 1;
 									}
-									else if ((LA30_0 == OR))
+									else if ((LA28_0 == OR))
 									{
-										alt30 = 2;
+										alt28 = 2;
 									}
 									else
 									{
-										NoViableAltException nvae_d30s0 =
-												new NoViableAltException("", 30, 0, input);
+										NoViableAltException nvae_d28s0 =
+												new NoViableAltException("", 28, 0, input);
 
-										throw nvae_d30s0;
+										throw nvae_d28s0;
 									}
-									switch (alt30)
+									switch (alt28)
 									{
 										case 1:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:215:7: XOR
 											{
-												Match(input, XOR, FOLLOW_XOR_in_expression_or_xor1107);
+												Match(input, XOR, FOLLOW_XOR_in_expression_or_xor1066);
 												op = "XOR";
 
 											}
@@ -2061,7 +1970,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 2:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:216:7: OR
 											{
-												Match(input, OR, FOLLOW_OR_in_expression_or_xor1117);
+												Match(input, OR, FOLLOW_OR_in_expression_or_xor1076);
 												op = "OR";
 
 											}
@@ -2069,7 +1978,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 									}
 
-									PushFollow(FOLLOW_expression_and_in_expression_or_xor1129);
+									PushFollow(FOLLOW_expression_and_in_expression_or_xor1088);
 									t2 = expression_and();
 									state.followingStackPointer--;
 
@@ -2079,12 +1988,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop31;
+								goto loop29;
 						}
 					} while (true);
 
-				loop31:
-					;	// Stops C# compiler whining that label 'loop31' has no statements
+				loop29:
+					;	// Stops C# compiler whining that label 'loop29' has no statements
 
 
 				}
@@ -2120,7 +2029,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:222:2: (t1= expression_compare ( AND t2= expression_compare )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:222:4: t1= expression_compare ( AND t2= expression_compare )*
 				{
-					PushFollow(FOLLOW_expression_compare_in_expression_and1159);
+					PushFollow(FOLLOW_expression_compare_in_expression_and1118);
 					t1 = expression_compare();
 					state.followingStackPointer--;
 
@@ -2128,22 +2037,22 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:223:3: ( AND t2= expression_compare )*
 					do
 					{
-						int alt32 = 2;
-						int LA32_0 = input.LA(1);
+						int alt30 = 2;
+						int LA30_0 = input.LA(1);
 
-						if ((LA32_0 == AND))
+						if ((LA30_0 == AND))
 						{
-							alt32 = 1;
+							alt30 = 1;
 						}
 
 
-						switch (alt32)
+						switch (alt30)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:223:5: AND t2= expression_compare
 								{
-									Match(input, AND, FOLLOW_AND_in_expression_and1168);
-									PushFollow(FOLLOW_expression_compare_in_expression_and1172);
+									Match(input, AND, FOLLOW_AND_in_expression_and1127);
+									PushFollow(FOLLOW_expression_compare_in_expression_and1131);
 									t2 = expression_compare();
 									state.followingStackPointer--;
 
@@ -2153,12 +2062,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop32;
+								goto loop30;
 						}
 					} while (true);
 
-				loop32:
-					;	// Stops C# compiler whining that label 'loop32' has no statements
+				loop30:
+					;	// Stops C# compiler whining that label 'loop30' has no statements
 
 
 				}
@@ -2194,7 +2103,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:227:2: (t1= expression_add ( ( '=' | '<>' | '<' | '>' | '<=' | '>=' ) t2= expression_add )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:227:4: t1= expression_add ( ( '=' | '<>' | '<' | '>' | '<=' | '>=' ) t2= expression_add )*
 				{
-					PushFollow(FOLLOW_expression_add_in_expression_compare1195);
+					PushFollow(FOLLOW_expression_add_in_expression_compare1154);
 					t1 = expression_add();
 					state.followingStackPointer--;
 
@@ -2202,67 +2111,67 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:228:3: ( ( '=' | '<>' | '<' | '>' | '<=' | '>=' ) t2= expression_add )*
 					do
 					{
-						int alt34 = 2;
-						int LA34_0 = input.LA(1);
+						int alt32 = 2;
+						int LA32_0 = input.LA(1);
 
-						if ((LA34_0 == 53 || (LA34_0 >= 64 && LA34_0 <= 68)))
+						if ((LA32_0 == 53 || (LA32_0 >= 63 && LA32_0 <= 67)))
 						{
-							alt34 = 1;
+							alt32 = 1;
 						}
 
 
-						switch (alt34)
+						switch (alt32)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:229:4: ( '=' | '<>' | '<' | '>' | '<=' | '>=' ) t2= expression_add
 								{
 									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:229:4: ( '=' | '<>' | '<' | '>' | '<=' | '>=' )
-									int alt33 = 6;
+									int alt31 = 6;
 									switch (input.LA(1))
 									{
 										case 53:
 											{
-												alt33 = 1;
+												alt31 = 1;
+											}
+											break;
+										case 63:
+											{
+												alt31 = 2;
 											}
 											break;
 										case 64:
 											{
-												alt33 = 2;
+												alt31 = 3;
 											}
 											break;
 										case 65:
 											{
-												alt33 = 3;
+												alt31 = 4;
 											}
 											break;
 										case 66:
 											{
-												alt33 = 4;
+												alt31 = 5;
 											}
 											break;
 										case 67:
 											{
-												alt33 = 5;
-											}
-											break;
-										case 68:
-											{
-												alt33 = 6;
+												alt31 = 6;
 											}
 											break;
 										default:
-											NoViableAltException nvae_d33s0 =
-													new NoViableAltException("", 33, 0, input);
+											NoViableAltException nvae_d31s0 =
+													new NoViableAltException("", 31, 0, input);
 
-											throw nvae_d33s0;
+											throw nvae_d31s0;
 									}
 
-									switch (alt33)
+									switch (alt31)
 									{
 										case 1:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:229:6: '='
 											{
-												Match(input, 53, FOLLOW_53_in_expression_compare1208);
+												Match(input, 53, FOLLOW_53_in_expression_compare1167);
 												op = "=";
 
 											}
@@ -2270,7 +2179,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 2:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:230:6: '<>'
 											{
-												Match(input, 64, FOLLOW_64_in_expression_compare1217);
+												Match(input, 63, FOLLOW_63_in_expression_compare1176);
 												op = "<>";
 
 											}
@@ -2278,7 +2187,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 3:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:231:6: '<'
 											{
-												Match(input, 65, FOLLOW_65_in_expression_compare1226);
+												Match(input, 64, FOLLOW_64_in_expression_compare1185);
 												op = "<";
 
 											}
@@ -2286,7 +2195,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 4:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:232:6: '>'
 											{
-												Match(input, 66, FOLLOW_66_in_expression_compare1235);
+												Match(input, 65, FOLLOW_65_in_expression_compare1194);
 												op = ">";
 
 											}
@@ -2294,7 +2203,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 5:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:233:6: '<='
 											{
-												Match(input, 67, FOLLOW_67_in_expression_compare1244);
+												Match(input, 66, FOLLOW_66_in_expression_compare1203);
 												op = "<=";
 
 											}
@@ -2302,7 +2211,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 6:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:234:6: '>='
 											{
-												Match(input, 68, FOLLOW_68_in_expression_compare1253);
+												Match(input, 67, FOLLOW_67_in_expression_compare1212);
 												op = ">=";
 
 											}
@@ -2310,7 +2219,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 									}
 
-									PushFollow(FOLLOW_expression_add_in_expression_compare1264);
+									PushFollow(FOLLOW_expression_add_in_expression_compare1223);
 									t2 = expression_add();
 									state.followingStackPointer--;
 
@@ -2320,12 +2229,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop34;
+								goto loop32;
 						}
 					} while (true);
 
-				loop34:
-					;	// Stops C# compiler whining that label 'loop34' has no statements
+				loop32:
+					;	// Stops C# compiler whining that label 'loop32' has no statements
 
 
 				}
@@ -2361,7 +2270,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:240:2: (t1= expression_mult ( ( '+' | '-' ) t2= expression_mult )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:240:4: t1= expression_mult ( ( '+' | '-' ) t2= expression_mult )*
 				{
-					PushFollow(FOLLOW_expression_mult_in_expression_add1294);
+					PushFollow(FOLLOW_expression_mult_in_expression_add1253);
 					t1 = expression_mult();
 					state.followingStackPointer--;
 
@@ -2369,45 +2278,45 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:241:3: ( ( '+' | '-' ) t2= expression_mult )*
 					do
 					{
-						int alt36 = 2;
-						int LA36_0 = input.LA(1);
+						int alt34 = 2;
+						int LA34_0 = input.LA(1);
 
-						if (((LA36_0 >= 69 && LA36_0 <= 70)))
+						if (((LA34_0 >= 68 && LA34_0 <= 69)))
 						{
-							alt36 = 1;
+							alt34 = 1;
 						}
 
 
-						switch (alt36)
+						switch (alt34)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:242:4: ( '+' | '-' ) t2= expression_mult
 								{
 									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:242:4: ( '+' | '-' )
-									int alt35 = 2;
-									int LA35_0 = input.LA(1);
+									int alt33 = 2;
+									int LA33_0 = input.LA(1);
 
-									if ((LA35_0 == 69))
+									if ((LA33_0 == 68))
 									{
-										alt35 = 1;
+										alt33 = 1;
 									}
-									else if ((LA35_0 == 70))
+									else if ((LA33_0 == 69))
 									{
-										alt35 = 2;
+										alt33 = 2;
 									}
 									else
 									{
-										NoViableAltException nvae_d35s0 =
-												new NoViableAltException("", 35, 0, input);
+										NoViableAltException nvae_d33s0 =
+												new NoViableAltException("", 33, 0, input);
 
-										throw nvae_d35s0;
+										throw nvae_d33s0;
 									}
-									switch (alt35)
+									switch (alt33)
 									{
 										case 1:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:242:6: '+'
 											{
-												Match(input, 69, FOLLOW_69_in_expression_add1307);
+												Match(input, 68, FOLLOW_68_in_expression_add1266);
 												op = "+";
 
 											}
@@ -2415,7 +2324,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 2:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:243:6: '-'
 											{
-												Match(input, 70, FOLLOW_70_in_expression_add1316);
+												Match(input, 69, FOLLOW_69_in_expression_add1275);
 												op = "-";
 
 											}
@@ -2423,7 +2332,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 									}
 
-									PushFollow(FOLLOW_expression_mult_in_expression_add1327);
+									PushFollow(FOLLOW_expression_mult_in_expression_add1286);
 									t2 = expression_mult();
 									state.followingStackPointer--;
 
@@ -2433,12 +2342,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop36;
+								goto loop34;
 						}
 					} while (true);
 
-				loop36:
-					;	// Stops C# compiler whining that label 'loop36' has no statements
+				loop34:
+					;	// Stops C# compiler whining that label 'loop34' has no statements
 
 
 				}
@@ -2476,7 +2385,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:251:3: (f1= expression_power ( (op1= '/' | op2= '*' ) f2= expression_power )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:251:5: f1= expression_power ( (op1= '/' | op2= '*' ) f2= expression_power )*
 				{
-					PushFollow(FOLLOW_expression_power_in_expression_mult1359);
+					PushFollow(FOLLOW_expression_power_in_expression_mult1318);
 					f1 = expression_power();
 					state.followingStackPointer--;
 
@@ -2484,45 +2393,45 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:252:4: ( (op1= '/' | op2= '*' ) f2= expression_power )*
 					do
 					{
-						int alt38 = 2;
-						int LA38_0 = input.LA(1);
+						int alt36 = 2;
+						int LA36_0 = input.LA(1);
 
-						if ((LA38_0 == 59 || LA38_0 == 71))
+						if ((LA36_0 == 59 || LA36_0 == 70))
 						{
-							alt38 = 1;
+							alt36 = 1;
 						}
 
 
-						switch (alt38)
+						switch (alt36)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:253:6: (op1= '/' | op2= '*' ) f2= expression_power
 								{
 									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:253:6: (op1= '/' | op2= '*' )
-									int alt37 = 2;
-									int LA37_0 = input.LA(1);
+									int alt35 = 2;
+									int LA35_0 = input.LA(1);
 
-									if ((LA37_0 == 71))
+									if ((LA35_0 == 70))
 									{
-										alt37 = 1;
+										alt35 = 1;
 									}
-									else if ((LA37_0 == 59))
+									else if ((LA35_0 == 59))
 									{
-										alt37 = 2;
+										alt35 = 2;
 									}
 									else
 									{
-										NoViableAltException nvae_d37s0 =
-												new NoViableAltException("", 37, 0, input);
+										NoViableAltException nvae_d35s0 =
+												new NoViableAltException("", 35, 0, input);
 
-										throw nvae_d37s0;
+										throw nvae_d35s0;
 									}
-									switch (alt37)
+									switch (alt35)
 									{
 										case 1:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:253:8: op1= '/'
 											{
-												op1 = (IToken)Match(input, 71, FOLLOW_71_in_expression_mult1378);
+												op1 = (IToken)Match(input, 70, FOLLOW_70_in_expression_mult1337);
 												op = ((op1 != null) ? op1.Text : null);
 
 											}
@@ -2530,7 +2439,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 										case 2:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:254:7: op2= '*'
 											{
-												op2 = (IToken)Match(input, 59, FOLLOW_59_in_expression_mult1390);
+												op2 = (IToken)Match(input, 59, FOLLOW_59_in_expression_mult1349);
 												op = ((op2 != null) ? op2.Text : null);
 
 											}
@@ -2538,7 +2447,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 									}
 
-									PushFollow(FOLLOW_expression_power_in_expression_mult1407);
+									PushFollow(FOLLOW_expression_power_in_expression_mult1366);
 									f2 = expression_power();
 									state.followingStackPointer--;
 
@@ -2548,12 +2457,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop38;
+								goto loop36;
 						}
 					} while (true);
 
-				loop38:
-					;	// Stops C# compiler whining that label 'loop38' has no statements
+				loop36:
+					;	// Stops C# compiler whining that label 'loop36' has no statements
 
 
 				}
@@ -2589,7 +2498,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:261:3: (f1= expression_unary ( '^' f2= expression_unary )* )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:261:5: f1= expression_unary ( '^' f2= expression_unary )*
 				{
-					PushFollow(FOLLOW_expression_unary_in_expression_power1437);
+					PushFollow(FOLLOW_expression_unary_in_expression_power1396);
 					f1 = expression_unary();
 					state.followingStackPointer--;
 
@@ -2597,22 +2506,22 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:262:4: ( '^' f2= expression_unary )*
 					do
 					{
-						int alt39 = 2;
-						int LA39_0 = input.LA(1);
+						int alt37 = 2;
+						int LA37_0 = input.LA(1);
 
-						if ((LA39_0 == 72))
+						if ((LA37_0 == 71))
 						{
-							alt39 = 1;
+							alt37 = 1;
 						}
 
 
-						switch (alt39)
+						switch (alt37)
 						{
 							case 1:
 								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:262:6: '^' f2= expression_unary
 								{
-									Match(input, 72, FOLLOW_72_in_expression_power1446);
-									PushFollow(FOLLOW_expression_unary_in_expression_power1450);
+									Match(input, 71, FOLLOW_71_in_expression_power1405);
+									PushFollow(FOLLOW_expression_unary_in_expression_power1409);
 									f2 = expression_unary();
 									state.followingStackPointer--;
 
@@ -2622,12 +2531,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop39;
+								goto loop37;
 						}
 					} while (true);
 
-				loop39:
-					;	// Stops C# compiler whining that label 'loop39' has no statements
+				loop37:
+					;	// Stops C# compiler whining that label 'loop37' has no statements
 
 
 				}
@@ -2665,53 +2574,53 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 			try
 			{
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:267:2: ( '-' e1= expression_range_is | '+' e2= expression_range_is | NOT t1= expression_range_is | e3= expression_range_is )
-				int alt40 = 4;
+				int alt38 = 4;
 				switch (input.LA(1))
 				{
-					case 70:
-						{
-							alt40 = 1;
-						}
-						break;
 					case 69:
 						{
-							alt40 = 2;
+							alt38 = 1;
+						}
+						break;
+					case 68:
+						{
+							alt38 = 2;
 						}
 						break;
 					case NOT:
 						{
-							alt40 = 3;
+							alt38 = 3;
 						}
 						break;
 					case PROPERTIES:
 					case DIMENSION:
 					case INTEGER:
 					case RANET_EXPRESSION:
+					case STRING:
 					case FLOAT:
 					case CASE:
 					case ID:
 					case QUOTED_ID:
-					case STRING:
-					case 62:
-					case 75:
+					case 61:
+					case 74:
 						{
-							alt40 = 4;
+							alt38 = 4;
 						}
 						break;
 					default:
-						NoViableAltException nvae_d40s0 =
-								new NoViableAltException("", 40, 0, input);
+						NoViableAltException nvae_d38s0 =
+								new NoViableAltException("", 38, 0, input);
 
-						throw nvae_d40s0;
+						throw nvae_d38s0;
 				}
 
-				switch (alt40)
+				switch (alt38)
 				{
 					case 1:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:267:4: '-' e1= expression_range_is
 						{
-							Match(input, 70, FOLLOW_70_in_expression_unary1479);
-							PushFollow(FOLLOW_expression_range_is_in_expression_unary1483);
+							Match(input, 69, FOLLOW_69_in_expression_unary1438);
+							PushFollow(FOLLOW_expression_range_is_in_expression_unary1442);
 							e1 = expression_range_is();
 							state.followingStackPointer--;
 
@@ -2722,8 +2631,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 2:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:268:4: '+' e2= expression_range_is
 						{
-							Match(input, 69, FOLLOW_69_in_expression_unary1490);
-							PushFollow(FOLLOW_expression_range_is_in_expression_unary1494);
+							Match(input, 68, FOLLOW_68_in_expression_unary1449);
+							PushFollow(FOLLOW_expression_range_is_in_expression_unary1453);
 							e2 = expression_range_is();
 							state.followingStackPointer--;
 
@@ -2734,8 +2643,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 3:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:269:4: NOT t1= expression_range_is
 						{
-							Match(input, NOT, FOLLOW_NOT_in_expression_unary1502);
-							PushFollow(FOLLOW_expression_range_is_in_expression_unary1506);
+							Match(input, NOT, FOLLOW_NOT_in_expression_unary1461);
+							PushFollow(FOLLOW_expression_range_is_in_expression_unary1465);
 							t1 = expression_range_is();
 							state.followingStackPointer--;
 
@@ -2746,7 +2655,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					case 4:
 						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:270:4: e3= expression_range_is
 						{
-							PushFollow(FOLLOW_expression_range_is_in_expression_unary1516);
+							PushFollow(FOLLOW_expression_range_is_in_expression_unary1475);
 							e3 = expression_range_is();
 							state.followingStackPointer--;
 
@@ -2789,30 +2698,30 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:274:2: (e1= expression_property ( ':' e2= expression_property | IS e3= expression_property )? )
 				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:274:4: e1= expression_property ( ':' e2= expression_property | IS e3= expression_property )?
 				{
-					PushFollow(FOLLOW_expression_property_in_expression_range_is1535);
+					PushFollow(FOLLOW_expression_property_in_expression_range_is1494);
 					e1 = expression_property();
 					state.followingStackPointer--;
 
 					value = e1;
 					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:275:4: ( ':' e2= expression_property | IS e3= expression_property )?
-					int alt41 = 3;
-					int LA41_0 = input.LA(1);
+					int alt39 = 3;
+					int LA39_0 = input.LA(1);
 
-					if ((LA41_0 == 73))
+					if ((LA39_0 == 72))
 					{
-						alt41 = 1;
+						alt39 = 1;
 					}
-					else if ((LA41_0 == IS))
+					else if ((LA39_0 == IS))
 					{
-						alt41 = 2;
+						alt39 = 2;
 					}
-					switch (alt41)
+					switch (alt39)
 					{
 						case 1:
 							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:275:6: ':' e2= expression_property
 							{
-								Match(input, 73, FOLLOW_73_in_expression_range_is1544);
-								PushFollow(FOLLOW_expression_property_in_expression_range_is1548);
+								Match(input, 72, FOLLOW_72_in_expression_range_is1503);
+								PushFollow(FOLLOW_expression_property_in_expression_range_is1507);
 								e2 = expression_property();
 								state.followingStackPointer--;
 
@@ -2823,8 +2732,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						case 2:
 							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:276:6: IS e3= expression_property
 							{
-								Match(input, IS, FOLLOW_IS_in_expression_range_is1558);
-								PushFollow(FOLLOW_expression_property_in_expression_range_is1562);
+								Match(input, IS, FOLLOW_IS_in_expression_range_is1517);
+								PushFollow(FOLLOW_expression_property_in_expression_range_is1521);
 								e3 = expression_property();
 								state.followingStackPointer--;
 
@@ -2853,7 +2762,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "expression_property"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:280:1: expression_property returns [MdxExpression value] : e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function ) )* ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:280:1: expression_property returns [MdxExpression value] : e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function ) )* ;
 		public MdxExpression expression_property() // throws RecognitionException [1]
 		{
 
@@ -2865,6 +2774,8 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			mdxParser.quoted_identifier_return id2 = default(mdxParser.quoted_identifier_return);
 
+			mdxParser.quoted_identifier_return id21 = default(mdxParser.quoted_identifier_return);
+
 			mdxParser.quoted_identifier_return id3 = default(mdxParser.quoted_identifier_return);
 
 			MdxFunctionExpression f1 = default(MdxFunctionExpression);
@@ -2872,138 +2783,138 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:281:2: (e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function ) )* )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:281:4: e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function ) )*
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:281:2: (e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function ) )* )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:281:4: e1= expression_simple ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function ) )*
 				{
-					PushFollow(FOLLOW_expression_simple_in_expression_property1588);
+					PushFollow(FOLLOW_expression_simple_in_expression_property1547);
 					e1 = expression_simple();
 					state.followingStackPointer--;
 
 					value = e1;
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:282:3: ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function ) )*
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:282:3: ( '.' (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function ) )*
 					do
 					{
-						int alt43 = 2;
-						int LA43_0 = input.LA(1);
+						int alt42 = 2;
+						int LA42_0 = input.LA(1);
 
-						if ((LA43_0 == 61))
+						if ((LA42_0 == 60))
 						{
-							alt43 = 1;
+							alt42 = 1;
 						}
 
 
-						switch (alt43)
+						switch (alt42)
 						{
 							case 1:
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:282:5: '.' (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function )
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:282:5: '.' (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function )
 								{
-									Match(input, 61, FOLLOW_61_in_expression_property1596);
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:283:4: (id1= unquoted_identifier | '&' id2= quoted_identifier | id3= quoted_identifier | f1= expression_function )
-									int alt42 = 4;
+									Match(input, 60, FOLLOW_60_in_expression_property1555);
+									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:283:4: (id1= unquoted_identifier | '&' id2= quoted_identifier ( '&' id21= quoted_identifier )* | id3= quoted_identifier | f1= expression_function )
+									int alt41 = 4;
 									switch (input.LA(1))
 									{
 										case ID:
 											{
-												int LA42_1 = input.LA(2);
+												int LA41_1 = input.LA(2);
 
-												if ((LA42_1 == 62))
+												if ((LA41_1 == EOF || LA41_1 == SET || (LA41_1 >= CELL && LA41_1 <= SELECT) || (LA41_1 >= CALCULATED && LA41_1 <= AS) || (LA41_1 >= DIMENSION && LA41_1 <= ON) || (LA41_1 >= XOR && LA41_1 <= AND) || LA41_1 == IS || (LA41_1 >= ELSE && LA41_1 <= THEN) || (LA41_1 >= 53 && LA41_1 <= 60) || (LA41_1 >= 62 && LA41_1 <= 72) || LA41_1 == 75))
 												{
-													alt42 = 4;
+													alt41 = 1;
 												}
-												else if ((LA42_1 == EOF || LA42_1 == SET || (LA42_1 >= CELL && LA42_1 <= SELECT) || (LA42_1 >= CALCULATED && LA42_1 <= AS) || (LA42_1 >= DIMENSION && LA42_1 <= ON) || (LA42_1 >= XOR && LA42_1 <= AND) || LA42_1 == IS || (LA42_1 >= ELSE && LA42_1 <= THEN) || (LA42_1 >= 53 && LA42_1 <= 61) || (LA42_1 >= 63 && LA42_1 <= 73) || LA42_1 == 76))
+												else if ((LA41_1 == 61))
 												{
-													alt42 = 1;
+													alt41 = 4;
 												}
 												else
 												{
-													NoViableAltException nvae_d42s1 =
-															new NoViableAltException("", 42, 1, input);
+													NoViableAltException nvae_d41s1 =
+															new NoViableAltException("", 41, 1, input);
 
-													throw nvae_d42s1;
+													throw nvae_d41s1;
 												}
 											}
 											break;
 										case DIMENSION:
 											{
-												int LA42_2 = input.LA(2);
+												int LA41_2 = input.LA(2);
 
-												if ((LA42_2 == 62))
+												if ((LA41_2 == 61))
 												{
-													alt42 = 4;
+													alt41 = 4;
 												}
-												else if ((LA42_2 == EOF || LA42_2 == SET || (LA42_2 >= CELL && LA42_2 <= SELECT) || (LA42_2 >= CALCULATED && LA42_2 <= AS) || (LA42_2 >= DIMENSION && LA42_2 <= ON) || (LA42_2 >= XOR && LA42_2 <= AND) || LA42_2 == IS || (LA42_2 >= ELSE && LA42_2 <= THEN) || (LA42_2 >= 53 && LA42_2 <= 61) || (LA42_2 >= 63 && LA42_2 <= 73) || LA42_2 == 76))
+												else if ((LA41_2 == EOF || LA41_2 == SET || (LA41_2 >= CELL && LA41_2 <= SELECT) || (LA41_2 >= CALCULATED && LA41_2 <= AS) || (LA41_2 >= DIMENSION && LA41_2 <= ON) || (LA41_2 >= XOR && LA41_2 <= AND) || LA41_2 == IS || (LA41_2 >= ELSE && LA41_2 <= THEN) || (LA41_2 >= 53 && LA41_2 <= 60) || (LA41_2 >= 62 && LA41_2 <= 72) || LA41_2 == 75))
 												{
-													alt42 = 1;
+													alt41 = 1;
 												}
 												else
 												{
-													NoViableAltException nvae_d42s2 =
-															new NoViableAltException("", 42, 2, input);
+													NoViableAltException nvae_d41s2 =
+															new NoViableAltException("", 41, 2, input);
 
-													throw nvae_d42s2;
+													throw nvae_d41s2;
 												}
 											}
 											break;
 										case PROPERTIES:
 											{
-												int LA42_3 = input.LA(2);
+												int LA41_3 = input.LA(2);
 
-												if ((LA42_3 == EOF || LA42_3 == SET || (LA42_3 >= CELL && LA42_3 <= SELECT) || (LA42_3 >= CALCULATED && LA42_3 <= AS) || (LA42_3 >= DIMENSION && LA42_3 <= ON) || (LA42_3 >= XOR && LA42_3 <= AND) || LA42_3 == IS || (LA42_3 >= ELSE && LA42_3 <= THEN) || (LA42_3 >= 53 && LA42_3 <= 61) || (LA42_3 >= 63 && LA42_3 <= 73) || LA42_3 == 76))
+												if ((LA41_3 == EOF || LA41_3 == SET || (LA41_3 >= CELL && LA41_3 <= SELECT) || (LA41_3 >= CALCULATED && LA41_3 <= AS) || (LA41_3 >= DIMENSION && LA41_3 <= ON) || (LA41_3 >= XOR && LA41_3 <= AND) || LA41_3 == IS || (LA41_3 >= ELSE && LA41_3 <= THEN) || (LA41_3 >= 53 && LA41_3 <= 60) || (LA41_3 >= 62 && LA41_3 <= 72) || LA41_3 == 75))
 												{
-													alt42 = 1;
+													alt41 = 1;
 												}
-												else if ((LA42_3 == 62))
+												else if ((LA41_3 == 61))
 												{
-													alt42 = 4;
+													alt41 = 4;
 												}
 												else
 												{
-													NoViableAltException nvae_d42s3 =
-															new NoViableAltException("", 42, 3, input);
+													NoViableAltException nvae_d41s3 =
+															new NoViableAltException("", 41, 3, input);
 
-													throw nvae_d42s3;
+													throw nvae_d41s3;
 												}
 											}
 											break;
-										case 74:
+										case 73:
 											{
-												alt42 = 2;
+												alt41 = 2;
 											}
 											break;
 										case QUOTED_ID:
 											{
-												int LA42_5 = input.LA(2);
+												int LA41_5 = input.LA(2);
 
-												if ((LA42_5 == 62))
+												if ((LA41_5 == 61))
 												{
-													alt42 = 4;
+													alt41 = 4;
 												}
-												else if ((LA42_5 == EOF || LA42_5 == SET || (LA42_5 >= CELL && LA42_5 <= SELECT) || (LA42_5 >= CALCULATED && LA42_5 <= AS) || (LA42_5 >= DIMENSION && LA42_5 <= ON) || (LA42_5 >= XOR && LA42_5 <= AND) || LA42_5 == IS || (LA42_5 >= ELSE && LA42_5 <= THEN) || (LA42_5 >= 53 && LA42_5 <= 61) || (LA42_5 >= 63 && LA42_5 <= 73) || LA42_5 == 76))
+												else if ((LA41_5 == EOF || LA41_5 == SET || (LA41_5 >= CELL && LA41_5 <= SELECT) || (LA41_5 >= CALCULATED && LA41_5 <= AS) || (LA41_5 >= DIMENSION && LA41_5 <= ON) || (LA41_5 >= XOR && LA41_5 <= AND) || LA41_5 == IS || (LA41_5 >= ELSE && LA41_5 <= THEN) || (LA41_5 >= 53 && LA41_5 <= 60) || (LA41_5 >= 62 && LA41_5 <= 72) || LA41_5 == 75))
 												{
-													alt42 = 3;
+													alt41 = 3;
 												}
 												else
 												{
-													NoViableAltException nvae_d42s5 =
-															new NoViableAltException("", 42, 5, input);
+													NoViableAltException nvae_d41s5 =
+															new NoViableAltException("", 41, 5, input);
 
-													throw nvae_d42s5;
+													throw nvae_d41s5;
 												}
 											}
 											break;
 										default:
-											NoViableAltException nvae_d42s0 =
-													new NoViableAltException("", 42, 0, input);
+											NoViableAltException nvae_d41s0 =
+													new NoViableAltException("", 41, 0, input);
 
-											throw nvae_d42s0;
+											throw nvae_d41s0;
 									}
 
-									switch (alt42)
+									switch (alt41)
 									{
 										case 1:
 											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:283:6: id1= unquoted_identifier
 											{
-												PushFollow(FOLLOW_unquoted_identifier_in_expression_property1606);
+												PushFollow(FOLLOW_unquoted_identifier_in_expression_property1565);
 												id1 = unquoted_identifier();
 												state.followingStackPointer--;
 
@@ -3012,21 +2923,57 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 											}
 											break;
 										case 2:
-											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:285:6: '&' id2= quoted_identifier
+											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:285:6: '&' id2= quoted_identifier ( '&' id21= quoted_identifier )*
 											{
-												Match(input, 74, FOLLOW_74_in_expression_property1619);
-												PushFollow(FOLLOW_quoted_identifier_in_expression_property1623);
+												Match(input, 73, FOLLOW_73_in_expression_property1578);
+												PushFollow(FOLLOW_quoted_identifier_in_expression_property1582);
 												id2 = quoted_identifier();
 												state.followingStackPointer--;
 
-												value = new MdxPropertyExpression(value, "&" + ((id2 != null) ? input.ToString((IToken)(id2.Start), (IToken)(id2.Stop)) : null));
+												string _UniqueName = "&" + ((id2 != null) ? input.ToString((IToken)(id2.Start), (IToken)(id2.Stop)) : null);
+												// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:286:6: ( '&' id21= quoted_identifier )*
+												do
+												{
+													int alt40 = 2;
+													int LA40_0 = input.LA(1);
+
+													if ((LA40_0 == 73))
+													{
+														alt40 = 1;
+													}
+
+
+													switch (alt40)
+													{
+														case 1:
+															// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:286:8: '&' id21= quoted_identifier
+															{
+																Match(input, 73, FOLLOW_73_in_expression_property1596);
+																PushFollow(FOLLOW_quoted_identifier_in_expression_property1600);
+																id21 = quoted_identifier();
+																state.followingStackPointer--;
+
+																_UniqueName += "&" + ((id21 != null) ? input.ToString((IToken)(id21.Start), (IToken)(id21.Stop)) : null);
+
+															}
+															break;
+
+														default:
+															goto loop40;
+													}
+												} while (true);
+
+											loop40:
+												;	// Stops C# compiler whining that label 'loop40' has no statements
+
+												value = new MdxPropertyExpression(value, _UniqueName);
 
 											}
 											break;
 										case 3:
-											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:287:6: id3= quoted_identifier
+											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:288:6: id3= quoted_identifier
 											{
-												PushFollow(FOLLOW_quoted_identifier_in_expression_property1638);
+												PushFollow(FOLLOW_quoted_identifier_in_expression_property1623);
 												id3 = quoted_identifier();
 												state.followingStackPointer--;
 
@@ -3035,9 +2982,9 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 											}
 											break;
 										case 4:
-											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:289:6: f1= expression_function
+											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:290:6: f1= expression_function
 											{
-												PushFollow(FOLLOW_expression_function_in_expression_property1653);
+												PushFollow(FOLLOW_expression_function_in_expression_property1638);
 												f1 = expression_function();
 												state.followingStackPointer--;
 
@@ -3053,12 +3000,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop43;
+								goto loop42;
 						}
 					} while (true);
 
-				loop43:
-					;	// Stops C# compiler whining that label 'loop43' has no statements
+				loop42:
+					;	// Stops C# compiler whining that label 'loop42' has no statements
 
 
 				}
@@ -3078,12 +3025,13 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "expression_simple"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:295:1: expression_simple returns [MdxExpression value] : ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | string_value | INTEGER | FLOAT | identifier | RANET_EXPRESSION );
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:296:1: expression_simple returns [MdxExpression value] : ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | STRING | INTEGER | FLOAT | identifier | RANET_EXPRESSION );
 		public MdxExpression expression_simple() // throws RecognitionException [1]
 		{
 
 			MdxExpression value = default(MdxExpression);
 
+			IToken STRING31 = null;
 			IToken INTEGER32 = null;
 			IToken FLOAT33 = null;
 			IToken RANET_EXPRESSION35 = null;
@@ -3095,22 +3043,20 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			MdxCaseExpression expression_case30 = default(MdxCaseExpression);
 
-			string string_value31 = default(string);
-
 			string identifier34 = default(string);
 
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:296:2: ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | string_value | INTEGER | FLOAT | identifier | RANET_EXPRESSION )
-				int alt45 = 9;
-				alt45 = dfa45.Predict(input);
-				switch (alt45)
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:297:2: ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | STRING | INTEGER | FLOAT | identifier | RANET_EXPRESSION )
+				int alt44 = 9;
+				alt44 = dfa44.Predict(input);
+				switch (alt44)
 				{
 					case 1:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:296:4: expression_function
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:297:4: expression_function
 						{
-							PushFollow(FOLLOW_expression_function_in_expression_simple1683);
+							PushFollow(FOLLOW_expression_function_in_expression_simple1668);
 							expression_function27 = expression_function();
 							state.followingStackPointer--;
 
@@ -3119,14 +3065,14 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						}
 						break;
 					case 2:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:297:4: '(' expressions_list ')'
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:298:4: '(' expressions_list ')'
 						{
-							Match(input, 62, FOLLOW_62_in_expression_simple1690);
-							PushFollow(FOLLOW_expressions_list_in_expression_simple1692);
+							Match(input, 61, FOLLOW_61_in_expression_simple1675);
+							PushFollow(FOLLOW_expressions_list_in_expression_simple1677);
 							expressions_list28 = expressions_list();
 							state.followingStackPointer--;
 
-							Match(input, 63, FOLLOW_63_in_expression_simple1694);
+							Match(input, 62, FOLLOW_62_in_expression_simple1679);
 
 							value = null;
 							if (expressions_list28 != null)
@@ -3141,23 +3087,23 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						}
 						break;
 					case 3:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:308:4: '{' ( expressions_list )? '}'
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:309:4: '{' ( expressions_list )? '}'
 						{
-							Match(input, 75, FOLLOW_75_in_expression_simple1703);
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:308:8: ( expressions_list )?
-							int alt44 = 2;
-							int LA44_0 = input.LA(1);
+							Match(input, 74, FOLLOW_74_in_expression_simple1688);
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:309:8: ( expressions_list )?
+							int alt43 = 2;
+							int LA43_0 = input.LA(1);
 
-							if ((LA44_0 == PROPERTIES || LA44_0 == DIMENSION || LA44_0 == INTEGER || LA44_0 == RANET_EXPRESSION || LA44_0 == NOT || (LA44_0 >= FLOAT && LA44_0 <= CASE) || (LA44_0 >= ID && LA44_0 <= STRING) || LA44_0 == 62 || (LA44_0 >= 69 && LA44_0 <= 70) || LA44_0 == 75))
+							if ((LA43_0 == PROPERTIES || LA43_0 == DIMENSION || LA43_0 == INTEGER || LA43_0 == RANET_EXPRESSION || LA43_0 == NOT || (LA43_0 >= STRING && LA43_0 <= CASE) || (LA43_0 >= ID && LA43_0 <= QUOTED_ID) || LA43_0 == 61 || (LA43_0 >= 68 && LA43_0 <= 69) || LA43_0 == 74))
 							{
-								alt44 = 1;
+								alt43 = 1;
 							}
-							switch (alt44)
+							switch (alt43)
 							{
 								case 1:
-									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:308:9: expressions_list
+									// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:309:9: expressions_list
 									{
-										PushFollow(FOLLOW_expressions_list_in_expression_simple1706);
+										PushFollow(FOLLOW_expressions_list_in_expression_simple1691);
 										expressions_list29 = expressions_list();
 										state.followingStackPointer--;
 
@@ -3167,15 +3113,15 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 							}
 
-							Match(input, 76, FOLLOW_76_in_expression_simple1710);
+							Match(input, 75, FOLLOW_75_in_expression_simple1695);
 							value = new MdxSetExpression(expressions_list29);
 
 						}
 						break;
 					case 4:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:310:4: expression_case
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:311:4: expression_case
 						{
-							PushFollow(FOLLOW_expression_case_in_expression_simple1719);
+							PushFollow(FOLLOW_expression_case_in_expression_simple1704);
 							expression_case30 = expression_case();
 							state.followingStackPointer--;
 
@@ -3184,36 +3130,33 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						}
 						break;
 					case 5:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:311:4: string_value
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:312:4: STRING
 						{
-							PushFollow(FOLLOW_string_value_in_expression_simple1726);
-							string_value31 = string_value();
-							state.followingStackPointer--;
-
-							value = new MdxConstantExpression(string_value31, MdxConstantKind.String);
+							STRING31 = (IToken)Match(input, STRING, FOLLOW_STRING_in_expression_simple1711);
+							value = new MdxConstantExpression(((STRING31 != null) ? STRING31.Text : null), MdxConstantKind.String);
 
 						}
 						break;
 					case 6:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:312:4: INTEGER
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:313:4: INTEGER
 						{
-							INTEGER32 = (IToken)Match(input, INTEGER, FOLLOW_INTEGER_in_expression_simple1733);
+							INTEGER32 = (IToken)Match(input, INTEGER, FOLLOW_INTEGER_in_expression_simple1718);
 							value = new MdxConstantExpression(((INTEGER32 != null) ? INTEGER32.Text : null), MdxConstantKind.Integer);
 
 						}
 						break;
 					case 7:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:313:4: FLOAT
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:314:4: FLOAT
 						{
-							FLOAT33 = (IToken)Match(input, FLOAT, FOLLOW_FLOAT_in_expression_simple1740);
+							FLOAT33 = (IToken)Match(input, FLOAT, FOLLOW_FLOAT_in_expression_simple1725);
 							value = new MdxConstantExpression(((FLOAT33 != null) ? FLOAT33.Text : null), MdxConstantKind.Float);
 
 						}
 						break;
 					case 8:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:314:4: identifier
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:315:4: identifier
 						{
-							PushFollow(FOLLOW_identifier_in_expression_simple1747);
+							PushFollow(FOLLOW_identifier_in_expression_simple1732);
 							identifier34 = identifier();
 							state.followingStackPointer--;
 
@@ -3222,9 +3165,9 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						}
 						break;
 					case 9:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:315:4: RANET_EXPRESSION
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:316:4: RANET_EXPRESSION
 						{
-							RANET_EXPRESSION35 = (IToken)Match(input, RANET_EXPRESSION, FOLLOW_RANET_EXPRESSION_in_expression_simple1754);
+							RANET_EXPRESSION35 = (IToken)Match(input, RANET_EXPRESSION, FOLLOW_RANET_EXPRESSION_in_expression_simple1739);
 							value = new MdxObjectReferenceExpression(((RANET_EXPRESSION35 != null) ? RANET_EXPRESSION35.Text : null));
 
 						}
@@ -3246,7 +3189,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "expressions_list"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:318:1: expressions_list returns [List<MdxExpression> value] : e1= expression ( ',' e2= expression )* ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:319:1: expressions_list returns [List<MdxExpression> value] : e1= expression ( ',' e2= expression )* ;
 		public List<MdxExpression> expressions_list() // throws RecognitionException [1]
 		{
 
@@ -3259,33 +3202,33 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:319:2: (e1= expression ( ',' e2= expression )* )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:319:4: e1= expression ( ',' e2= expression )*
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:320:2: (e1= expression ( ',' e2= expression )* )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:320:4: e1= expression ( ',' e2= expression )*
 				{
-					PushFollow(FOLLOW_expression_in_expressions_list1782);
+					PushFollow(FOLLOW_expression_in_expressions_list1767);
 					e1 = expression();
 					state.followingStackPointer--;
 
 					value = new List<MdxExpression>(); value.Add(e1);
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:321:3: ( ',' e2= expression )*
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:322:3: ( ',' e2= expression )*
 					do
 					{
-						int alt46 = 2;
-						int LA46_0 = input.LA(1);
+						int alt45 = 2;
+						int LA45_0 = input.LA(1);
 
-						if ((LA46_0 == 58))
+						if ((LA45_0 == 58))
 						{
-							alt46 = 1;
+							alt45 = 1;
 						}
 
 
-						switch (alt46)
+						switch (alt45)
 						{
 							case 1:
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:321:5: ',' e2= expression
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:322:5: ',' e2= expression
 								{
-									Match(input, 58, FOLLOW_58_in_expressions_list1792);
-									PushFollow(FOLLOW_expression_in_expressions_list1796);
+									Match(input, 58, FOLLOW_58_in_expressions_list1777);
+									PushFollow(FOLLOW_expression_in_expressions_list1781);
 									e2 = expression();
 									state.followingStackPointer--;
 
@@ -3295,12 +3238,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 								break;
 
 							default:
-								goto loop46;
+								goto loop45;
 						}
 					} while (true);
 
-				loop46:
-					;	// Stops C# compiler whining that label 'loop46' has no statements
+				loop45:
+					;	// Stops C# compiler whining that label 'loop45' has no statements
 
 
 				}
@@ -3320,7 +3263,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "expression_function"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:323:1: expression_function returns [MdxFunctionExpression value] : identifier '(' ( expressions_list )? ')' ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:324:1: expression_function returns [MdxFunctionExpression value] : identifier '(' ( expressions_list )? ')' ;
 		public MdxFunctionExpression expression_function() // throws RecognitionException [1]
 		{
 
@@ -3333,28 +3276,28 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:324:2: ( identifier '(' ( expressions_list )? ')' )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:324:4: identifier '(' ( expressions_list )? ')'
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:325:2: ( identifier '(' ( expressions_list )? ')' )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:325:4: identifier '(' ( expressions_list )? ')'
 				{
-					PushFollow(FOLLOW_identifier_in_expression_function1815);
+					PushFollow(FOLLOW_identifier_in_expression_function1800);
 					identifier36 = identifier();
 					state.followingStackPointer--;
 
-					Match(input, 62, FOLLOW_62_in_expression_function1817);
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:324:19: ( expressions_list )?
-					int alt47 = 2;
-					int LA47_0 = input.LA(1);
+					Match(input, 61, FOLLOW_61_in_expression_function1802);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:325:19: ( expressions_list )?
+					int alt46 = 2;
+					int LA46_0 = input.LA(1);
 
-					if ((LA47_0 == PROPERTIES || LA47_0 == DIMENSION || LA47_0 == INTEGER || LA47_0 == RANET_EXPRESSION || LA47_0 == NOT || (LA47_0 >= FLOAT && LA47_0 <= CASE) || (LA47_0 >= ID && LA47_0 <= STRING) || LA47_0 == 62 || (LA47_0 >= 69 && LA47_0 <= 70) || LA47_0 == 75))
+					if ((LA46_0 == PROPERTIES || LA46_0 == DIMENSION || LA46_0 == INTEGER || LA46_0 == RANET_EXPRESSION || LA46_0 == NOT || (LA46_0 >= STRING && LA46_0 <= CASE) || (LA46_0 >= ID && LA46_0 <= QUOTED_ID) || LA46_0 == 61 || (LA46_0 >= 68 && LA46_0 <= 69) || LA46_0 == 74))
 					{
-						alt47 = 1;
+						alt46 = 1;
 					}
-					switch (alt47)
+					switch (alt46)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:324:21: expressions_list
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:325:21: expressions_list
 							{
-								PushFollow(FOLLOW_expressions_list_in_expression_function1821);
+								PushFollow(FOLLOW_expressions_list_in_expression_function1806);
 								expressions_list37 = expressions_list();
 								state.followingStackPointer--;
 
@@ -3364,7 +3307,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 					}
 
-					Match(input, 63, FOLLOW_63_in_expression_function1826);
+					Match(input, 62, FOLLOW_62_in_expression_function1811);
 					value = new MdxFunctionExpression(identifier36, expressions_list37);
 
 				}
@@ -3384,7 +3327,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "expression_case"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:327:1: expression_case returns [MdxCaseExpression value] : CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:328:1: expression_case returns [MdxCaseExpression value] : CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END ;
 		public MdxCaseExpression expression_case() // throws RecognitionException [1]
 		{
 
@@ -3401,24 +3344,24 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:328:2: ( CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:328:4: CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:329:2: ( CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:329:4: CASE (ve1= expression )? (w1= when_clause (w2= when_clause )* )? ( ELSE ve2= expression )? END
 				{
-					Match(input, CASE, FOLLOW_CASE_in_expression_case1843);
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:328:9: (ve1= expression )?
-					int alt48 = 2;
-					int LA48_0 = input.LA(1);
+					Match(input, CASE, FOLLOW_CASE_in_expression_case1828);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:329:9: (ve1= expression )?
+					int alt47 = 2;
+					int LA47_0 = input.LA(1);
 
-					if ((LA48_0 == PROPERTIES || LA48_0 == DIMENSION || LA48_0 == INTEGER || LA48_0 == RANET_EXPRESSION || LA48_0 == NOT || (LA48_0 >= FLOAT && LA48_0 <= CASE) || (LA48_0 >= ID && LA48_0 <= STRING) || LA48_0 == 62 || (LA48_0 >= 69 && LA48_0 <= 70) || LA48_0 == 75))
+					if ((LA47_0 == PROPERTIES || LA47_0 == DIMENSION || LA47_0 == INTEGER || LA47_0 == RANET_EXPRESSION || LA47_0 == NOT || (LA47_0 >= STRING && LA47_0 <= CASE) || (LA47_0 >= ID && LA47_0 <= QUOTED_ID) || LA47_0 == 61 || (LA47_0 >= 68 && LA47_0 <= 69) || LA47_0 == 74))
 					{
-						alt48 = 1;
+						alt47 = 1;
 					}
-					switch (alt48)
+					switch (alt47)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:328:10: ve1= expression
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:329:10: ve1= expression
 							{
-								PushFollow(FOLLOW_expression_in_expression_case1848);
+								PushFollow(FOLLOW_expression_in_expression_case1833);
 								ve1 = expression();
 								state.followingStackPointer--;
 
@@ -3429,42 +3372,42 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 					}
 
 					var wl = new List<MdxWhenClause>();
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:330:5: (w1= when_clause (w2= when_clause )* )?
-					int alt50 = 2;
-					int LA50_0 = input.LA(1);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:331:5: (w1= when_clause (w2= when_clause )* )?
+					int alt49 = 2;
+					int LA49_0 = input.LA(1);
 
-					if ((LA50_0 == WHEN))
+					if ((LA49_0 == WHEN))
 					{
-						alt50 = 1;
+						alt49 = 1;
 					}
-					switch (alt50)
+					switch (alt49)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:330:6: w1= when_clause (w2= when_clause )*
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:331:6: w1= when_clause (w2= when_clause )*
 							{
-								PushFollow(FOLLOW_when_clause_in_expression_case1865);
+								PushFollow(FOLLOW_when_clause_in_expression_case1850);
 								w1 = when_clause();
 								state.followingStackPointer--;
 
 								wl.Add(w1);
-								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:331:6: (w2= when_clause )*
+								// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:332:6: (w2= when_clause )*
 								do
 								{
-									int alt49 = 2;
-									int LA49_0 = input.LA(1);
+									int alt48 = 2;
+									int LA48_0 = input.LA(1);
 
-									if ((LA49_0 == WHEN))
+									if ((LA48_0 == WHEN))
 									{
-										alt49 = 1;
+										alt48 = 1;
 									}
 
 
-									switch (alt49)
+									switch (alt48)
 									{
 										case 1:
-											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:331:8: w2= when_clause
+											// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:332:8: w2= when_clause
 											{
-												PushFollow(FOLLOW_when_clause_in_expression_case1878);
+												PushFollow(FOLLOW_when_clause_in_expression_case1863);
 												w2 = when_clause();
 												state.followingStackPointer--;
 
@@ -3474,12 +3417,12 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 											break;
 
 										default:
-											goto loop49;
+											goto loop48;
 									}
 								} while (true);
 
-							loop49:
-								;	// Stops C# compiler whining that label 'loop49' has no statements
+							loop48:
+								;	// Stops C# compiler whining that label 'loop48' has no statements
 
 
 							}
@@ -3487,21 +3430,21 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 					}
 
-					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:333:5: ( ELSE ve2= expression )?
-					int alt51 = 2;
-					int LA51_0 = input.LA(1);
+					// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:334:5: ( ELSE ve2= expression )?
+					int alt50 = 2;
+					int LA50_0 = input.LA(1);
 
-					if ((LA51_0 == ELSE))
+					if ((LA50_0 == ELSE))
 					{
-						alt51 = 1;
+						alt50 = 1;
 					}
-					switch (alt51)
+					switch (alt50)
 					{
 						case 1:
-							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:333:7: ELSE ve2= expression
+							// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:334:7: ELSE ve2= expression
 							{
-								Match(input, ELSE, FOLLOW_ELSE_in_expression_case1899);
-								PushFollow(FOLLOW_expression_in_expression_case1903);
+								Match(input, ELSE, FOLLOW_ELSE_in_expression_case1884);
+								PushFollow(FOLLOW_expression_in_expression_case1888);
 								ve2 = expression();
 								state.followingStackPointer--;
 
@@ -3511,7 +3454,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 					}
 
-					Match(input, END, FOLLOW_END_in_expression_case1911);
+					Match(input, END, FOLLOW_END_in_expression_case1896);
 					value = new MdxCaseExpression(ve1, wl, ve2);
 
 				}
@@ -3531,7 +3474,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "when_clause"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:338:1: when_clause returns [MdxWhenClause value] : WHEN e1= expression THEN e2= expression ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:339:1: when_clause returns [MdxWhenClause value] : WHEN e1= expression THEN e2= expression ;
 		public MdxWhenClause when_clause() // throws RecognitionException [1]
 		{
 
@@ -3544,16 +3487,16 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:339:2: ( WHEN e1= expression THEN e2= expression )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:339:4: WHEN e1= expression THEN e2= expression
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:340:2: ( WHEN e1= expression THEN e2= expression )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:340:4: WHEN e1= expression THEN e2= expression
 				{
-					Match(input, WHEN, FOLLOW_WHEN_in_when_clause1936);
-					PushFollow(FOLLOW_expression_in_when_clause1940);
+					Match(input, WHEN, FOLLOW_WHEN_in_when_clause1921);
+					PushFollow(FOLLOW_expression_in_when_clause1925);
 					e1 = expression();
 					state.followingStackPointer--;
 
-					Match(input, THEN, FOLLOW_THEN_in_when_clause1942);
-					PushFollow(FOLLOW_expression_in_when_clause1946);
+					Match(input, THEN, FOLLOW_THEN_in_when_clause1927);
+					PushFollow(FOLLOW_expression_in_when_clause1931);
 					e2 = expression();
 					state.followingStackPointer--;
 
@@ -3576,7 +3519,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "identifier"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:344:1: identifier returns [string value] : ( unquoted_identifier | quoted_identifier );
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:345:1: identifier returns [string value] : ( unquoted_identifier | quoted_identifier );
 		public string identifier() // throws RecognitionException [1]
 		{
 
@@ -3589,31 +3532,31 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:345:2: ( unquoted_identifier | quoted_identifier )
-				int alt52 = 2;
-				int LA52_0 = input.LA(1);
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:346:2: ( unquoted_identifier | quoted_identifier )
+				int alt51 = 2;
+				int LA51_0 = input.LA(1);
 
-				if ((LA52_0 == PROPERTIES || LA52_0 == DIMENSION || LA52_0 == ID))
+				if ((LA51_0 == PROPERTIES || LA51_0 == DIMENSION || LA51_0 == ID))
 				{
-					alt52 = 1;
+					alt51 = 1;
 				}
-				else if ((LA52_0 == QUOTED_ID))
+				else if ((LA51_0 == QUOTED_ID))
 				{
-					alt52 = 2;
+					alt51 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d52s0 =
-							new NoViableAltException("", 52, 0, input);
+					NoViableAltException nvae_d51s0 =
+							new NoViableAltException("", 51, 0, input);
 
-					throw nvae_d52s0;
+					throw nvae_d51s0;
 				}
-				switch (alt52)
+				switch (alt51)
 				{
 					case 1:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:345:4: unquoted_identifier
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:346:4: unquoted_identifier
 						{
-							PushFollow(FOLLOW_unquoted_identifier_in_identifier1974);
+							PushFollow(FOLLOW_unquoted_identifier_in_identifier1959);
 							unquoted_identifier38 = unquoted_identifier();
 							state.followingStackPointer--;
 
@@ -3622,9 +3565,9 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 						}
 						break;
 					case 2:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:346:8: quoted_identifier
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:347:8: quoted_identifier
 						{
-							PushFollow(FOLLOW_quoted_identifier_in_identifier1985);
+							PushFollow(FOLLOW_quoted_identifier_in_identifier1970);
 							quoted_identifier39 = quoted_identifier();
 							state.followingStackPointer--;
 
@@ -3649,7 +3592,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "unquoted_identifier"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:349:1: unquoted_identifier returns [string value] : ( ID | keyword );
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:350:1: unquoted_identifier returns [string value] : ( ID | keyword );
 		public string unquoted_identifier() // throws RecognitionException [1]
 		{
 
@@ -3661,39 +3604,39 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:350:2: ( ID | keyword )
-				int alt53 = 2;
-				int LA53_0 = input.LA(1);
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:351:2: ( ID | keyword )
+				int alt52 = 2;
+				int LA52_0 = input.LA(1);
 
-				if ((LA53_0 == ID))
+				if ((LA52_0 == ID))
 				{
-					alt53 = 1;
+					alt52 = 1;
 				}
-				else if ((LA53_0 == PROPERTIES || LA53_0 == DIMENSION))
+				else if ((LA52_0 == PROPERTIES || LA52_0 == DIMENSION))
 				{
-					alt53 = 2;
+					alt52 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d53s0 =
-							new NoViableAltException("", 53, 0, input);
+					NoViableAltException nvae_d52s0 =
+							new NoViableAltException("", 52, 0, input);
 
-					throw nvae_d53s0;
+					throw nvae_d52s0;
 				}
-				switch (alt53)
+				switch (alt52)
 				{
 					case 1:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:350:4: ID
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:351:4: ID
 						{
-							ID40 = (IToken)Match(input, ID, FOLLOW_ID_in_unquoted_identifier2006);
+							ID40 = (IToken)Match(input, ID, FOLLOW_ID_in_unquoted_identifier1991);
 							value = ((ID40 != null) ? ID40.Text : null);
 
 						}
 						break;
 					case 2:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:351:4: keyword
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:352:4: keyword
 						{
-							PushFollow(FOLLOW_keyword_in_unquoted_identifier2013);
+							PushFollow(FOLLOW_keyword_in_unquoted_identifier1998);
 							keyword41 = keyword();
 							state.followingStackPointer--;
 
@@ -3722,7 +3665,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		};
 
 		// $ANTLR start "quoted_identifier"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:354:1: quoted_identifier returns [string value] : QUOTED_ID ;
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:355:1: quoted_identifier returns [string value] : QUOTED_ID ;
 		public mdxParser.quoted_identifier_return quoted_identifier() // throws RecognitionException [1]
 		{
 			mdxParser.quoted_identifier_return retval = new mdxParser.quoted_identifier_return();
@@ -3732,10 +3675,10 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:355:2: ( QUOTED_ID )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:355:4: QUOTED_ID
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:356:2: ( QUOTED_ID )
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:356:4: QUOTED_ID
 				{
-					QUOTED_ID42 = (IToken)Match(input, QUOTED_ID, FOLLOW_QUOTED_ID_in_quoted_identifier2030);
+					QUOTED_ID42 = (IToken)Match(input, QUOTED_ID, FOLLOW_QUOTED_ID_in_quoted_identifier2015);
 					retval.value = ((QUOTED_ID42 != null) ? QUOTED_ID42.Text : null);
 
 				}
@@ -3757,7 +3700,7 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 
 		// $ANTLR start "keyword"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:358:1: keyword returns [string value] : ( DIMENSION | PROPERTIES );
+		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:359:1: keyword returns [string value] : ( DIMENSION | PROPERTIES );
 		public string keyword() // throws RecognitionException [1]
 		{
 
@@ -3768,39 +3711,39 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 
 			try
 			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:359:2: ( DIMENSION | PROPERTIES )
-				int alt54 = 2;
-				int LA54_0 = input.LA(1);
+				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:360:2: ( DIMENSION | PROPERTIES )
+				int alt53 = 2;
+				int LA53_0 = input.LA(1);
 
-				if ((LA54_0 == DIMENSION))
+				if ((LA53_0 == DIMENSION))
 				{
-					alt54 = 1;
+					alt53 = 1;
 				}
-				else if ((LA54_0 == PROPERTIES))
+				else if ((LA53_0 == PROPERTIES))
 				{
-					alt54 = 2;
+					alt53 = 2;
 				}
 				else
 				{
-					NoViableAltException nvae_d54s0 =
-							new NoViableAltException("", 54, 0, input);
+					NoViableAltException nvae_d53s0 =
+							new NoViableAltException("", 53, 0, input);
 
-					throw nvae_d54s0;
+					throw nvae_d53s0;
 				}
-				switch (alt54)
+				switch (alt53)
 				{
 					case 1:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:359:4: DIMENSION
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:360:4: DIMENSION
 						{
-							DIMENSION43 = (IToken)Match(input, DIMENSION, FOLLOW_DIMENSION_in_keyword2047);
+							DIMENSION43 = (IToken)Match(input, DIMENSION, FOLLOW_DIMENSION_in_keyword2032);
 							value = ((DIMENSION43 != null) ? DIMENSION43.Text : null);
 
 						}
 						break;
 					case 2:
-						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:360:4: PROPERTIES
+						// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:361:4: PROPERTIES
 						{
-							PROPERTIES44 = (IToken)Match(input, PROPERTIES, FOLLOW_PROPERTIES_in_keyword2054);
+							PROPERTIES44 = (IToken)Match(input, PROPERTIES, FOLLOW_PROPERTIES_in_keyword2039);
 							value = ((PROPERTIES44 != null) ? PROPERTIES44.Text : null);
 
 						}
@@ -3820,77 +3763,44 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		}
 		// $ANTLR end "keyword"
 
-
-		// $ANTLR start "string_value"
-		// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:363:1: string_value returns [string value] : STRING ;
-		public string string_value() // throws RecognitionException [1]
-		{
-
-			string value = default(string);
-
-			IToken STRING45 = null;
-
-			try
-			{
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:364:2: ( STRING )
-				// D:\\tfs\\Ranet.UILibrary.OLAP4\\trunk\\UILibrary.Olap\\Ranet.Olap.Mdx\\Compiler\\Parser\\mdx.g:364:4: STRING
-				{
-					STRING45 = (IToken)Match(input, STRING, FOLLOW_STRING_in_string_value2071);
-					value = ((STRING45 != null) ? STRING45.Text : null).Substring(1, ((STRING45 != null) ? STRING45.Text : null).Length - 2);
-
-				}
-
-			}
-			catch (RecognitionException re)
-			{
-				ReportError(re);
-				Recover(input, re);
-			}
-			finally
-			{
-			}
-			return value;
-		}
-		// $ANTLR end "string_value"
-
 		// Delegated rules
 
 
-		protected DFA45 dfa45;
+		protected DFA44 dfa44;
 		private void InitializeCyclicDFAs()
 		{
-			this.dfa45 = new DFA45(this);
+			this.dfa44 = new DFA44(this);
 		}
 
-		const string DFA45_eotS =
+		const string DFA44_eotS =
 				"\x0e\uffff";
-		const string DFA45_eofS =
+		const string DFA44_eofS =
 				"\x01\uffff\x04\x0c\x09\uffff";
-		const string DFA45_minS =
+		const string DFA44_minS =
 				"\x01\x0a\x04\x06\x09\uffff";
-		const string DFA45_maxS =
-				"\x01\x4b\x04\x4c\x09\uffff";
-		const string DFA45_acceptS =
+		const string DFA44_maxS =
+				"\x01\x4a\x04\x4b\x09\uffff";
+		const string DFA44_acceptS =
 				"\x05\uffff\x01\x02\x01\x03\x01\x04\x01\x05\x01\x06\x01\x07\x01" +
 				"\x09\x01\x08\x01\x01";
-		const string DFA45_specialS =
+		const string DFA44_specialS =
 				"\x0e\uffff}>";
-		static readonly string[] DFA45_transitionS = {
+		static readonly string[] DFA44_transitionS = {
             "\x01\x03\x0a\uffff\x01\x02\x01\uffff\x01\x09\x01\uffff\x01"+
-            "\x0b\x08\uffff\x01\x0a\x01\x07\x04\uffff\x01\x01\x01\x04\x01"+
-            "\x08\x13\uffff\x01\x05\x0c\uffff\x01\x06",
+            "\x0b\x08\uffff\x01\x08\x01\x0a\x01\x07\x04\uffff\x01\x01\x01"+
+            "\x04\x12\uffff\x01\x05\x0c\uffff\x01\x06",
             "\x01\x0c\x02\uffff\x03\x0c\x02\uffff\x03\x0c\x04\uffff\x02"+
-            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x02\uffff\x04\x0c\x0d"+
-            "\uffff\x09\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
+            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x03\uffff\x04\x0c\x0c"+
+            "\uffff\x08\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
             "\x01\x0c\x02\uffff\x03\x0c\x02\uffff\x03\x0c\x04\uffff\x02"+
-            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x02\uffff\x04\x0c\x0d"+
-            "\uffff\x09\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
+            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x03\uffff\x04\x0c\x0c"+
+            "\uffff\x08\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
             "\x01\x0c\x02\uffff\x03\x0c\x02\uffff\x03\x0c\x04\uffff\x02"+
-            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x02\uffff\x04\x0c\x0d"+
-            "\uffff\x09\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
+            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x03\uffff\x04\x0c\x0c"+
+            "\uffff\x08\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
             "\x01\x0c\x02\uffff\x03\x0c\x02\uffff\x03\x0c\x04\uffff\x02"+
-            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x02\uffff\x04\x0c\x0d"+
-            "\uffff\x09\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
+            "\x0c\x06\uffff\x03\x0c\x01\uffff\x01\x0c\x03\uffff\x04\x0c\x0c"+
+            "\uffff\x08\x0c\x01\x0d\x0b\x0c\x02\uffff\x01\x0c",
             "",
             "",
             "",
@@ -3902,33 +3812,33 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
             ""
     };
 
-		static readonly short[] DFA45_eot = DFA.UnpackEncodedString(DFA45_eotS);
-		static readonly short[] DFA45_eof = DFA.UnpackEncodedString(DFA45_eofS);
-		static readonly char[] DFA45_min = DFA.UnpackEncodedStringToUnsignedChars(DFA45_minS);
-		static readonly char[] DFA45_max = DFA.UnpackEncodedStringToUnsignedChars(DFA45_maxS);
-		static readonly short[] DFA45_accept = DFA.UnpackEncodedString(DFA45_acceptS);
-		static readonly short[] DFA45_special = DFA.UnpackEncodedString(DFA45_specialS);
-		static readonly short[][] DFA45_transition = DFA.UnpackEncodedStringArray(DFA45_transitionS);
+		static readonly short[] DFA44_eot = DFA.UnpackEncodedString(DFA44_eotS);
+		static readonly short[] DFA44_eof = DFA.UnpackEncodedString(DFA44_eofS);
+		static readonly char[] DFA44_min = DFA.UnpackEncodedStringToUnsignedChars(DFA44_minS);
+		static readonly char[] DFA44_max = DFA.UnpackEncodedStringToUnsignedChars(DFA44_maxS);
+		static readonly short[] DFA44_accept = DFA.UnpackEncodedString(DFA44_acceptS);
+		static readonly short[] DFA44_special = DFA.UnpackEncodedString(DFA44_specialS);
+		static readonly short[][] DFA44_transition = DFA.UnpackEncodedStringArray(DFA44_transitionS);
 
-		protected class DFA45 : DFA
+		protected class DFA44 : DFA
 		{
-			public DFA45(BaseRecognizer recognizer)
+			public DFA44(BaseRecognizer recognizer)
 			{
 				this.recognizer = recognizer;
-				this.decisionNumber = 45;
-				this.eot = DFA45_eot;
-				this.eof = DFA45_eof;
-				this.min = DFA45_min;
-				this.max = DFA45_max;
-				this.accept = DFA45_accept;
-				this.special = DFA45_special;
-				this.transition = DFA45_transition;
+				this.decisionNumber = 44;
+				this.eot = DFA44_eot;
+				this.eof = DFA44_eof;
+				this.min = DFA44_min;
+				this.max = DFA44_max;
+				this.accept = DFA44_accept;
+				this.special = DFA44_special;
+				this.transition = DFA44_transition;
 
 			}
 
 			override public string Description
 			{
-				get { return "295:1: expression_simple returns [MdxExpression value] : ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | string_value | INTEGER | FLOAT | identifier | RANET_EXPRESSION );"; }
+				get { return "296:1: expression_simple returns [MdxExpression value] : ( expression_function | '(' expressions_list ')' | '{' ( expressions_list )? '}' | expression_case | STRING | INTEGER | FLOAT | identifier | RANET_EXPRESSION );"; }
 			}
 
 		}
@@ -3939,20 +3849,20 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public static readonly BitSet FOLLOW_EOF_in_mdx_statement69 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_select_statement_in_mdx_statement_single87 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_update_statement_in_mdx_statement_single95 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_UPDATE_in_update_statement116 = new BitSet(new ulong[] { 0x4000030002280420UL });
-		public static readonly BitSet FOLLOW_CUBE_in_update_statement118 = new BitSet(new ulong[] { 0x4000030002280420UL });
+		public static readonly BitSet FOLLOW_UPDATE_in_update_statement116 = new BitSet(new ulong[] { 0x2000060002280420UL });
+		public static readonly BitSet FOLLOW_CUBE_in_update_statement118 = new BitSet(new ulong[] { 0x2000060002280420UL });
 		public static readonly BitSet FOLLOW_cube_specification_in_update_statement133 = new BitSet(new ulong[] { 0x0000000000000040UL });
-		public static readonly BitSet FOLLOW_SET_in_update_statement145 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_SET_in_update_statement145 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
 		public static readonly BitSet FOLLOW_expression_property_in_update_statement149 = new BitSet(new ulong[] { 0x0020000000000000UL });
-		public static readonly BitSet FOLLOW_53_in_update_statement162 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
+		public static readonly BitSet FOLLOW_53_in_update_statement162 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
 		public static readonly BitSet FOLLOW_expression_or_xor_in_update_statement166 = new BitSet(new ulong[] { 0x01C0000000000002UL });
 		public static readonly BitSet FOLLOW_54_in_update_statement181 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_55_in_update_statement193 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_56_in_update_statement205 = new BitSet(new ulong[] { 0x0200000000000080UL });
-		public static readonly BitSet FOLLOW_BY_in_update_statement219 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_BY_in_update_statement219 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
 		public static readonly BitSet FOLLOW_weight_value_expression_in_update_statement223 = new BitSet(new ulong[] { 0x0200000000000000UL });
 		public static readonly BitSet FOLLOW_57_in_update_statement239 = new BitSet(new ulong[] { 0x0000000000000082UL });
-		public static readonly BitSet FOLLOW_BY_in_update_statement253 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_BY_in_update_statement253 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
 		public static readonly BitSet FOLLOW_weight_value_expression_in_update_statement257 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_expression_property_in_weight_value_expression294 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_expression_property_in_condition312 = new BitSet(new ulong[] { 0x0000000000000002UL });
@@ -3960,160 +3870,155 @@ namespace Ranet.Olap.Mdx.Compiler.Parser
 		public static readonly BitSet FOLLOW_with_clause_single_in_select_statement347 = new BitSet(new ulong[] { 0x000000000000CA40UL });
 		public static readonly BitSet FOLLOW_select_statement_subcube_in_select_statement376 = new BitSet(new ulong[] { 0x0000000000000602UL });
 		public static readonly BitSet FOLLOW_CELL_in_select_statement389 = new BitSet(new ulong[] { 0x0000000000000400UL });
-		public static readonly BitSet FOLLOW_PROPERTIES_in_select_statement392 = new BitSet(new ulong[] { 0x000003001C200400UL });
+		public static readonly BitSet FOLLOW_PROPERTIES_in_select_statement392 = new BitSet(new ulong[] { 0x000006001C200400UL });
 		public static readonly BitSet FOLLOW_cell_property_in_select_statement396 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_58_in_select_statement407 = new BitSet(new ulong[] { 0x000003001C200400UL });
+		public static readonly BitSet FOLLOW_58_in_select_statement407 = new BitSet(new ulong[] { 0x000006001C200400UL });
 		public static readonly BitSet FOLLOW_cell_property_in_select_statement411 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_SELECT_in_select_statement_subcube445 = new BitSet(new ulong[] { 0x4800070D02A81400UL, 0x0000000000000860UL });
+		public static readonly BitSet FOLLOW_SELECT_in_select_statement_subcube445 = new BitSet(new ulong[] { 0x2800061D02A81400UL, 0x0000000000000430UL });
 		public static readonly BitSet FOLLOW_59_in_select_statement_subcube454 = new BitSet(new ulong[] { 0x0000000000001000UL });
 		public static readonly BitSet FOLLOW_axis_specification_in_select_statement_subcube463 = new BitSet(new ulong[] { 0x0400000000001000UL });
-		public static readonly BitSet FOLLOW_58_in_select_statement_subcube474 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
+		public static readonly BitSet FOLLOW_58_in_select_statement_subcube474 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
 		public static readonly BitSet FOLLOW_axis_specification_in_select_statement_subcube478 = new BitSet(new ulong[] { 0x0400000000001000UL });
-		public static readonly BitSet FOLLOW_FROM_in_select_statement_subcube494 = new BitSet(new ulong[] { 0x4000030002280420UL });
+		public static readonly BitSet FOLLOW_FROM_in_select_statement_subcube494 = new BitSet(new ulong[] { 0x2000060002280420UL });
 		public static readonly BitSet FOLLOW_cube_specification_in_select_statement_subcube498 = new BitSet(new ulong[] { 0x0000000000002002UL });
-		public static readonly BitSet FOLLOW_WHERE_in_select_statement_subcube507 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_WHERE_in_select_statement_subcube507 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
 		public static readonly BitSet FOLLOW_condition_in_select_statement_subcube511 = new BitSet(new ulong[] { 0x0000000000000002UL });
 		public static readonly BitSet FOLLOW_CALCULATED_in_with_clause_single536 = new BitSet(new ulong[] { 0x0000000000008000UL });
-		public static readonly BitSet FOLLOW_MEMBER_in_with_clause_single539 = new BitSet(new ulong[] { 0x0000030000200400UL });
+		public static readonly BitSet FOLLOW_MEMBER_in_with_clause_single539 = new BitSet(new ulong[] { 0x0000060000200400UL });
 		public static readonly BitSet FOLLOW_member_name_in_with_clause_single541 = new BitSet(new ulong[] { 0x0000000000010000UL });
-		public static readonly BitSet FOLLOW_AS_in_with_clause_single543 = new BitSet(new ulong[] { 0x5000070D02A80400UL, 0x0000000000000860UL });
+		public static readonly BitSet FOLLOW_AS_in_with_clause_single543 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
 		public static readonly BitSet FOLLOW_CELL_in_with_clause_single554 = new BitSet(new ulong[] { 0x0000000000020000UL });
 		public static readonly BitSet FOLLOW_CALCULATION_in_with_clause_single556 = new BitSet(new ulong[] { 0x0000000000040000UL });
-		public static readonly BitSet FOLLOW_FOR_in_with_clause_single558 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
+		public static readonly BitSet FOLLOW_FOR_in_with_clause_single558 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
 		public static readonly BitSet FOLLOW_expression_in_with_clause_single562 = new BitSet(new ulong[] { 0x0000000000010000UL });
-		public static readonly BitSet FOLLOW_AS_in_with_clause_single564 = new BitSet(new ulong[] { 0x5000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_60_in_with_clause_single580 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_with_clause_single584 = new BitSet(new ulong[] { 0x1000000000000000UL });
-		public static readonly BitSet FOLLOW_60_in_with_clause_single586 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_expression_in_with_clause_single601 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_58_in_with_clause_single616 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_property_definition_in_with_clause_single620 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_SET_in_with_clause_single632 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_set_name_in_with_clause_single634 = new BitSet(new ulong[] { 0x0000000000010000UL });
-		public static readonly BitSet FOLLOW_AS_in_with_clause_single636 = new BitSet(new ulong[] { 0x5000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_60_in_with_clause_single642 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_with_clause_single646 = new BitSet(new ulong[] { 0x1000000000000000UL });
-		public static readonly BitSet FOLLOW_60_in_with_clause_single648 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_in_with_clause_single664 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_compound_id_in_member_name691 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_property_definition710 = new BitSet(new ulong[] { 0x0020000000000000UL });
-		public static readonly BitSet FOLLOW_53_in_property_definition712 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_or_xor_in_property_definition714 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_compound_id_in_set_name742 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_compound_id764 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_61_in_compound_id772 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_identifier_in_compound_id776 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_NON_in_axis_specification806 = new BitSet(new ulong[] { 0x0000000000100000UL });
-		public static readonly BitSet FOLLOW_EMPTY_in_axis_specification808 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_axis_specification817 = new BitSet(new ulong[] { 0x0000000000600400UL });
-		public static readonly BitSet FOLLOW_DIMENSION_in_axis_specification825 = new BitSet(new ulong[] { 0x0000000000000400UL });
-		public static readonly BitSet FOLLOW_PROPERTIES_in_axis_specification828 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_property_in_axis_specification832 = new BitSet(new ulong[] { 0x0400000000400000UL });
-		public static readonly BitSet FOLLOW_58_in_axis_specification842 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_property_in_axis_specification846 = new BitSet(new ulong[] { 0x0400000000400000UL });
-		public static readonly BitSet FOLLOW_ON_in_axis_specification860 = new BitSet(new ulong[] { 0x0000030000A00400UL });
-		public static readonly BitSet FOLLOW_axis_name_in_axis_specification864 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_axis_name888 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_INTEGER_in_axis_name895 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_compound_id_in_property912 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_cube_name_in_cube_specification934 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_NON_in_cube_specification945 = new BitSet(new ulong[] { 0x0000000001000000UL });
-		public static readonly BitSet FOLLOW_VISUAL_in_cube_specification947 = new BitSet(new ulong[] { 0x4000000000000000UL });
-		public static readonly BitSet FOLLOW_62_in_cube_specification952 = new BitSet(new ulong[] { 0x0000000000000800UL });
-		public static readonly BitSet FOLLOW_select_statement_subcube_in_cube_specification954 = new BitSet(new ulong[] { 0x8000000000000000UL });
-		public static readonly BitSet FOLLOW_63_in_cube_specification956 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_compound_id_in_cube_name976 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_RANET_EXPRESSION_in_cube_name984 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_CELL_ORDINAL_in_cell_property1004 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_VALUE_in_cell_property1011 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_FORMATTED_VALUE_in_cell_property1018 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_provider_specific_cell_property_in_cell_property1025 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_provider_specific_cell_property1042 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_or_xor_in_expression1073 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_and_in_expression_or_xor1093 = new BitSet(new ulong[] { 0x0000000060000002UL });
-		public static readonly BitSet FOLLOW_XOR_in_expression_or_xor1107 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_OR_in_expression_or_xor1117 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_and_in_expression_or_xor1129 = new BitSet(new ulong[] { 0x0000000060000002UL });
-		public static readonly BitSet FOLLOW_expression_compare_in_expression_and1159 = new BitSet(new ulong[] { 0x0000000080000002UL });
-		public static readonly BitSet FOLLOW_AND_in_expression_and1168 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_compare_in_expression_and1172 = new BitSet(new ulong[] { 0x0000000080000002UL });
-		public static readonly BitSet FOLLOW_expression_add_in_expression_compare1195 = new BitSet(new ulong[] { 0x0020000000000002UL, 0x000000000000001FUL });
-		public static readonly BitSet FOLLOW_53_in_expression_compare1208 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_64_in_expression_compare1217 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_65_in_expression_compare1226 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_66_in_expression_compare1235 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_67_in_expression_compare1244 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_68_in_expression_compare1253 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_add_in_expression_compare1264 = new BitSet(new ulong[] { 0x0020000000000002UL, 0x000000000000001FUL });
-		public static readonly BitSet FOLLOW_expression_mult_in_expression_add1294 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000060UL });
-		public static readonly BitSet FOLLOW_69_in_expression_add1307 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_70_in_expression_add1316 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_mult_in_expression_add1327 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000060UL });
-		public static readonly BitSet FOLLOW_expression_power_in_expression_mult1359 = new BitSet(new ulong[] { 0x0800000000000002UL, 0x0000000000000080UL });
-		public static readonly BitSet FOLLOW_71_in_expression_mult1378 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_59_in_expression_mult1390 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_power_in_expression_mult1407 = new BitSet(new ulong[] { 0x0800000000000002UL, 0x0000000000000080UL });
-		public static readonly BitSet FOLLOW_expression_unary_in_expression_power1437 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000100UL });
-		public static readonly BitSet FOLLOW_72_in_expression_power1446 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_unary_in_expression_power1450 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000100UL });
-		public static readonly BitSet FOLLOW_70_in_expression_unary1479 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1483 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_69_in_expression_unary1490 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1494 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_NOT_in_expression_unary1502 = new BitSet(new ulong[] { 0x4000070D02A00400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1506 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1516 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1535 = new BitSet(new ulong[] { 0x0000000200000002UL, 0x0000000000000200UL });
-		public static readonly BitSet FOLLOW_73_in_expression_range_is1544 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
-		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1548 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_IS_in_expression_range_is1558 = new BitSet(new ulong[] { 0x4000070C02A00400UL, 0x0000000000000800UL });
-		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1562 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_simple_in_expression_property1588 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_61_in_expression_property1596 = new BitSet(new ulong[] { 0x0000030000200400UL, 0x0000000000000400UL });
-		public static readonly BitSet FOLLOW_unquoted_identifier_in_expression_property1606 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_74_in_expression_property1619 = new BitSet(new ulong[] { 0x0000030000200400UL });
-		public static readonly BitSet FOLLOW_quoted_identifier_in_expression_property1623 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_quoted_identifier_in_expression_property1638 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_function_in_expression_property1653 = new BitSet(new ulong[] { 0x2000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_function_in_expression_simple1683 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_62_in_expression_simple1690 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expressions_list_in_expression_simple1692 = new BitSet(new ulong[] { 0x8000000000000000UL });
-		public static readonly BitSet FOLLOW_63_in_expression_simple1694 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_75_in_expression_simple1703 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000001860UL });
-		public static readonly BitSet FOLLOW_expressions_list_in_expression_simple1706 = new BitSet(new ulong[] { 0x0000000000000000UL, 0x0000000000001000UL });
-		public static readonly BitSet FOLLOW_76_in_expression_simple1710 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_case_in_expression_simple1719 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_string_value_in_expression_simple1726 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_INTEGER_in_expression_simple1733 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_FLOAT_in_expression_simple1740 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_expression_simple1747 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_RANET_EXPRESSION_in_expression_simple1754 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_expression_in_expressions_list1782 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_58_in_expressions_list1792 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_expressions_list1796 = new BitSet(new ulong[] { 0x0400000000000002UL });
-		public static readonly BitSet FOLLOW_identifier_in_expression_function1815 = new BitSet(new ulong[] { 0x4000000000000000UL });
-		public static readonly BitSet FOLLOW_62_in_expression_function1817 = new BitSet(new ulong[] { 0xC000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expressions_list_in_expression_function1821 = new BitSet(new ulong[] { 0x8000000000000000UL });
-		public static readonly BitSet FOLLOW_63_in_expression_function1826 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_CASE_in_expression_case1843 = new BitSet(new ulong[] { 0x4000077D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_expression_case1848 = new BitSet(new ulong[] { 0x0000007000000000UL });
-		public static readonly BitSet FOLLOW_when_clause_in_expression_case1865 = new BitSet(new ulong[] { 0x0000007000000000UL });
-		public static readonly BitSet FOLLOW_when_clause_in_expression_case1878 = new BitSet(new ulong[] { 0x0000007000000000UL });
-		public static readonly BitSet FOLLOW_ELSE_in_expression_case1899 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_expression_case1903 = new BitSet(new ulong[] { 0x0000002000000000UL });
-		public static readonly BitSet FOLLOW_END_in_expression_case1911 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_WHEN_in_when_clause1936 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_when_clause1940 = new BitSet(new ulong[] { 0x0000008000000000UL });
-		public static readonly BitSet FOLLOW_THEN_in_when_clause1942 = new BitSet(new ulong[] { 0x4000070D02A80400UL, 0x0000000000000860UL });
-		public static readonly BitSet FOLLOW_expression_in_when_clause1946 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_unquoted_identifier_in_identifier1974 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_quoted_identifier_in_identifier1985 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_ID_in_unquoted_identifier2006 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_keyword_in_unquoted_identifier2013 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_QUOTED_ID_in_quoted_identifier2030 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_DIMENSION_in_keyword2047 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_PROPERTIES_in_keyword2054 = new BitSet(new ulong[] { 0x0000000000000002UL });
-		public static readonly BitSet FOLLOW_STRING_in_string_value2071 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_AS_in_with_clause_single564 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_with_clause_single584 = new BitSet(new ulong[] { 0x0400000000000002UL });
+		public static readonly BitSet FOLLOW_58_in_with_clause_single596 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_property_definition_in_with_clause_single600 = new BitSet(new ulong[] { 0x0400000000000002UL });
+		public static readonly BitSet FOLLOW_SET_in_with_clause_single612 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_set_name_in_with_clause_single614 = new BitSet(new ulong[] { 0x0000000000010000UL });
+		public static readonly BitSet FOLLOW_AS_in_with_clause_single616 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_with_clause_single626 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_compound_id_in_member_name650 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_property_definition669 = new BitSet(new ulong[] { 0x0020000000000000UL });
+		public static readonly BitSet FOLLOW_53_in_property_definition671 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_or_xor_in_property_definition673 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_compound_id_in_set_name701 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_compound_id723 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_60_in_compound_id731 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_identifier_in_compound_id735 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_NON_in_axis_specification765 = new BitSet(new ulong[] { 0x0000000000100000UL });
+		public static readonly BitSet FOLLOW_EMPTY_in_axis_specification767 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_axis_specification776 = new BitSet(new ulong[] { 0x0000000000600400UL });
+		public static readonly BitSet FOLLOW_DIMENSION_in_axis_specification784 = new BitSet(new ulong[] { 0x0000000000000400UL });
+		public static readonly BitSet FOLLOW_PROPERTIES_in_axis_specification787 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_property_in_axis_specification791 = new BitSet(new ulong[] { 0x0400000000400000UL });
+		public static readonly BitSet FOLLOW_58_in_axis_specification801 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_property_in_axis_specification805 = new BitSet(new ulong[] { 0x0400000000400000UL });
+		public static readonly BitSet FOLLOW_ON_in_axis_specification819 = new BitSet(new ulong[] { 0x0000060000A00400UL });
+		public static readonly BitSet FOLLOW_axis_name_in_axis_specification823 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_axis_name847 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_INTEGER_in_axis_name854 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_compound_id_in_property871 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_cube_name_in_cube_specification893 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_NON_in_cube_specification904 = new BitSet(new ulong[] { 0x0000000001000000UL });
+		public static readonly BitSet FOLLOW_VISUAL_in_cube_specification906 = new BitSet(new ulong[] { 0x2000000000000000UL });
+		public static readonly BitSet FOLLOW_61_in_cube_specification911 = new BitSet(new ulong[] { 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_select_statement_subcube_in_cube_specification913 = new BitSet(new ulong[] { 0x4000000000000000UL });
+		public static readonly BitSet FOLLOW_62_in_cube_specification915 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_compound_id_in_cube_name935 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_RANET_EXPRESSION_in_cube_name943 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_CELL_ORDINAL_in_cell_property963 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_VALUE_in_cell_property970 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_FORMATTED_VALUE_in_cell_property977 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_provider_specific_cell_property_in_cell_property984 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_provider_specific_cell_property1001 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_or_xor_in_expression1032 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_and_in_expression_or_xor1052 = new BitSet(new ulong[] { 0x0000000060000002UL });
+		public static readonly BitSet FOLLOW_XOR_in_expression_or_xor1066 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_OR_in_expression_or_xor1076 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_and_in_expression_or_xor1088 = new BitSet(new ulong[] { 0x0000000060000002UL });
+		public static readonly BitSet FOLLOW_expression_compare_in_expression_and1118 = new BitSet(new ulong[] { 0x0000000080000002UL });
+		public static readonly BitSet FOLLOW_AND_in_expression_and1127 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_compare_in_expression_and1131 = new BitSet(new ulong[] { 0x0000000080000002UL });
+		public static readonly BitSet FOLLOW_expression_add_in_expression_compare1154 = new BitSet(new ulong[] { 0x8020000000000002UL, 0x000000000000000FUL });
+		public static readonly BitSet FOLLOW_53_in_expression_compare1167 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_63_in_expression_compare1176 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_64_in_expression_compare1185 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_65_in_expression_compare1194 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_66_in_expression_compare1203 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_67_in_expression_compare1212 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_add_in_expression_compare1223 = new BitSet(new ulong[] { 0x8020000000000002UL, 0x000000000000000FUL });
+		public static readonly BitSet FOLLOW_expression_mult_in_expression_add1253 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000030UL });
+		public static readonly BitSet FOLLOW_68_in_expression_add1266 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_69_in_expression_add1275 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_mult_in_expression_add1286 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000030UL });
+		public static readonly BitSet FOLLOW_expression_power_in_expression_mult1318 = new BitSet(new ulong[] { 0x0800000000000002UL, 0x0000000000000040UL });
+		public static readonly BitSet FOLLOW_70_in_expression_mult1337 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_59_in_expression_mult1349 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_power_in_expression_mult1366 = new BitSet(new ulong[] { 0x0800000000000002UL, 0x0000000000000040UL });
+		public static readonly BitSet FOLLOW_expression_unary_in_expression_power1396 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000080UL });
+		public static readonly BitSet FOLLOW_71_in_expression_power1405 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_unary_in_expression_power1409 = new BitSet(new ulong[] { 0x0000000000000002UL, 0x0000000000000080UL });
+		public static readonly BitSet FOLLOW_69_in_expression_unary1438 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1442 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_68_in_expression_unary1449 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1453 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_NOT_in_expression_unary1461 = new BitSet(new ulong[] { 0x2000061D02A00400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1465 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_range_is_in_expression_unary1475 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1494 = new BitSet(new ulong[] { 0x0000000200000002UL, 0x0000000000000100UL });
+		public static readonly BitSet FOLLOW_72_in_expression_range_is1503 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
+		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1507 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_IS_in_expression_range_is1517 = new BitSet(new ulong[] { 0x2000061C02A00400UL, 0x0000000000000400UL });
+		public static readonly BitSet FOLLOW_expression_property_in_expression_range_is1521 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_simple_in_expression_property1547 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_60_in_expression_property1555 = new BitSet(new ulong[] { 0x0000060000200400UL, 0x0000000000000200UL });
+		public static readonly BitSet FOLLOW_unquoted_identifier_in_expression_property1565 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_73_in_expression_property1578 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_quoted_identifier_in_expression_property1582 = new BitSet(new ulong[] { 0x1000000000000002UL, 0x0000000000000200UL });
+		public static readonly BitSet FOLLOW_73_in_expression_property1596 = new BitSet(new ulong[] { 0x0000060000200400UL });
+		public static readonly BitSet FOLLOW_quoted_identifier_in_expression_property1600 = new BitSet(new ulong[] { 0x1000000000000002UL, 0x0000000000000200UL });
+		public static readonly BitSet FOLLOW_quoted_identifier_in_expression_property1623 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_function_in_expression_property1638 = new BitSet(new ulong[] { 0x1000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_function_in_expression_simple1668 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_61_in_expression_simple1675 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expressions_list_in_expression_simple1677 = new BitSet(new ulong[] { 0x4000000000000000UL });
+		public static readonly BitSet FOLLOW_62_in_expression_simple1679 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_74_in_expression_simple1688 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000C30UL });
+		public static readonly BitSet FOLLOW_expressions_list_in_expression_simple1691 = new BitSet(new ulong[] { 0x0000000000000000UL, 0x0000000000000800UL });
+		public static readonly BitSet FOLLOW_75_in_expression_simple1695 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_case_in_expression_simple1704 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_STRING_in_expression_simple1711 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_INTEGER_in_expression_simple1718 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_FLOAT_in_expression_simple1725 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_expression_simple1732 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_RANET_EXPRESSION_in_expression_simple1739 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_expression_in_expressions_list1767 = new BitSet(new ulong[] { 0x0400000000000002UL });
+		public static readonly BitSet FOLLOW_58_in_expressions_list1777 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_expressions_list1781 = new BitSet(new ulong[] { 0x0400000000000002UL });
+		public static readonly BitSet FOLLOW_identifier_in_expression_function1800 = new BitSet(new ulong[] { 0x2000000000000000UL });
+		public static readonly BitSet FOLLOW_61_in_expression_function1802 = new BitSet(new ulong[] { 0x6000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expressions_list_in_expression_function1806 = new BitSet(new ulong[] { 0x4000000000000000UL });
+		public static readonly BitSet FOLLOW_62_in_expression_function1811 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_CASE_in_expression_case1828 = new BitSet(new ulong[] { 0x200006FD02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_expression_case1833 = new BitSet(new ulong[] { 0x000000E000000000UL });
+		public static readonly BitSet FOLLOW_when_clause_in_expression_case1850 = new BitSet(new ulong[] { 0x000000E000000000UL });
+		public static readonly BitSet FOLLOW_when_clause_in_expression_case1863 = new BitSet(new ulong[] { 0x000000E000000000UL });
+		public static readonly BitSet FOLLOW_ELSE_in_expression_case1884 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_expression_case1888 = new BitSet(new ulong[] { 0x0000004000000000UL });
+		public static readonly BitSet FOLLOW_END_in_expression_case1896 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_WHEN_in_when_clause1921 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_when_clause1925 = new BitSet(new ulong[] { 0x0000010000000000UL });
+		public static readonly BitSet FOLLOW_THEN_in_when_clause1927 = new BitSet(new ulong[] { 0x2000061D02A80400UL, 0x0000000000000430UL });
+		public static readonly BitSet FOLLOW_expression_in_when_clause1931 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_unquoted_identifier_in_identifier1959 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_quoted_identifier_in_identifier1970 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_ID_in_unquoted_identifier1991 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_keyword_in_unquoted_identifier1998 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_QUOTED_ID_in_quoted_identifier2015 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_DIMENSION_in_keyword2032 = new BitSet(new ulong[] { 0x0000000000000002UL });
+		public static readonly BitSet FOLLOW_PROPERTIES_in_keyword2039 = new BitSet(new ulong[] { 0x0000000000000002UL });
 
 	}
 }

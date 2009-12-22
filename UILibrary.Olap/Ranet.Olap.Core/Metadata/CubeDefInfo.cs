@@ -128,6 +128,21 @@ namespace Ranet.Olap.Core.Metadata
             }
         }
 
+        List<NamedSetInfo> m_NamedSets = null;
+        public List<NamedSetInfo> NamedSets
+        {
+            get
+            {
+                if (m_NamedSets == null)
+                    m_NamedSets = new List<NamedSetInfo>();
+                return m_NamedSets;
+            }
+            set
+            {
+                m_NamedSets = value;
+            }
+        }
+
         List<MeasureGroupInfo> m_MeasureGroups = null;
         public List<MeasureGroupInfo> MeasureGroups
         {

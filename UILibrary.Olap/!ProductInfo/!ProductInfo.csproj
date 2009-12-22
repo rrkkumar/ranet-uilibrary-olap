@@ -15,14 +15,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>
     </AssemblyOriginatorKeyFile>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -53,27 +45,23 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="!ProductInfo.Define" />
+    <None Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
+      <Link>Licenses\Ranet.UILibrary.Olap.License.ru.rtf</Link>
+    </None>
     <None Include="..\UILibrary.Olap.WixInstaller\License.rtf">
-      <Link>Licences\License.rtf</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>Licenses\License.rtf</Link>
     </None>
     <None Include="Galaktika.OpenSource.snk" />
     <None Include="TFSBuild.proj" />
     <None Include="TFSBuild.rsp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licences\BSD-Antlr.Runtime.txt">
-      <Link>Licences\BSD-Antlr.Runtime.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licences\GPL v.3.txt">
-      <Link>Licences\GPL v.3.txt</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licences\Ranet.UILibrary.Olap.License.ru.rtf">
-      <Link>Licences\Ranet.UILibrary.Olap.License.ru.rtf</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <Content Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt">
+      <Link>Licenses\BSD-Antlr.Runtime.txt</Link>
+    </Content>
+    <Content Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\GPL v.3.txt">
+      <Link>Licenses\GPL v.3.txt</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

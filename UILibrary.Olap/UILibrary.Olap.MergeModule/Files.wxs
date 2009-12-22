@@ -4,10 +4,10 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C133' Guid='a0f4605d-9c01-4be2-a3ee-c9fab23ae1b7'>
+			<Component Id='C3216' Guid='d7d3a994-a01a-4913-9a52-82ed4e7a45c5'>
 				<File
-					Id='I133'
-					Name='N133'
+					Id='I3216'
+					Name='N3216'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Core.dll'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Core.dll'
@@ -18,10 +18,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_SYMBOLS'>
-			<Component Id='C134' Guid='edbe2bc0-7ede-4580-a3f3-858ac029dde1'>
+			<Component Id='C3217' Guid='ba3bb712-4a04-419a-8a27-1e857115cce4'>
 				<File
-					Id='I134'
-					Name='N134'
+					Id='I3217'
+					Name='N3217'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Core.pdb'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Core.pdb'
@@ -32,10 +32,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C135' Guid='b051b879-6acd-423a-bc25-58d3532df892'>
+			<Component Id='C3218' Guid='40cf4170-8b51-4686-a181-da002fa9ee36'>
 				<File
-					Id='I135'
-					Name='N135'
+					Id='I3218'
+					Name='N3218'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Core.xml'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Core.xml'
@@ -46,10 +46,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C136' Guid='cb872bb2-30d2-4f84-83db-abf071e8b5f4'>
+			<Component Id='C3219' Guid='298a74e8-ef40-4b0c-a8da-157caf04a301'>
 				<File
-					Id='I136'
-					Name='N136'
+					Id='I3219'
+					Name='N3219'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.dll'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.dll'
@@ -60,10 +60,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C137' Guid='c111c069-2b1f-4f49-bfe3-142c1778aaed'>
+			<Component Id='C3220' Guid='dcfd8f91-dce2-432d-a379-23f35b9fcc93'>
 				<File
-					Id='I137'
-					Name='N137'
+					Id='I3220'
+					Name='N3220'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Mdx.dll'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Mdx.dll'
@@ -74,10 +74,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_SYMBOLS'>
-			<Component Id='C138' Guid='056ce958-be4c-4cac-9126-bb3f3e4cebee'>
+			<Component Id='C3221' Guid='02f18e28-8b8c-407d-ae76-8e8bf04a1c8d'>
 				<File
-					Id='I138'
-					Name='N138'
+					Id='I3221'
+					Name='N3221'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Mdx.pdb'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Mdx.pdb'
@@ -88,10 +88,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C139' Guid='c01d26b0-efe1-4e78-a660-3b2d058a7d55'>
+			<Component Id='C3222' Guid='755a24a0-2fc9-4221-9133-201003e289bb'>
 				<File
-					Id='I139'
-					Name='N139'
+					Id='I3222'
+					Name='N3222'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.Mdx.xml'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.Mdx.xml'
@@ -102,10 +102,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_SYMBOLS'>
-			<Component Id='C140' Guid='86b9b1da-9f7f-4684-b3f2-f615b73f667f'>
+			<Component Id='C3223' Guid='bbbc48ac-5e62-4ed0-a27b-416ff8b7f0c5'>
 				<File
-					Id='I140'
-					Name='N140'
+					Id='I3223'
+					Name='N3223'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.pdb'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.pdb'
@@ -116,10 +116,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN'>
-			<Component Id='C141' Guid='cfaa14fc-dedf-4a42-ae71-13b134f15449'>
+			<Component Id='C3224' Guid='316e3ca0-5ecd-4a70-be38-647f4687de18'>
 				<File
-					Id='I141'
-					Name='N141'
+					Id='I3224'
+					Name='N3224'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.xml'
 					Source='..\..\Binaries\Release\Ranet.AgOlap.xml'
@@ -130,10 +130,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN'>
-			<Component Id='C142' Guid='30270609-2d22-477b-ad6a-180927b86d48'>
+			<Component Id='C3225' Guid='b999c510-1f6a-4f60-ac4a-817b3bd697da'>
 				<File
-					Id='I142'
-					Name='N142'
+					Id='I3225'
+					Name='N3225'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Core.dll'
 					Source='..\..\Binaries\Release\Ranet.Olap.Core.dll'
@@ -144,10 +144,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_SYMBOLS'>
-			<Component Id='C143' Guid='55e9f525-6471-4a69-9bce-78eacf089592'>
+			<Component Id='C3226' Guid='59280566-cd19-4b41-971c-7229fda385da'>
 				<File
-					Id='I143'
-					Name='N143'
+					Id='I3226'
+					Name='N3226'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Core.pdb'
 					Source='..\..\Binaries\Release\Ranet.Olap.Core.pdb'
@@ -158,10 +158,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN'>
-			<Component Id='C144' Guid='bc35f839-5f5f-427f-a07d-269a7f68f092'>
+			<Component Id='C3227' Guid='56c09297-3e92-4e79-a052-078c9b26d405'>
 				<File
-					Id='I144'
-					Name='N144'
+					Id='I3227'
+					Name='N3227'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Core.xml'
 					Source='..\..\Binaries\Release\Ranet.Olap.Core.xml'
@@ -172,10 +172,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN'>
-			<Component Id='C145' Guid='e6c8f614-625f-4823-8296-c36f8ffc2ae4'>
+			<Component Id='C3228' Guid='b2b2acb2-57ca-499f-8812-40834965595f'>
 				<File
-					Id='I145'
-					Name='N145'
+					Id='I3228'
+					Name='N3228'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Mdx.dll'
 					Source='..\..\Binaries\Release\Ranet.Olap.Mdx.dll'
@@ -186,10 +186,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_SYMBOLS'>
-			<Component Id='C146' Guid='909b6389-c5c7-4123-a4c2-bcd1e63525b4'>
+			<Component Id='C3229' Guid='9c6a92de-d2b1-47f4-b787-61560b888ae0'>
 				<File
-					Id='I146'
-					Name='N146'
+					Id='I3229'
+					Name='N3229'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Mdx.pdb'
 					Source='..\..\Binaries\Release\Ranet.Olap.Mdx.pdb'
@@ -200,10 +200,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN'>
-			<Component Id='C147' Guid='90ee7438-769a-4304-95d1-4d0a1933d5d9'>
+			<Component Id='C3230' Guid='a7fdc09c-d62f-4821-b23d-03b0bea9b805'>
 				<File
-					Id='I147'
-					Name='N147'
+					Id='I3230'
+					Name='N3230'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Mdx.xml'
 					Source='..\..\Binaries\Release\Ranet.Olap.Mdx.xml'
@@ -214,10 +214,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN'>
-			<Component Id='C148' Guid='f471d09b-89e3-4f22-a016-b5967dc761b1'>
+			<Component Id='C3231' Guid='99e866f6-d9ff-4def-ba05-2a673196b044'>
 				<File
-					Id='I148'
-					Name='N148'
+					Id='I3231'
+					Name='N3231'
 					KeyPath='yes'
 					LongName='Ranet.Web.Olap.dll'
 					Source='..\..\Binaries\Release\Ranet.Web.Olap.dll'
@@ -228,10 +228,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_SYMBOLS'>
-			<Component Id='C149' Guid='e1ac7317-234c-4f62-8914-1ba63b684d17'>
+			<Component Id='C3232' Guid='61b096e8-2e12-49fd-8f29-6afbd582441a'>
 				<File
-					Id='I149'
-					Name='N149'
+					Id='I3232'
+					Name='N3232'
 					KeyPath='yes'
 					LongName='Ranet.Web.Olap.xml'
 					Source='..\..\Binaries\Release\Ranet.Web.Olap.xml'
@@ -242,10 +242,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_SILVERLIGHT_BIN_RU'>
-			<Component Id='C150' Guid='3716f411-5a66-442e-bd4c-dd8325da7c63'>
+			<Component Id='C3233' Guid='8ec46ead-41b1-4095-a36c-0234af451528'>
 				<File
-					Id='I150'
-					Name='N150'
+					Id='I3233'
+					Name='N3233'
 					KeyPath='yes'
 					LongName='Ranet.AgOlap.resources.dll'
 					Source='..\..\Binaries\Release\ru\Ranet.AgOlap.resources.dll'
@@ -256,10 +256,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_SYMBOLS'>
-			<Component Id='C151' Guid='ff25a044-8e59-4a33-afa8-6f293944bede'>
+			<Component Id='C3234' Guid='5f4a1faf-0d42-4248-88cd-d2030d0935cb'>
 				<File
-					Id='I151'
-					Name='N151'
+					Id='I3234'
+					Name='N3234'
 					KeyPath='yes'
 					LongName='Ranet.Web.Olap.pdb'
 					Source='..\..\Binaries\Release\Ranet.Web.Olap.pdb'
@@ -270,10 +270,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_FRAMEWORK_BIN_RU'>
-			<Component Id='C152' Guid='e22383db-e699-44cc-887d-5cbc15d680de'>
+			<Component Id='C3235' Guid='0cd558b0-8d78-4de3-a3f5-b71aace0ee8d'>
 				<File
-					Id='I152'
-					Name='N152'
+					Id='I3235'
+					Name='N3235'
 					KeyPath='yes'
 					LongName='Ranet.Olap.Core.resources.dll'
 					Source='..\..\Binaries\Release\ru\Ranet.Olap.Core.resources.dll'
@@ -283,42 +283,42 @@
 				/>
 			</Component>
 		</DirectoryRef>
-		<DirectoryRef Id='INSTALLDIR_Licences'>
-			<Component Id='C153' Guid='89adbcf0-d143-437b-b166-fba471c53f4e'>
+		<DirectoryRef Id='INSTALLDIR_Licenses'>
+			<Component Id='C3236' Guid='f065669b-0249-4742-9b23-97691b0c114c'>
 				<File
-					Id='I153'
-					Name='N153'
+					Id='I3236'
+					Name='N3236'
 					KeyPath='yes'
 					LongName='BSD-Antlr.Runtime.txt'
-					Source='INSTALLDIR\Licences\BSD-Antlr.Runtime.txt'
+					Source='INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt'
 					Checksum='yes'
 					Compressed='yes'
 					DiskId='1'
 				/>
 			</Component>
 		</DirectoryRef>
-		<DirectoryRef Id='INSTALLDIR_Licences'>
-			<Component Id='C154' Guid='f26faad1-9349-48e0-8a09-fc1092398ba3'>
+		<DirectoryRef Id='INSTALLDIR_Licenses'>
+			<Component Id='C3237' Guid='1b9eb88c-9069-478b-9877-5cd8c12c7493'>
 				<File
-					Id='I154'
-					Name='N154'
+					Id='I3237'
+					Name='N3237'
 					KeyPath='yes'
 					LongName='GPL v.3.txt'
-					Source='INSTALLDIR\Licences\GPL v.3.txt'
+					Source='INSTALLDIR\Licenses\GPL v.3.txt'
 					Checksum='yes'
 					Compressed='yes'
 					DiskId='1'
 				/>
 			</Component>
 		</DirectoryRef>
-		<DirectoryRef Id='INSTALLDIR_Licences'>
-			<Component Id='C155' Guid='aa264e4a-fe00-4aee-864b-eb6500a6b5c1'>
+		<DirectoryRef Id='INSTALLDIR_Licenses'>
+			<Component Id='C3238' Guid='ffbcf6a6-03f5-4d53-beb4-08c7cdf2e64b'>
 				<File
-					Id='I155'
-					Name='N155'
+					Id='I3238'
+					Name='N3238'
 					KeyPath='yes'
 					LongName='Ranet.UILibrary.Olap.License.ru.rtf'
-					Source='INSTALLDIR\Licences\Ranet.UILibrary.Olap.License.ru.rtf'
+					Source='INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf'
 					Checksum='yes'
 					Compressed='yes'
 					DiskId='1'
@@ -326,29 +326,29 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C133'/>
-			<ComponentRef Id='C134'/>
-			<ComponentRef Id='C135'/>
-			<ComponentRef Id='C136'/>
-			<ComponentRef Id='C137'/>
-			<ComponentRef Id='C138'/>
-			<ComponentRef Id='C139'/>
-			<ComponentRef Id='C140'/>
-			<ComponentRef Id='C141'/>
-			<ComponentRef Id='C142'/>
-			<ComponentRef Id='C143'/>
-			<ComponentRef Id='C144'/>
-			<ComponentRef Id='C145'/>
-			<ComponentRef Id='C146'/>
-			<ComponentRef Id='C147'/>
-			<ComponentRef Id='C148'/>
-			<ComponentRef Id='C149'/>
-			<ComponentRef Id='C150'/>
-			<ComponentRef Id='C151'/>
-			<ComponentRef Id='C152'/>
-			<ComponentRef Id='C153'/>
-			<ComponentRef Id='C154'/>
-			<ComponentRef Id='C155'/>
+			<ComponentRef Id='C3216'/>
+			<ComponentRef Id='C3217'/>
+			<ComponentRef Id='C3218'/>
+			<ComponentRef Id='C3219'/>
+			<ComponentRef Id='C3220'/>
+			<ComponentRef Id='C3221'/>
+			<ComponentRef Id='C3222'/>
+			<ComponentRef Id='C3223'/>
+			<ComponentRef Id='C3224'/>
+			<ComponentRef Id='C3225'/>
+			<ComponentRef Id='C3226'/>
+			<ComponentRef Id='C3227'/>
+			<ComponentRef Id='C3228'/>
+			<ComponentRef Id='C3229'/>
+			<ComponentRef Id='C3230'/>
+			<ComponentRef Id='C3231'/>
+			<ComponentRef Id='C3232'/>
+			<ComponentRef Id='C3233'/>
+			<ComponentRef Id='C3234'/>
+			<ComponentRef Id='C3235'/>
+			<ComponentRef Id='C3236'/>
+			<ComponentRef Id='C3237'/>
+			<ComponentRef Id='C3238'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

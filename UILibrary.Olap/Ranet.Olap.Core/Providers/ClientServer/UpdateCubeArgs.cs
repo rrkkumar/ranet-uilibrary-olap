@@ -24,10 +24,11 @@ using System.Collections.Generic;
 
 namespace Ranet.Olap.Core.Providers.ClientServer
 {
-    public class UpdateCubeArgs
+    public class UpdateCubeArgs : OlapActionBase
     {
         public UpdateCubeArgs()
         {
+            ActionType = OlapActionTypes.UpdateCube;
         }
         
         public String PivotID = String.Empty;

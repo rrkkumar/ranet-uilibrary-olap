@@ -29,40 +29,17 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using System.Windows.Controls;
 
 namespace Ranet.AgOlap.Controls.General.Tree
 {
-    public class LoadNextTreeNode : TreeViewItem
+    public class LoadNextTreeNode : CustomTreeNode
     {
-        public readonly String NODE_TEXT = Localization.MemberChoice_LoadNext;
-        TreeItemControl ItemControl;
-
-        public LoadNextTreeNode()
+        public LoadNextTreeNode() 
+            : base()
         {
-            ItemControl = new TreeItemControl();
-            ItemControl.Text = NODE_TEXT;
-            ItemControl.ItemText.FontStyle = FontStyles.Italic;
-            ItemControl.Icon = UriResources.Images.LoadNext16;
-
-            Header = ItemControl;
-
-            ItemControl.MouseDoubleClick += new MouseDoubleClickEventHandler(ItemControl_MouseDoubleClick);
-        }
-
-        public event MouseDoubleClickEventHandler MouseDoubleClick;
-        void Raise_MouseDoubleClick(EventArgs e)
-        {
-            MouseDoubleClickEventHandler handler = MouseDoubleClick;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
-        }
-
-        void ItemControl_MouseDoubleClick(object sender, EventArgs e)
-        {
-            Raise_MouseDoubleClick(e);        
+            Text = Localization.MemberChoice_LoadNext;
+            m_ItemCtrl.ItemText.FontStyle = FontStyles.Italic;
+            Icon = UriResources.Images.LoadNext16;
         }
     }
 }

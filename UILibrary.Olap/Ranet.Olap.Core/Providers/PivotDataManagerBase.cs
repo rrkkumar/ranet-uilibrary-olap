@@ -138,7 +138,10 @@ namespace Ranet.Olap.Core.Providers
                     MdxSelectStatement statement = provider.ParseMdx(originalQuery) as MdxSelectStatement;
                     if (statement != null)
                     {
-                        if (statement.Axes != null && statement.Axes.Count > 2 && statement.Where != null)
+                        if (statement.Where == null)
+                            statement.Where = new MdxWhereClause();
+
+                        if (statement.Axes != null && statement.Axes.Count > 2)
                         {
                             IList<MdxExpression> expr = new List<MdxExpression>();
                             if (statement.Where.Expression != null)
@@ -539,18 +542,26 @@ namespace Ranet.Olap.Core.Providers
         public CellSetData RefreshQuery()
         {
             CellSetData res = null;
-            using (MdxDomProvider provider = MdxDomProvider.CreateProvider())
+            if (!string.IsNullOrEmpty(Query))
             {
-                StringBuilder sb = new StringBuilder();
-                provider.GenerateMdxFromDom(this.CreateWrappedStatement(), sb, new MdxGeneratorOptions());
+                using (MdxDomProvider provider = MdxDomProvider.CreateProvider())
+                {
+                    StringBuilder sb = new StringBuilder();
+                    provider.GenerateMdxFromDom(this.CreateWrappedStatement(), sb, new MdxGeneratorOptions());
 
-                String new_Query = sb.ToString();
+                    String new_Query = sb.ToString();
 
-                res = ExecuteQuery(new_Query);
-                //if (!String.IsNullOrEmpty(res))
-                //{
-                //    Application[QUERY] = new_Query;
-                //}
+                    res = ExecuteQuery(new_Query);
+                    //if (!String.IsNullOrEmpty(res))
+                    //{
+                    //    Application[QUERY] = new_Query;
+                    //}
+                }
+            }
+            else
+            { 
+                // Пустой запрос
+                res = new CellSetData();
             }
             return res;
         }
@@ -682,19 +693,22 @@ namespace Ranet.Olap.Core.Providers
             }
             */
 
-            var expression = ax.Expression;
-            var hierarchize = expression as MdxFunctionExpression;
-            if (hierarchize != null && hierarchize.Name.ToLower() == "hierarchize" && hierarchize.Arguments.Count == 1)
+            if (actions.Count > 0)
             {
-                expression = hierarchize.Arguments[0];
-            }
+                var expression = ax.Expression;
+                var hierarchize = expression as MdxFunctionExpression;
+                if (hierarchize != null && hierarchize.Name.ToLower() == "hierarchize" && hierarchize.Arguments.Count == 1)
+                {
+                    expression = hierarchize.Arguments[0];
+                }
 
-            axisExpression = new MdxFunctionExpression(
-                         "HIERARCHIZE",
-                         new MdxExpression[]
+                axisExpression = new MdxFunctionExpression(
+                             "HIERARCHIZE",
+                             new MdxExpression[]
                         {
                             GetWrappedExpression(expression, actions)
                         });
+            }
 
 
             // Возможность убрать пустые колонки

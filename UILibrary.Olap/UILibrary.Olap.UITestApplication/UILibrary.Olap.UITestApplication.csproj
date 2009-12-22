@@ -121,6 +121,10 @@
       <Project>{00583D29-AC6B-4AD1-A66B-F3AD3F81B639}</Project>
       <Name>Ranet.AgOlap</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ranet.Olap.Mdx\Ranet.AgOlap.Mdx.csproj">
+      <Project>{FA8CC918-2E96-491B-AD8A-BDC5860A2FAC}</Project>
+      <Name>Ranet.AgOlap.Mdx</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />

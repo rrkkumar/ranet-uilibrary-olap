@@ -10,10 +10,26 @@
 								Id="RANET_UILIBRARY_OLAP_Lic_LNK"
 								Directory="Shortcuts.RANET_UILIBRARY_OLAP"
 								Name="MainLic"
-								LongName="Ranet.UILibrary.Olap.Licence"
-								Description="Ranet.UILibrary.Olap Licence"
+								LongName="Ranet.UILibrary.Olap.License"
+								Description="Ranet.UILibrary.Olap License"
 								Show="normal"
-								Target="[INSTALLDIR]Licences\Ranet.UILibrary.Olap.Licence.rtf"
+								Target="[INSTALLDIR]Licenses\Ranet.UILibrary.Olap.License.rtf"
+							/>
+							<Shortcut
+								Id="RANET_UILIBRARY_OLAP_Readme"
+								Directory="Shortcuts.RANET_UILIBRARY_OLAP"
+								Name="Readme.txt"
+								Description="Please read this file."
+								Show="normal"
+								Target="[INSTALLDIR]Readme.txt"
+							/>
+							<Shortcut
+								Id="RANET_UILIBRARY_OLAP_WhatsNew"
+								Directory="Shortcuts.RANET_UILIBRARY_OLAP"
+								Name="WhatsNew.txt"
+								Description="Information about changes."
+								Show="normal"
+								Target="[INSTALLDIR]WhatsNew.txt"
 							/>
 						</Component>
 					</Directory>

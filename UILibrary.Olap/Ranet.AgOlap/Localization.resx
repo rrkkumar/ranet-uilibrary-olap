@@ -776,4 +776,91 @@ Please, recalculate data or cancel changes.</value>
   <data name="PivotGrid_CustomProperties_NotFound" xml:space="preserve">
     <value>Custom properties for member not found. Possible member is calculated.</value>
   </data>
+  <data name="MdxDesigner_CalculatedMemberEditor" xml:space="preserve">
+    <value>Customer Calculations Editor</value>
+  </data>
+  <data name="CalcMemberEditor_MemberTab" xml:space="preserve">
+    <value>Member View</value>
+  </data>
+  <data name="CalcMemberEditor_ScriptTab" xml:space="preserve">
+    <value>Script View</value>
+  </data>
+  <data name="CalcMemberEditor_DialogCaption" xml:space="preserve">
+    <value>Customer Calculations Editor</value>
+  </data>
+  <data name="CalcMemberEditor_DisplayFolderLabel" xml:space="preserve">
+    <value>Display Folder:</value>
+  </data>
+  <data name="CalcMemberEditor_ExpressionLabel" xml:space="preserve">
+    <value>Expression:</value>
+  </data>
+  <data name="CalcMemberEditor_MeasureGroupLabel" xml:space="preserve">
+    <value>Measure Group:</value>
+  </data>
+  <data name="CalcMemberEditor_NameLabel" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="CalcMemberEditor_ScriptLabel" xml:space="preserve">
+    <value>Script:</value>
+  </data>
+  <data name="CalcMemberEditor_AddMember" xml:space="preserve">
+    <value>Add Calculated Member</value>
+  </data>
+  <data name="CalcMemberEditor_AddSet" xml:space="preserve">
+    <value>Add Named Set</value>
+  </data>
+  <data name="CalcMemberEditor_DeleteMember" xml:space="preserve">
+    <value>Delete Current Calculation</value>
+  </data>
+  <data name="ComboBoxItem_New" xml:space="preserve">
+    <value>&lt;Create...&gt;</value>
+  </data>
+  <data name="ComboBoxItem_None" xml:space="preserve">
+    <value>None</value>
+  </data>
+  <data name="FolderComboBox_NewFolder" xml:space="preserve">
+    <value>New Folder</value>
+  </data>
+  <data name="CalcMemberEditor_FormatStringLabel" xml:space="preserve">
+    <value>Format String:</value>
+  </data>
+  <data name="CalcMemberEditor_AddNamedSet" xml:space="preserve">
+    <value>Add Named Set</value>
+  </data>
+  <data name="ComboBoxItem_NewItem" xml:space="preserve">
+    <value>New Item</value>
+  </data>
+  <data name="CalcMemberEditor_MembersNamesMustBeUnique" xml:space="preserve">
+    <value>The Calculated Members contains in list with alike names. Correct the givenned mistake automatically?</value>
+  </data>
+  <data name="CalcMemberEditor_NamedSetsNamesMustBeUnique" xml:space="preserve">
+    <value>The Named Sets elements contains In list with alike names. Correct the givenned mistake automatically?</value>
+  </data>
+  <data name="MdxDesigner_EditQuery_ToolTip" xml:space="preserve">
+    <value>Edit MDX query</value>
+  </data>
+  <data name="CalculationsListControl_CalculatedMembers_TreeNode" xml:space="preserve">
+    <value>Members</value>
+  </data>
+  <data name="CalculationsListControl_NamedSets_TreeNode" xml:space="preserve">
+    <value>Sets</value>
+  </data>
+  <data name="MetadataResponseException_CubeNotFound" xml:space="preserve">
+    <value>Cube with name '{0}' not found.</value>
+  </data>
+  <data name="MetadataResponseException_DimensionByUniqueName_InCube_NotFound" xml:space="preserve">
+    <value>Dimension with unique name '{0}' not found in cube '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_HierarchyByUniqueName_InCube_NotFound" xml:space="preserve">
+    <value>Hierarchy with unique name '{0}' not found in cube '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound" xml:space="preserve">
+    <value>Hierarchy with unique name '{0}' not found in dimension '{1}'.</value>
+  </data>
+  <data name="MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound" xml:space="preserve">
+    <value>Level with unique name '{0}' not found in hierarchy '{1}'.</value>
+  </data>
+  <data name="CalcMemberEditor_Clear" xml:space="preserve">
+    <value>Delete All Calculations</value>
+  </data>
 </root>

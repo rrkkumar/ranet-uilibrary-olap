@@ -65,6 +65,8 @@
 		  <param name="background" value="white" />
 		  <param name="minRuntimeVersion" value="3.0.40624.0" />
 		  <param name="autoUpgrade" value="true" />
+		  <param name="enableHtmlAccess" value="true" />
+          <param name="windowless" value="true" />
 		  <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=3.0.40624.0" style="text-decoration:none">
  			  <img src="http://go.microsoft.com/fwlink/?LinkId=108181" alt="Get Microsoft Silverlight" style="border-style:none"/>
 		  </a>

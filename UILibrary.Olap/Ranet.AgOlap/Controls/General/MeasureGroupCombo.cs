@@ -38,6 +38,7 @@ namespace Ranet.AgOlap.Controls.General
 {
     public class MeasureGroupCombo : UserControl
     {
+        public const String ALL_MEASURES_GROUPS = "<ALL_MEASURES_GROUPS>";
         ComboBoxEx comboBox;
 
         public MeasureGroupCombo()
@@ -48,10 +49,9 @@ namespace Ranet.AgOlap.Controls.General
             comboBox = new ComboBoxEx();
             LayoutRoot.Children.Add(comboBox);
 
-            comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = Localization.MeasureGroup_All, Caption = Localization.MeasureGroup_All }));
+            comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = MeasureGroupCombo.ALL_MEASURES_GROUPS, Caption = Localization.MeasureGroup_All }));
             comboBox.Combo.SelectedIndex = 0;
             comboBox.SelectionChanged += new SelectionChangedEventHandler(comboBox_SelectionChanged);
-
 
             this.Content = LayoutRoot;
         }
@@ -87,32 +87,32 @@ namespace Ranet.AgOlap.Controls.General
         {
             comboBox.Clear();
 
-            comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = Localization.MeasureGroup_All, Caption = Localization.MeasureGroup_All}));
+            comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = MeasureGroupCombo.ALL_MEASURES_GROUPS, Caption = Localization.MeasureGroup_All }));
             foreach (MeasureGroupInfo info in list)
             {
                 comboBox.Combo.Items.Add(new MeasureGroupItemControl(info));
             }
+            
             comboBox.Combo.SelectedIndex = 0;
         }
 
 
         public void SelectItem(String name)
         {
-            if (comboBox.Combo.Items.Count > 0)
-                comboBox.Combo.SelectedIndex = 0;
-            else
-                comboBox.Combo.SelectedIndex = -1;
-
             int i = 0;
             foreach (MeasureGroupItemControl item in comboBox.Combo.Items)
             {
                 if (item.Info.Name == name)
                 {
                     comboBox.Combo.SelectedIndex = i;
-                    break;
+                    return;
                 }
                 i++;
             }
+            if (comboBox.Combo.Items.Count > 0)
+                comboBox.Combo.SelectedIndex = 0;
+            else
+                comboBox.Combo.SelectedIndex = -1;
         }
 
         public bool IsWaiting
@@ -131,7 +131,7 @@ namespace Ranet.AgOlap.Controls.General
                 else
                 {
                     comboBox.Clear();
-                    comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = Localization.MeasureGroup_All, Caption = Localization.MeasureGroup_All }));
+                    comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = MeasureGroupCombo.ALL_MEASURES_GROUPS, Caption = Localization.MeasureGroup_All }));
                     comboBox.Combo.SelectedIndex = 0;
                 }
             }

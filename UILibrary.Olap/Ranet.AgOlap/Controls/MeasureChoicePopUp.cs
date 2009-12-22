@@ -77,6 +77,7 @@ namespace Ranet.AgOlap.Controls
                 m_ChoiceControl.URL = URL;
                 m_ChoiceControl.Connection = m_AConnection;
                 m_ChoiceControl.CubeName = m_ACubeName;
+                m_ChoiceControl.MeasureGroupName = m_AMeasureGroupName;
 
                 m_ChoiceControl.Initialize();
                 NeedReload = false;
@@ -154,6 +155,23 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_ACubeName = value;
+                NeedReload = true;
+            }
+        }
+
+        private string m_AMeasureGroupName;
+        /// <summary>
+        /// Имя OLAP куба
+        /// </summary>
+        public String AMeasureGroupName
+        {
+            get
+            {
+                return m_AMeasureGroupName;
+            }
+            set
+            {
+                m_AMeasureGroupName = value;
                 NeedReload = true;
             }
         }
