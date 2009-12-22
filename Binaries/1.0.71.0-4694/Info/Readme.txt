@@ -1,3 +1,7 @@
+Attention:
+	It is unstabilized release.
+	We strongly do not recommend to install these libraries to GAC!
+
 Welcome to Ranet.UILibrary.OLAP project
 
 It is Open Source project which is hosted at
