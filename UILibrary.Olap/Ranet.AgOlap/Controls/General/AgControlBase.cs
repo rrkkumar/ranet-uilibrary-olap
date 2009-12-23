@@ -34,27 +34,78 @@ namespace Ranet.AgOlap.Controls.General
 {
     public interface ILogService
     {
-        void LogException(String caption, Exception ex);
-        void LogMessage(String caption, String message);
+        void LogError(object sender, String message);
+        void LogWarning(object sender, String message);
+        void LogInformation(object sender, String message);
     }
 
     public class DefaultLogManager : ILogService
     {
         #region ILogService Members
-        public void LogException(String caption, Exception ex)
+        public void LogError(object sender, String message)
         {
-            //throw ex;
-            if (ex != null)
-            {
-                MessageBox.Show(ex.Message, caption, MessageBoxButton.OK);
-            }
-        }
+            String caption = GetControlCaption(sender);
+            if (String.IsNullOrEmpty(caption))
+                caption = Localization.Error;
 
-        public void LogMessage(String caption, string message)
-        {
             MessageBox.Show(message, caption, MessageBoxButton.OK);
         }
+
+        public void LogWarning(object sender, string message)
+        {
+            String caption = GetControlCaption(sender);
+            if (String.IsNullOrEmpty(caption))
+                caption = Localization.Warning;
+
+            MessageBox.Show(message, caption, MessageBoxButton.OK);
+        }
+
+        public void LogInformation(object sender, string message)
+        {
+            String caption = GetControlCaption(sender);
+            System.Diagnostics.Debug.WriteLine(DateTime.Now + " " + caption + ": " + message);
+        }
         #endregion
+
+        public static String GetControlCaption(object sender)
+        {
+            String caption = String.Empty;
+            if (sender is CubeChoiceCtrl)
+                caption = Localization.CubeChoiceControl_Name;
+            if (sender is DateChoiceCtrl)
+                caption = Localization.DateChoiceControl_Name;
+            if (sender is DatePickerCtrl)
+                caption = Localization.DateChoiceControl_Name;
+            if (sender is ObjectSaveAsDialog)
+                caption = Localization.SaveAsDialog_Name;
+            if (sender is ObjectLoadDialog)
+                caption = Localization.LoadingDialog_Name;
+            if (sender is HierarchyChoiceCtrl)
+                caption = Localization.HierarchyChoiceControl_Name;
+            if (sender is DimensionChoiceCtrl)
+                caption = Localization.DimensionChoiceControl_Name;
+            if (sender is LevelChoiceCtrl)
+                caption = Localization.LevelChoiceControl_Name;
+            if (sender is MeasureChoiceCtrl)
+                caption = Localization.MeasureChoiceControl_Name;
+            if (sender is KpiChoiceCtrl)
+                caption = Localization.KpiChoiceControl_Name;
+            if (sender is MemberChoiceControl)
+                caption = Localization.MemberChoiceControl_Name;
+            if (sender is OlapBrowserControl)
+                caption = Localization.OlapBrowserControl_Name;
+            if (sender is PivotMdxDesignerControl)
+                caption = Localization.MdxDesignerControl_Name;
+            if (sender is ServerExplorerCtrl)
+                caption = Localization.ServerExplorerControl_Name;
+            if (sender is TransactionStateButton)
+                caption = Localization.TransactionStateButton_Name;
+            if (sender is UpdateablePivotGridControl)
+                caption = Localization.PivotGridControl_Name;
+            if (sender is ValueCopyDesignerControl)
+                caption = Localization.ValueCopyDesignerControl_Name;
+            return caption;
+        }
     }
 
 

@@ -20,14 +20,18 @@
 
 using System;
 using System.Net;
+using System.Collections.Generic;
 
 
 namespace Ranet.Olap.Core.Providers.ClientServer
 {
-    public enum QueryExecutingType 
+    public enum QueryTypes
     {
-        Query,
-        NonQuery
+        Select,
+        Update,
+        CommitTransaction,
+        RollbackTransaction,
+        DrillThrough
     }
     
     public class MdxQueryArgs : OlapActionBase
@@ -37,10 +41,28 @@ namespace Ranet.Olap.Core.Providers.ClientServer
             ActionType = OlapActionTypes.ExecuteQuery;
         }
 
-        public String PivotID = String.Empty;
+        /// <summary>
+        /// Соединение
+        /// </summary>
         public String Connection = String.Empty;
-        public String Query = String.Empty;
+        /// <summary>
+        /// ID сессии для MS AS
+        /// </summary>
+        public String SessionId = String.Empty;
 
-        public QueryExecutingType Type = QueryExecutingType.Query; 
+        List<String> m_Queries;
+        public List<String> Queries
+        {
+            get
+            {
+                if (m_Queries == null) { m_Queries = new List<string>(); }
+                return m_Queries;
+            }
+            set {
+                m_Queries = value;
+            }
+        }
+
+        public QueryTypes Type = QueryTypes.Select; 
     }
 }

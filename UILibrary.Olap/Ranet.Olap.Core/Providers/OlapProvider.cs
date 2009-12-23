@@ -58,8 +58,14 @@ namespace Ranet.Olap.Core.Providers
 
         protected virtual CellSetData GetDescription(String query)
         {
-            System.Diagnostics.Trace.WriteLine("Ranet.Olap.Core.Providers.OlapProvider execute MDX query: " + query);
+            System.Diagnostics.Trace.TraceInformation("Ranet.Olap.Core.Providers.OlapProvider execute MDX query: {0} \r\n", query);
             return QueryExecuter.ExecuteQuery(query);
+        }
+
+        protected virtual String GetCellSetDescription(String query)
+        {
+            System.Diagnostics.Trace.TraceInformation("Ranet.Olap.Core.Providers.OlapProvider execute MDX query: {0} \r\n", query);
+            return QueryExecuter.GetCellSetDescription(query);
         }
 
         private String GetSubset(String set, long begin, long count)
@@ -371,7 +377,7 @@ namespace Ranet.Olap.Core.Providers
                     {
                         if (posColumn.Members.Count > 0)
                         {
-                            MemberDataWrapper wrapper = new MemberDataWrapper(posColumn.Members[0]);
+                            MemberDataWrapper wrapper = new MemberDataWrapper(cs_descr.Axes[0].Members[posColumn.Members[0].Id]);
 
                             if (cs_descr.Axes.Count > 1)
                             {
@@ -381,7 +387,7 @@ namespace Ranet.Olap.Core.Providers
                                     if (posRow.Members.Count > 0)
                                     {
                                         PropertyData prop = new PropertyData();
-                                        prop.Name = posRow.Members[0].Caption;
+                                        prop.Name = cs_descr.Axes[1].Members[posRow.Members[0].Id].Caption;
 
                                         // Название свойства имеет специальный вид -IsDataMember-
                                         // В качестве названия будем использовать подстроку между символами "-"
@@ -539,7 +545,7 @@ namespace Ranet.Olap.Core.Providers
                     bool isParentChild = false;
                     try
                     {
-                        OlapMetadataProvider provider = new OlapMetadataProvider(QueryExecuter.Connection.ConnectionString);
+                        OlapMetadataProvider provider = new OlapMetadataProvider(QueryExecuter.Connection);
                         HierarchyInfo hierarchy = provider.GetHierarchy(cubeName, String.Empty, hierarchyUniqueName);
                         if(hierarchy != null && hierarchy.HierarchyOrigin == HierarchyInfoOrigin.ParentChildHierarchy)
                         {

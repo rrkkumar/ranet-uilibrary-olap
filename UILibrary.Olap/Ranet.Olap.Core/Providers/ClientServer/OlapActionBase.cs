@@ -6,14 +6,9 @@ namespace Ranet.Olap.Core.Providers.ClientServer
     public enum OlapActionTypes
     { 
         Unknown,
+        ExportToExcel, 
         GetMetadata,
-        GetMembers,
-        GetPivotData,
-        MemberAction,
         StorageAction,
-        ServiceCommand,
-        GetToolBarInfo,
-        UpdateCube,
         ExecuteQuery
     }
 

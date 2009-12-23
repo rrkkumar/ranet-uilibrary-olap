@@ -66,7 +66,7 @@ namespace Ranet.AgOlap.Controls
                     }
                     else
                     {
-                        throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_DimensionByUniqueName_InCube_NotFound, DimensionUniqueName, CubeName));
+                        LogManager.LogError(this, String.Format(Localization.MetadataResponseException_DimensionByUniqueName_InCube_NotFound, DimensionUniqueName, CubeName));
                     }
                 }
 

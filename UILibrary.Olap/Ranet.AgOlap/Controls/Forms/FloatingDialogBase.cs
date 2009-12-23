@@ -131,22 +131,10 @@ namespace Ranet.AgOlap.Controls.Forms
             }
         }
 
-        // Override this method to add your content to the dialog
         protected abstract FrameworkElement GetContent();
 
-        // Override this method if you want to do something (e.g. call Close) when you click
-        // outside of the content
         protected virtual void OnClickOutside() { }
 
-
-        // A Grid is the child of the Popup. If it is modal, it will contain a Canvas, which
-        // will be sized to fill the plugin and prevent mouse interaction with the elements
-        // outside of the popup. (Keyboard interaction is still possible, but hopefully when
-        // Silverlight 2 RTMs, you can disable the root to take care of that.) The Grid isn't
-        // strictly needed if there is always a Canvas, but it is handy for centering the content.
-        //
-        // The other child of the Grid is the content of the popup. This is obtained from the
-        // GetContent method.
         bool IsEnsured = false;
         private void EnsurePopup(FloatingDialogStyle style, Point position)
         {

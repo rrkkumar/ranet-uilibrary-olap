@@ -38,6 +38,7 @@ using System.Text;
 using System.ComponentModel;
 using Ranet.AgOlap.Controls.General.ItemControls;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Controls.Data;
 
 namespace Ranet.AgOlap.Controls.ValueDelivery
 {
@@ -310,7 +311,7 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
             membersToDelivery.Text = Localization.ValueDeliveryControl_MembersToDelivery;
             Row2_LayoutRoot.Children.Add(membersToDelivery);
 
-            m_MembersGrid = new DataGrid();
+            m_MembersGrid = new RanetDataGrid();
             m_MembersGrid.Margin = new Thickness(0, 5, 0, 0);
             m_MembersGrid.AlternatingRowBackground = new SolidColorBrush(Colors.White);
             m_MembersGrid.RowBackground = new SolidColorBrush(Colors.White);

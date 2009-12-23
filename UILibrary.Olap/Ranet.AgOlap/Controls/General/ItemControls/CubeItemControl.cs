@@ -36,15 +36,19 @@ namespace Ranet.AgOlap.Controls.General.ItemControls
 {
     public class CubeItemControl : ItemControlBase
     {
-        public CubeItemControl(CubeDefInfo info)
+        public CubeItemControl(CubeDefInfo info, bool useIcon)
+            : base(useIcon)
         {
             if (info == null)
                 throw new ArgumentNullException("info");
             
             m_Info = info;
             Text = info.Caption;
-            
-            Icon = UriResources.Images.Cube16;
+
+            if (useIcon)
+            {
+                Icon = UriResources.Images.Cube16;
+            }
         }
 
         CubeDefInfo m_Info = null;
@@ -54,7 +58,5 @@ namespace Ranet.AgOlap.Controls.General.ItemControls
                 return m_Info;
             }
         }
-
- 
     }
 }

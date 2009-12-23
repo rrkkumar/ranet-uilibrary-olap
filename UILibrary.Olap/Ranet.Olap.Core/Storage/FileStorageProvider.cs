@@ -32,91 +32,173 @@ namespace Ranet.Olap.Core.Storage
     {
         #region IStorageProvider Members
 
+        public List<ObjectStorageFileDescription> Clear(IPrincipal currentPrincipal, String searchPattern)
+        {
+            try
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider clear started.",
+                    DateTime.Now.ToString());
+
+                string folder = string.Empty;
+                if (GetFolderForPrincipal(currentPrincipal, ref folder))
+                {
+                    var files = Directory.GetFiles(folder, searchPattern, SearchOption.TopDirectoryOnly);
+                    if (files != null)
+                    {
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            File.Delete(files[i]);
+                        }
+                    }
+                }
+                return GetList(currentPrincipal, searchPattern);
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Saving File completed. \r\n", DateTime.Now.ToString());
+            }
+        }
+
         public void Save(IPrincipal currentPrincipal, string name, string content)
         {
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
-
-            string folder = string.Empty;
-            if (GetFolderForPrincipal(currentPrincipal, ref folder))
+            try
             {
-                string path = Path.Combine(folder, name);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Saving File: '{1}' started.",
+                    DateTime.Now.ToString(), name);
 
-                using (var sw = new StreamWriter(File.Open(path, FileMode.Create)))
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentNullException("name");
+
+                string folder = string.Empty;
+                if (GetFolderForPrincipal(currentPrincipal, ref folder))
                 {
-                    sw.Write(content);
-                    sw.Close();
+                    string path = Path.Combine(folder, name);
+
+                    using (var sw = new StreamWriter(File.Open(path, FileMode.Create)))
+                    {
+                        sw.Write(content);
+                        sw.Close();
+                    }
                 }
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Saving File completed. \r\n", DateTime.Now.ToString());
+            }
+        }
+
+        public void Delete(IPrincipal currentPrincipal, string name)
+        {
+            try
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Loading File: '{1}' started.",
+                    DateTime.Now.ToString(), name);
+
+                String result = String.Empty;
+
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentNullException("name");
+
+                string folder = string.Empty;
+                if (GetFolderForPrincipal(currentPrincipal, ref folder))
+                {
+                    string path = Path.Combine(folder, name);
+
+                    if (File.Exists(path))
+                    {
+                        File.Delete(path);
+                    }
+                }
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Loading File completed. \r\n", DateTime.Now.ToString());
             }
         }
 
         public string Load(IPrincipal currentPrincipal, string name)
         {
-            String result = String.Empty;
-
-            if (string.IsNullOrEmpty(name))
-                throw new ArgumentNullException("name");
-
-            string folder = string.Empty;
-            if (GetFolderForPrincipal(currentPrincipal, ref folder))
+            try
             {
-                string path = Path.Combine(folder, name);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Loading File: '{1}' started.",
+                    DateTime.Now.ToString(), name);
 
-                if (File.Exists(path))
+                String result = String.Empty;
+
+                if (string.IsNullOrEmpty(name))
+                    throw new ArgumentNullException("name");
+
+                string folder = string.Empty;
+                if (GetFolderForPrincipal(currentPrincipal, ref folder))
                 {
-                    using (var sr = new StreamReader(File.OpenRead(path)))
+                    string path = Path.Combine(folder, name);
+
+                    if (File.Exists(path))
                     {
-                        result = sr.ReadToEnd();
-                        sr.Close();
+                        using (var sr = new StreamReader(File.OpenRead(path)))
+                        {
+                            result = sr.ReadToEnd();
+                            sr.Close();
+                        }
                     }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Loading File completed. \r\n", DateTime.Now.ToString());
+            }
         }
 
         #endregion
 
         public List<ObjectStorageFileDescription> GetList(IPrincipal currentPrincipal, string mask)
         {
-            List<ObjectStorageFileDescription> result = new List<ObjectStorageFileDescription>();
-
-            if (string.IsNullOrEmpty(mask))
-                throw new ArgumentNullException("mask");
-
-            string folder = string.Empty;
-            if (GetFolderForPrincipal(currentPrincipal, ref folder))
+            try
             {
-                String[] files = Directory.GetFiles(folder, mask, SearchOption.TopDirectoryOnly);
-                if (files != null)
-                {
-                    for (int i = 0; i < files.Length; i++)
-                    {
-                        String file = files[i];
-                        if (!file.Contains(".content."))
-                        {
-                            string path = Path.Combine(folder, file);
-                            if (File.Exists(path))
-                            {
-                                using (var sr = new StreamReader(File.OpenRead(path)))
-                                {
-                                    string str = sr.ReadToEnd();
-                                    sr.Close();
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Getting List by Mask: '{1}' started.",
+                    DateTime.Now.ToString(), mask);
 
-                                    if (!String.IsNullOrEmpty(str))
+                List<ObjectStorageFileDescription> result = new List<ObjectStorageFileDescription>();
+
+                if (string.IsNullOrEmpty(mask))
+                    throw new ArgumentNullException("mask");
+
+                string folder = string.Empty;
+                if (GetFolderForPrincipal(currentPrincipal, ref folder))
+                {
+                    String[] files = Directory.GetFiles(folder, mask, SearchOption.TopDirectoryOnly);
+                    if (files != null)
+                    {
+                        for (int i = 0; i < files.Length; i++)
+                        {
+                            String file = files[i];
+                            if (!file.Contains(".content."))
+                            {
+                                string path = Path.Combine(folder, file);
+                                if (File.Exists(path))
+                                {
+                                    using (var sr = new StreamReader(File.OpenRead(path)))
                                     {
-                                        // Пытаемся преобразовать в описатель
-                                        ObjectStorageFileDescription descr = XmlSerializationUtility.XmlStr2Obj<ObjectStorageFileDescription>(str);
-                                        if (descr != null)
+                                        string str = sr.ReadToEnd();
+                                        sr.Close();
+
+                                        if (!String.IsNullOrEmpty(str))
                                         {
-                                            // Если файла с содержимым не существует, то имя файла скидываем
-                                            if(!String.IsNullOrEmpty(descr.ContentFileName))
+                                            // Пытаемся преобразовать в описатель
+                                            ObjectStorageFileDescription descr = XmlSerializationUtility.XmlStr2Obj<ObjectStorageFileDescription>(str);
+                                            if (descr != null)
                                             {
-                                                string content_path = Path.Combine(folder, descr.ContentFileName);
-                                                if(!File.Exists(content_path))
-                                                    descr.ContentFileName = String.Empty;
+                                                // Если файла с содержимым не существует, то имя файла скидываем
+                                                if (!String.IsNullOrEmpty(descr.ContentFileName))
+                                                {
+                                                    string content_path = Path.Combine(folder, descr.ContentFileName);
+                                                    if (!File.Exists(content_path))
+                                                        descr.ContentFileName = String.Empty;
+                                                }
+                                                result.Add(descr);
                                             }
-                                            result.Add(descr);
                                         }
                                     }
                                 }
@@ -124,9 +206,13 @@ namespace Ranet.Olap.Core.Storage
                         }
                     }
                 }
-            }
 
-            return result;
+                return result;
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Storage.FileStorageProvider Getting List completed. \r\n", DateTime.Now.ToString());
+            }
         }
 
         private bool GetFolderForPrincipal(IPrincipal principal, ref string folder)

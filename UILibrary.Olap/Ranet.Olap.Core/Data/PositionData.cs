@@ -33,83 +33,20 @@ namespace Ranet.Olap.Core.Data
         
         }
 
-        List<MemberData> m_Members = null;
+        List<PositionMemberData> m_Members = null;
         /// <summary>
         /// Элементы для данной позиции
         /// </summary>
-        public List<MemberData> Members
+        public List<PositionMemberData> Members
         {
             get
             {
                 if (m_Members == null)
-                    m_Members = new List<MemberData>();
+                    m_Members = new List<PositionMemberData>();
                 return m_Members;
             }
             set { m_Members = value; }
         }
 
-        internal void Serialize(XmlWriter writer)
-        {
-            if (writer == null)
-                return;
-
-            writer.WriteStartElement("PositionData");
-            // Элементы - начало
-            writer.WriteStartElement("Members");
-            foreach (MemberData member in Members)
-            {
-                member.Serialize(writer);
-            }
-            // Элементы - конец
-            writer.WriteEndElement();
-
-            writer.WriteEndElement();
-        }
-
-        internal static PositionData Deserialize(XmlReader reader)
-        {
-            if (reader != null)
-            {
-                try
-                {
-                    PositionData target = null;
-                    if (reader.NodeType == XmlNodeType.Element &&
-                        reader.Name == "PositionData")
-                    {
-                        target = new PositionData();
-
-                        reader.ReadStartElement("PositionData");
-
-                        // Элементы
-                        reader.ReadStartElement("Members");
-                        MemberData member = null;
-                        do
-                        {
-                            member = MemberData.Deserialize(reader);
-                            if (member != null)
-                                target.Members.Add(member);
-                        } while (member != null);
-                        if (reader.NodeType == XmlNodeType.EndElement &&
-                            reader.Name == "Members")
-                        {
-                            reader.ReadEndElement();
-                        }
-
-                        if (reader.NodeType == XmlNodeType.EndElement &&
-                            reader.Name == "PositionData")
-                        {
-                            reader.ReadEndElement();
-                        }
-                    }
-                    return target;
-                }
-                catch (XmlException ex)
-                {
-                    throw ex;
-                    //return null;
-                }
-            }
-            return null;
-        }
     }
 }

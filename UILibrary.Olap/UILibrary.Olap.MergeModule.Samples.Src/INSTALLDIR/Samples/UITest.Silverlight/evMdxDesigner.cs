@@ -8,7 +8,7 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)
 		{
-			pivotMdxDesignerControl.URL = WSDataUrl;
+			//  pivotMdxDesignerControl.URL = WSDataUrl;
 			pivotMdxDesignerControl.Connection = ConnectionStringId;
 			pivotMdxDesignerControl.CubeName = mdxDesigner_cubeName.Text;
 			pivotMdxDesignerControl.SubCube = mdxDesigner_subCube.Text;

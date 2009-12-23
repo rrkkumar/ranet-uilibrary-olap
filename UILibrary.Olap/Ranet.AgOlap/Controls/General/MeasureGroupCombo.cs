@@ -88,9 +88,12 @@ namespace Ranet.AgOlap.Controls.General
             comboBox.Clear();
 
             comboBox.Combo.Items.Add(new MeasureGroupItemControl(new MeasureGroupInfo() { Name = MeasureGroupCombo.ALL_MEASURES_GROUPS, Caption = Localization.MeasureGroup_All }));
-            foreach (MeasureGroupInfo info in list)
+            if (list != null)
             {
-                comboBox.Combo.Items.Add(new MeasureGroupItemControl(info));
+                foreach (MeasureGroupInfo info in list)
+                {
+                    comboBox.Combo.Items.Add(new MeasureGroupItemControl(info));
+                }
             }
             
             comboBox.Combo.SelectedIndex = 0;

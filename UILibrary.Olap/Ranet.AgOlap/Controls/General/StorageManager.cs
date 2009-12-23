@@ -30,77 +30,86 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.Olap.Core;
+using Ranet.ZipLib;
 
 namespace Ranet.AgOlap.Controls.General
 {
-    public class StorageManager : IStorageManager
-    {
-        String m_URL = String.Empty;
-        public String URL
-        {
-            get { return m_URL; }
-            set { m_URL = value; }
-        }
+	public class StorageManager : IStorageManager
+	{
+		String m_URL = String.Empty;
+		public String URL
+		{
+			get { return m_URL; }
+			set { m_URL = value; }
+		}
 
-        public StorageManager(String url)
-        {
-            URL = url;
-        }
+		public StorageManager(String url)
+		{
+			URL = url;
+		}
 
-        void ModifyEndPoint(OlapWebService.OlapWebServiceSoapClient service)
-        {
-            if (service != null)
+		//void ModifyEndPoint(OlapWebService.OlapWebServiceSoapClient service)
+		//{
+		//  if (service != null)
+		//  {
+		//    if (!String.IsNullOrEmpty(URL))
+		//    {
+		//      service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(URL));
+		//    }
+		//    else
+		//    {
+		//      service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(Application.Current.Host.Source, "/OlapWebService.asmx"));
+		//    }
+		//  }
+		//}
+
+		#region IStorageManager Members
+
+		void service_PerformStorageActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e)
+		{
+            InvokeResultDescriptor result = null;
+            if (e.Error == null)
             {
-                if (!String.IsNullOrEmpty(URL))
-                {
-                    service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(URL));
-                }
-                else
-                {
-                    service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(Application.Current.Host.Source, "/OlapWebService.asmx"));
-                }
+                result = InvokeResultDescriptor.Deserialize(e.Result);
             }
-        }
+			if (result != null)
+			{
+				if (result.IsArchive)
+				{
+					result.Content = ZipCompressor.DecompressFromBase64String(result.Content);
+					result.IsArchive = false;
+				}
 
-        #region IStorageManager Members
+				Raise_InvokeCompleted(new DataLoaderEventArgs(result, e.Error, e.UserState));
+			}
+		}
 
-        void service_PerformStorageActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e)
-        {
-            InvokeResultDescriptor result = XmlSerializationUtility.XmlStr2Obj<InvokeResultDescriptor>(e.Result);
-            if (result != null)
-            {
-                //if (result.IsArchive)
-                //{
-                //    result.Content = ZipCompressor.DecompressFromBase64String(result.Content);
-                //    result.IsArchive = false;
-                //}
+		void Raise_InvokeCompleted(DataLoaderEventArgs args)
+		{
+			EventHandler<DataLoaderEventArgs> handler = this.InvokeCompleted;
+			if (handler != null)
+			{
+				handler(this, args);
+			}
+		}
 
-                Raise_InvokeCompleted(new DataLoaderEventArgs(result, e.Error, e.UserState));
-            }
-        }
-
-        void Raise_InvokeCompleted(DataLoaderEventArgs args)
-        {
-            EventHandler<DataLoaderEventArgs> handler = this.InvokeCompleted;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
-
-        public void Invoke(object schema, object state)
+		public void Invoke(object schema, object state)
         {
             if (schema == null)
                 throw new ArgumentNullException("schema");
 
-            OlapWebService.OlapWebServiceSoapClient service = new Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient();
-            ModifyEndPoint(service);
+            OlapWebService.OlapWebServiceSoapClient service =
+             Services.ServiceManager.CreateService
+						 < Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
+						 , Ranet.AgOlap.OlapWebService.OlapWebServiceSoap
+						 >(URL);
+            // ModifyEndPoint(service);
             service.PerformOlapServiceActionCompleted += service_PerformStorageActionCompleted;
-            service.PerformOlapServiceActionAsync("Storage" ,schema.ToString(), state);
+            service.PerformOlapServiceActionAsync("StorageAction" ,schema.ToString(), state);
         }
 
-        public event EventHandler<DataLoaderEventArgs> InvokeCompleted;
+		public event EventHandler<DataLoaderEventArgs> InvokeCompleted;
 
-        #endregion
-    }
+		#endregion
+	}
 }

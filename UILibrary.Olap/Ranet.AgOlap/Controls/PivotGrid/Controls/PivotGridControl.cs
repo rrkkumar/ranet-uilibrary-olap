@@ -42,6 +42,7 @@ using Ranet.AgOlap.Features;
 using System.Windows.Browser;
 using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.Olap.Core;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
@@ -138,7 +139,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             LayoutRoot = new Grid();
             LayoutRoot.RowDefinitions.Add(new RowDefinition());
-            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto});
+            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
 
@@ -248,6 +249,16 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
+        bool m_DrillThroughCells = true;
+        /// <summary>
+        /// Использовать DrillThrough для ячеек
+        /// </summary>
+        public bool DrillThroughCells
+        {
+            get { return m_DrillThroughCells; }
+            set { m_DrillThroughCells = value; }
+        }
+
         TooltipController m_TooltipController = null;
         ScrollBarMouseWheelSupport m_VericalMouseWhellSupport;
 
@@ -282,22 +293,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             RefreshSelectedCells();
         }
 
-        public void ChangeCell(CellInfo cell, String value)
+        public void ChangeCell(CellInfo cell, UpdateEntry entry)
         {
             if (cell != null)
             {
                 if (m_CellControls_Dict.ContainsKey(cell))
                 {
                     CellControl cell_control = m_CellControls_Dict[cell];
-                    if (cell_control != null && cell_control.Cell != null)
+                    if (cell_control != null)
                     {
-                        cell_control.ChangeText(value);
+                        cell_control.NotRecalculatedChange = entry;
                     }
-                }
-                else
-                {
-                    cell.IsModified = true;
-                    cell.ModifiedValue = value;
                 }
             }
         }
@@ -434,7 +440,31 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             get { return IsUpdateable & !String.IsNullOrEmpty(UpdateScript); }
         }
 
-        public String UpdateScript { get; set; }
+        /// <summary>
+        /// 
+        /// </summary>
+        private String m_Connection = String.Empty;
+        /// <summary>
+        /// Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
+        /// </summary>
+        public String Connection
+        {
+            get
+            {
+                return m_Connection;
+            }
+            set
+            {
+                m_Connection = value;
+            }
+        }
+
+        String m_UpdateScript = String.Empty;
+        public String UpdateScript 
+        {
+            get { return m_UpdateScript; }
+            set { m_UpdateScript = value; } 
+        }
 
         bool m_Axis0_IsInteractive = true;
         /// <summary>
@@ -572,16 +602,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
 
         public event CellValueChangedEventHandler CellValueChanged;
-        private void Raise_CellValueChanged(CellInfo cell, String newValue)
+        private void Raise_CellValueChanged(List<UpdateEntry> changes)
         {
-            if (cell == null)
-                return;
-
             CellValueChangedEventHandler handler = this.CellValueChanged;
             if (handler != null)
             {
-                //IDictionary<String, MemberInfo> tuple = cell.GetTuple();
-                handler(this, new CellValueChangedEventArgs(cell, newValue/*, tuple.Values.ToList()), cell.CellDescr.Value.Value, cell.CellDescr.Value.DisplayValue*/));
+                handler(this, new CellValueChangedEventArgs(changes));
             }
         }
 
@@ -762,9 +788,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 if (cellEditorText == null)
                 {
-                    if (FocusedCell.Cell.IsModified)
+                    if (FocusedCell.NotRecalculatedChange != null)
                     {
-                         CellEditor.Value = FocusedCell.Cell.ModifiedValue;
+                         CellEditor.Value = FocusedCell.NotRecalculatedChange.NewValue;
                     }
                     else
                     {
@@ -827,13 +853,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     // Проверяем чтобы значение изменилось
                     if (FocusedCell.Cell.ValueToString != value)
                     {
-                        FocusedCell.ChangeText(value);
+                        var entry = new UpdateEntry(FocusedCell.Cell, value);
+                        var changes = new List<UpdateEntry>();
+                        changes.Add(entry);
+
+                        FocusedCell.NotRecalculatedChange = entry;
+
+                        // В качестве разделителя для числа обязательно должна использоватьеся точка (т.к. эта строка будет помещена в МDX)
+                        value = value.Replace(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator, ".");
+
+                        Raise_CellValueChanged(changes);
                     }
-
-                    // В качестве разделителя для числа обязательно должна использоватьеся точка (т.к. эта строка будет помещена в МDX)
-                    value = value.Replace(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator, ".");
-
-                    Raise_CellValueChanged(FocusedCell.Cell, value);
                 }
             }
 
@@ -866,6 +896,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             Refresh,
             RefreshByColumns,
             RefreshByRows
+        }
+
+        public void Refresh()
+        {
+            Refresh(RefreshType.BuildEndRefresh);
         }
 
         void Refresh(RefreshType type)
@@ -1466,6 +1501,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_HorizontalScroll.Visibility = Visibility.Collapsed;
                 }
             }
+            else 
+            {
+                m_HorizontalScroll.Visibility = Visibility.Collapsed;
+            }
             #endregion Настройка области колонок
 
             DateTime stop = DateTime.Now;
@@ -1498,7 +1537,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 double max_height = GetMaxHeight();
 
                 int layout_row_index = RowsArea_BeginRowIndex;
-                for (int i = RowsArea_FirstVisible_Coordinate.Row, indx = 0; i < layout.RowsLayout.Rows_Size; i++, indx++)
+                int rowsCount = layout.RowsLayout.Rows_Size;
+                // если в результате только одна ось, ячейки есть. То они должны отображаться без области строк
+                if (rowsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
+                    layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
+                {
+                    rowsCount = 1;
+                }
+
+                for (int i = RowsArea_FirstVisible_Coordinate.Row, indx = 0; i < rowsCount; i++, indx++)
                 {
                     // Пытаемся ПОЛУЧИТЬ данную строку в гриде
                     RowDefinition current_row = null;
@@ -1509,7 +1556,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     else
                     {
                         // ДОБАВЛЯЕМ строку
-                        current_row = new RowDefinition() { MinHeight = Math.Round(MIN_HEIGHT  * Scale)};
+                        current_row = new RowDefinition() { MinHeight = Math.Round(MIN_HEIGHT * Scale) };
                         ItemsLayoutRoot.RowDefinitions.Add(current_row);
                     }
                     m_RowsArea_RowsCount++;
@@ -1571,7 +1618,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_VerticalScroll.Visibility = Visibility.Collapsed;
                 }
             }
-            
+            else
+            {
+                m_VerticalScroll.Visibility = Visibility.Collapsed;
+            }
             #endregion Настройка области строк
 
             DateTime stop = DateTime.Now;
@@ -1911,6 +1961,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
+        /// <summary>
+        /// Кэш измененных ячеек
+        /// </summary>
+        public readonly CellChangesCache LocalChanges = new CellChangesCache();
+
         public void InitializeCellsArea(PivotLayoutProvider layout)
         {
             CellInfo old_FocusedCellView = FocusedCellView;
@@ -1926,6 +1981,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             m_CellControls_Dict.Clear();
 
+            CellChangesCache recalculatedCache = OlapTransactionManager.GetPendingChanges(Connection);
             int columnIndex = CellsArea_FirstVisible_Coordinate.Column;
             int layout_column_indx = 0;
             int layout_row_indx = 0;
@@ -1933,7 +1989,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 int rowIndex = CellsArea_FirstVisible_Coordinate.Row;
                 layout_row_indx = 0;
-                foreach (MemberControl rowCtrl in RowsArea_LovestMemberControls)
+                int rowsCount = RowsArea_LovestMemberControls.Count;
+
+                bool hasRows = true;
+                // если в результате только одна ось, ячейки есть. То они должны отображаться без области строк
+                if (rowsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
+                    layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
+                {
+                    rowsCount = 1;
+                    rowIndex = -1;
+                    hasRows = false;
+                }
+
+                for (int row = 0; row < rowsCount; row++)
                 {
                     CellInfo cell_info = layout.PivotProvider.Provider.GetCellInfo(columnIndex, rowIndex);
 
@@ -1944,6 +2012,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         if (cell_Control != null)
                         {
                             m_CellControls_Dict.Add(cell_info, cell_Control);
+                            // Left border
+                            cell_Control.ShowLeftBorder = !hasRows && layout_column_indx == 0;
+
                             cell_Control.Cell = cell_info;
                             if (cell_Control.IsFocused)
                             {
@@ -1966,6 +2037,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     new_FocusedCell.IsFocused = true;
                                 }
                             }
+
+                            // Cell is changed and not Recalculated
+                            cell_Control.NotRecalculatedChange = LocalChanges.FindChange(cell_info);
+                            // Cell is changed and already Recalculated
+                            cell_Control.RecalculatedChange = recalculatedCache.FindChange(cell_info);
                         }
                     }
 
@@ -2102,7 +2178,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 m_CopyValueMenuItem.IsEnabled = false;
                         }
 
-                        m_CopySelectedCellsMenuItem.IsEnabled = (Selection != null && Selection.Count > 0);
+                        m_DrillThroughMenuItem.IsEnabled = !(cell_Control.Cell != null && cell_Control.Cell.IsCalculated);
                         m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
                     }
 
@@ -2169,6 +2245,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         ContextMenuItem m_CopySelectedCellsMenuItem = null;
         ContextMenuItem m_PasteSelectedCellsMenuItem = null;
         ContextMenuSplitter m_CopyCellsSplitter = null;
+        ContextMenuItem m_DrillThroughMenuItem = null;
 
         private CustomContextMenu CreateContextMenu(AreaType areaType)
         {
@@ -2239,6 +2316,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
                 m_DeliveryValueSplitter = contextMenu.AddMenuSplitter();
 
+                m_DrillThroughMenuItem = new ContextMenuItem(Localization.ContextMenu_DrillThrough);
+                m_DrillThroughMenuItem.Tag = ControlActionType.DrillThrough;
+                //item.Icon = UriResources.Images.ActionNode16;
+                contextMenu.AddMenuItem(m_DrillThroughMenuItem);
+                m_DrillThroughMenuItem.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
                 m_CopySelectedCellsMenuItem = new ContextMenuItem(Localization.ContextMenu_Copy);
                 m_CopySelectedCellsMenuItem.Tag = ControlActionType.Copy;
                 m_CopySelectedCellsMenuItem.Icon = UriResources.Images.Copy16;
@@ -2262,9 +2345,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
                 else
                 {
-                    m_CopySelectedCellsMenuItem.IsEnabled = (Selection != null && Selection.Count > 0);
                     m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
                 }
+
+                if (!DrillThroughCells)
+                    m_DrillThroughMenuItem.Visibility = Visibility.Collapsed;
             }
 
             item = new ContextMenuItem(Localization.ContextMenu_ShowMDX);
@@ -2900,7 +2985,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 {
                                     if (Selection.Contains(cell_Control.Cell))
                                     {
-                                        cell_Control.ShowOriginalValue();
+                                        LocalChanges.RemoveChange(cell_Control.Cell);
+                                        cell_Control.UndoChanges();
                                     }
                                 }
                             }
@@ -2947,6 +3033,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         case Key.Up:
                         case Key.PageUp:
                             isNavigation = true;
+                            // Учитываем запрос с одной осью
+                            if (m_LayoutProvider.PivotProvider.RowsArea.RowsCount == 0)
+                            {
+                                layout_row_index = -1;
+                                break;
+                            }
                             if (e.Key == Key.PageUp)
                             {
                                 // Если индекст строки больше чем индекс первой полностью видимой, то скачем не на предыдущую страницу, а на первую видимую строку
@@ -2991,6 +3083,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         case Key.Enter:
                         case Key.PageDown:
                             isNavigation = true;
+                            // Учитываем запрос с одной осью
+                            if (m_LayoutProvider.PivotProvider.RowsArea.RowsCount == 0)
+                            {
+                                layout_row_index = -1;
+                                break;
+                            }
                             if (e.Key == Key.PageDown)
                             {
                                 // Если индекст строки меньше чем индекс последней полностью видимой, то скачем не на следующую страницу, а на последнюю видимую строку
@@ -3112,7 +3210,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     }
 
                     if (layout_column_index >= 0 &&
-                        layout_row_index >= 0)
+                        (layout_row_index >= 0 || (layout_row_index == -1 && m_LayoutProvider.PivotProvider.RowsArea.RowsCount == 0))) // Учитываем запросы с одной осью
                     {
                         if (isNavigation)
                         {
@@ -3447,10 +3545,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 int beginRowIndex = Math.Min(cell1.CellDescr.Axis1_Coord, cell2.CellDescr.Axis1_Coord);
                 int endRowIndex = Math.Max(cell1.CellDescr.Axis1_Coord, cell2.CellDescr.Axis1_Coord);
 
+                //beginRowIndex и endRowIndex могут быть равны -1 (когда только одна ось в запросе)
                 if (beginColumnIndex >= 0 &&
                     endColumnIndex >= 0 &&
-                    beginRowIndex >= 0 &&
-                    endRowIndex >= 0)
+                    ((beginRowIndex >= 0 && endRowIndex >= 0) || (beginRowIndex == -1 && endRowIndex >= -1)))
                 {
                     for (int columnIndex = beginColumnIndex; columnIndex <= endColumnIndex; columnIndex++)
                     {

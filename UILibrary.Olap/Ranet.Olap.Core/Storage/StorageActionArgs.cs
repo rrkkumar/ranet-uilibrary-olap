@@ -77,7 +77,9 @@ namespace Ranet.Olap.Core.Storage
         Save,
         Load,
         GetList,
-        None
+        None,
+        Clear,
+        Delete
     }
 
 }

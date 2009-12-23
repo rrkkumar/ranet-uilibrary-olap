@@ -72,6 +72,26 @@ namespace Ranet.Olap.Core.Providers
         IDictionary<String, MemberInfo> tuple = null;
         String tupleToStr = String.Empty;
         String shortTupleToStr = String.Empty;
+        
+        Dictionary<String, String> m_Tuple;
+        /// <summary>
+        /// Тапл для ячейки. Ключ: имя иерархии; Значение: уникальное имя элемента
+        /// </summary>
+        public Dictionary<String, String> Tuple
+        {
+            get {
+                if (m_Tuple == null)
+                {
+                    m_Tuple = new Dictionary<String, String>();
+                    IDictionary<String, MemberInfo> dict = GetTuple();
+                    foreach (var item in dict)
+                    {
+                        m_Tuple.Add(item.Key, item.Value.UniqueName);
+                    }
+                }
+                return m_Tuple;
+            }
+        }
 
         /// <summary>
         /// Возвращает тапл для ячейки. Ключ: имя иерархии; Значение: элемент
@@ -98,6 +118,29 @@ namespace Ranet.Olap.Core.Providers
                 }
             }
             return tuple;
+        }
+
+        bool m_IsCalcaulcatedIsKnown = false;
+        bool m_IsCalcaulcated = false;
+        public bool IsCalculated
+        {
+            get
+            {
+                if (!m_IsCalcaulcatedIsKnown)
+                {
+                    var t = GetTuple();
+                    foreach (var m in t.Values)
+                    {
+                        if (m.IsCalculated)
+                        {
+                            m_IsCalcaulcated = true;
+                            break;
+                        }
+                    }
+                    m_IsCalcaulcatedIsKnown = true;
+                }
+                return m_IsCalcaulcated;
+            }
         }
 
         public bool CompareByTuple(IDictionary<String, MemberInfo> new_tuple)
@@ -196,32 +239,6 @@ namespace Ranet.Olap.Core.Providers
                 if (CellDescr != null && CellDescr.Value != null && CellDescr.Value.Value != null)
                     return CellDescr.Value.Value.ToString();
                 return String.Empty;
-            }
-        }
-
-        bool m_IsModified = false;
-        public bool IsModified
-        {
-            set
-            {
-                m_IsModified = value;
-            }
-            get
-            {
-                return m_IsModified;
-            }
-        }
-
-        String m_ModifiedValue = String.Empty;
-        public String ModifiedValue
-        {
-            get
-            {
-                return m_ModifiedValue;
-            }
-            set 
-            {
-                m_ModifiedValue = value;
             }
         }
     }

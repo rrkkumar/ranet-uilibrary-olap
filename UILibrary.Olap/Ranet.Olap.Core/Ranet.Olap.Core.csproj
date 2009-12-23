@@ -14,6 +14,10 @@
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,8 +46,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jayrock.Json, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dll\Jayrock.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AnalysisServices.AdomdClient, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\dll\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
+      <SpecificVersion>False</SpecificVersion>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -63,18 +72,26 @@
     <Compile Include="..\!ProductInfo\ProductInfo.cs">
       <Link>ProductInfo.cs</Link>
     </Compile>
+    <Compile Include="..\Ranet.AgOlap\Common.cs">
+      <Link>Common.cs</Link>
+    </Compile>
     <Compile Include="Cache2D.cs" />
     <Compile Include="ConnectionInfo.cs" />
+    <Compile Include="Data\AdomdPropsObj.cs" />
     <Compile Include="Data\AxisData.cs" />
     <Compile Include="Data\CellData.cs" />
     <Compile Include="Data\CellSetData.cs" />
     <Compile Include="Data\CellValueData.cs" />
     <Compile Include="Data\DataBase.cs" />
+    <Compile Include="Data\DataTableWrapper.cs" />
     <Compile Include="Data\IPropertiesData.cs" />
+    <Compile Include="Data\JPropObj.cs" />
+    <Compile Include="Data\JPropsObj.cs" />
     <Compile Include="Data\MemberData.cs" />
-    <Compile Include="Data\MemberDataWrapper.cs" />
     <Compile Include="Data\PositionData.cs" />
+    <Compile Include="Data\PositionMemberData.cs" />
     <Compile Include="ExportHelper.cs" />
+    <Compile Include="HeaderCollection.cs" />
     <Compile Include="InvokeResultDescriptor.cs" />
     <Compile Include="Localization.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -104,24 +121,19 @@
     <Compile Include="Providers\CellSetDataProvider.cs" />
     <Compile Include="Providers\CellSetDescriptionProvider.cs" />
     <Compile Include="Providers\CellValueInfo.cs" />
-    <Compile Include="Providers\ClientServer\DataSourceInfoArgs.cs" />
     <Compile Include="Providers\ClientServer\MdxQueryArgs.cs" />
-    <Compile Include="Providers\ClientServer\MemberActionType.cs" />
     <Compile Include="Providers\ClientServer\OlapActionBase.cs" />
-    <Compile Include="Providers\ClientServer\PerformMemberActionArgs.cs" />
-    <Compile Include="Providers\ClientServer\PivotGridToolBarInfo.cs" />
-    <Compile Include="Providers\ClientServer\PivotInitializeArgs.cs" />
-    <Compile Include="Providers\ClientServer\ServiceCommandArgs.cs" />
-    <Compile Include="Providers\ClientServer\ShortMemberInfo.cs" />
-    <Compile Include="Providers\ClientServer\UpdateCubeArgs.cs" />
+    <Compile Include="Providers\DataTableHelper.cs" />
     <Compile Include="Providers\FilterOperand.cs" />
     <Compile Include="Providers\FilterOperation.cs" />
     <Compile Include="Providers\FilterOperationBase.cs" />
+    <Compile Include="Providers\IMdxExecuter.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Providers\InfoBase.cs" />
     <Compile Include="Providers\InvisibleMemberInfo.cs" />
     <Compile Include="Providers\IPivotTableDataProvider.cs" />
     <Compile Include="Providers\IProperties.cs" />
-    <Compile Include="Providers\IQueryExecuter.cs" />
     <Compile Include="Providers\MemberActions\DrillActionContainer.cs" />
     <Compile Include="Providers\MemberActions\HistoryItem.cs" />
     <Compile Include="Providers\MemberActions\HistoryManager.cs" />
@@ -130,8 +142,6 @@
     <Compile Include="Providers\MembersAreaInfo.cs" />
     <Compile Include="Providers\OlapMetadataProvider.cs" />
     <Compile Include="Providers\OlapMetadataResponseException.cs" />
-    <Compile Include="Providers\OlapProvider.cs" />
-    <Compile Include="Providers\PivotDataManagerBase.cs" />
     <Compile Include="Providers\PivotDataProvider.cs" />
     <Compile Include="Providers\PivotMemberItem.cs" />
     <Compile Include="Storage\FileStorageProvider.cs" />

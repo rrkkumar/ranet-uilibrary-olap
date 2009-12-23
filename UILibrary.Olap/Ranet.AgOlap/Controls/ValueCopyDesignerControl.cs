@@ -178,13 +178,13 @@ namespace Ranet.AgOlap.Controls
         {
             if (e.Error != null)
             {
-                LogManager.LogException(Localization.PivotGridControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
-                LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 
@@ -237,9 +237,8 @@ namespace Ranet.AgOlap.Controls
                     String query = copyControl.BuildCopyScript();
                     if (!String.IsNullOrEmpty(query))
                     {
-                        MdxQueryArgs args = FastCommandHelper.CreateMdxQueryArgs(Connection, query);
-                        args.PivotID = this.GetHashCode().ToString();
-                        args.Type = QueryExecutingType.NonQuery;
+                        MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                        args.Type = QueryTypes.Update;
                         OlapDataLoader.LoadData(args, sender);
                     }
                     else
@@ -322,19 +321,35 @@ namespace Ranet.AgOlap.Controls
             {
                 if (e.Error != null)
                 {
-                    LogManager.LogException(Localization.ValueCopyDesignerControl_Name, e.Error);
+                    LogManager.LogError(this, e.Error.ToString());
                     return;
                 }
 
                 if (e.Result.ContentType == InvokeContentType.Error)
                 {
-                    LogManager.LogMessage(Localization.ValueCopyDesignerControl_Name, Localization.Error + "! " + e.Result.Content);
+                    LogManager.LogError(this, e.Result.Content);
                     return;
                 }
 
-                CubeDefInfo cs_descr = XmlSerializationUtility.XmlStr2Obj<CubeDefInfo>(e.Result.Content);
-                m_CopyControl.InitializeMetadata(cs_descr);
+                MdxQueryArgs mdx_args = e.UserState as MdxQueryArgs;
+                if(mdx_args != null)
+                {
+                    CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
+                    InitializeTuple(cs_descr);
 
+                    // Зачитываем метаданные куба в целом
+                    stopWaiting = false;
+                    LogManager.LogInformation(this, this.Name + " - Loading cube metadata.");
+                    MetadataQuery args = CommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
+                    OlapDataLoader.LoadData(args, args);
+                }
+
+                MetadataQuery metadata_args = e.UserState as MetadataQuery;
+                if (metadata_args != null)
+                {
+                    CubeDefInfo cs_descr = XmlSerializationUtility.XmlStr2Obj<CubeDefInfo>(e.Result.Content);
+                    m_CopyControl.InitializeMetadata(cs_descr);
+                }
             }
             finally
             {
@@ -367,38 +382,6 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        void PivotLoader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            bool stopWaiting = true;
-            try
-            {
-                if (e.Error != null)
-                {
-                    LogManager.LogException(Localization.ValueCopyDesignerControl_Name, e.Error);
-                    return;
-                }
-
-                if (e.Result.ContentType == InvokeContentType.Error)
-                {
-                    LogManager.LogMessage(Localization.ValueCopyDesignerControl_Name, Localization.Error + "! " + e.Result.Content);
-                    return;
-                }
-
-                CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
-                InitializeTuple(cs_descr);
-
-                // Зачитываем метаданне куба в целом
-                stopWaiting = false;
-                MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
-                OlapDataLoader.LoadData(args, null);
-            }
-            finally
-            {
-                if (stopWaiting)
-                    IsWaiting = false;
-            }
-        }
-
         public void Initialize()
         {
             m_CopyControl.CubeName = CubeName;
@@ -406,17 +389,18 @@ namespace Ranet.AgOlap.Controls
             m_CopyControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(m_CopyControl_GetOlapDataLoader);
 
             IsWaiting = true;
+            LogManager.LogInformation(this, this.Name + " - Calculating Tuple form cell.");
             // MDX запрос может служить источником Tuple. Если запрос задан, то пытаемся его выполнить и в качестве Tuple будем использовать координаты первой ячейки.
             if (!String.IsNullOrEmpty(Query))
             {
                 MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, Query);
-                OlapDataLoader.LoadData(args, null);
+                OlapDataLoader.LoadData(args, args);
             }
             else
             {
                 // Зачитываем метаданне куба в целом
-                MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
-                OlapDataLoader.LoadData(args, null);
+                MetadataQuery args = CommandHelper.CreateGetCubeMetadataArgs(Connection, CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
+                OlapDataLoader.LoadData(args, args);
             }
         }
 

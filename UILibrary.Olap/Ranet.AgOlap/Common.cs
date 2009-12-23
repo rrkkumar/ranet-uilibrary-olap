@@ -26,7 +26,7 @@ namespace Ranet.AgOlap
     {
         //public static readonly string CommandHeaderName = "BI-Command";
         //public static readonly string MetadataQueryTemplate = "/Metadata/Handler.bisvc";
-        public const string Namespace = "Ranet.OgOlap";
+        public const string Namespace = "Ranet.UILibrary.Olap";
         //public static readonly string SettingsContainerName = "settings.xml";
         //public static readonly string MetadataContainerName = "metadata.xml";
         //public static readonly string ClientDllName = "client.dll";

@@ -25,11 +25,8 @@ using System.Text;
 using Ranet.AgOlap.Controls.General.ClientServer;
 using Ranet.AgOlap;
 using Ranet.Olap.Core.Metadata;
-using Ranet.AgOlap.Controls.MemberChoice.ClientServer;
 using Ranet.Olap.Core.Data;
 using Ranet.Olap.Core.Providers;
-using Ranet.Olap.Web.PivotGrid;
-using Ranet.Web.Olap.PivotGrid;
 using Ranet.Olap.Core;
 using Ranet.Olap.Core.Providers.ClientServer;
 using System.IO;
@@ -38,9 +35,15 @@ using Microsoft.AnalysisServices.AdomdClient;
 using Ranet.Olap.Core.Storage;
 using System.Web;
 using System.Configuration;
+using Ranet.ZipLib;
+using System.Web.Services;
+using System.Data;
 
 namespace Ranet.Web.Olap
 {
+    [WebService(Namespace = "http://tempuri.org/")]
+    [WebServiceBinding(ConformsTo = WsiProfiles.BasicProfile1_1)]
+    [System.ComponentModel.ToolboxItem(false)]
     public class OlapWebServiceBase : System.Web.Services.WebService
     {
         public OlapWebServiceBase()
@@ -61,10 +64,15 @@ namespace Ranet.Web.Olap
 
         bool UseCompress = true;
 
+        [WebMethod(EnableSession = true)]
         public String PerformOlapServiceAction(String schemaType, String schema)
         {
+            DateTime start = DateTime.Now;
             try
             {
+                System.Diagnostics.Trace.TraceInformation("{0} PerformOlapServiceAction \r\n SCHEMA_TYPE: {1} \r\n SCHEMA: {2} \r\n", 
+                    DateTime.Now.ToString(), schemaType, schema);
+
                 object type = OlapActionTypes.Parse(typeof(OlapActionTypes), schemaType, true);
                 if (type != null)
                 {
@@ -73,215 +81,47 @@ namespace Ranet.Web.Olap
                     {
                         case OlapActionTypes.GetMetadata:
                             return GetMetaData(schema);
-                        case OlapActionTypes.GetMembers:
-                            return GetMembersData(schema);
-                        case OlapActionTypes.GetPivotData:
-                            return GetPivotData(schema);
-                        case OlapActionTypes.MemberAction:
-                            return PerformMemberAction(schema);
                         case OlapActionTypes.StorageAction:
                             return PerformStorageAction(schema);
-                        case OlapActionTypes.ServiceCommand:
-                            return PerformServiceCommand(schema);
-                        case OlapActionTypes.GetToolBarInfo:
-                            return GetToolBarInfo(schema);
-                        case OlapActionTypes.UpdateCube:
-                            return UpdateCube(schema);
+                        case OlapActionTypes.ExportToExcel:
+                            return ExportToExcel(schema);
                         case OlapActionTypes.ExecuteQuery:
                             return ExecuteQuery(schema);
                     }
                 }
 
-                // Metadata
-                //OlapActionBase metadata_args = XmlUtility.XmlStr2Obj<OlapActionBase>(schema);
-                //if (metadata_args != null && metadata_args.ActionType == OlapActionTypes.GetMetadata)
-                //{
-                //    return GetMetaData(schema);
-                //}
-
-                //// Members
-                //OlapActionBase members_args = XmlUtility.XmlStr2Obj<OlapActionBase>(schema);
-                //if (members_args != null && members_args.ActionType == OlapActionTypes.GetMembers)
-                //{
-                //    return GetMembersData(schema);
-                //}
-
                 InvokeResultDescriptor result = new InvokeResultDescriptor();
-                return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+                return InvokeResultDescriptor.Serialize(result);
             }
             catch (Exception ex)
             {
                 InvokeResultDescriptor result = new InvokeResultDescriptor();
                 result.Content = ex.ToString();
                 result.ContentType = InvokeContentType.Error;
-                return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+                System.Diagnostics.Trace.TraceError("{0} PerformOlapServiceAction ERROR: {1}\r\n",
+                    DateTime.Now.ToString(), ex.ToString());
+                return InvokeResultDescriptor.Serialize(result);
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} PerformOlapServiceAction: {1} completed \r\n time: {2} \r\n",
+                    DateTime.Now.ToString(), schemaType, (DateTime.Now - start).ToString());
             }
         }
 
-        #region Загрузка данных для контрола выбора элемента измерения
-        public String GetMembersData(String schema)
+        [WebMethod]
+        public String About()
         {
-            InvokeResultDescriptor result = new InvokeResultDescriptor();
-            String res = String.Empty;
-            try
-            {
-                MemberChoiceQuery args = XmlUtility.XmlStr2Obj<MemberChoiceQuery>(schema);
-
-                if (args != null)
-                {
-                    switch (args.QueryType)
-                    {
-                        case MemberChoiceQueryType.GetRootMembersCount:
-                            res = GetRootMembersCount(args);
-                            break;
-                        case MemberChoiceQueryType.GetRootMembers:
-                            res = GetRootMembers(args);
-                            break;
-                        case MemberChoiceQueryType.GetChildrenMembers:
-                            res = GetChildrenMembers(args);
-                            break;
-                        case MemberChoiceQueryType.FindMembers:
-                            res = FindMembers(args);
-                            break;
-                        case MemberChoiceQueryType.GetAscendants:
-                            res = GetAscendants(args);
-                            break;
-                        case MemberChoiceQueryType.GetMember:
-                            res = GetMember(args);
-                            break;
-                        case MemberChoiceQueryType.GetMembers:
-                            res = GetMembers(args);
-                            break;
-                        case MemberChoiceQueryType.LoadSetWithAscendants:
-                            res = LoadSetWithAscendants(args);
-                            break;
-                    }
-                }
-                result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
-                result.ContentType = InvokeContentType.MultidimData;
-            }
-            catch (AdomdConnectionException connection_ex)
-            {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            return "Web Service for Visual OLAP Controls Library";
         }
-
-        String LoadSetWithAscendants(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            members = provider.LoadSetWithAscendants(args.Set, args.CubeName, args.SubCube, args.HierarchyUniqueName);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-
-        String GetMembers(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            members = provider.GetMembers(args.CubeName, args.SubCube, args.Set);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-
-        String GetMember(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            MemberDataWrapper member = null;
-            member = provider.GetMember(args.CubeName, args.MemberUniqueName, args.Properties);
-
-            return XmlUtility.Obj2XmlStr(member, Common.Namespace);
-        }
-
-        String GetRootMembersCount(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            double count = 0;
-
-            if (String.IsNullOrEmpty(args.StartLevelUniqueName))
-                count = provider.GetMembersCount(args.CubeName, args.SubCube, args.HierarchyUniqueName, 0);
-            else
-                count = provider.GetMembersCount(args.CubeName, args.SubCube, args.HierarchyUniqueName, args.StartLevelUniqueName);
-
-            return count.ToString();
-        }
-
-        String GetRootMembers(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            if (String.IsNullOrEmpty(args.StartLevelUniqueName))
-                members = provider.GetHierarchyMembers(args.CubeName, args.SubCube, args.HierarchyUniqueName, 0, args.BeginIndex, args.Count);
-            else
-                members = provider.GetLevelMembers(args.CubeName, args.SubCube, args.HierarchyUniqueName, args.StartLevelUniqueName, args.BeginIndex, args.Count);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-
-        String GetChildrenMembers(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            members = provider.GetChildrenMembers(args.CubeName, args.SubCube, args.HierarchyUniqueName, args.MemberUniqueName, args.BeginIndex, args.Count);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-
-
-        String GetAscendants(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            members = provider.GetAscendants(args.CubeName, args.SubCube, args.HierarchyUniqueName, args.StartLevelUniqueName, args.MemberUniqueName);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-
-
-        String FindMembers(MemberChoiceQuery args)
-        {
-            OlapProvider provider = new OlapProvider(new DefaultQueryExecuter(GetConnection(args.Connection)));
-
-            List<MemberDataWrapper> members = null;
-            members = provider.SearchMembers(args.CubeName, args.SubCube, args.HierarchyUniqueName, args.StartLevelUniqueName, args.Filter);
-
-            return XmlUtility.Obj2XmlStr(members, Common.Namespace);
-        }
-        #endregion Загрузка данных для контрола выбора элемента измерения
 
         #region Загрузка метаданных
-        public String GetMetaData(String schema)
+        String GetMetaData(String schema)
         {
             InvokeResultDescriptor result = new InvokeResultDescriptor();
             String res = null;
             try
             {
-                MetadataQuery args = XmlUtility.XmlStr2Obj<MetadataQuery>(schema);
+                MetadataQuery args = XmlSerializationUtility.XmlStr2Obj<MetadataQuery>(schema);
 
                 if (args != null)
                 {
@@ -324,13 +164,13 @@ namespace Ranet.Web.Olap
                     }
                 }
                 result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
+                if (UseCompress)
+                {
+                    // Архивация строки
+                    String compesed = ZipCompressor.CompressAndConvertToBase64String(res);
+                    result.Content = compesed;
+                    result.IsArchive = true;
+                }
                 result.ContentType = InvokeContentType.MultidimData;
             }
             catch (AdomdConnectionException connection_ex)
@@ -348,34 +188,51 @@ namespace Ranet.Web.Olap
                 result.Content = metadata_ex.Message;
                 result.ContentType = InvokeContentType.Error;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            return InvokeResultDescriptor.Serialize(result);
         }
 
         String GetConnectionString(String connection)
         {
-            object str = this.Application[connection];
+            object str = null;
+            if (HttpContext.Current.Session != null)
+            {
+                str = HttpContext.Current.Session[connection];
+            }
+            else
+            {
+                str = this.Application[connection];
+            }
             if (str != null)
                 return str.ToString();
             else
-                throw new Exception("Connection String not foud in Application state");
+                throw new Exception(String.Format("Connection: '{0}' not foud in Application state", connection));
         }
 
         ConnectionInfo GetConnection(String connection)
         {
-            object str = this.Application[connection];
+            object str = null;
+            // Если в сессии есть строка соединения, то берем ее. Иначе пытаемся зачитать из Application
+            if (HttpContext.Current.Session != null && HttpContext.Current.Session[connection] != null)
+            {
+                str = HttpContext.Current.Session[connection];
+            }
+            else
+            {
+                str = this.Application[connection];
+            }
             if (str != null)
                 return new ConnectionInfo(connection, str.ToString());
             else
-                throw new Exception("Connection String not foud in Application state");
+                throw new Exception(String.Format("Connection: '{0}' not foud in Application state", connection));
         }
 
         String GetLevelProperties(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             // Делать коллекцию с ключем "Имя свойства" нельзя, т.к. свойства KEY1, KEY2 и т.д. есть не у всех уровней и например в контроле выбора элемента измерения при построении уловия поиска придется проверять для каких уровней они есть, а для каких нету
             List<LevelPropertyInfo> list = new List<LevelPropertyInfo>();
@@ -406,464 +263,312 @@ namespace Ranet.Web.Olap
                 }
             }
 
-            return XmlUtility.Obj2XmlStr(list, Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list, Common.Namespace);
         }
 
         String GetKPIs(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, KpiInfo> list = provider.GetKPIs(args.CubeName);
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetMeasureGroups(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             List<MeasureGroupInfo> list = provider.GetMeasureGroups(args.CubeName);
 
-            return XmlUtility.Obj2XmlStr(list, Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list, Common.Namespace);
         }
 
         String GetCubeMetadata(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             CubeDefInfo info = provider.GetCubeMetadata(args.CubeName, args.QueryType);
 
-            return XmlUtility.Obj2XmlStr(info, Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(info, Common.Namespace);
         }
 
         String GetCubes(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, CubeDefInfo> list = provider.GetCubes();
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetMeasures(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, MeasureInfo> list = provider.GetMeasures(args.CubeName);
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetLevels(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, LevelInfo> list = provider.GetLevels(args.CubeName, args.DimensionUniqueName, args.HierarchyUniqueName);
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetDimensions(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, DimensionInfo> list = provider.GetDimensions(args.CubeName);
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetHierarchies(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             Dictionary<String, HierarchyInfo> list = provider.GetHierarchies(args.CubeName, args.DimensionUniqueName);
 
-            return XmlUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(list.Values.ToList(), Common.Namespace);
         }
 
         String GetDimension(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
 
             DimensionInfo info = provider.GetDimension(args.CubeName, args.DimensionUniqueName);
-            return XmlUtility.Obj2XmlStr(info, Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(info, Common.Namespace);
         }
 
         String GetHierarchy(MetadataQuery args)
         {
-            OlapMetadataProvider provider = new OlapMetadataProvider(GetConnectionString(args.Connection));
+            OlapMetadataProvider provider = new OlapMetadataProvider(new ConnectionInfo(args.Connection, GetConnectionString(args.Connection)));
             HierarchyInfo info = provider.GetHierarchy(args.CubeName, args.DimensionUniqueName, args.HierarchyUniqueName);
-            return XmlUtility.Obj2XmlStr(info, Common.Namespace);
+            return XmlSerializationUtility.Obj2XmlStr(info, Common.Namespace);
         }
         #endregion Загрузка метаданных
 
         private String OLAP_DATA_MANAGER = "OLAP_DATA_MANAGER_{0}";
 
-        #region Загрузка метаданных для сводной таблицы
-        public String GetPivotData(String schema)
+        #region Выполнение запросов
+        String ExecuteQuery(String schema)
         {
             InvokeResultDescriptor result = new InvokeResultDescriptor();
             String res = String.Empty;
             try
             {
-                PivotInitializeArgs args = XmlUtility.XmlStr2Obj<PivotInitializeArgs>(schema);
-
+                String sessionId = String.Empty;
+                MdxQueryArgs args = XmlSerializationUtility.XmlStr2Obj<MdxQueryArgs>(schema);
                 if (args != null)
                 {
-                    if (!String.IsNullOrEmpty(args.Query))
+                    sessionId = args.SessionId;
+                    DefaultQueryExecuter queryExecuter = new DefaultQueryExecuter(GetConnection(args.Connection));
+                    if (args.Queries.Count > 0)
                     {
-                        //OlapDataManager dataManager = this.Application[OLAP_DATA_MANAGER] as OlapDataManager;
-                        //if (dataManager == null)
-                        //{
-                        String connStr = GetConnectionString(args.Connection);
-                        OlapPivotDataManager dataManager = new OlapPivotDataManager(GetConnection(args.Connection), args.Query, args.UpdateScript);
-                        if (!String.IsNullOrEmpty(args.PivotID))
-                        {
-                            this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] = dataManager;
-                        }
-                        //}
-
-                        DefaultQueryExecuter manager = new DefaultQueryExecuter(GetConnection(args.Connection));
-                        if (!String.IsNullOrEmpty(args.Query))
-                        {
-                            CellSetData cs_descr = manager.ExecuteQuery(args.Query);
-                            res = CellSetData.Serialize(cs_descr);
-                            //res = XmlUtility.Obj2XmlStr(cs_descr, Common.Namespace);
-                        }
-                    }
-                    else
-                    { 
-                        // Пустой запрос
-                        res = CellSetData.Serialize(new CellSetData());
-                    }
-                }
-
-                result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
-                result.ContentType = InvokeContentType.MultidimData;
-            }
-            catch (AdomdConnectionException connection_ex)
-            {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
-        }
-
-        public String PerformMemberAction(String schema)
-        {
-            InvokeResultDescriptor result = new InvokeResultDescriptor();
-            String res = String.Empty;
-            try
-            {
-                PerformMemberActionArgs args = XmlUtility.XmlStr2Obj<PerformMemberActionArgs>(schema);
-                if (args != null)
-                {
-                    OlapPivotDataManager dataManager = this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] as OlapPivotDataManager;
-                    if (dataManager != null)
-                    {
-                        CellSetData csd = dataManager.PerformMemberAction(args);
-                        res = CellSetData.Serialize(csd);
-                        //DateTime s1 = DateTime.Now;
-                        //res = XmlUtility.Obj2XmlStr(csd, Common.Namespace);
-                        //DateTime s2 = DateTime.Now;
-                        //System.Diagnostics.Debug.WriteLine(" Member Action result serialize time: " + (s2 - s1).ToString());
-
-                        //DateTime d1 = DateTime.Now;
-                        //String r = CellSetData.Serialize(csd);
-                        //DateTime d2 = DateTime.Now;
-                        //System.Diagnostics.Debug.WriteLine(" Member Action result serialize time (NEW): " + (d2 - d1).ToString());
-
-                        //CellSetData.Deserialize(r);
-                    }
-                }
-                result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
-                result.ContentType = InvokeContentType.MultidimData;
-            }
-            catch (AdomdConnectionException connection_ex)
-            {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
-        }
-
-        public String PerformServiceCommand(String schema)
-        {
-            InvokeResultDescriptor result = new InvokeResultDescriptor();
-            String res = String.Empty;
-            try
-            {
-                ServiceCommandArgs args = XmlUtility.XmlStr2Obj<ServiceCommandArgs>(schema);
-                if (args != null)
-                {
-                    OlapPivotDataManager dataManager = this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] as OlapPivotDataManager;
-                    if (dataManager != null)
-                    {
-                        switch (args.Command)
-                        {
-                            case ServiceCommandType.Forward:
-                                dataManager.History.MoveNext();
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.Back:
-                                dataManager.History.MoveBack();
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.ToBegin:
-                                dataManager.History.ToBegin();
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.ToEnd:
-                                dataManager.History.ToEnd();
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.HideEmptyColumns:
-                                dataManager.HideEmptyColumns = true;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.ShowEmptyColumns:
-                                dataManager.HideEmptyColumns = false;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.RotateAxes:
-                                dataManager.RotateAxes = true;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.NormalAxes:
-                                dataManager.RotateAxes = false;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.HideEmptyRows:
-                                dataManager.HideEmptyRows = true;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.ShowEmptyRows:
-                                dataManager.HideEmptyRows = false;
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                            case ServiceCommandType.ExportToExcel:
-                                res = dataManager.ExportToExcel();
-                                break;
-                            case ServiceCommandType.GetDataSourceInfo:
-                                DataSourceInfoArgs info = dataManager.GetDataSourceInfo(args);
-                                res = XmlUtility.Obj2XmlStr(info, Common.Namespace);
-                                break;
-                            default:
-                                res = CellSetData.Serialize(dataManager.RefreshQuery());
-                                break;
-                        }
-                        
-                        result.Content = res;
-                        //if (UseCompress)
-                        //{
-                        //    // Архивация строки
-                        //    String compesed = ZipCompressor.CompressToBase64String(res);
-                        //    result.Content = compesed;
-                        //    result.IsArchive = true;
-                        //}
                         result.ContentType = InvokeContentType.MultidimData;
+
+                        switch (args.Type)
+                        {
+                            case QueryTypes.Update:
+                            case QueryTypes.CommitTransaction:
+                            case QueryTypes.RollbackTransaction:
+                                List<String> results = new List<String>();
+                                result.ContentType = InvokeContentType.UpdateResult;
+                                foreach (var query in args.Queries)
+                                {
+                                    try
+                                    {
+                                        // Method return a value of one (1). 
+                                        queryExecuter.ExecuteNonQuery(query, ref sessionId);
+                                        results.Add(String.Empty);
+                                    }
+                                    catch (AdomdConnectionException connection_ex)
+                                    {
+                                        results.Add(connection_ex.Message);
+                                    }
+                                    catch (AdomdErrorResponseException response_ex)
+                                    {
+                                        results.Add(response_ex.Message);
+                                    }
+                                    catch (AdomdUnknownResponseException unknown_ex)
+                                    {
+                                        results.Add(unknown_ex.Message);
+                                    }
+                                    catch(InvalidOperationException invalid_ex)
+                                    {
+                                        results.Add(invalid_ex.Message);
+                                    }
+                                }
+                                res = XmlSerializationUtility.Obj2XmlStr(results, Common.Namespace);
+                                break;
+                            case QueryTypes.Select:
+                                try
+                                {
+                                    res = queryExecuter.GetCellSetDescription(args.Queries[0], ref sessionId);
+                                }
+                                catch (AdomdConnectionException connection_ex)
+                                {
+                                    res = connection_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (AdomdErrorResponseException response_ex)
+                                {
+                                    res = response_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (AdomdUnknownResponseException unknown_ex)
+                                {
+                                    res = unknown_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (InvalidOperationException invalid_ex)
+                                {
+                                    res = invalid_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                break;
+                            case QueryTypes.DrillThrough:
+                                try
+                                {
+                                    var table = queryExecuter.ExecuteReader(args.Queries[0], ref sessionId);
+                                    if (table != null)
+                                    {
+                                        res = XmlSerializationUtility.Obj2XmlStr(DataTableHelper.Create(table));
+                                    }
+                                }
+                                catch (AdomdConnectionException connection_ex)
+                                {
+                                    res = connection_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (AdomdErrorResponseException response_ex)
+                                {
+                                    res = response_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (AdomdUnknownResponseException unknown_ex)
+                                {
+                                    res = unknown_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                catch (InvalidOperationException invalid_ex)
+                                {
+                                    res = invalid_ex.Message;
+                                    result.ContentType = InvokeContentType.Error;
+                                }
+                                break;
+                        }
                     }
                 }
-            }
-            catch (AdomdConnectionException connection_ex)
-            {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
+                result.Content = res;
+                System.Diagnostics.Debug.WriteLine("CellSetData size: " + res.Length);
+
+                if (UseCompress)
+                {
+                    DateTime start = DateTime.Now;
+                    // Архивация строки
+                    String compesed = ZipCompressor.CompressAndConvertToBase64String(res);
+                    System.Diagnostics.Debug.WriteLine("CellSetData compression time: " + (DateTime.Now - start).ToString());
+                    System.Diagnostics.Debug.WriteLine("CellSetData compressed size: " + compesed.Length);
+
+                    result.Content = compesed;
+                    result.IsArchive = true;
+                }
+                
+                result.Headers.Add(new Header(InvokeResultDescriptor.SESSION_ID, sessionId));
+                result.Headers.Add(new Header(InvokeResultDescriptor.CONNECTION_ID, args.Connection));
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw;
             }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            return InvokeResultDescriptor.Serialize(result);
         }
 
-        public String GetToolBarInfo(String schema)
+        private String ExportToExcel(String schema)
         {
             InvokeResultDescriptor result = new InvokeResultDescriptor();
             String res = String.Empty;
             try
             {
-                PivotGridToolBarInfo args = XmlUtility.XmlStr2Obj<PivotGridToolBarInfo>(schema);
-                if (args != null)
+                String sessionId = String.Empty;
+                String connection = String.Empty;
+                try
                 {
-                    OlapPivotDataManager dataManager = this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] as OlapPivotDataManager;
-                    if (dataManager != null)
+                    MdxQueryArgs args = XmlSerializationUtility.XmlStr2Obj<MdxQueryArgs>(schema);
+                    if (args != null)
                     {
-                        PivotGridToolBarInfo toolBarInfo = new PivotGridToolBarInfo();
-                        toolBarInfo.HistorySize = dataManager.History.Size;
-                        toolBarInfo.CurrentHistoryIndex = dataManager.History.CurrentHistiryItemIndex;
-                        toolBarInfo.HideEmptyRows = dataManager.HideEmptyRows;
-                        toolBarInfo.HideEmptyColumns = dataManager.HideEmptyColumns;
-
-                        res = XmlUtility.Obj2XmlStr(toolBarInfo, Common.Namespace);
-                    }
-                }
-                result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
-        }
-
-        public delegate void MethodInvoker();
-
-        public String ExecuteQuery(String schema)
-        {
-            InvokeResultDescriptor result = new InvokeResultDescriptor();
-            String res = String.Empty;
-            try
-            {
-                MdxQueryArgs args = XmlUtility.XmlStr2Obj<MdxQueryArgs>(schema);
-
-                if (args != null)
-                {
-                    OlapPivotDataManager dataManager = null;
-                    if (!String.IsNullOrEmpty(args.PivotID))
-                    { 
-                        dataManager = this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] as OlapPivotDataManager;
-                    }
-
-                    if (dataManager == null)
-                    {
-                        dataManager = new OlapPivotDataManager(GetConnection(args.Connection), args.Query, String.Empty);
-                    }
-
-                    if (dataManager != null)
-                    {
-                        if (args.Type == QueryExecutingType.NonQuery)
+                        sessionId = args.SessionId;
+                        connection = args.Connection;
+                        DefaultQueryExecuter queryExecuter = new DefaultQueryExecuter(GetConnection(args.Connection));
+                        if (args.Queries.Count > 0)
                         {
-                            int i = dataManager.ExecuteNonQuery(args.Query);
-                            res = XmlUtility.Obj2XmlStr(i, Common.Namespace);
-                        }
-                        else
-                        {
-                            CellSetData cs = dataManager.ExecuteQuery(args.Query);
-                            res = CellSetData.Serialize(cs);
-                            //res = XmlUtility.Obj2XmlStr(cs, Common.Namespace);
+                            res = queryExecuter.GetCellSetDescription(args.Queries[0], ref sessionId);
                         }
                     }
                 }
+                catch (AdomdConnectionException connection_ex)
+                {
+                    result.Content = connection_ex.Message;
+                    result.ContentType = InvokeContentType.Error;
+                }
+                catch (AdomdErrorResponseException response_ex)
+                {
+                    result.Content = response_ex.Message;
+                    result.ContentType = InvokeContentType.Error;
+                }
+                catch (AdomdUnknownResponseException unknown_ex)
+                {
+                    result.Content = unknown_ex.Message;
+                    result.ContentType = InvokeContentType.Error;
+                }
+                catch (InvalidOperationException invalid_ex)
+                {
+                    result.Content = invalid_ex.Message;
+                    result.ContentType = InvokeContentType.Error;
+                }
+
+                if (!String.IsNullOrEmpty(res))
+                {
+                    CellSetData cs = CellSetData.Deserialize(res);
+                    PivotDataProvider pivotProvider = new PivotDataProvider(new CellSetDataProvider(cs));
+                    res = ExportHelper.ExportToExcel(pivotProvider);
+                }
+
                 result.Content = res;
-                //if (UseCompress)
-                //{
-                //    // Архивация строки
-                //    String compesed = ZipCompressor.CompressToBase64String(res);
-                //    result.Content = compesed;
-                //    result.IsArchive = true;
-                //}
+                if (UseCompress)
+                {
+                    // Архивация строки
+                    String compesed = ZipCompressor.CompressAndConvertToBase64String(res);
+                    result.Content = compesed;
+                    result.IsArchive = true;
+                }
                 result.ContentType = InvokeContentType.MultidimData;
+                result.Headers.Add(new Header(InvokeResultDescriptor.SESSION_ID, sessionId));
+                result.Headers.Add(new Header(InvokeResultDescriptor.CONNECTION_ID, connection));
             }
-            catch (AdomdConnectionException connection_ex)
+            catch (Exception)
             {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
+                throw;
             }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            return InvokeResultDescriptor.Serialize(result);
         }
-
-        public String UpdateCube(String schema)
-        {
-            InvokeResultDescriptor result = new InvokeResultDescriptor();
-            String res = String.Empty;
-            try
-            {
-                UpdateCubeArgs args = XmlUtility.XmlStr2Obj<UpdateCubeArgs>(schema);
-                if (args != null)
-                {
-                    OlapPivotDataManager dataManager = this.Application[String.Format(OLAP_DATA_MANAGER, args.PivotID)] as OlapPivotDataManager;
-                    if (dataManager != null)
-                    {
-                        if (!String.IsNullOrEmpty(dataManager.UpdateScript))
-                        {
-                            PivotTableUpdater.UpdateSync(dataManager.UpdateScript, args);
-                        }
-                    }
-                }
-                result.Content = res;
-            }
-            catch (AdomdConnectionException connection_ex)
-            {
-                result.Content = connection_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (AdomdErrorResponseException response_ex)
-            {
-                result.Content = response_ex.Message;
-                result.ContentType = InvokeContentType.Error;
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
-        }
-
-        #endregion Загрузка метаданных для сводной таблицы
+        #endregion Выполнение запросов
 
         #region Работа с хранилищем
-        public String PerformStorageAction(String schema)
+        String PerformStorageAction(String schema)
         {
             InvokeResultDescriptor result = new InvokeResultDescriptor();
             String res = String.Empty;
             try
             {
-                StorageActionArgs args = XmlUtility.XmlStr2Obj<StorageActionArgs>(schema);
+                StorageActionArgs args = XmlSerializationUtility.XmlStr2Obj<StorageActionArgs>(schema);
                 if (args != null)
                 {
                     FileStorageProvider storageProvider = new FileStorageProvider();
@@ -878,17 +583,25 @@ namespace Ranet.Web.Olap
                             res = storageProvider.Load(HttpContext.Current.User, args.FileDescription.ContentFileName);
                             break;
                         case StorageActionTypes.GetList:
-                            res = XmlUtility.Obj2XmlStr(storageProvider.GetList(HttpContext.Current.User, "*." + FileStorageProvider.GetFilteExtension(args.ContentType)), Common.Namespace);
+                            res = XmlSerializationUtility.Obj2XmlStr(storageProvider.GetList(HttpContext.Current.User, "*." + FileStorageProvider.GetFilteExtension(args.ContentType)), Common.Namespace);
+                            break;
+                        case StorageActionTypes.Clear:
+                            res = XmlSerializationUtility.Obj2XmlStr(storageProvider.Clear(HttpContext.Current.User, "*." + FileStorageProvider.GetFilteExtension(args.ContentType)));
+                            break;
+                        case StorageActionTypes.Delete:
+                            storageProvider.Delete(HttpContext.Current.User, args.FileDescription.Description.Name + "." + FileStorageProvider.GetFilteExtension(args.ContentType));
+                            storageProvider.Delete(HttpContext.Current.User, args.FileDescription.ContentFileName);
+                            res = XmlSerializationUtility.Obj2XmlStr(storageProvider.GetList(HttpContext.Current.User, "*." + FileStorageProvider.GetFilteExtension(args.ContentType)), Common.Namespace);
                             break;
                     }
                 }
                 result.Content = res;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw ex;
+                throw;
             }
-            return XmlUtility.Obj2XmlStr(result, Common.Namespace);
+            return InvokeResultDescriptor.Serialize(result);
         }
         #endregion Работа с хранилищем
     }

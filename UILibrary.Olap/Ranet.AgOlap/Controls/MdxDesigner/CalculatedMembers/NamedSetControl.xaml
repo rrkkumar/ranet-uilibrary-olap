@@ -17,19 +17,17 @@
 
                     <!-- Имя -->
                     <TextBlock Grid.Row="0" x:Name="lblName" Text="Name:"></TextBlock>
-                    <TextBox Grid.Row="1" x:Name="txtName" Margin="0,3,0,0"></TextBox>
+                    <general:RichTextBox Grid.Row="1" x:Name="txtName" Margin="0,3,0,0"></general:RichTextBox>
 
                     <!-- Скрипт -->
-                    <Border x:Name="brdExpression" Grid.Row="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="2" Padding="0">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" x:Name="lblExpression" Text="Expression:" Margin="0,3,0,0"></TextBlock>
-                            <TextBox Grid.Row="1" x:Name="txtExpression" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0"></TextBox>
-                        </Grid>
-                    </Border>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" x:Name="lblExpression" Text="Expression:" Margin="0,3,0,0"></TextBlock>
+                        <general:RichTextBox Grid.Row="1" x:Name="txtExpression" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"></general:RichTextBox>
+                    </Grid>
                 </Grid>
             </swc:TabItem>
         </swc:TabControl>

@@ -42,15 +42,24 @@ namespace Ranet.AgOlap.Controls.Forms
         public FloatingWindowControl()
         {
             InitializeComponent();
-            MaximizeButton.Button.Click += new RoutedEventHandler(MaximizeButton_Click);
+            MaximizeButton.btnMinMaxButton.Checked += new RoutedEventHandler(btnMinMaxButton_Checked);
+            MaximizeButton.btnMinMaxButton.Unchecked += new RoutedEventHandler(btnMinMaxButton_Unchecked);
             this.Loaded += new RoutedEventHandler(FloatingWindowControl_Loaded);
 
             resDoubleClickTimer = new Storyboard();
             resDoubleClickTimer.Duration = new Duration(new TimeSpan(0, 0, 0, 0, 250));
             resDoubleClickTimer.Completed += new EventHandler(Storyboard_Completed);
             LayoutRoot.Resources.Add("resDoubleClickTimer", resDoubleClickTimer);
+        }
 
-            MaximizeButton.Visibility = Visibility.Collapsed;
+        void btnMinMaxButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            OnMaximize(); 
+        }
+
+        void btnMinMaxButton_Checked(object sender, RoutedEventArgs e)
+        {
+            OnMaximize(); 
         }
 
         int m_ClickCount = 0;
@@ -60,7 +69,7 @@ namespace Ranet.AgOlap.Controls.Forms
         {
             if (m_ClickCount > 1)
             {
-                OnMaximize();
+                IsMaximized = !IsMaximized;
             }
             m_ClickCount = 0;
         }
@@ -405,11 +414,6 @@ namespace Ranet.AgOlap.Controls.Forms
             this.UpdateLayout();
         }
 
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            OnMaximize();
-        }
-
         void OnMaximize()
         {
             if (IsMaximized == false)
@@ -427,8 +431,6 @@ namespace Ranet.AgOlap.Controls.Forms
 
                     Canvas.SetTop(this, 0);
                     Canvas.SetLeft(this, 0);
-
-                    MaximizeButton.IsMaximized = true;
                 }
             }
             else
@@ -439,22 +441,28 @@ namespace Ranet.AgOlap.Controls.Forms
 
                 Canvas.SetTop(this, m_Minimized_Location.Y);
                 Canvas.SetLeft(this, m_Minimized_Location.X);
-                
-                MaximizeButton.IsMaximized = false;
             }
-            m_IsMaximized = !m_IsMaximized;
+
+            // Change Visual State MaximizeButton using event
+            this.SizeChanged += new SizeChangedEventHandler(FloatingWindowControl_SizeChanged);
+        }
+
+        void FloatingWindowControl_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            this.SizeChanged -= new SizeChangedEventHandler(FloatingWindowControl_SizeChanged);
+            VisualStateManager.GoToState(MaximizeButton.btnMinMaxButton, "Normal", true);
         }
 
         Point m_Minimized_Location = new Point(0, 0);
         Size m_Minimized_Size = new Size(400, 300);
-        bool m_IsMaximized = false;
+
         public bool IsMaximized
         {
-            get { return m_IsMaximized; }
+            get { return MaximizeButton.IsMaximized; }
             set {
-                if (m_IsMaximized != value)
+                if (MaximizeButton.IsMaximized != value)
                 {
-                    OnMaximize();
+                    MaximizeButton.IsMaximized = value;
                 }
             }
         }

@@ -24,28 +24,10 @@ using System.Collections;
 using System.Collections.Specialized;
 using System.Collections.Generic;
 using Ranet.Olap.Core.Data;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.MemberChoice.Info
 {
-    /// <summary>
-    /// Режим работы с выделенными элементами
-    /// </summary>
-    public enum Modes
-    {
-        /// <summary>
-        /// Область строк сводной таблицы
-        /// </summary>
-        Rows_Area,
-        /// <summary>
-        /// Область фильтров сводной таблицы
-        /// </summary>
-        Filter_Area,
-        /// <summary>
-        /// Элемент выбора для БМ
-        /// </summary>
-        BM
-    }
-
     #region Возможные состояния
     //Любой элемент OlapMemberInfo в иерархии может находиться в одном из 3 состояний
     //	Не выбран
@@ -105,11 +87,11 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
     {
         #region Свойства OlapMemberInfo
 
-        private MemberDataWrapper m_Info = null;
+        private MemberData m_Info = null;
         /// <summary>
         /// раппер для элемента измерения, соответствующий данному узлу дерева
         /// </summary>
-        public MemberDataWrapper Info
+        public MemberData Info
         {
             get
             {
@@ -169,7 +151,7 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         {
             get
             {
-                return this.Info.Member.UniqueName;
+                return this.Info.UniqueName;
             }
         }
 
@@ -180,7 +162,7 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         {
             get
             {
-                if (CubeChildrenCount > 0)
+                if (Info != null && Info.ChildCount > 0)
                 {
                     return true;
                 }
@@ -191,15 +173,14 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
 
         #region Конструкторы
 
-        public OlapMemberInfo(MemberDataWrapper info, Modes mode)
+        public OlapMemberInfo(MemberData info)
         {
             if (info == null)
                 throw new ArgumentNullException("info");
 
             this.m_Info = info;
-            this.mode = mode;
 
-            this.cubeChildrenCount = info.RealChildrenCount;
+            this.cubeChildrenCount = QueryProvider.GetRealChildrenCount(info);
         }
 
 
@@ -232,21 +213,6 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             if (Parent != null)
             {
                 SetStateByParent();
-            }
-        }
-
-        /// <summary>
-        /// Режим работы
-        /// </summary>
-        private Modes mode = Modes.BM;
-        /// <summary>
-        /// Режим работы
-        /// </summary>
-        public Modes Mode
-        {
-            get
-            {
-                return this.mode;
             }
         }
 
@@ -321,9 +287,6 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             }
         }
 
-        /// <summary>
-        /// ДЛЯ СОВМЕСТИМОСТИ пока загрузка родителей идет через Member.Parent
-        /// </summary>
         long cubeChildrenCount = 0;
         /// <summary>
         /// Количество дочерних элементов в кубе
@@ -549,84 +512,31 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         /// <param name="changedMember">Элемент, который первым изменил состояние</param>
         private void ParentSelectStateChanged(OlapMemberInfo sender, OlapMemberInfo changedMember)
         {
-            //Режим работы - БМ
-            if (this.Mode == Modes.BM)
+            bool changed = false;
+            switch (changedMember.SelectState)
             {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Selected_Self:
-                        break;
-                    case SelectStates.Not_Selected:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        if (changed)
-                        {
-                            Raise_ParentSelectStateChanged(changedMember);
-                        }
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasChildren)
-                            SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            SetState(SelectStates.Selected_By_Parent);
+                case SelectStates.Selected_Self:
+                    break;
+                case SelectStates.Not_Selected:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    if (changed)
+                    {
                         Raise_ParentSelectStateChanged(changedMember);
-                        break;
-                    case SelectStates.Not_Initialized:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        if (changed)
-                            Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                }
+                    }
+                    break;
+                case SelectStates.Selected_With_Children:
+                    if (HasChildren)
+                        SetState(SelectStates.Selected_By_Parent_With_Children);
+                    else
+                        SetState(SelectStates.Selected_By_Parent);
+                    Raise_ParentSelectStateChanged(changedMember);
+                    break;
+                case SelectStates.Not_Initialized:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    if (changed)
+                        Raise_ChildSelectStateChanged(changedMember);
+                    break;
             }
-
-            //Режим работы - Область строк (!!! Совпадает с БМ)
-            if (this.Mode == Modes.Rows_Area)
-            {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Selected_Self:
-                        break;
-                    case SelectStates.Not_Selected:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        if (changed)
-                        {
-                            Raise_ParentSelectStateChanged(changedMember);
-                        }
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasChildren)
-                            SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            SetState(SelectStates.Selected_By_Parent);
-                        Raise_ParentSelectStateChanged(changedMember);
-                        break;
-                }
-            }
-
-            //Режим работы - Область фильтров
-            if (this.Mode == Modes.Filter_Area)
-            {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Not_Selected:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        if (changed)
-                        {
-                            Raise_ParentSelectStateChanged(changedMember);
-                        }
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasChildren)
-                            SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            SetState(SelectStates.Selected_By_Parent);
-                        Raise_ParentSelectStateChanged(changedMember);
-                        break;
-                }
-            }
-
         }
 
         /// <summary>
@@ -635,170 +545,79 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         /// <param name="changedMember">Элемент, который первым изменил состояние</param>
         private void ChildSelectStateChanged(OlapMemberInfo sender, OlapMemberInfo changedMember)
         {
-            //Режим работы - БМ
-            if (this.Mode == Modes.BM)
+            bool changed = false;
+            switch (changedMember.SelectState)
             {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Selected_Self:
-                        if (SelectState == SelectStates.Selected_Self && AllChildrenIsSelected)
-                        {
-                            SetNewState(SelectStates.Selected_With_Children);
-                        }
-                        else
-                        {
-                            if (SelectState == SelectStates.Not_Initialized ||
-                                SelectState == SelectStates.Not_Selected)
-                            {
-                                changed = SetState(SelectStates.Labeled_As_Parent);
-                            }
-                            if (changed)
-                                Raise_ChildSelectStateChanged(changedMember);
-                        }
-                        break;
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                        if (this.HasSelectedChildren == false)
-                        {
-                            if (SelectState == SelectStates.Labeled_As_Parent)
-                            {
-                                changed = SetState(SelectStates.Not_Initialized);
-                                Raise_SetChildrenState(SelectStates.Not_Initialized, false);
-
-                                if (changed)
-                                    Raise_ChildSelectStateChanged(changedMember);
-                                break;
-                            }
-                        }
-
-                        if (HasSelectedChildren == false && AllChildrenIsLoaded == true)
-                        {
-                            switch (SelectState)
-                            {
-                                case SelectStates.Selected_With_Children:
-                                case SelectStates.Selected_With_Children_Has_Excluded:
-                                    changed = SetState(SelectStates.Selected_Self);
-                                    Raise_SetChildrenState(SelectStates.Not_Initialized, false);
-                                    break;
-                                case SelectStates.Selected_By_Parent_With_Children:
-                                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                                    changed = SetState(SelectStates.Selected_By_Parent);
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            switch (SelectState)
-                            {
-                                case SelectStates.Selected_With_Children:
-                                    changed = SetState(SelectStates.Selected_With_Children_Has_Excluded);
-                                    break;
-                                case SelectStates.Selected_By_Parent_With_Children:
-                                    changed = SetState(SelectStates.Selected_By_Parent_With_Children_Has_Excluded);
-                                    break;
-                            }
-                        }
-                        if (changed)
-                            Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (SelectState == SelectStates.Selected_Self && AllChildrenIsSelected)
-                        {
-                            SetNewState(SelectStates.Selected_With_Children);
-                        }
-                        else
-                        {
-                            if (SelectState == SelectStates.Not_Initialized ||
-                                SelectState == SelectStates.Not_Selected)
-                            {
-                                changed = SetState(SelectStates.Labeled_As_Parent);
-                            }
-                            else
-                            {
-                                if (HasExcludedChildren == false)
-                                {
-                                    if (SelectState == SelectStates.Selected_With_Children_Has_Excluded)
-                                    {
-                                        changed = SetState(SelectStates.Selected_With_Children);
-                                        Raise_ParentSelectStateChanged(this);
-                                    }
-                                    if (SelectState == SelectStates.Selected_By_Parent_With_Children_Has_Excluded)
-                                        changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                                }
-                            }
-                            if (changed)
-                                Raise_ChildSelectStateChanged(changedMember);
-                        }
-                        break;
-                }
-            }
-
-            //Режим работы - Область строк
-            if (this.Mode == Modes.Rows_Area)
-            {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Selected_Self:
+                case SelectStates.Selected_Self:
+                    if (SelectState == SelectStates.Selected_Self && AllChildrenIsSelected)
+                    {
+                        SetNewState(SelectStates.Selected_With_Children);
+                    }
+                    else
+                    {
                         if (SelectState == SelectStates.Not_Initialized ||
-                            SelectState == SelectStates.Not_Selected ||
-                            SelectState == SelectStates.Selected_Self)
+                            SelectState == SelectStates.Not_Selected)
                         {
                             changed = SetState(SelectStates.Labeled_As_Parent);
                         }
                         if (changed)
                             Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                        if (this.HasSelectedChildren == false)
+                    }
+                    break;
+                case SelectStates.Not_Selected:
+                case SelectStates.Not_Initialized:
+                    if (this.HasSelectedChildren == false)
+                    {
+                        if (SelectState == SelectStates.Labeled_As_Parent)
                         {
-                            if (SelectState == SelectStates.Labeled_As_Parent)
-                            {
+                            changed = SetState(SelectStates.Not_Initialized);
+                            Raise_SetChildrenState(SelectStates.Not_Initialized, false);
+
+                            if (changed)
+                                Raise_ChildSelectStateChanged(changedMember);
+                            break;
+                        }
+                    }
+
+                    if (HasSelectedChildren == false && AllChildrenIsLoaded == true)
+                    {
+                        switch (SelectState)
+                        {
+                            case SelectStates.Selected_With_Children:
+                            case SelectStates.Selected_With_Children_Has_Excluded:
                                 changed = SetState(SelectStates.Selected_Self);
                                 Raise_SetChildrenState(SelectStates.Not_Initialized, false);
-
-                                if (changed)
-                                    Raise_ChildSelectStateChanged(changedMember);
                                 break;
-                            }
+                            case SelectStates.Selected_By_Parent_With_Children:
+                            case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                                changed = SetState(SelectStates.Selected_By_Parent);
+                                break;
                         }
-
-                        if (HasSelectedChildren == false && AllChildrenIsLoaded == true)
+                    }
+                    else
+                    {
+                        switch (SelectState)
                         {
-                            switch (SelectState)
-                            {
-                                case SelectStates.Selected_With_Children:
-                                case SelectStates.Selected_With_Children_Has_Excluded:
-                                    changed = SetState(SelectStates.Selected_Self);
-                                    Raise_SetChildrenState(SelectStates.Not_Initialized, false);
-                                    break;
-                                case SelectStates.Selected_By_Parent_With_Children:
-                                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                                    changed = SetState(SelectStates.Selected_By_Parent);
-                                    break;
-                            }
+                            case SelectStates.Selected_With_Children:
+                                changed = SetState(SelectStates.Selected_With_Children_Has_Excluded);
+                                break;
+                            case SelectStates.Selected_By_Parent_With_Children:
+                                changed = SetState(SelectStates.Selected_By_Parent_With_Children_Has_Excluded);
+                                break;
                         }
-                        else
-                        {
-                            switch (SelectState)
-                            {
-                                case SelectStates.Selected_With_Children:
-                                    changed = SetState(SelectStates.Selected_With_Children_Has_Excluded);
-                                    break;
-                                case SelectStates.Selected_By_Parent_With_Children:
-                                    changed = SetState(SelectStates.Selected_By_Parent_With_Children_Has_Excluded);
-                                    break;
-                            }
-                        }
-                        if (changed)
-                            Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                    case SelectStates.Selected_With_Children:
+                    }
+                    if (changed)
+                        Raise_ChildSelectStateChanged(changedMember);
+                    break;
+                case SelectStates.Selected_With_Children:
+                    if (SelectState == SelectStates.Selected_Self && AllChildrenIsSelected)
+                    {
+                        SetNewState(SelectStates.Selected_With_Children);
+                    }
+                    else
+                    {
                         if (SelectState == SelectStates.Not_Initialized ||
-                            SelectState == SelectStates.Not_Selected ||
-                            SelectState == SelectStates.Selected_Self)
+                            SelectState == SelectStates.Not_Selected)
                         {
                             changed = SetState(SelectStates.Labeled_As_Parent);
                         }
@@ -817,70 +636,9 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
                         }
                         if (changed)
                             Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                }
+                    }
+                    break;
             }
-
-            //Режим работы - Область фильтров
-            if (this.Mode == Modes.Filter_Area)
-            {
-                bool changed = false;
-                switch (changedMember.SelectState)
-                {
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                        if (SelectState == SelectStates.Selected_With_Children ||
-                            SelectState == SelectStates.Selected_By_Parent_With_Children ||
-                            SelectState == SelectStates.Selected_With_Children_Has_Excluded ||
-                            SelectState == SelectStates.Selected_By_Parent_With_Children_Has_Excluded)
-                        {
-                            if (HasSelectedChildren)
-                            {
-                                if (SelectState == SelectStates.Selected_With_Children)
-                                    changed = SetState(SelectStates.Selected_With_Children_Has_Excluded);
-                                if (SelectState == SelectStates.Selected_By_Parent_With_Children)
-                                    changed = SetState(SelectStates.Selected_By_Parent_With_Children_Has_Excluded);
-                            }
-                            else
-                            {
-                                changed = SetState(SelectStates.Not_Selected);
-                                Raise_ParentSelectStateChanged(this);
-                            }
-                        }
-                        else
-                        {
-                            if (HasSelectedChildren)
-                                changed = SetState(SelectStates.Labeled_As_Parent);
-                            else
-                            {
-                                changed = SetState(SelectStates.Not_Selected);
-                                Raise_ParentSelectStateChanged(this);
-                            }
-                        }
-
-                        if (changed)
-                            Raise_ChildSelectStateChanged(changedMember);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasExcludedChildren == false)
-                        {
-                            this.SetState(SelectStates.Selected_With_Children);
-
-                            //Сообщаем дочерним узлам о том, что родительский элемент изменил свое состояние
-                            Raise_ParentSelectStateChanged(this);
-                        }
-                        else
-                        {
-                            if (this.SelectState == SelectStates.Not_Initialized ||
-                                this.SelectState == SelectStates.Not_Selected)
-                                changed = SetState(SelectStates.Labeled_As_Parent);
-                            if (changed)
-                                Raise_ChildSelectStateChanged(changedMember);
-                        }
-                        break;
-                }
-            }
-
         }
         #endregion Изменение состояния по инициативе родительских либо дочерних элементов
 
@@ -995,24 +753,66 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             String selfSet = null;
             List<String> childSet = new List<String>();
 
-            if (Mode == Modes.BM)
+            switch (SelectState)
             {
-                switch (SelectState)
-                {
-                    case SelectStates.Selected_With_Children:
-                        //AddCalculatedMembers(
-                        //GENERATE
-                        //(
-                        //		{ 
-                        //		 	 <Member_Unique_Name>
-                        //		}, 
-                        //		DESCENDANTS
-                        //      (
-                        //			<Dimension_Unique_Name>.CURRENTMEMBER
-                        //		)
-                        //	)
-                        //)
+                case SelectStates.Selected_With_Children:
+                    //AddCalculatedMembers(
+                    //GENERATE
+                    //(
+                    //		{ 
+                    //		 	 <Member_Unique_Name>
+                    //		}, 
+                    //		DESCENDANTS
+                    //      (
+                    //			<Dimension_Unique_Name>.CURRENTMEMBER
+                    //		)
+                    //	)
+                    //)
 
+                    selfSet = "AddCalculatedMembers(GENERATE({" +
+                        this.UniqueName +
+                        "}, DESCENDANTS(" + HierarchyUniqueName + ".CURRENTMEMBER)))";
+
+                    //Элемент заносим в список участников формирования запроса
+                    if (membersInSet != null)
+                        membersInSet[this.UniqueName] = this;
+                    break;
+                case SelectStates.Selected_By_Parent:
+                case SelectStates.Selected_With_Children_Has_Excluded:
+                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+
+                    if (SelectState == SelectStates.Selected_By_Parent && HasChildren == false)
+                        //childSet = GetChildrenSet(membersInSet);
+                        break;
+
+                    //{
+                    //GENERATE
+                    //(
+                    //		{ 
+                    //		  EXCEPT
+                    //			(
+                    //				<Member_Unique_Name>.Children, 
+                    //				{
+                    //					<Excluded_Member_Unique_Name>,
+                    //					<Excluded_Member_Unique_Name>,
+                    //					<Excluded_Member_Unique_Name>	
+                    //				}
+                    //			)
+                    //		}, 
+                    //		DESCENDANTS
+                    //		(
+                    //			<Dimension_Unique_Name>.CURRENTMEMBER
+                    //		)
+                    //	)
+                    //,<Member_Unique_Name>
+                    //}
+
+                    //Получаем Set из дочерних, который нужно исключить
+                    String toExclude = GetExcludedChildrenSet(membersInSet);
+
+                    //Такого быть не должно. Но если вдруг произошло, то поступаем как в случае case SelectStates.Selected_With_Children:
+                    if (toExclude == null || toExclude.Length <= 0)
+                    {
                         selfSet = "AddCalculatedMembers(GENERATE({" +
                             this.UniqueName +
                             "}, DESCENDANTS(" + HierarchyUniqueName + ".CURRENTMEMBER)))";
@@ -1021,87 +821,42 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
                         if (membersInSet != null)
                             membersInSet[this.UniqueName] = this;
                         break;
-                    case SelectStates.Selected_By_Parent:
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                    }
 
-                        if (SelectState == SelectStates.Selected_By_Parent && HasChildren == false)
-                            //childSet = GetChildrenSet(membersInSet);
-                            break;
+                    selfSet = "{GENERATE({EXCEPT(AddCalculatedMembers(" +
+                        this.UniqueName + ".Children)," +
+                        toExclude +
+                        ")}, DESCENDANTS(" + HierarchyUniqueName + ".CURRENTMEMBER))," + this.UniqueName + "}";
 
-                        //{
-                        //GENERATE
-                        //(
-                        //		{ 
-                        //		  EXCEPT
-                        //			(
-                        //				<Member_Unique_Name>.Children, 
-                        //				{
-                        //					<Excluded_Member_Unique_Name>,
-                        //					<Excluded_Member_Unique_Name>,
-                        //					<Excluded_Member_Unique_Name>	
-                        //				}
-                        //			)
-                        //		}, 
-                        //		DESCENDANTS
-                        //		(
-                        //			<Dimension_Unique_Name>.CURRENTMEMBER
-                        //		)
-                        //	)
-                        //,<Member_Unique_Name>
-                        //}
+                    childSet = GetChildrenSet(membersInSet);
 
-                        //Получаем Set из дочерних, который нужно исключить
-                        String toExclude = GetExcludedChildrenSet(membersInSet);
+                    //Элемент заносим в список участников формирования запроса
+                    if (membersInSet != null)
+                        membersInSet[this.UniqueName] = this;
+                    break;
+                case SelectStates.Selected_Self:
+                    selfSet = this.UniqueName;
+                    childSet = GetChildrenSet(membersInSet);
 
-                        //Такого быть не должно. Но если вдруг произошло, то поступаем как в случае case SelectStates.Selected_With_Children:
-                        if (toExclude == null || toExclude.Length <= 0)
-                        {
-                            selfSet = "AddCalculatedMembers(GENERATE({" +
-                                this.UniqueName +
-                                "}, DESCENDANTS(" + HierarchyUniqueName + ".CURRENTMEMBER)))";
+                    //Элемент заносим в список участников формирования запроса
+                    if (membersInSet != null)
+                        membersInSet[this.UniqueName] = this;
+                    break;
+                case SelectStates.Labeled_As_Parent:
+                    childSet = GetChildrenSet(membersInSet);
+                    break;
+                case SelectStates.Not_Initialized:
+                    break;
+                case SelectStates.Not_Selected:
+                    childSet = GetChildrenSet(membersInSet);
 
-                            //Элемент заносим в список участников формирования запроса
-                            if (membersInSet != null)
-                                membersInSet[this.UniqueName] = this;
-                            break;
-                        }
+                    //Элемент заносим в список участников формирования запроса
+                    if (membersInSet != null)
+                        membersInSet[this.UniqueName] = this;
 
-                        selfSet = "{GENERATE({EXCEPT(AddCalculatedMembers(" +
-                            this.UniqueName + ".Children)," +
-                            toExclude +
-                            ")}, DESCENDANTS(" + HierarchyUniqueName + ".CURRENTMEMBER))," + this.UniqueName + "}";
-
-                        childSet = GetChildrenSet(membersInSet);
-
-                        //Элемент заносим в список участников формирования запроса
-                        if (membersInSet != null)
-                            membersInSet[this.UniqueName] = this;
-                        break;
-                    case SelectStates.Selected_Self:
-                        selfSet = this.UniqueName;
-                        childSet = GetChildrenSet(membersInSet);
-
-                        //Элемент заносим в список участников формирования запроса
-                        if (membersInSet != null)
-                            membersInSet[this.UniqueName] = this;
-                        break;
-                    case SelectStates.Labeled_As_Parent:
-                        childSet = GetChildrenSet(membersInSet);
-                        break;
-                    case SelectStates.Not_Initialized:
-                        break;
-                    case SelectStates.Not_Selected:
-                        childSet = GetChildrenSet(membersInSet);
-
-                        //Элемент заносим в список участников формирования запроса
-                        if (membersInSet != null)
-                            membersInSet[this.UniqueName] = this;
-
-                        break;
-                }
-
+                    break;
             }
+
 
             if (String.IsNullOrEmpty(selfSet) && childSet.Count == 0)
                 return null;
@@ -1149,18 +904,10 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         public void SetNewState(SelectStates newState)
         {
 
-            if (Mode == Modes.BM)
+            if (newState == SelectStates.Selected_Self && AllChildrenIsSelected)
             {
-                if (newState == SelectStates.Selected_Self && AllChildrenIsSelected)
-                {
-                    //Устанавливаем в новое состояние
-                    SetState(SelectStates.Selected_With_Children);
-                }
-                else
-                {
-                    //Устанавливаем в новое состояние
-                    SetState(newState);
-                }
+                //Устанавливаем в новое состояние
+                SetState(SelectStates.Selected_With_Children);
             }
             else
             {
@@ -1182,75 +929,26 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         /// </summary>
         public void SetNextState()
         {
-            //Режим работы - БМ
-            if (this.Mode == Modes.BM)
+            switch (SelectState)
             {
-                switch (SelectState)
-                {
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                    case SelectStates.Labeled_As_Parent:
-                        SetNewState(SelectStates.Selected_Self);
-                        break;
-                    case SelectStates.Selected_Self:
-                    case SelectStates.Selected_By_Parent:
-                        if (this.HasChildren)
-                            SetNewState(SelectStates.Selected_With_Children);
-                        else
-                            SetNewState(SelectStates.Not_Selected);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        SetNewState(SelectStates.Not_Selected);
-                        break;
-                }
-            }
-            //Режим работы - Область строк
-            if (this.Mode == Modes.Rows_Area)
-            {
-                switch (SelectState)
-                {
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                        SetNewState(SelectStates.Selected_Self);
-                        break;
-                    case SelectStates.Selected_Self:
-                    case SelectStates.Selected_By_Parent:
-                        if (this.HasChildren)
-                            SetNewState(SelectStates.Selected_With_Children);
-                        else
-                            SetNewState(SelectStates.Not_Selected);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                    case SelectStates.Labeled_As_Parent:
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        SetNewState(SelectStates.Not_Selected);
-                        break;
-                }
-            }
-
-            //Режим работы - Область фильтров
-            if (this.Mode == Modes.Filter_Area)
-            {
-                switch (SelectState)
-                {
-                    case SelectStates.Not_Selected:
-                    case SelectStates.Not_Initialized:
-                    case SelectStates.Labeled_As_Parent:
+                case SelectStates.Not_Selected:
+                case SelectStates.Not_Initialized:
+                case SelectStates.Labeled_As_Parent:
+                    SetNewState(SelectStates.Selected_Self);
+                    break;
+                case SelectStates.Selected_Self:
+                case SelectStates.Selected_By_Parent:
+                    if (this.HasChildren)
                         SetNewState(SelectStates.Selected_With_Children);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                    case SelectStates.Selected_By_Parent:
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                    else
                         SetNewState(SelectStates.Not_Selected);
-                        break;
-                }
+                    break;
+                case SelectStates.Selected_With_Children:
+                case SelectStates.Selected_By_Parent_With_Children:
+                case SelectStates.Selected_With_Children_Has_Excluded:
+                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                    SetNewState(SelectStates.Not_Selected);
+                    break;
             }
         }
 
@@ -1263,94 +961,50 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
                 return false;
 
             bool changed = false;
-            if (Mode == Modes.BM || Mode == Modes.Rows_Area)
+
+            switch (Parent.SelectState)
             {
-                switch (Parent.SelectState)
-                {
-                    case SelectStates.Not_Initialized:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Not_Selected:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_Self:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Selected_By_Parent:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_By_Parent_With_Children:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Labeled_As_Parent:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                }
+                case SelectStates.Not_Initialized:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    break;
+                case SelectStates.Not_Selected:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    break;
+                case SelectStates.Selected_Self:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    break;
+                case SelectStates.Selected_With_Children:
+                    if (HasChildren)
+                        changed = SetState(SelectStates.Selected_By_Parent_With_Children);
+                    else
+                        changed = SetState(SelectStates.Selected_By_Parent);
+                    break;
+                case SelectStates.Selected_By_Parent:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    break;
+                case SelectStates.Selected_By_Parent_With_Children:
+                    if (HasChildren)
+                        changed = SetState(SelectStates.Selected_By_Parent_With_Children);
+                    else
+                        changed = SetState(SelectStates.Selected_By_Parent);
+                    break;
+                case SelectStates.Labeled_As_Parent:
+                    changed = SetState(SelectStates.Not_Initialized);
+                    break;
+                case SelectStates.Selected_With_Children_Has_Excluded:
+                    if (HasChildren)
+                        changed = SetState(SelectStates.Selected_By_Parent_With_Children);
+                    else
+                        changed = SetState(SelectStates.Selected_By_Parent);
+                    break;
+                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                    if (HasChildren)
+                        changed = SetState(SelectStates.Selected_By_Parent_With_Children);
+                    else
+                        changed = SetState(SelectStates.Selected_By_Parent);
+                    break;
             }
 
-            if (Mode == Modes.Filter_Area)
-            {
-                switch (Parent.SelectState)
-                {
-                    case SelectStates.Not_Initialized:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Not_Selected:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_With_Children:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Selected_By_Parent:
-                        changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Labeled_As_Parent:
-                        changed = SetState(SelectStates.Not_Initialized);
-                        break;
-                    case SelectStates.Selected_By_Parent_With_Children:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        if (HasChildren)
-                            changed = SetState(SelectStates.Selected_By_Parent_With_Children);
-                        else
-                            changed = SetState(SelectStates.Selected_By_Parent);
-                        break;
-                }
-            }
             return changed;
         }
 

@@ -97,6 +97,12 @@ namespace Ranet.AgOlap.Controls
             if (m_TextBox != null)
                 m_TextBox.IsReadOnly = true;
 
+            var readOnlyVisualElement = base.GetTemplateChild("ReadOnlyVisualElement") as Border;
+            if (readOnlyVisualElement != null)
+            {
+                readOnlyVisualElement.Background = new SolidColorBrush(Colors.Transparent);
+            }
+
             if (m_Calendar != null)
             {
                 m_Calendar.DisplayDateChanged += new EventHandler<CalendarDateChangedEventArgs>(calendar_DisplayDateChanged);
@@ -295,8 +301,7 @@ namespace Ranet.AgOlap.Controls
                 StringBuilder builder = new StringBuilder();
                 if (String.IsNullOrEmpty(Connection))
                     builder.Append(Localization.Connection_PropertyDesc);
-                LogManager.LogMessage(Localization.DateChoiceControl_Name, Localization.Error + "! " + String.Format(Localization.ControlSettingsNotInitialized_Message, builder.ToString()));
-
+                LogManager.LogError(this, String.Format(Localization.ControlSettingsNotInitialized_Message, builder.ToString()));
                 return;
             }
 
@@ -348,13 +353,13 @@ namespace Ranet.AgOlap.Controls
 
             if (e.Error != null)
             {
-                LogManager.LogException(Localization.DateChoiceControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
-                LogManager.LogMessage(Localization.DateChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 
@@ -376,8 +381,8 @@ namespace Ranet.AgOlap.Controls
                 {
                     if (position.Members.Count > 0)
                     {
-                        if (!m_LoadedMembers.ContainsKey(position.Members[0].UniqueName))
-                            m_LoadedMembers.Add(position.Members[0].UniqueName, position.Members[0]);
+                        if (!m_LoadedMembers.ContainsKey(cs_descr.Axes[0].Members[position.Members[0].Id].UniqueName))
+                            m_LoadedMembers.Add(cs_descr.Axes[0].Members[position.Members[0].Id].UniqueName, cs_descr.Axes[0].Members[position.Members[0].Id]);
                     }
                 }
             }

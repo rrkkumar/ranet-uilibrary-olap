@@ -105,28 +105,66 @@ namespace Ranet.AgOlap.Controls.General
         public void Initialize(MemberData member)
         {
             m_PropertiesOwnerControl.Visibility = Visibility.Visible;
-            m_PropertiesOwnerControl.Content = new MemberItemControl(member); 
-            m_PropertiesList.Initialize(member);
+            m_PropertiesOwnerControl.Content = new MemberItemControl(member);
+            List<PropertyItem> list = new List<PropertyItem>();
+            if (member != null)
+            {
+                foreach (PropertyData pair in member.MemberProperties)
+                {
+                    PropertyItem item = new PropertyItem();
+
+                    String caption = pair.Name;
+                    if (caption.StartsWith("-") && caption.EndsWith("-"))
+                        caption = caption.Trim('-');
+                    item.Property = caption;
+
+                    if (pair.Value != null)
+                    {
+                        item.Value = pair.Value.ToString();
+                    }
+                    else
+                    {
+                        item.Value = String.Empty;
+                    }
+                    list.Add(item);
+                }
+            }
+            m_PropertiesList.Initialize(list);
         }
 
         public void Initialize(MemberInfo member)
         {
             m_PropertiesOwnerControl.Visibility = Visibility.Visible;
             m_PropertiesOwnerControl.Content = new MemberInfoItemControl(member);
-            m_PropertiesList.Initialize(member);
-        }
 
-        public void Initialize(CellInfo cell)
-        {
-            m_PropertiesOwnerControl.Visibility = Visibility.Collapsed;
-            if (cell != null && cell.CellDescr != null)
+            List<PropertyItem> list = new List<PropertyItem>();
+            if (member != null && member.PropertiesDictionary != null)
             {
-                m_PropertiesList.Initialize(cell.CellDescr.Value);
+                foreach (KeyValuePair<String, object> pair in member.PropertiesDictionary)
+                {
+                    PropertyItem item = new PropertyItem();
+                    item.Property = pair.Key;
+                    if (item.Property == "DrilledDown")
+                    {
+                        // Элементы на оси объединяются если идут подряд одинаковые. При этом значение данного свойства формируется по ИЛИ
+                        item.Value = member.DrilledDown.ToString();
+                    }
+                    else
+                    {
+                        if (pair.Value != null)
+                        {
+                            item.Value = pair.Value.ToString();
+                        }
+                        else
+                        {
+                            item.Value = String.Empty;
+                        }
+                    }
+                    list.Add(item);
+                }
             }
-            else
-            {
-                m_PropertiesList.Clear();
-            }
+
+            m_PropertiesList.Initialize(list);
         }
     }
 }

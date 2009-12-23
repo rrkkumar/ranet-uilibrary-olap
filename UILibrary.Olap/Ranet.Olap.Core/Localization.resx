@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MetadataResponseException_CubeNotFound" xml:space="preserve">
-    <value>Cube with name '{0}' not found.</value>
+    <value>Cube with name '{0}' not found. Connection: {1}.</value>
   </data>
   <data name="MetadataResponseException_DimensionByUniqueName_InCube_NotFound" xml:space="preserve">
-    <value>Dimension with unique name '{0}' not found in cube '{1}'.</value>
+    <value>Dimension with unique name '{0}' not found in cube '{1}'. Connection: {2}.</value>
   </data>
   <data name="MetadataResponseException_HierarchyByUniqueName_InCube_NotFound" xml:space="preserve">
-    <value>Hierarchy with unique name '{0}' not found in cube '{1}'.</value>
+    <value>Hierarchy with unique name '{0}' not found in cube '{1}'. Connection: {2}.</value>
   </data>
   <data name="MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound" xml:space="preserve">
-    <value>Hierarchy with unique name '{0}' not found in dimension '{1}'.</value>
+    <value>Hierarchy with unique name '{0}' not found in dimension '{1}'. Connection: {2}.</value>
   </data>
   <data name="MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound" xml:space="preserve">
-    <value>Level with unique name '{0}' not found in hierarchy '{1}'.</value>
+    <value>Level with unique name '{0}' not found in hierarchy '{1}'. Connection: {2}.</value>
   </data>
 </root>

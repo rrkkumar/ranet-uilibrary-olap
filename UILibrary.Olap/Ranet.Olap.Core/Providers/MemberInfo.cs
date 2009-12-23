@@ -67,6 +67,16 @@ namespace Ranet.Olap.Core.Providers
             set { m_DrilledDown = value; }
         }
 
+        /// <summary>
+        /// Member is calculated
+        /// </summary>
+        public bool IsCalculated
+        {
+            get {
+                return PropertiesDictionary.ContainsKey(KEY0_PROPERTY) && PropertiesDictionary[KEY0_PROPERTY] == null;
+            }
+        }
+
         private int m_LevelDepth = 0;
         public int LevelDepth
         {

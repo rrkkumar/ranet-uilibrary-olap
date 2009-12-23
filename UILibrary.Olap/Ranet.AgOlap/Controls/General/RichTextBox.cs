@@ -40,6 +40,8 @@ namespace Ranet.AgOlap.Controls.General
 
         public RichTextBox()
         {
+            DefaultStyleKey = typeof(RichTextBox);
+
             base.MouseEnter += new MouseEventHandler(RichTextBox_MouseEnter);
             base.MouseLeave += new MouseEventHandler(RichTextBox_MouseLeave);
             this.IsMouseWheelAttached = false;
@@ -49,6 +51,17 @@ namespace Ranet.AgOlap.Controls.General
         {
             return base.GetTemplateChild("ContentElement") as ScrollViewer;
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            var readOnlyVisualElement = base.GetTemplateChild("ReadOnlyVisualElement") as Border;
+            if (readOnlyVisualElement != null)
+            {
+                readOnlyVisualElement.Background = new SolidColorBrush(Colors.Transparent);
+            }
+        } 
 
         public bool IsMouseWheelAttached { get; set; }
 
@@ -162,5 +175,19 @@ namespace Ranet.AgOlap.Controls.General
                 this.ContextMenu.IsDropDownOpen = true;
             }
         }
+    }
+
+    public class SimpleTextBox : RichTextBox
+    {        
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            var readOnlyVisualElement = base.GetTemplateChild("ReadOnlyVisualElement") as Border;
+            if (readOnlyVisualElement != null)
+            {
+                readOnlyVisualElement.Background = new SolidColorBrush(Colors.Transparent);
+            }
+        } 
     }
 }

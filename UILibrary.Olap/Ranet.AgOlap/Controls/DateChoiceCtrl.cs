@@ -324,13 +324,13 @@ namespace Ranet.AgOlap.Controls
 
             if (e.Error != null)
             {
-                LogManager.LogException(Localization.DateChoiceControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
-                LogManager.LogMessage(Localization.DateChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 
@@ -352,8 +352,8 @@ namespace Ranet.AgOlap.Controls
                 {
                     if(position.Members.Count > 0)
                     {
-                        if(!m_LoadedMembers.ContainsKey(position.Members[0].UniqueName))
-                            m_LoadedMembers.Add(position.Members[0].UniqueName, position.Members[0]);
+                        if(!m_LoadedMembers.ContainsKey(cs_descr.Axes[0].Members[position.Members[0].Id].UniqueName))
+                            m_LoadedMembers.Add(cs_descr.Axes[0].Members[position.Members[0].Id].UniqueName, cs_descr.Axes[0].Members[position.Members[0].Id]);
                     }
                 }
             }

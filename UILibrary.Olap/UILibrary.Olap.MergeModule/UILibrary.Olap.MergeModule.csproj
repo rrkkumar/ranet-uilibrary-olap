@@ -13,6 +13,10 @@
     <AssemblyName>UILibrary.Olap.MergeModule</AssemblyName>
     <StartupObject>
     </StartupObject>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <PublishUrl>http://localhost/UILibrary.WixMergeModule/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -129,7 +133,7 @@
       <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Web.Olap.dll</Link>
     </Content>
     <Content Include="..\..\Binaries\Release\Ranet.Web.Olap.xml">
-      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.Web.Olap.xml</Link>
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.Web.Olap.xml</Link>
     </Content>
     <Content Include="..\..\Binaries\Release\ru\Ranet.AgOlap.resources.dll">
       <Link>INSTALLDIR\SILVERLIGHT\BIN\RU\Ranet.AgOlap.resources.dll</Link>
@@ -141,9 +145,59 @@
       <Link>INSTALLDIR\FRAMEWORK\BIN\RU\Ranet.Olap.Core.resources.dll</Link>
     </Content>
     <Content Include="INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt" />
-    <Content Include="INSTALLDIR\Licenses\GPL v.3.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Binaries\Release\Ranet.AgZipLib.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgZipLib.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgZipLib.pdb">
+      <Link>INSTALLDIR\SILVERLIGHT\SYMBOLS\Ranet.AgZipLib.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.AgZipLib.xml">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgZipLib.xml</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.ZipLib.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.ZipLib.dll</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.ZipLib.pdb">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Ranet.ZipLib.pdb</Link>
+    </Content>
+    <Content Include="..\..\Binaries\Release\Ranet.ZipLib.xml">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Ranet.ZipLib.xml</Link>
+    </Content>
+    <Content Include="..\dll\GPL v.3.txt">
+      <Link>INSTALLDIR\Licenses\GPL v.3.txt</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.AgJson.dll">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Jayrock.AgJson.dll</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.AgJson.pdb">
+      <Link>INSTALLDIR\SILVERLIGHT\SYMBOLS\Jayrock.AgJson.pdb</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.AgJson.xml">
+      <Link>INSTALLDIR\SILVERLIGHT\BIN\Jayrock.AgJson.xml</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.Json.dll">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Jayrock.Json.dll</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.Json.pdb">
+      <Link>INSTALLDIR\FRAMEWORK\SYMBOLS\Jayrock.Json.pdb</Link>
+    </Content>
+    <Content Include="..\dll\Jayrock.Json.xml">
+      <Link>INSTALLDIR\FRAMEWORK\BIN\Jayrock.Json.xml</Link>
+    </Content>
+    <Content Include="..\dll\LGPL v.3.txt">
+      <Link>INSTALLDIR\Licenses\LGPL v.3.txt</Link>
+    </Content>
+    <Content Include="..\dll\Ranet.Json.License.txt">
+      <Link>INSTALLDIR\Licenses\Ranet.Json.License.txt</Link>
+    </Content>
+    <Content Include="..\dll\Ranet.ZipLib.License.txt">
+      <Link>INSTALLDIR\Licenses\Ranet.ZipLib.License.txt</Link>
+    </Content>
+    <Content Include="..\dll\SilverlightToolkit.License.txt">
+      <Link>INSTALLDIR\Licenses\SilverlightToolkit.License.txt</Link>
+    </Content>
     <Content Include="INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf" />
   </ItemGroup>
   <ItemGroup>

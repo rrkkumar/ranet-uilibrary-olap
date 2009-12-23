@@ -12,6 +12,10 @@
     <AssemblyName>Ranet.Web.Olap</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
@@ -47,6 +51,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\dll\Microsoft.AnalysisServices.AdomdClient.dll</HintPath>
     </Reference>
+    <Reference Include="Ranet.ZipLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\dll\Ranet.ZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -69,18 +77,11 @@
     <Compile Include="..\Ranet.AgOlap\Controls\General\ClientServer\MetadataQuery.cs">
       <Link>MetadataQuery.cs</Link>
     </Compile>
-    <Compile Include="..\Ranet.AgOlap\Controls\MemberChoice\ClientServer\MemberChoiceQuery.cs">
-      <Link>MemberChoiceQuery.cs</Link>
-    </Compile>
     <Compile Include="AdomdConnectionPool.cs" />
     <Compile Include="DefaultQueryExecuter.cs" />
-    <Compile Include="OlapHelper.cs" />
     <Compile Include="OlapWebServiceBase.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PivotGrid\OlapPivotDataManager.cs" />
-    <Compile Include="PivotGrid\PivotTableUpdater.cs" />
-    <Compile Include="XmlUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Ranet.Olap.Core\Ranet.Olap.Core.csproj">

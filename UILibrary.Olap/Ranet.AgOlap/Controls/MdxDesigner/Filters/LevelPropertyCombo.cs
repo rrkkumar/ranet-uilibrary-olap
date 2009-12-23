@@ -31,6 +31,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.General.ItemControls;
 using Ranet.Olap.Core.Metadata;
+using Ranet.AgOlap.Controls.Combo;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
 {
@@ -42,7 +43,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
         {
             Grid LayoutRoot = new Grid();
 
-            comboBox = new ComboBox();
+            comboBox = new RanetComboBox();
             LayoutRoot.Children.Add(comboBox);
 
             comboBox.Items.Add(new LevelPropertyItemControl(new LevelPropertyInfo("Caption", "Caption")));

@@ -152,10 +152,10 @@ namespace Ranet.AgOlap.Controls.Gauge
         // Толщина границы спидометра
         double outerSize = 0;
 
+        double m_CurrentValue = double.MinValue;
         /// <summary>
         /// Текущее значение
         /// </summary>
-        double m_CurrentValue = double.MinValue;
         public double CurrentValue
         {
             get
@@ -185,6 +185,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         TextBlock currentValueText;
 
         String m_Text = String.Empty;
+        /// <summary>
+        /// Тект, который отображается в качестве подписи на циферблате
+        /// </summary>
         public String Text
         {
             get {
@@ -197,6 +200,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         String m_DivisionsFormatString = "0.##";
+        /// <summary>
+        /// Строка форматирования для значений основных делений
+        /// </summary>
         public String DivisionsFormatString
         {
             get
@@ -211,6 +217,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         String m_CurrentValueFormatString = "0.##";
+        /// <summary>
+        /// Строка форматирования для отображения текущего значения
+        /// </summary>
         public String CurrentValueFormatString
         {
             get
@@ -225,6 +234,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         private double m_HeightValue = double.MinValue;
+        /// <summary>
+        /// Верхнее значение
+        /// </summary>
         public double HightValue
         {
             get {
@@ -237,6 +249,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         private double m_LowValue = double.MinValue;
+        /// <summary>
+        /// Нижнее значение
+        /// </summary>
         public double LowValue
         {
             get
@@ -251,6 +266,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         bool m_HidePercentageInDivisions = false;
+        /// <summary>
+        /// Флаг, определяющий необходимость отображения % в значениях основных делений
+        /// </summary>
         public bool HidePercentageInDivisions
         {
             get
@@ -265,6 +283,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         bool m_HidePercentageInValue = false;
+        /// <summary>
+        /// Флаг, определяющий необходимость отображения % в текущем значении
+        /// </summary>
         public bool HidePercentageInValue
         {
             get
@@ -488,6 +509,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         int m_DivisionsCount = 10;
+        /// <summary>
+        /// Количество основных делений
+        /// </summary>
         public int DivisionsCount
         {
             get {
@@ -500,6 +524,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         int m_SubDivisionsCount = 5;
+        /// <summary>
+        /// Количество промежуточных делений
+        /// </summary>
         public int SubDivisionsCount
         {
             get
@@ -545,6 +572,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         Color m_GoodColor = Colors.Green;
+        /// <summary>
+        /// Цвет для верхней области - между верхним и максимальным значениями
+        /// </summary>
         public Color GoodColor
         {
             get { return m_GoodColor; }
@@ -555,6 +585,9 @@ namespace Ranet.AgOlap.Controls.Gauge
             }
         }
 
+        /// <summary>
+        /// Тект всплывающей подсказки
+        /// </summary>
         public string ToolTipText
         {
             get
@@ -571,6 +604,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         Color m_BackgroundColor = Colors.Transparent;
+        /// <summary>
+        /// Цвет фона 
+        /// </summary>
         public Color BackgroundColor
         {
             get { return m_BackgroundColor; }
@@ -593,6 +629,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         Color m_BadColor = Colors.Red;
+        /// <summary>
+        /// Цвет для нижней области - между минимальным и нижним значениями
+        /// </summary>
         public Color BadColor
         {
             get { return m_BadColor; }
@@ -604,6 +643,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         Color m_MiddleColor = Colors.Yellow;
+        /// <summary>
+        /// Цвет средней области - между нижним и верхним значениями
+        /// </summary>
         public Color MiddleColor
         {
             get { return m_MiddleColor; }
@@ -649,6 +691,9 @@ namespace Ranet.AgOlap.Controls.Gauge
         }
 
         Color m_ForeColor = Colors.Black;
+        /// <summary>
+        /// Цвет для значений циферблата
+        /// </summary>
         public Color ForeColor
         {
             get { return m_ForeColor; }

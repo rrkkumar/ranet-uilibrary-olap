@@ -118,18 +118,18 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="MetadataResponseException_CubeNotFound" xml:space="preserve">
-    <value>Не удалось найти куб с именем '{0}'.</value>
+    <value>Не удалось найти куб с именем '{0}'. Соединение: {1}.</value>
   </data>
   <data name="MetadataResponseException_DimensionByUniqueName_InCube_NotFound" xml:space="preserve">
-    <value>Не удалось найти измерение с уникальным именем '{0}' в кубе '{1}'.</value>
+    <value>Не удалось найти измерение с уникальным именем '{0}' в кубе '{1}'. Соединение: {2}.</value>
   </data>
   <data name="MetadataResponseException_HierarchyByUniqueName_InCube_NotFound" xml:space="preserve">
-    <value>Не удалось найти иерархию с уникальным именем '{0}' в кубе '{1}'.</value>
+    <value>Не удалось найти иерархию с уникальным именем '{0}' в кубе '{1}'. Соединение: {2}.</value>
   </data>
   <data name="MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound" xml:space="preserve">
-    <value>Не удалось найти иерархию с уникальным именем '{0}' в измерении '{1}'.</value>
+    <value>Не удалось найти иерархию с уникальным именем '{0}' в измерении '{1}'. Соединение: {2}.</value>
   </data>
   <data name="MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound" xml:space="preserve">
-    <value>Не удалось найти уровень с уникальным именем '{0}' в иерархии '{1}'.</value>
+    <value>Не удалось найти уровень с уникальным именем '{0}' в иерархии '{1}'. Соединение: {2}.</value>
   </data>
 </root>

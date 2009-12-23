@@ -25,9 +25,11 @@ namespace UILibrary.Olap.UITestApplication
 			{
 				try
 				{
-					
+
 					Config.Save();
-					CheckedInfo.Text ="Connection has been succesfully checked.";
+					CheckedInfo.Text = "Connection has been succesfully checked.";
+					System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
+					//Application.Current.Host.Content.NavigationState="Done!";
 					//MessageBox.Show(CheckedInfo.Text, "OK", MessageBoxButton.OK);
 					//initCubeChoiceButton_Click(null, null);
 					//initPivotGridButton_Click(null, null);
@@ -36,8 +38,12 @@ namespace UILibrary.Olap.UITestApplication
 				}
 				catch (Exception E)
 				{
-					MessageBox.Show(E.ToString(),"Error",MessageBoxButton.OK);
+					MessageBox.Show(E.ToString(), "Error", MessageBoxButton.OK);
 				}
+			}
+			, () =>
+			{
+				CheckedInfo.Text = "There were errors while connection checking....";
 			}
 			);
 		}

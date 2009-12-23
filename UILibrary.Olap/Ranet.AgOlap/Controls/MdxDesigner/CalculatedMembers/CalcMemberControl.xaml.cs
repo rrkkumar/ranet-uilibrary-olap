@@ -41,6 +41,10 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             lblExpression.Text = Localization.CalcMemberEditor_ExpressionLabel;
             tabMemberTab.Header = Localization.CalcMemberEditor_MemberTab;
             tabScriptTab.Header = Localization.CalcMemberEditor_ScriptTab;
+            lblNonEmptyBehavior.Text = Localization.CalcMemberEditor_NonEmpty;
+            lblFormatString.Text = Localization.CalcMemberEditor_FormatStringLabel;
+            lblBackColor.Text = Localization.CalcMemberEditor_BackColorLabel;
+            lblForeColor.Text = Localization.CalcMemberEditor_ForeColorLabel;
 
             comboFormatString.SelectionChanged += new EventHandler(comboFormatString_SelectionChanged);
             comboFormatString.EditStart += new EventHandler(comboBox_EditStart);
@@ -54,6 +58,24 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             comboNonEmptyBehavior.ItemsSource = m_NonEmptyBehavoirSource;
             comboNonEmptyBehavior.DropDownOpened += new EventHandler(comboBox_EditStart);
             comboNonEmptyBehavior.DropDownClosed += new EventHandler(comboNonEmptyBehavior_DropDownClosed);
+
+            comboBackColor.ColorsComboBox.DropDownOpened += new EventHandler(comboBox_EditStart);
+            comboBackColor.ColorsComboBox.DropDownClosed += new EventHandler(BackColor_ColorsComboBox_DropDownClosed);
+
+            comboForeColor.ColorsComboBox.DropDownOpened += new EventHandler(comboBox_EditStart);
+            comboForeColor.ColorsComboBox.DropDownClosed += new EventHandler(ForeColor_ColorsComboBox_DropDownClosed);
+        }
+
+        void ForeColor_ColorsComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            Raise_InnerEditEnd();
+            Member.ForeColor = comboForeColor.CurrentObject != null ? comboForeColor.CurrentObject.ColorValue : Colors.Transparent;
+        }
+
+        void BackColor_ColorsComboBox_DropDownClosed(object sender, EventArgs e)
+        {
+            Raise_InnerEditEnd();
+            Member.BackColor = comboBackColor.CurrentObject != null ? comboBackColor.CurrentObject.ColorValue : Colors.Transparent;
         }
 
         void comboNonEmptyBehavior_DropDownClosed(object sender, EventArgs e)
@@ -69,49 +91,83 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
         List<ComboBoxItemData> m_NonEmptyBehavoirSource = new List<ComboBoxItemData>();
 
-
-        bool m_IsReadyToDrop = false;
-        public bool IsReadyToDrop
+        public void HighlightDrop(Point point)
         {
-            get { return m_IsReadyToDrop; }
-            set
+            if (IsEnabled)
             {
-                if (m_IsReadyToDrop != value)
+                Rect expression_Bounds = AgControlBase.GetSLBounds(txtExpression);
+                if (expression_Bounds.Contains(point))
                 {
-                    m_IsReadyToDrop = value;
-                    if (value)
-                    {
-                        brdExpression.BorderBrush = new SolidColorBrush(Color.FromArgb(50, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
-                        brdExpression.Background = new SolidColorBrush(Color.FromArgb(20, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
-                    }
-                    else
-                    {
-                        brdExpression.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                        brdExpression.Background = new SolidColorBrush(Colors.Transparent);
-                    }
+                    txtExpression.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 1, Opacity = 0.8, Color = Colors.Blue };
+                }
+                else
+                {
+                    txtExpression.Effect = null;
+                }
+
+                Rect name_Bounds = AgControlBase.GetSLBounds(txtName);
+                if (name_Bounds.Contains(point))
+                {
+                    txtName.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 1, Opacity = 0.8, Color = Colors.Blue };
+                }
+                else
+                {
+                    txtName.Effect = null;
+                }
+            }
+            else
+            {
+                txtName.Effect = null;
+                txtExpression.Effect = null;
+            }
+        }
+        
+        public void Drop(Point point, String str)
+        {
+            if (!String.IsNullOrEmpty(str))
+            {
+                if (CanDropToName(point))
+                {
+                    txtName.Text += " " + str;
+                    txtName.Effect = null;
+                }
+                if (CanDropToExpression(point))
+                {
+                    txtExpression.Text += " " + str;
+                    txtExpression.Effect = null;
                 }
             }
         }
 
-        public void Drop(Point point, String str)
-        {
-            if (IsReadyToDrop && !String.IsNullOrEmpty(str))
-            {
-                txtExpression.Text += " " + str;
-            }
-        }
-
-        public bool CanDrop(Point point)
+        bool CanDropToName(Point point)
         {
             if (IsEnabled)
             {
-                Rect expression_Bounds = AgControlBase.GetSLBounds(brdExpression);
+                Rect name_Bounds = AgControlBase.GetSLBounds(txtName);
+                if (name_Bounds.Contains(point))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool CanDropToExpression(Point point)
+        {
+            if (IsEnabled)
+            {
+                Rect expression_Bounds = AgControlBase.GetSLBounds(txtExpression);
                 if (expression_Bounds.Contains(point))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        public bool CanDrop(Point point)
+        {
+            return CanDropToName(point) | CanDropToExpression(point);
         }
 
         void txtName_KeyDown(object sender, KeyEventArgs e)
@@ -272,6 +328,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
             // Ищем соответствующую строку форматирования
             comboFormatString.SelectItem(info != null ? info.FormatString : String.Empty);
+            comboForeColor.SelectItem(info != null ? info.ForeColor : Colors.Transparent);
+            comboBackColor.SelectItem(info != null ? info.BackColor : Colors.Transparent);
 
             if (TabCtrl.SelectedItem == tabScriptTab)
             {

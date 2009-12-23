@@ -52,8 +52,8 @@ namespace Ranet.AgOlap.Controls.General.Tree
                 throw new ArgumentNullException("info");
             m_MemberInfo = info;
 
-            if (info.Info != null && info.Info.Member != null)
-                Text = MemberInfo.Info.Member.Caption;
+            if (info.Info != null && info.Info != null)
+                Text = MemberInfo.Info.Caption;
             else
                 Text = String.Empty;
 
@@ -76,8 +76,8 @@ namespace Ranet.AgOlap.Controls.General.Tree
             {
                 m_MemberVisualizationType = value;
                 // Определяем что именно нужно светить в контроле
-                if (MemberInfo.Info != null && MemberInfo.Info.Member != null)
-                    Text = MemberInfo.Info.Member.GetText(m_MemberVisualizationType);
+                if (MemberInfo.Info != null && MemberInfo.Info != null)
+                    Text = MemberInfo.Info.GetText(m_MemberVisualizationType);
                 else
                     Text = String.Empty;
             }

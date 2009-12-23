@@ -32,32 +32,19 @@ using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.PivotGrid.Data;
 using System.Collections.Generic;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
     public class CellValueChangedEventArgs : EventArgs
     {
-        //public object Owner = null;
-        public readonly CellInfo Cell = null;
-        //public readonly String OldDisplayValue = String.Empty;
-        //public readonly object OldValue = null;
-        public readonly String NewValue = String.Empty;
-        //public readonly IList<MemberInfo> Tuple = null;
+        public readonly List<UpdateEntry> Changes;
 
-        public CellValueChangedEventArgs(/*object owner,*/
-            CellInfo cell,
-            String newValue//,
-            //IList<MemberInfo> tuple,
-            //object oldValue,
-            //String oldDisplayValue
-            )
+        public CellValueChangedEventArgs(List<UpdateEntry> changes)
         {
-            //this.Owner = owner;
-            this.Cell = cell;
-            this.NewValue = newValue;
-            //this.Tuple = tuple;
-            //this.OldValue = oldValue;
-            //OldDisplayValue = oldDisplayValue;
+            if (changes == null)
+                throw new ArgumentNullException("changes");
+            Changes = changes;
         }
     }
 

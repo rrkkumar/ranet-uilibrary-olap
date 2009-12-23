@@ -91,7 +91,7 @@
 			</Directory>
 			<Directory Id="ProgramFilesFolder" Name="PFiles">
 				<Directory Id="GALAKTIKA" Name="GalDir" LongName="$(var.Manufacturer)">
-					<Directory Id="INSTALLDIR" Name="UILib" LongName="$(var.ProductName).$(var.FileVersionBuild).$(var.FileVersionRevision)">
+					<Directory Id="INSTALLDIR" Name="UILib" LongName="$(var.ProductName)">
 						<Merge Language="0" Id="Main" SourceFile="..\..\Binaries\Release\$(var.ProductName).Runtime.msm" DiskId="1"/>
 						<Merge Language="0" Id="Samples" SourceFile="..\..\Binaries\Release\$(var.ProductName).Samples.msm" DiskId="1"/>
 						<Merge Language="0" Id="SamplesSrc" SourceFile="..\..\Binaries\Release\$(var.ProductName).Samples.Src.msm" DiskId="1"/>

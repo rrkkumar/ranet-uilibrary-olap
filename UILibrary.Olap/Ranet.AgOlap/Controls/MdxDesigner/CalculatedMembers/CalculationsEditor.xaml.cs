@@ -93,11 +93,14 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
         void m_ClearButton_Click(object sender, RoutedEventArgs e)
         {
-            Members.Clear();
-            Sets.Clear();
-            m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
-            MembersList.Initialize(Members, Sets);
-            RefreshMetadataTree();
+            if (MessageBox.Show(Localization.DeleteAll_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                Members.Clear();
+                Sets.Clear();
+                m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
+                MembersList.Initialize(Members, Sets);
+                RefreshMetadataTree();
+            }
         }
 
         #region Drag and Drop из метаданных куба
@@ -116,15 +119,14 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             {
                 TreeViewItem node = e.Node;
 
-                if (MemberCtrl.Visibility == Visibility.Visible && MemberCtrl.IsReadyToDrop)
+                Point point = new Point(m_DragStart.X + e.Args.HorizontalChange, m_DragStart.Y + e.Args.VerticalChange);
+                if (MemberCtrl.Visibility == Visibility.Visible && MemberCtrl.CanDrop(point))
                 {
-                    MemberCtrl.Drop(new Point(m_PrevDrag.X + e.Args.HorizontalChange, m_PrevDrag.Y + e.Args.VerticalChange), CubeBrowser.GetNodeString(node as CustomTreeNode));
-                    MemberCtrl.IsReadyToDrop = false;
+                    MemberCtrl.Drop(point, CubeBrowser.GetNodeString(node as CustomTreeNode));
                 }
-                if (SetCtrl.Visibility == Visibility.Visible && SetCtrl.IsReadyToDrop)
+                if (SetCtrl.Visibility == Visibility.Visible && SetCtrl.CanDrop(point))
                 {
-                    SetCtrl.Drop(new Point(m_PrevDrag.X + e.Args.HorizontalChange, m_PrevDrag.Y + e.Args.VerticalChange), CubeBrowser.GetNodeString(node as CustomTreeNode));
-                    SetCtrl.IsReadyToDrop = false;
+                    SetCtrl.Drop(point, CubeBrowser.GetNodeString(node as CustomTreeNode));
                 }
             }
         }
@@ -134,9 +136,9 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             Point m_DragDelta = new Point(m_PrevDrag.X + e.Args.HorizontalChange, m_PrevDrag.Y + e.Args.VerticalChange);
 
             if (MemberCtrl.Visibility == Visibility.Visible)
-                MemberCtrl.IsReadyToDrop = MemberCtrl.CanDrop(m_DragDelta);
+                MemberCtrl.HighlightDrop(m_DragDelta);
             if (SetCtrl.Visibility == Visibility.Visible)
-                SetCtrl.IsReadyToDrop = SetCtrl.CanDrop(m_DragDelta);
+                SetCtrl.HighlightDrop(m_DragDelta);
 
             m_PrevDrag = m_DragDelta;
         }
@@ -245,11 +247,35 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
         void m_AddCalcMemberButton_Click(object sender, RoutedEventArgs e)
         {
             CalcMemberInfo info = new CalcMemberInfo();
-            info.Name = BuildNewCalculatedMemberName(String.Empty);
+
+            // Если по выбранному узлу можем определить иерархию, то уникальное имя иерархии добавляем в имя вычисляемого элемента
+            // В этом случае элемент попадет в данную иерархию
+            // В противном случае - в иерархию [Measures] даже если она явно не прописана в имени
+            String name_prefix = String.Empty;
+            var hierarchy = CubeBrowser.SelectedNode as HierarchyTreeNode;
+            if (hierarchy != null)
+            {
+                if (hierarchy.Info != null && hierarchy.Info is HierarchyInfo)
+                    name_prefix = ((HierarchyInfo)hierarchy.Info).UniqueName;
+            }
+            var level = CubeBrowser.SelectedNode as LevelTreeNode;
+            if (level != null)
+            {
+                if (level.Info != null && level.Info is LevelInfo)
+                    name_prefix = ((LevelInfo)level.Info).ParentHirerachyId;
+            }
+            var member = CubeBrowser.SelectedNode as MemberLiteTreeNode;
+            if (member != null)
+            {
+                if (member.Info != null)
+                    name_prefix = member.Info.HierarchyUniqueName;
+            }
+
+            String defaultName = String.IsNullOrEmpty(name_prefix) ? "[Calculated Member]" : name_prefix + "." + "[Calculated Member]";
+            info.Name = BuildNewCalculatedMemberName(defaultName);
             Members.Add(info.Name, info);
             
-            MembersList.Initialize(Members, Sets);
-            MembersList.CurrentObject = info;
+            MembersList.Initialize(Members, Sets, info);
             RefreshMetadataTree();
             m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
         }
@@ -260,8 +286,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             info.Name = BuildNewCalculatedNamedSetName(String.Empty);
             Sets.Add(info.Name, info);
 
-            MembersList.Initialize(Members, Sets);
-            MembersList.CurrentObject = info;
+            MembersList.Initialize(Members, Sets, info);
             RefreshMetadataTree();
             m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
         }
@@ -355,24 +380,27 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
         void m_DeleteCalcMemberButton_Click(object sender, RoutedEventArgs e)
         {
-            CalcMemberInfo memberInfo = MembersList.CurrentObject as CalcMemberInfo;
-            if (memberInfo != null)
+            if (MessageBox.Show(Localization.DeleteCurrent_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
             {
-                Members.Remove(memberInfo.Name);
-                MembersList.RemoveItem(memberInfo);
-            }
-            else
-            {
-                CalculatedNamedSetInfo setInfo = MembersList.CurrentObject as CalculatedNamedSetInfo;
-                if (setInfo != null)
+                CalcMemberInfo memberInfo = MembersList.CurrentObject as CalcMemberInfo;
+                if (memberInfo != null)
                 {
-                    Sets.Remove(setInfo.Name);
-                    MembersList.RemoveItem(setInfo);
+                    Members.Remove(memberInfo.Name);
+                    MembersList.RemoveItem(memberInfo);
                 }
-            }
+                else
+                {
+                    CalculatedNamedSetInfo setInfo = MembersList.CurrentObject as CalculatedNamedSetInfo;
+                    if (setInfo != null)
+                    {
+                        Sets.Remove(setInfo.Name);
+                        MembersList.RemoveItem(setInfo);
+                    }
+                }
 
-            m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
-            RefreshMetadataTree();
+                m_ClearButton.IsEnabled = (Members.Count + Sets.Count) > 0;
+                RefreshMetadataTree();
+            }
             return;
         }
 
@@ -410,7 +438,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             }
         }
 
-        public void Initialize(Dictionary<String, CalculationInfoBase> members, Dictionary<String, CalculationInfoBase> sets, CubeDefInfo cubeInfo)
+        public void Initialize(Dictionary<String, CalculationInfoBase> members, Dictionary<String, CalculationInfoBase> sets, CubeDefInfo cubeInfo, String measureGroupName)
         {
             m_Members = members;
             m_Sets = sets;
@@ -420,6 +448,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
             if(CubeBrowser.CubeInfo != cubeInfo)
                 CubeBrowser.Initialize(cubeInfo);
+            CubeBrowser.MeasureGroupName = measureGroupName;
 
             MemberCtrl.IsEnabled = SetCtrl.IsEnabled = false;
 

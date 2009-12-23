@@ -29,6 +29,8 @@ namespace Ranet.Olap.Core.Data
 {
     public class CellData
     {
+        public const String FORMAT_STRING = "FORMAT_STRING";
+
         public CellData()
         { 
         }
@@ -134,7 +136,7 @@ namespace Ranet.Olap.Core.Data
                 {
                     try
                     {
-                        object obj = Value.GetPropertyValue("FORMAT_STRING");
+                        object obj = Value.GetPropertyValue(FORMAT_STRING);
                         if (obj != null)
                         {
                             res = obj.ToString();
@@ -146,67 +148,6 @@ namespace Ranet.Olap.Core.Data
                 }
                 return res;
             }
-        }
-
-        internal void Serialize(XmlWriter writer)
-        {
-            if (writer == null)
-                return;
-
-            writer.WriteStartElement("CellData");
-            // Свойства
-            writer.WriteElementString("Axis0_Coord", this.Axis0_Coord.ToString(CultureInfo.InvariantCulture));
-            writer.WriteElementString("Axis1_Coord", this.Axis1_Coord.ToString(CultureInfo.InvariantCulture));
-            // Значение
-            Value.Serialize(writer);
-
-            writer.WriteEndElement();
-        }
-
-        internal static CellData Deserialize(XmlReader reader)
-        {
-            if (reader != null)
-            {
-                try
-                {
-                    CellData target = null;
-                    if (reader.NodeType == XmlNodeType.Element &&
-                        reader.Name == "CellData")
-                    {
-                        target = new CellData();
-
-                        reader.ReadStartElement("CellData");
-
-                        reader.ReadStartElement("Axis0_Coord");
-                        if (reader.NodeType == XmlNodeType.Text)
-                        {
-                            target.Axis0_Coord = Convert.ToInt32(reader.ReadContentAsString());
-                            reader.ReadEndElement();
-                        }
-                        reader.ReadStartElement("Axis1_Coord");
-                        if (reader.NodeType == XmlNodeType.Text)
-                        {
-                            target.Axis1_Coord = Convert.ToInt32(reader.ReadContentAsString());
-                            reader.ReadEndElement();
-                        }
-
-                        target.Value = CellValueData.Deserialize(reader);
-
-                        if (reader.NodeType == XmlNodeType.EndElement &&
-                            reader.Name == "CellData")
-                        {
-                            reader.ReadEndElement();
-                        }
-                    }
-                    return target;
-                }
-                catch (XmlException ex)
-                {
-                    throw ex;
-                    //return null;
-                }
-            }
-            return null;
         }
     }
 }

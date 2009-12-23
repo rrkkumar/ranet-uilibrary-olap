@@ -16,6 +16,10 @@
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -50,6 +54,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jayrock.AgJson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dll\Jayrock.AgJson.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="mscorlib" />
     <Reference Include="system" />
@@ -65,6 +73,9 @@
   <ItemGroup>
     <Compile Include="..\!ProductInfo\ProductInfo.cs">
       <Link>ProductInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.AgOlap\Common.cs">
+      <Link>Common.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Cache2D.cs">
       <Link>Cache2D.cs</Link>
@@ -87,17 +98,29 @@
     <Compile Include="..\Ranet.Olap.Core\Data\DataBase.cs">
       <Link>Data\DataBase.cs</Link>
     </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Data\DataTableWrapper.cs">
+      <Link>Data\DataTableWrapper.cs</Link>
+    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Data\IPropertiesData.cs">
       <Link>Data\IPropertiesData.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Data\JPropObj.cs">
+      <Link>Data\JPropObj.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Data\JPropsObj.cs">
+      <Link>Data\JPropsObj.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Data\MemberData.cs">
       <Link>Data\MemberData.cs</Link>
     </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Data\MemberDataWrapper.cs">
-      <Link>Data\MemberDataWrapper.cs</Link>
-    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Data\PositionData.cs">
       <Link>Data\PositionData.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Data\PositionMemberData.cs">
+      <Link>Data\PositionMemberData.cs</Link>
+    </Compile>
+    <Compile Include="..\Ranet.Olap.Core\HeaderCollection.cs">
+      <Link>HeaderCollection.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\InvokeResultDescriptor.cs">
       <Link>InvokeResultDescriptor.cs</Link>
@@ -159,35 +182,11 @@
     <Compile Include="..\Ranet.Olap.Core\Providers\CellValueInfo.cs">
       <Link>Providers\CellValueInfo.cs</Link>
     </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\DataSourceInfoArgs.cs">
-      <Link>Providers\ClientServer\DataSourceInfoArgs.cs</Link>
-    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\MdxQueryArgs.cs">
       <Link>Providers\ClientServer\MdxQueryArgs.cs</Link>
     </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\MemberActionType.cs">
-      <Link>Providers\ClientServer\MemberActionType.cs</Link>
-    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\OlapActionBase.cs">
       <Link>Providers\ClientServer\OlapActionBase.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\PerformMemberActionArgs.cs">
-      <Link>Providers\ClientServer\PerformMemberActionArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\PivotGridToolBarInfo.cs">
-      <Link>Providers\ClientServer\PivotGridToolBarInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\PivotInitializeArgs.cs">
-      <Link>Providers\ClientServer\PivotInitializeArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\ServiceCommandArgs.cs">
-      <Link>Providers\ClientServer\ServiceCommandArgs.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\ShortMemberInfo.cs">
-      <Link>Providers\ClientServer\ShortMemberInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\ClientServer\UpdateCubeArgs.cs">
-      <Link>Providers\ClientServer\UpdateCubeArgs.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\FilterOperand.cs">
       <Link>Providers\FilterOperand.cs</Link>
@@ -210,18 +209,6 @@
     <Compile Include="..\Ranet.Olap.Core\Providers\IProperties.cs">
       <Link>Providers\IProperties.cs</Link>
     </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\IQueryExecuter.cs">
-      <Link>Providers\IQueryExecuter.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\MemberActions\DrillActionContainer.cs">
-      <Link>Providers\MemberActions\DrillActionContainer.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\MemberActions\HistoryItem.cs">
-      <Link>Providers\MemberActions\HistoryItem.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\MemberActions\HistoryManager.cs">
-      <Link>Providers\MemberActions\HistoryManager.cs</Link>
-    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\MemberInfo.cs">
       <Link>Providers\MemberInfo.cs</Link>
     </Compile>
@@ -233,9 +220,6 @@
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\OlapMetadataResponseException.cs">
       <Link>Providers\OlapMetadataResponseException.cs</Link>
-    </Compile>
-    <Compile Include="..\Ranet.Olap.Core\Providers\PivotDataManagerBase.cs">
-      <Link>Providers\PivotDataManagerBase.cs</Link>
     </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\PivotDataProvider.cs">
       <Link>Providers\PivotDataProvider.cs</Link>
@@ -249,6 +233,7 @@
     <Compile Include="..\Ranet.Olap.Core\XmlSerializationUtility.cs">
       <Link>XmlSerializationUtility.cs</Link>
     </Compile>
+    <Compile Include="Providers\IQueryExecuter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">

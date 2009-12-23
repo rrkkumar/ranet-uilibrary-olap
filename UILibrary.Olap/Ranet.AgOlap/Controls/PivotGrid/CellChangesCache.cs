@@ -32,35 +32,67 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using Ranet.AgOlap.Controls.PivotGrid.Controls;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.PivotGrid
 {
     public class CellChangesCache
     {
-        List<CellValueChangedEventArgs> m_CellChanges = new List<CellValueChangedEventArgs>();
+        List<UpdateEntry> m_CellChanges;
         
         /// <summary>
         /// Кэш измененных ячеек
         /// </summary>
-        public List<CellValueChangedEventArgs> CellChanges
+        List<UpdateEntry> CellChanges
         {
             get
             {
+                if (m_CellChanges == null)
+                {
+                    m_CellChanges = new List<UpdateEntry>();
+                }
                 return m_CellChanges;
             }
         }
 
+        public int Count
+        {
+            get{
+                return CellChanges.Count;
+            }
+        }
+
+        public List<UpdateEntry> GetCellChanges()
+        {
+            var res = new List<UpdateEntry>();
+            foreach (var entry in CellChanges)
+            {
+                res.Add(entry.Clone() as UpdateEntry);
+            }
+            return res;
+        }
+
+        public void Clear()
+        {
+            CellChanges.Clear();
+        }
+
+        public void Add(UpdateEntry args)
+        {
+            RemoveChange(args);
+            CellChanges.Add(args);
+        }
+
         /// <summary>
         /// Ищет в кэше изменений ячейку
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        public CellValueChangedEventArgs FindLastChange(CellInfo cell)
+        public UpdateEntry FindChange(UpdateEntry args)
         {
-            for (int i = CellChanges.Count - 1; i >= 0; i--)
-            { 
-                CellValueChangedEventArgs arg = CellChanges[i];
-                if (arg.Cell == cell)
+            foreach (UpdateEntry arg in CellChanges)
+            {
+                if(CompareTuples(arg.Tuple, args.Tuple))
                     return arg;
             }
             return null;
@@ -71,41 +103,53 @@ namespace Ranet.AgOlap.Controls.PivotGrid
         /// </summary>
         /// <param name="args"></param>
         /// <returns></returns>
-        CellValueChangedEventArgs FindChange(CellValueChangedEventArgs args)
+        public UpdateEntry FindChange(CellInfo cell)
         {
-            foreach (CellValueChangedEventArgs arg in CellChanges)
+            if (cell != null)
             {
-                if (arg.Cell == args.Cell)
-                    return arg;
-                //if (arg.Tuple != null && args.Tuple != null && arg.Tuple.Count == args.Tuple.Count && arg.Tuple.Count > 0)
-                //{
-                //    bool isEqual = true;
-                //    for (int i = 0; i < arg.Tuple.Count; i++)
-                //    {
-                //        if (arg.Tuple[i].UniqueName != args.Tuple[i].UniqueName)
-                //        {
-                //            isEqual = false;
-                //            break;
-                //        }
-                //    }
-                //    if (isEqual)
-                //        return arg;
-                //}
+                UpdateEntry entry = new UpdateEntry(cell);
+                return FindChange(entry);
             }
             return null;
         }
-        
-        public void RemoveChanges(CellValueChangedEventArgs args)
+
+        public static bool CompareTuples(Dictionary<String, String> tuple1, Dictionary<String, String> tuple2)
         {
-            CellValueChangedEventArgs change = null;
-            do
+            if (tuple1 == null && tuple2 == null)
+                return true;
+            if (tuple1 == null || tuple2 == null)
+                return false;
+
+            if (tuple1.Count != tuple2.Count)
+                return false;
+
+            foreach (var key1 in tuple1.Keys)
             {
-                change = FindChange(args);
-                if (change != null)
-                {
-                    CellChanges.Remove(change);
-                }
-            } while (change != null);
+                if(!tuple2.ContainsKey(key1))
+                    return false;
+                if(tuple1[key1] != tuple2[key1])
+                    return false;
+            }
+            return true;
         }
+
+        public void RemoveChange(UpdateEntry args)
+        {
+            UpdateEntry change = FindChange(args);
+            if (change != null)
+            {
+                CellChanges.Remove(change);
+            }
+        }
+
+        public void RemoveChange(CellInfo cell)
+        {
+            if (cell != null)
+            {
+                UpdateEntry entry = new UpdateEntry(cell);
+                RemoveChange(entry);
+            }
+        }
+
     }
 }

@@ -41,11 +41,6 @@ namespace Ranet.AgOlap.Controls.General
 
         public UserSchemaWrapper(SchemaType schema)
         {
-            if (schema.Equals(default(SchemaType)))
-            {
-                throw new ArgumentNullException("schema");
-            }
-
             Schema = schema;
         }
 

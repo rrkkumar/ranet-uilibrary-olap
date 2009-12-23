@@ -103,7 +103,8 @@ namespace Ranet.AgOlap.Controls
                 if (result != null && result.Length > 1)
                 {
                     //Обрамляем исходную строку () если она еще не обрамлена
-                    if (/*str.IndexOf(" ") > 0 &&*/ result[0] != '(' && result[result.Length - 1] != ')')
+                    if (/*str.IndexOf(" ") > 0 &&*/ (result[0] != '(' && result[result.Length - 1] != ')') &&
+                        (result[0] != '[' && result[result.Length - 1] != ']'))
                         result = "(" + result + ")";
                 }
                 return result;

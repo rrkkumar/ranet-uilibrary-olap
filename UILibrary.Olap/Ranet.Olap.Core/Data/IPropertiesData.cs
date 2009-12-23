@@ -49,97 +49,48 @@ namespace Ranet.Olap.Core.Data
             set { m_Value = value; }
         }
 
-        public PropertyData()
-        { 
-        
+        public override bool Equals(object obj)
+        {
+            var pd = obj as PropertyData;
+            if (pd == null)
+                return false;
+
+            if (pd.Name != Name)
+                return false;
+
+            if (Value == null)
+            {
+                if (pd.Value == null)
+                    return true;
+
+                return false;
+            }
+            return Value.Equals(pd.Value);
+        }
+        public override int GetHashCode()
+        {
+            int hc = 0;
+            if (Name != null)
+                hc = Name.GetHashCode();
+            if (Value != null)
+            {
+                unchecked
+                {
+                    hc *= 3;
+                    hc ^= Value.GetHashCode();
+                }
+            }
+            return hc;
+        }
+
+        public PropertyData() 
+        {
         }
 
         public PropertyData(String name, object value)
         {
             m_Name = name;
             m_Value = value;
-        }
-
-        internal void Serialize(XmlWriter writer)
-        {
-            if (writer == null)
-                return;
-
-            writer.WriteStartElement("PropertyData");
-            // Свойства
-            writer.WriteElementString("Name", this.Name.ToString(CultureInfo.InvariantCulture));
-            if (Value != null)
-            {
-                writer.WriteStartElement("Value");
-                writer.WriteAttributeString("Type", Value.GetType().FullName.ToString(CultureInfo.InvariantCulture));
-                object val = Convert.ChangeType(Value, typeof(string), CultureInfo.InvariantCulture);
-                writer.WriteValue(val);
-                writer.WriteEndElement();
-            }
-            writer.WriteEndElement();
-        }
-
-        internal static PropertyData Deserialize(XmlReader reader)
-        {
-            if (reader != null)
-            {
-                try
-                {
-                    PropertyData target = null;
-                    if (reader.NodeType == XmlNodeType.Element &&
-                        reader.Name == "PropertyData")
-                    {
-                        target = new PropertyData();
-
-                        reader.ReadStartElement("PropertyData");
-
-                        reader.ReadStartElement("Name");
-                        if (reader.NodeType == XmlNodeType.Text)
-                        {
-                            target.Name = reader.ReadContentAsString();
-                            reader.ReadEndElement();
-                        }
-
-                        String type = null;
-                        if (reader.MoveToAttribute("Type"))
-                        {
-                            if (reader.NodeType == XmlNodeType.Attribute &&
-                                reader.Name == "Type" &&
-                                reader.ReadAttributeValue())
-                            {
-                                type = reader.Value;
-                            }
-                        }
-
-                        String value = null;
-                        if (reader.MoveToElement())
-                        {
-                            if (reader.NodeType == XmlNodeType.Element &&
-                                reader.Name == "Value")
-                                reader.ReadStartElement("Value");
-                            if (reader.NodeType == XmlNodeType.Text)
-                            {
-                                value = reader.ReadContentAsString();
-                            }
-                            reader.ReadEndElement();
-                        }
-
-                        if (value != null && !String.IsNullOrEmpty(type))
-                        {
-                            target.Value = Convert.ChangeType(value, Type.GetType(type), CultureInfo.InvariantCulture);
-                        }
-
-                        reader.ReadEndElement();
-                    }
-                    return target;
-                }
-                catch (XmlException ex)
-                {
-                    throw ex;
-                    //return null;
-                }
-            }
-            return null;
         }
     }
 }

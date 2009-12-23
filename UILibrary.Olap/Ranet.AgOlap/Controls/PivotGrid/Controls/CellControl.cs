@@ -35,6 +35,9 @@ using Ranet.AgOlap.Controls.PivotGrid.Controls;
 using System.Collections.Generic;
 using Ranet.Olap.Core.Providers;
 using Ranet.AgOlap.Controls.PivotGrid.Conditions;
+using Ranet.AgOlap.Providers;
+using System.Windows.Media.Imaging;
+using System.Globalization;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
@@ -335,9 +338,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 // Если ячейка редактируемая
                 if (Owner != null && Owner.CanEdit && Cell.IsUpdateable)
                 {
-                    if (IsModified)
+                    if (RecalculatedChange != null || NotRecalculatedChange != null)
                     {
-                        m_Border.Background = new SolidColorBrush(Color.FromArgb(125, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
+                        if (NotRecalculatedChange != null)
+                        {
+                            m_Border.Background = new SolidColorBrush(Color.FromArgb(75, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
+                        }
                     }
                     else
                     {
@@ -382,9 +388,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        public void ShowOriginalValue()
+        public void UndoChanges()
         {
-            IsModified = false;
+            m_NotRecalculatedChange = null;
             ApplySettings();
         }
 
@@ -430,23 +436,25 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     {
                         border.BorderBrush = new SolidColorBrush(Colors.DarkGray);
                     }
-                    border.BorderThickness = new Thickness(0, 0, 1, 1);
-                    m_LayoutPanel.Margin = new Thickness(0);
+
+                    if (ShowLeftBorder)
+                    {
+                        border.BorderThickness = new Thickness(1, 0, 1, 1);
+                        m_LayoutPanel.Margin = new Thickness(-1, 0, 0, 0);
+                    }
+                    else
+                    {
+                        border.BorderThickness = new Thickness(0, 0, 1, 1);
+                        m_LayoutPanel.Margin = new Thickness(0);
+                    }
                 }
             }
         }
 
-        public void ChangeText(String newText)
-        {
-            if (m_Caption_Text.Text != newText)
-            {
-                if (Cell != null)
-                    Cell.ModifiedValue = newText;
-                IsModified = true;
-                ApplyValueSettings();
-                ApplyBackgroundSettings();
-            }
-        }
+        /// <summary>
+        /// Отображать левую границу ячейки (Когда ячейка в первой колонке, а области строк нет - 1 ось)
+        /// </summary>
+        public bool ShowLeftBorder = false;
 
         public String Text
         {
@@ -558,33 +566,33 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             if (show_Value)
             {
                 m_Caption_Text.Visibility = Visibility.Visible;
+                m_Caption_Text.FontWeight = FontWeights.Normal;
 
-                if (IsModified)
+                if (NotRecalculatedChange != null)
                 {
                     // Пытаемся отобразить модифицированное значение в том же формате, в котором оно будет отображаться пользователю когда запишется в куб
                     // Модифицированное значение пытаемся преобразовать в число. Если преобразование успешное, то пытаемся применить строку форматирования
                     // В случае, если преобразование в число не получится, то выводим модифицированное значение просто в строку
-                    // String text = Cell.ModifiedValue;
-                    //if (Cell.CellDescr != null && !String.IsNullOrEmpty(Cell.CellDescr.FormatString))
-                    //{
-                    //    // Проверяем чтобы в качестве разделителя был допутимый символ (чтобы значение можно было конвертировать).
-                    //    String modif = Cell.ModifiedValue;
-                    //    modif = modif.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
-                    //    modif = modif.Replace(",", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
+                    String text = NotRecalculatedChange.NewValue;
+                    if (Cell.CellDescr != null && !String.IsNullOrEmpty(Cell.CellDescr.FormatString))
+                    {
+                        // Проверяем чтобы в качестве разделителя был допутимый символ (чтобы значение можно было конвертировать).
+                        String modif = text;
+                        modif = modif.Replace(".", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
+                        modif = modif.Replace(",", System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator);
 
-                    //    text = modif;
-                    //    try
-                    //    {
-                    //        double value = Convert.ToDouble(modif);
-                    //        String str = value.ToString(Cell.CellDescr.FormatString);
-                    //        if (str != Cell.CellDescr.FormatString) // Для случаев Currency и т.д.
-                    //            text = str;
-                    //    }
-                    //    catch
-                    //    {
-                    //    }
-                    //}
-                    m_Caption_Text.Text = Cell.ModifiedValue;
+                        try
+                        {
+                            double value = Convert.ToDouble(modif);
+                            String str = value.ToString(Cell.CellDescr.FormatString, CultureInfo.InvariantCulture);
+                            if (str != Cell.CellDescr.FormatString) // Для случаев Currency и т.д.
+                                text = str;
+                        }
+                        catch
+                        {
+                        }
+                    }
+                    m_Caption_Text.Text = text;
                 }
                 else
                 {
@@ -606,14 +614,23 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 else
                 {
                     Brush brush = new SolidColorBrush(Colors.Black);
-                    if (!IsModified && Cell.CellDescr != null)
+
+                    if (RecalculatedChange != null)
                     {
-                        int foreColor = Cell.CellDescr.ForeColor;
-                        if (foreColor != int.MinValue)
+                        m_Caption_Text.FontWeight = FontWeights.Bold;
+                        brush = new SolidColorBrush(Colors.Blue);
+                    }
+                    else
+                    {
+                        if (NotRecalculatedChange == null && Cell.CellDescr != null)
                         {
-                            // Цвет из OLAP (свойства ячейки)
-                            Color color = ColorHelper.FromRgb(foreColor);
-                            brush = new SolidColorBrush(color);
+                            int foreColor = Cell.CellDescr.ForeColor;
+                            if (foreColor != int.MinValue)
+                            {
+                                // Цвет из OLAP (свойства ячейки)
+                                Color color = ColorHelper.FromRgb(foreColor);
+                                brush = new SolidColorBrush(color);
+                            }
                         }
                     }
                     m_Caption_Text.Foreground = brush;
@@ -624,8 +641,21 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 m_Caption_Text.Visibility = Visibility.Collapsed;
             }
 
+            BitmapImage image = null;
+            if (m_CustomCellAppearance != null)
+            {
+                image = m_CustomCellAppearance.CustomImage;
+            }
+
+            // Если ошибка при обновлении ячейки
+            if (NotRecalculatedChange != null && NotRecalculatedChange.HasError)
+            {
+                show_Image = true;
+                image = UriResources.Images.ErrorSmall16;
+            }
+
             // Картинка из условия
-            if (show_Image)
+            if (show_Image && image != null)
             {
                 if (m_Image == null)
                 {
@@ -638,11 +668,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
 
                 m_Image.Visibility = Visibility.Visible;
-                m_Image.Source = m_CustomCellAppearance.CustomImage;
-                if(m_CustomCellAppearance.CustomImage != null)
+                m_Image.Source = image;
+                if (image != null)
                 {
-                    m_Image.Width = m_CustomCellAppearance.CustomImage.PixelWidth * Scale;
-                    m_Image.Height = m_CustomCellAppearance.CustomImage.PixelHeight * Scale;
+                    m_Image.Width = image.PixelWidth * Scale;
+                    m_Image.Height = image.PixelHeight * Scale;
                 }
                 if (show_Value)
                 {
@@ -709,19 +739,33 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        public bool IsModified
+        UpdateEntry m_NotRecalculatedChange;
+        /// <summary>
+        /// Change the cell, with not recalculated
+        /// </summary>
+        public UpdateEntry NotRecalculatedChange
         {
+            get { return m_NotRecalculatedChange; }
             set
             {
-                if (Cell != null)
-                    Cell.IsModified = value;
+                m_NotRecalculatedChange = value;
                 ApplyBackgroundSettings();
+                ApplyValueSettings();
             }
-            get
+        }
+
+        UpdateEntry m_RecalculatedChange;
+        /// <summary>
+        /// Change the cell, which already recalculated
+        /// </summary>
+        public UpdateEntry RecalculatedChange
+        {
+            get { return m_RecalculatedChange; }
+            set
             {
-                if (Cell != null)
-                    return Cell.IsModified;
-                return false;
+                m_RecalculatedChange = value;
+                ApplyBackgroundSettings();
+                ApplyValueSettings();
             }
         }
 

@@ -96,25 +96,26 @@ namespace Ranet.Olap.Mdx
 
 		#endregion
 
-		public override bool Equals(object obj)
-		{
-			MdxObjectReferenceExpression objRef = obj as MdxObjectReferenceExpression;
-			if (objRef != null)
-			{
-				return objRef.UniqueName.Equals(this.UniqueName);
-			}
-			return base.Equals(obj);
-		}
+        //public override bool Equals(object obj)
+        //{
+        //    MdxObjectReferenceExpression objRef = obj as MdxObjectReferenceExpression;
+        //    if (objRef != null)
+        //    {
+        //        return objRef.UniqueName.Equals(this.UniqueName);
+        //    }
+        //    return base.Equals(obj);
+        //}
 
-		public override int GetHashCode()
-		{
-			return this.UniqueName.GetHashCode();
-		}
+        //public override int GetHashCode()
+        //{
+        //    return this.UniqueName.GetHashCode();
+        //}
 
-		public override string ToString()
-		{
-			return string.Format("{0} ({1})", m_Caption, m_UniqueName);
-		}
+        //public override string ToString()
+        //{
+        //    return string.Format("{0} ({1})", m_Caption, m_UniqueName);
+        //}
+
 		public override string SelfToken
 		{
 			get { return UniqueName; }

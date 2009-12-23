@@ -30,6 +30,7 @@ namespace Ranet.Olap.Core.Providers
     {
         ConnectionInfo Connection { get; }
         CellSetData ExecuteQuery(string query);
+        String GetCellSetDescription(string query);
         int ExecuteNonQuery(string query);
     }
 }

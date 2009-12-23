@@ -30,6 +30,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using Ranet.AgOlap.Controls.List;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner
 {
@@ -47,13 +48,13 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
     public class AreaItemsList : UserControl
     {
-        ListBox m_List;
+        RanetListBox m_List;
 
         public AreaItemsList()
         {
             Grid LayoutRoot = new Grid();
 
-            m_List = new ListBox();
+            m_List = new RanetListBox();
             LayoutRoot.Children.Add(m_List);
 
             this.Content = LayoutRoot;

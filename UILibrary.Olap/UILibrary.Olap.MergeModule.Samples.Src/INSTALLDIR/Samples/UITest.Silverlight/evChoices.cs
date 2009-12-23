@@ -8,7 +8,7 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void initCubeChoiceButton_Click(object sender, RoutedEventArgs e)
 		{
-			cubeChoiceControl.URL = WSDataUrl;
+			// cubeChoiceControl.URL = WSDataUrl;
 			cubeChoiceControl.Connection = ConnectionStringId;
 			cubeChoiceControl.Initialize();
 		}
@@ -29,7 +29,7 @@ namespace UILibrary.Olap.UITestApplication
 				MessageBox.Show("Please select a Cube before initializing KPIChoice control.");				
 				return;
 			}
-			kpiChoiceControl.URL = WSDataUrl;
+			// kpiChoiceControl.URL = WSDataUrl;
 			kpiChoiceControl.AConnection = ConnectionStringId;
 			kpiChoiceControl.ACubeName = cubeChoiceControl.SelectedInfo.Name;
 		}
@@ -40,7 +40,7 @@ namespace UILibrary.Olap.UITestApplication
 				MessageBox.Show("Please select a Cube before initializing MeasureChoice control.");
 				return;
 			}
-			measureChoiceControl.URL = WSDataUrl;
+			// measureChoiceControl.URL = WSDataUrl;
 			measureChoiceControl.AConnection = ConnectionStringId;
 			measureChoiceControl.ACubeName = cubeChoiceControl.SelectedInfo.Name;
 		}
@@ -52,7 +52,7 @@ namespace UILibrary.Olap.UITestApplication
 				return;
 			}
 
-			dimensionChoiceControl.URL = WSDataUrl;
+			// dimensionChoiceControl.URL = WSDataUrl;
 			dimensionChoiceControl.Connection = ConnectionStringId;
 			dimensionChoiceControl.CubeName = cubeChoiceControl.SelectedInfo.Name;
 			dimensionChoiceControl.Initialize();
@@ -78,7 +78,7 @@ namespace UILibrary.Olap.UITestApplication
 				MessageBox.Show("Please select a Dimension before initializing HierarchyChoice control.");
 				return;
 			}
-			hierarchyChoiceControl.URL = WSDataUrl;
+			// hierarchyChoiceControl.URL = WSDataUrl;
 			hierarchyChoiceControl.Connection = ConnectionStringId;
 			hierarchyChoiceControl.CubeName = cubeChoiceControl.SelectedInfo.Name;
 			hierarchyChoiceControl.DimensionUniqueName = dimensionChoiceControl.SelectedInfo.UniqueName;
@@ -106,7 +106,7 @@ namespace UILibrary.Olap.UITestApplication
 				return;
 			}
 
-			memberChoice.URL = WSDataUrl;
+			// memberChoice.URL = WSDataUrl;
 			memberChoice.Connection = ConnectionStringId;
 			memberChoice.CubeName = cubeChoiceControl.SelectedInfo.Name;
 			memberChoice.HierarchyUniqueName = hierarchyChoiceControl.SelectedInfo.UniqueName;

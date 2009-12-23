@@ -97,6 +97,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Background Color:.
+        /// </summary>
+        public static string CalcMemberEditor_BackColorLabel {
+            get {
+                return ResourceManager.GetString("CalcMemberEditor_BackColorLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete All Calculations.
         /// </summary>
         public static string CalcMemberEditor_Clear {
@@ -138,6 +147,15 @@ namespace Ranet.AgOlap {
         public static string CalcMemberEditor_ExpressionLabel {
             get {
                 return ResourceManager.GetString("CalcMemberEditor_ExpressionLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Foreground Color:.
+        /// </summary>
+        public static string CalcMemberEditor_ForeColorLabel {
+            get {
+                return ResourceManager.GetString("CalcMemberEditor_ForeColorLabel", resourceCulture);
             }
         }
         
@@ -196,6 +214,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Non-empty Behavior:.
+        /// </summary>
+        public static string CalcMemberEditor_NonEmpty {
+            get {
+                return ResourceManager.GetString("CalcMemberEditor_NonEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Script:.
         /// </summary>
         public static string CalcMemberEditor_ScriptLabel {
@@ -228,6 +255,24 @@ namespace Ranet.AgOlap {
         public static string CalculationsListControl_NamedSets_TreeNode {
             get {
                 return ResourceManager.GetString("CalculationsListControl_NamedSets_TreeNode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell Properties.
+        /// </summary>
+        public static string CellPropertiesDialog_Caption {
+            get {
+                return ResourceManager.GetString("CellPropertiesDialog_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell value:.
+        /// </summary>
+        public static string CellValue_Label {
+            get {
+                return ResourceManager.GetString("CellValue_Label", resourceCulture);
             }
         }
         
@@ -291,6 +336,15 @@ namespace Ranet.AgOlap {
         public static string Confirmation {
             get {
                 return ResourceManager.GetString("Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Connection.
+        /// </summary>
+        public static string Connection {
+            get {
+                return ResourceManager.GetString("Connection", resourceCulture);
             }
         }
         
@@ -394,6 +448,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to DrillThrough.
+        /// </summary>
+        public static string ContextMenu_DrillThrough {
+            get {
+                return ResourceManager.GetString("ContextMenu_DrillThrough", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Paste.
         /// </summary>
         public static string ContextMenu_Paste {
@@ -475,7 +538,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Custom properties....
+        ///   Looks up a localized string similar to Custom Properties.
         /// </summary>
         public static string CustomPropertiesDialog_Caption {
             get {
@@ -511,7 +574,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Data source information....
+        ///   Looks up a localized string similar to Data Source Information.
         /// </summary>
         public static string DataSourceInfoDialog_Caption {
             get {
@@ -543,6 +606,69 @@ namespace Ranet.AgOlap {
         public static string Delete {
             get {
                 return ResourceManager.GetString("Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You want delete all items permanently?.
+        /// </summary>
+        public static string DeleteAll_Question {
+            get {
+                return ResourceManager.GetString("DeleteAll_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete All.
+        /// </summary>
+        public static string DeleteAll_ToolTip {
+            get {
+                return ResourceManager.GetString("DeleteAll_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You want delete current item permanently?.
+        /// </summary>
+        public static string DeleteCurrent_Question {
+            get {
+                return ResourceManager.GetString("DeleteCurrent_Question", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete Current.
+        /// </summary>
+        public static string DeleteCurrent_ToolTip {
+            get {
+                return ResourceManager.GetString("DeleteCurrent_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Dialog_CloseButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Dialog_CloseButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximize.
+        /// </summary>
+        public static string Dialog_MaximizeButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Dialog_MaximizeButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restore Down.
+        /// </summary>
+        public static string Dialog_RestoreDownButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Dialog_RestoreDownButton_ToolTip", resourceCulture);
             }
         }
         
@@ -579,6 +705,24 @@ namespace Ranet.AgOlap {
         public static string DimensionUniqueName_PropertyDesc {
             get {
                 return ResourceManager.GetString("DimensionUniqueName_PropertyDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drillthroug:.
+        /// </summary>
+        public static string Drillthrough_Label {
+            get {
+                return ResourceManager.GetString("Drillthrough_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drillthrough result.
+        /// </summary>
+        public static string DrillthroughDialog_Caption {
+            get {
+                return ResourceManager.GetString("DrillthroughDialog_Caption", resourceCulture);
             }
         }
         
@@ -889,11 +1033,29 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loading Dialog.
+        /// </summary>
+        public static string LoadingDialog_Name {
+            get {
+                return ResourceManager.GetString("LoadingDialog_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Customer Calculations Editor.
         /// </summary>
         public static string MdxDesigner_CalculatedMemberEditor {
             get {
                 return ResourceManager.GetString("MdxDesigner_CalculatedMemberEditor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Calculations.
+        /// </summary>
+        public static string MdxDesigner_Calculations {
+            get {
+                return ResourceManager.GetString("MdxDesigner_Calculations", resourceCulture);
             }
         }
         
@@ -984,6 +1146,15 @@ namespace Ranet.AgOlap {
         public static string MdxDesigner_ContextMenu_TopFilter {
             get {
                 return ResourceManager.GetString("MdxDesigner_ContextMenu_TopFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cube.
+        /// </summary>
+        public static string MdxDesigner_Cube {
+            get {
+                return ResourceManager.GetString("MdxDesigner_Cube", resourceCulture);
             }
         }
         
@@ -1087,6 +1258,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Current query setting will are lost when change cube. You want to save settings?.
+        /// </summary>
+        public static string MdxDesigner_SaveCustomCalculations_Message {
+            get {
+                return ResourceManager.GetString("MdxDesigner_SaveCustomCalculations_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Show/Hide MDX query.
         /// </summary>
         public static string MdxDesigner_ShowQuery_ToolTip {
@@ -1110,6 +1290,15 @@ namespace Ranet.AgOlap {
         public static string MdxDesigner_ValuesNode_Caption {
             get {
                 return ResourceManager.GetString("MdxDesigner_ValuesNode_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to MDX Designer.
+        /// </summary>
+        public static string MdxDesignerControl_Name {
+            get {
+                return ResourceManager.GetString("MdxDesignerControl_Name", resourceCulture);
             }
         }
         
@@ -1258,6 +1447,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member Properties.
+        /// </summary>
+        public static string MemberPropertiesDialog_Caption {
+            get {
+                return ResourceManager.GetString("MemberPropertiesDialog_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Members.
         /// </summary>
         public static string Members {
@@ -1267,7 +1465,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error....
+        ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string MessageBox_Error {
             get {
@@ -1276,7 +1474,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Warning....
+        ///   Looks up a localized string similar to Warning.
         /// </summary>
         public static string MessageBox_Warning {
             get {
@@ -1380,6 +1578,15 @@ namespace Ranet.AgOlap {
         public static string ObjectSaveDialog_Replace_Message {
             get {
                 return ResourceManager.GetString("ObjectSaveDialog_Replace_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Metadata Browser.
+        /// </summary>
+        public static string OlapBrowserControl_Name {
+            get {
+                return ResourceManager.GetString("OlapBrowserControl_Name", resourceCulture);
             }
         }
         
@@ -1701,7 +1908,16 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Properties....
+        ///   Looks up a localized string similar to Properties.
+        /// </summary>
+        public static string Properties {
+            get {
+                return ResourceManager.GetString("Properties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Properties.
         /// </summary>
         public static string PropertiesDialog_Caption {
             get {
@@ -1737,6 +1953,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save as Dialog.
+        /// </summary>
+        public static string SaveAsDialog_Name {
+            get {
+                return ResourceManager.GetString("SaveAsDialog_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Xls Files (.xls)|*.xls.
         /// </summary>
         public static string SaveDialog_Filter_XlsFiles {
@@ -1751,6 +1976,15 @@ namespace Ranet.AgOlap {
         public static string SaveDialog_Filter_XmlFiles {
             get {
                 return ResourceManager.GetString("SaveDialog_Filter_XmlFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Control initialization error. Cube by default is not defined. Please initialize Cube name..
+        /// </summary>
+        public static string ServerExplorer_CubePropertyError {
+            get {
+                return ResourceManager.GetString("ServerExplorer_CubePropertyError", resourceCulture);
             }
         }
         
@@ -1818,11 +2052,29 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transaction State Button.
+        /// </summary>
+        public static string TransactionStateButton_Name {
+            get {
+                return ResourceManager.GetString("TransactionStateButton_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error loading data.
         /// </summary>
         public static string TreeNode_ErrorLoadingData {
             get {
                 return ResourceManager.GetString("TreeNode_ErrorLoadingData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tuple.
+        /// </summary>
+        public static string Tuple {
+            get {
+                return ResourceManager.GetString("Tuple", resourceCulture);
             }
         }
         
@@ -2061,7 +2313,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value copy settings....
+        ///   Looks up a localized string similar to Value Copy Settings.
         /// </summary>
         public static string ValueCopyDialog_Caption {
             get {
@@ -2169,7 +2421,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Value delivery settings....
+        ///   Looks up a localized string similar to Value Delivery Settings.
         /// </summary>
         public static string ValueDeliveryDialog_Caption {
             get {

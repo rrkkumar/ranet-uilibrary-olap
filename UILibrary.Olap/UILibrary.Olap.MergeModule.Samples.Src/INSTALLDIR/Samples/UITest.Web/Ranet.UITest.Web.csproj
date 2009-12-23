@@ -13,6 +13,10 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SilverlightApplicationList>{565A60AF-7228-4343-8BE3-D477357D5690}|..\UITest.Silverlight\Ranet.UITest.Silverlight.csproj|ClientBin|False</SilverlightApplicationList>
     <SourceAnalysisOverrideSettingsFile>C:\Documents and Settings\anatoly\Application Data\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

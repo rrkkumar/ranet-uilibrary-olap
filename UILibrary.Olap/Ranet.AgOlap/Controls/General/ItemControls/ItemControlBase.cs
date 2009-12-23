@@ -83,13 +83,16 @@ namespace Ranet.AgOlap.Controls.General.ItemControls
 
         public BitmapImage Icon
         {
-            set
-            {
-                ItemIcon.Source = value;
-            }
             get
             {
                 return ItemIcon.Source as BitmapImage;
+            }
+            set
+            {
+                if (ItemIcon != null)
+                {
+                    ItemIcon.Source = value;
+                }
             }
         }
 

@@ -1188,6 +1188,16 @@ namespace Ranet.AgOlap.Controls
             const string REMOVE_CROSS_16 = "/Ranet.AgOlap;component/Controls/Images/Remove.png";
             const string REMOVE_ALL_CROSS_16 = "/Ranet.AgOlap;component/Controls/Images/RemoveAll.png";
 
+            const string ERROR_SMALL_16 = "/Ranet.AgOlap;component/Controls/Images/ErrorSmall.png";
+
+            public static BitmapImage ErrorSmall16
+            {
+                get
+                {
+                    return UriResources.GetImage(ERROR_SMALL_16);
+                }
+            }
+
             public static BitmapImage RemoveAllCross16
             {
                 get

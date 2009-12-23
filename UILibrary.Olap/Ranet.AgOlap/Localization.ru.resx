@@ -172,10 +172,10 @@
     <value>Скопировать в буфер</value>
   </data>
   <data name="CustomPropertiesDialog_Caption" xml:space="preserve">
-    <value>Пользовательские свойства...</value>
+    <value>Пользовательские свойства</value>
   </data>
   <data name="DataSourceInfoDialog_Caption" xml:space="preserve">
-    <value>Информация об источнике данных...</value>
+    <value>Информация об источнике данных</value>
   </data>
   <data name="DataSourceInfo_MovedAxes" xml:space="preserve">
     <value>MDX запрос (2 оси)</value>
@@ -274,10 +274,10 @@
     <value>Элементы</value>
   </data>
   <data name="MessageBox_Error" xml:space="preserve">
-    <value>Ошибка...</value>
+    <value>Ошибка</value>
   </data>
   <data name="MessageBox_Warning" xml:space="preserve">
-    <value>Внимание...</value>
+    <value>Внимание</value>
   </data>
   <data name="PivotGrid_BackButton_ToolTip" xml:space="preserve">
     <value>Назад (Ctrl+Влево)</value>
@@ -333,7 +333,7 @@
     <value>Использовать отложенный пересчет</value>
   </data>
   <data name="PropertiesDialog_Caption" xml:space="preserve">
-    <value>Свойства...</value>
+    <value>Свойства</value>
   </data>
   <data name="PropertiesList_PropertyColumn" xml:space="preserve">
     <value>Свойство</value>
@@ -393,7 +393,7 @@
     <value>Коэффициент:</value>
   </data>
   <data name="ValueCopyDialog_Caption" xml:space="preserve">
-    <value>Копирование данных...</value>
+    <value>Копирование данных</value>
   </data>
   <data name="ValueDeliveryControl_ChildrenMembers" xml:space="preserve">
     <value>Дочерние элементы</value>
@@ -429,7 +429,7 @@
     <value>Соседние элементы</value>
   </data>
   <data name="ValueDeliveryDialog_Caption" xml:space="preserve">
-    <value>Распределение значения...</value>
+    <value>Распределение значения</value>
   </data>
   <data name="ValueDeliveryDialog_Delivered" xml:space="preserve">
     <value>Распределено:</value>
@@ -862,5 +862,86 @@
   </data>
   <data name="CalcMemberEditor_Clear" xml:space="preserve">
     <value>Удалить все вычисления</value>
+  </data>
+  <data name="CalcMemberEditor_BackColorLabel" xml:space="preserve">
+    <value>Цвет фона:</value>
+  </data>
+  <data name="CalcMemberEditor_ForeColorLabel" xml:space="preserve">
+    <value>Цвет шрифта:</value>
+  </data>
+  <data name="CellPropertiesDialog_Caption" xml:space="preserve">
+    <value>Свойства ячейки</value>
+  </data>
+  <data name="MemberPropertiesDialog_Caption" xml:space="preserve">
+    <value>Свойства элемента</value>
+  </data>
+  <data name="Connection" xml:space="preserve">
+    <value>Соединение</value>
+  </data>
+  <data name="Dialog_CloseButton_ToolTip" xml:space="preserve">
+    <value>Закрыть</value>
+  </data>
+  <data name="Dialog_MaximizeButton_ToolTip" xml:space="preserve">
+    <value>Развернуть</value>
+  </data>
+  <data name="Dialog_RestoreDownButton_ToolTip" xml:space="preserve">
+    <value>Свернуть</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Свойства</value>
+  </data>
+  <data name="Tuple" xml:space="preserve">
+    <value>Координаты</value>
+  </data>
+  <data name="TransactionStateButton_Name" xml:space="preserve">
+    <value>Кнопка управления транзакциями</value>
+  </data>
+  <data name="MdxDesigner_Cube" xml:space="preserve">
+    <value>Куб</value>
+  </data>
+  <data name="MdxDesigner_SaveCustomCalculations_Message" xml:space="preserve">
+    <value>Текущие настройки запроса  будут утеряны при смене куба. Вы хотите сохранить эти настройки?</value>
+  </data>
+  <data name="ServerExplorer_CubePropertyError" xml:space="preserve">
+    <value>Ошибка инициализации. Куб по умолчанию не задан. Пожалуйста, задайте имя куба.</value>
+  </data>
+  <data name="LoadingDialog_Name" xml:space="preserve">
+    <value>Диалог "Загрузить"</value>
+  </data>
+  <data name="MdxDesignerControl_Name" xml:space="preserve">
+    <value>Дизайнер MDX</value>
+  </data>
+  <data name="OlapBrowserControl_Name" xml:space="preserve">
+    <value>Просмотрщик метаданных</value>
+  </data>
+  <data name="SaveAsDialog_Name" xml:space="preserve">
+    <value>Диалог "Сохранить как"</value>
+  </data>
+  <data name="CalcMemberEditor_NonEmpty" xml:space="preserve">
+    <value>Выражение для Non-empty:</value>
+  </data>
+  <data name="MdxDesigner_Calculations" xml:space="preserve">
+    <value>Вычисления</value>
+  </data>
+  <data name="ContextMenu_DrillThrough" xml:space="preserve">
+    <value>DrillThrough</value>
+  </data>
+  <data name="CellValue_Label" xml:space="preserve">
+    <value>Значение ячейки:</value>
+  </data>
+  <data name="DeleteAll_Question" xml:space="preserve">
+    <value>Вы действительно хотите удалить все элементы?</value>
+  </data>
+  <data name="DeleteAll_ToolTip" xml:space="preserve">
+    <value>Удалить все</value>
+  </data>
+  <data name="DeleteCurrent_Question" xml:space="preserve">
+    <value>Вы действительно хотите удалить текущий элемент?</value>
+  </data>
+  <data name="DeleteCurrent_ToolTip" xml:space="preserve">
+    <value>Удалить текущий</value>
+  </data>
+  <data name="DrillthroughDialog_Caption" xml:space="preserve">
+    <value>Результат Drillthrough</value>
   </data>
 </root>

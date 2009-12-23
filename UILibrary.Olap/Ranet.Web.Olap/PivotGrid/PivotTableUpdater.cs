@@ -150,7 +150,7 @@ SET ";
 
         internal static void ParseHierarchies(ref string script, List<ShortMemberInfo> dr, object newValue, object oldValue)
         {
-            Regex r = new Regex("\\$\\$([^\\$]+)\\$\\$", RegexOptions.Compiled);
+            Regex r = new Regex(@"<%([^%<>]+)%>", RegexOptions.Compiled);
             Match m = r.Match(script);
             while (m.Success)
             {

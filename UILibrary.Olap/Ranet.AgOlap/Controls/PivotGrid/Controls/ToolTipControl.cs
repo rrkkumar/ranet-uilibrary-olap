@@ -72,17 +72,26 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         public void Initialize(CellControl cell)
         {
+            Text = String.Empty;
             if (cell != null && cell.Cell != null)
             {
-                if (cell.Cell.CellDescr != null && cell.Cell.CellDescr.Value != null && cell.Cell.CellDescr.Value.Value != null)
+                if (cell.NotRecalculatedChange != null && cell.NotRecalculatedChange.HasError)
                 {
-                    Caption = cell.Cell.CellDescr.Value.DisplayValue;
+                    Caption = cell.NotRecalculatedChange.Error;
                 }
                 else
                 {
-                    Caption = "(null)";
+                    if (cell.Cell.CellDescr != null && cell.Cell.CellDescr.Value != null && cell.Cell.CellDescr.Value.Value != null)
+                    {
+                        Caption = cell.Cell.CellDescr.Value.DisplayValue;
+                    }
+                    else
+                    {
+                        Caption = "(null)";
+                    }
                 }
-                Text = cell.Cell.GetShortTupleToStr();
+
+                Text += cell.Cell.GetShortTupleToStr();
             }
             else
             {

@@ -172,10 +172,10 @@
     <value>Copy to clipboard</value>
   </data>
   <data name="CustomPropertiesDialog_Caption" xml:space="preserve">
-    <value>Custom properties...</value>
+    <value>Custom Properties</value>
   </data>
   <data name="DataSourceInfoDialog_Caption" xml:space="preserve">
-    <value>Data source information...</value>
+    <value>Data Source Information</value>
   </data>
   <data name="DataSourceInfo_MovedAxes" xml:space="preserve">
     <value>MDX Query (2 Axes)</value>
@@ -274,10 +274,10 @@
     <value>Members</value>
   </data>
   <data name="MessageBox_Error" xml:space="preserve">
-    <value>Error...</value>
+    <value>Error</value>
   </data>
   <data name="MessageBox_Warning" xml:space="preserve">
-    <value>Warning...</value>
+    <value>Warning</value>
   </data>
   <data name="PivotGrid_BackButton_ToolTip" xml:space="preserve">
     <value>Navigate Backward (Ctrl+Left)</value>
@@ -333,7 +333,7 @@ Please, recalculate data or cancel changes.</value>
     <value>Use remitted recalculation</value>
   </data>
   <data name="PropertiesDialog_Caption" xml:space="preserve">
-    <value>Properties...</value>
+    <value>Properties</value>
   </data>
   <data name="PropertiesList_PropertyColumn" xml:space="preserve">
     <value>Property</value>
@@ -393,7 +393,7 @@ Please, recalculate data or cancel changes.</value>
     <value>Сoefficient:</value>
   </data>
   <data name="ValueCopyDialog_Caption" xml:space="preserve">
-    <value>Value copy settings...</value>
+    <value>Value Copy Settings</value>
   </data>
   <data name="ValueDeliveryControl_ChildrenMembers" xml:space="preserve">
     <value>Children members</value>
@@ -429,7 +429,7 @@ Please, recalculate data or cancel changes.</value>
     <value>Siblings members</value>
   </data>
   <data name="ValueDeliveryDialog_Caption" xml:space="preserve">
-    <value>Value delivery settings...</value>
+    <value>Value Delivery Settings</value>
   </data>
   <data name="ValueDeliveryDialog_Delivered" xml:space="preserve">
     <value>Delivered:</value>
@@ -551,8 +551,8 @@ Please, recalculate data or cancel changes.</value>
   <data name="UpdateScript_PropertyDesc" xml:space="preserve">
     <value>Update script</value>
   </data>
-  <data name="Warning" xml:space="preserve">
-    <value>Warning</value>
+  <data name="DrillthroughDialog_Caption" xml:space="preserve">
+    <value>Drillthrough result</value>
   </data>
   <data name="MdxDesigner_ContextMenu_TopFilter" xml:space="preserve">
     <value>Top N</value>
@@ -862,5 +862,89 @@ Please, recalculate data or cancel changes.</value>
   </data>
   <data name="CalcMemberEditor_Clear" xml:space="preserve">
     <value>Delete All Calculations</value>
+  </data>
+  <data name="CalcMemberEditor_BackColorLabel" xml:space="preserve">
+    <value>Background Color:</value>
+  </data>
+  <data name="CalcMemberEditor_ForeColorLabel" xml:space="preserve">
+    <value>Foreground Color:</value>
+  </data>
+  <data name="CellPropertiesDialog_Caption" xml:space="preserve">
+    <value>Cell Properties</value>
+  </data>
+  <data name="MemberPropertiesDialog_Caption" xml:space="preserve">
+    <value>Member Properties</value>
+  </data>
+  <data name="Connection" xml:space="preserve">
+    <value>Connection</value>
+  </data>
+  <data name="Dialog_CloseButton_ToolTip" xml:space="preserve">
+    <value>Close</value>
+  </data>
+  <data name="Dialog_MaximizeButton_ToolTip" xml:space="preserve">
+    <value>Maximize</value>
+  </data>
+  <data name="Dialog_RestoreDownButton_ToolTip" xml:space="preserve">
+    <value>Restore Down</value>
+  </data>
+  <data name="Properties" xml:space="preserve">
+    <value>Properties</value>
+  </data>
+  <data name="Tuple" xml:space="preserve">
+    <value>Tuple</value>
+  </data>
+  <data name="TransactionStateButton_Name" xml:space="preserve">
+    <value>Transaction State Button</value>
+  </data>
+  <data name="MdxDesigner_Cube" xml:space="preserve">
+    <value>Cube</value>
+  </data>
+  <data name="MdxDesigner_SaveCustomCalculations_Message" xml:space="preserve">
+    <value>Current query setting will are lost when change cube. You want to save settings?</value>
+  </data>
+  <data name="ServerExplorer_CubePropertyError" xml:space="preserve">
+    <value>Control initialization error. Cube by default is not defined. Please initialize Cube name.</value>
+  </data>
+  <data name="LoadingDialog_Name" xml:space="preserve">
+    <value>Loading Dialog</value>
+  </data>
+  <data name="MdxDesignerControl_Name" xml:space="preserve">
+    <value>MDX Designer</value>
+  </data>
+  <data name="OlapBrowserControl_Name" xml:space="preserve">
+    <value>Metadata Browser</value>
+  </data>
+  <data name="SaveAsDialog_Name" xml:space="preserve">
+    <value>Save as Dialog</value>
+  </data>
+  <data name="CalcMemberEditor_NonEmpty" xml:space="preserve">
+    <value>Non-empty Behavior:</value>
+  </data>
+  <data name="MdxDesigner_Calculations" xml:space="preserve">
+    <value>Calculations</value>
+  </data>
+  <data name="ContextMenu_DrillThrough" xml:space="preserve">
+    <value>DrillThrough</value>
+  </data>
+  <data name="CellValue_Label" xml:space="preserve">
+    <value>Cell value:</value>
+  </data>
+  <data name="DeleteAll_Question" xml:space="preserve">
+    <value>You want delete all items permanently?</value>
+  </data>
+  <data name="DeleteAll_ToolTip" xml:space="preserve">
+    <value>Delete All</value>
+  </data>
+  <data name="DeleteCurrent_Question" xml:space="preserve">
+    <value>You want delete current item permanently?</value>
+  </data>
+  <data name="DeleteCurrent_ToolTip" xml:space="preserve">
+    <value>Delete Current</value>
+  </data>
+  <data name="Drillthrough_Label" xml:space="preserve">
+    <value>Drillthroug:</value>
+  </data>
+  <data name="Warning" xml:space="preserve">
+    <value>Warning</value>
   </data>
 </root>

@@ -98,6 +98,8 @@ namespace Ranet.Olap.Core.Providers
             }
         }
 
+        public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject { get; set; }
+
         public virtual DataSourceInfoArgs GetDataSourceInfo(ServiceCommandArgs args)
         {
             DataSourceInfoArgs res = new DataSourceInfoArgs();
@@ -122,7 +124,7 @@ namespace Ranet.Olap.Core.Providers
                 queryIsOK = false;
             }
 
-            res.ConnectionString = Executor.Connection.ConnectionString;
+            res.ConnectionString = Executor.Connection.ConnectionID;
             res.UpdateScript = UpdateScript;
 
             return res;
@@ -541,6 +543,11 @@ namespace Ranet.Olap.Core.Providers
 
         public CellSetData RefreshQuery()
         {
+            return this.RefreshQuery(null);
+        }
+
+        public CellSetData RefreshQuery(Func<MdxObject, MdxObject> objectConsumerPattern)
+        {
             CellSetData res = null;
             if (!string.IsNullOrEmpty(Query))
             {
@@ -725,14 +732,13 @@ namespace Ranet.Olap.Core.Providers
                 axisExpression = new MdxNonEmptyExpression(axisExpression);
             }
             */
-            // Непонятные и лишние условия. Эквивалентный код:
-            if (History.CurrentHistoryItem.ColumnsActionChain.Equals(actions))
+            if (History.CurrentHistoryItem.ColumnsActionChain.Equals(actions) && HideEmptyColumns)
             {
-                ax.NonEmpty = HideEmptyColumns;
+                ax.NonEmpty = true;
             }
-            if (History.CurrentHistoryItem.RowsActionChain.Equals(actions))
+            if (History.CurrentHistoryItem.RowsActionChain.Equals(actions) && HideEmptyRows)
             {
-                ax.NonEmpty = HideEmptyRows;
+                ax.NonEmpty = true;
             }
 
             return new MdxAxis(
@@ -750,19 +756,38 @@ namespace Ranet.Olap.Core.Providers
         {
             if (actions == null)
                 return expr;
-            foreach (DrillActionContainer container in actions)
-            {
-                if (container.Action != null)
-                {
-                    MdxExpression newExpr = container.Action.Process(expr) as MdxExpression;
-                    if (newExpr != null)
-                        expr = newExpr;
-                }
 
-                if (container.Children != null && container.Children.Count > 0)
-                    expr = GetWrappedExpression(expr, container.Children);
-            }
+            //foreach (DrillActionContainer container in actions)
+            //{
+            //    if (container.Action != null)
+            //    {
+            //        if (container.Action is MdxActionBase)
+            //        {
+            //            if (passedHierarchies.Contains(container.HierarchyUniqueName))
+            //            {
+            //                ((MdxActionBase)container.Action).ConcretizeMdxObject = null;
+            //            }
+            //            else
+            //            {
+            //                ((MdxActionBase)container.Action).ConcretizeMdxObject = this.ConcretizeMdxObject;
+            //            }
+            //        }
 
+            //        MdxExpression newExpr = container.Action.Process(expr, new MdxActionContext(container.HierarchyUniqueName, container.MemberUniqueName)) as MdxExpression;
+            //        if (!passedHierarchies.Contains(container.HierarchyUniqueName))
+            //        {
+            //            passedHierarchies.Add(container.HierarchyUniqueName);
+            //        }
+            //        if (newExpr != null)
+            //            expr = newExpr;
+            //    }
+
+            //    if (container.Children != null && container.Children.Count > 0)
+            //        expr = GetWrappedExpression(expr, container.Children);
+            //}
+
+            var processor = new DrillActionProcessor(actions, this.ConcretizeMdxObject);
+            expr = processor.Process(expr);
             return expr;
         }
 

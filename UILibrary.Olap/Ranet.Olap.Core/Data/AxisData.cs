@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using System.Xml;
 using System.Globalization;
+using Jayrock.Json;
 
 namespace Ranet.Olap.Core.Data
 {
@@ -32,6 +33,8 @@ namespace Ranet.Olap.Core.Data
         public AxisData()
         { 
         }
+
+        public int AxisNum = -1;
 
         String m_Name = String.Empty;
         /// <summary>
@@ -58,78 +61,48 @@ namespace Ranet.Olap.Core.Data
             set { m_Positions = value; }
         }
 
-        internal void Serialize(XmlWriter writer)
+        Dictionary<int, MemberData> m_Members;
+        public Dictionary<int, MemberData> Members
         {
-            if (writer == null)
-                return;
-
-            writer.WriteStartElement("AxisData");
-            // Свойства
-            writer.WriteElementString("Name", this.Name.ToString(CultureInfo.InvariantCulture));
-            
-            // Позиции - начало
-            writer.WriteStartElement("Positions");
-            foreach (PositionData pos in Positions)
-            {
-                pos.Serialize(writer);
+            get {
+                if (m_Members == null)
+                {
+                    m_Members = new Dictionary<int, MemberData>();
+                }
+                return m_Members;
             }
-            // Позиции - конец
-            writer.WriteEndElement();
-
-            writer.WriteEndElement();
         }
 
-        internal static AxisData Deserialize(XmlReader reader)
+        Dictionary<int, String> m_MembersPropertiesNames;
+        /// <summary>
+        /// Названия свойств элементов
+        /// </summary>
+        public Dictionary<int, String> MembersPropertiesNames
         {
-            if (reader != null)
+            get
             {
-                try
+                if (m_MembersPropertiesNames == null)
                 {
-                    AxisData target = null;
-                    if (reader.NodeType == XmlNodeType.Element &&
-                        reader.Name == "AxisData")
-                    {
-                        target = new AxisData();
-
-                        reader.ReadStartElement("AxisData");
-
-                        reader.ReadStartElement("Name");
-                        if (reader.NodeType == XmlNodeType.Text)
-                        {
-                            target.Name = reader.ReadContentAsString();
-                            reader.ReadEndElement();
-                        }
-
-                        // Позиции 
-                        reader.ReadStartElement("Positions");
-                        PositionData pos = null;
-                        do
-                        {
-                            pos = PositionData.Deserialize(reader);
-                            if (pos != null)
-                                target.Positions.Add(pos);
-                        } while (pos != null);
-                        if (reader.NodeType == XmlNodeType.EndElement &&
-                            reader.Name == "Positions")
-                        {
-                            reader.ReadEndElement();
-                        }
-
-                        if (reader.NodeType == XmlNodeType.EndElement &&
-                            reader.Name == "AxisData")
-                        {
-                            reader.ReadEndElement();
-                        }
-                    }
-                    return target;
+                    m_MembersPropertiesNames = new Dictionary<int, String>();
                 }
-                catch (XmlException ex)
-                {
-                    throw ex;
-                    //return null;
-                }
+                return m_MembersPropertiesNames;
             }
-            return null;
+        }
+
+        Dictionary<int, String> m_CustomMembersPropertiesNames;
+        /// <summary>
+        /// Названия пользовательских свойств элементов
+        /// </summary>
+        public Dictionary<int, String> CustomMembersPropertiesNames
+        {
+            get
+            {
+                if (m_CustomMembersPropertiesNames == null)
+                {
+                    m_CustomMembersPropertiesNames = new Dictionary<int, String>();
+                }
+                return m_CustomMembersPropertiesNames;
+            }
         }
     }
 }

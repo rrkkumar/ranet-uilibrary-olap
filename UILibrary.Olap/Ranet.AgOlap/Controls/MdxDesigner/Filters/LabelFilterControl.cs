@@ -30,6 +30,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.MdxDesigner.Wrappers;
+using Ranet.AgOlap.Controls.General;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
 {
@@ -69,7 +70,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
             Grid.SetColumn(comboFilterType, 1);
 
             // Текстовое поле
-            text_1 = new TextBox() { Margin = new Thickness(5,0,0,0), Text = String.Empty };
+            text_1 = new RichTextBox() { Margin = new Thickness(5,0,0,0), Text = String.Empty };
             LayoutRoot.Children.Add(text_1);
             Grid.SetRow(text_1, 1);
             Grid.SetColumn(text_1, 2);
@@ -81,7 +82,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
             Grid.SetRow(lblAnd, 1);
 
             // Текстовое поле
-            text_2 = new TextBox() { Margin = new Thickness(5, 0, 0, 0), Text = String.Empty };
+            text_2 = new RichTextBox() { Margin = new Thickness(5, 0, 0, 0), Text = String.Empty };
             LayoutRoot.Children.Add(text_2);
             Grid.SetRow(text_2, 1);
             Grid.SetColumn(text_2, 4);

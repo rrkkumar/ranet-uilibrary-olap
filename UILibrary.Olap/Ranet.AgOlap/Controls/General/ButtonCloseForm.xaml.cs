@@ -37,6 +37,8 @@ namespace Ranet.AgOlap.Controls.General
 		{
 			// Required to initialize variables
 			InitializeComponent();
+
+            ToolTipService.SetToolTip(this, Localization.Dialog_CloseButton_ToolTip);
 		}
 
         public event RoutedEventHandler Click;

@@ -26,11 +26,15 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.IO;
 using System.Globalization;
+using Jayrock.Json.Conversion;
+using Jayrock.Json;
 
 namespace Ranet.Olap.Core.Data
 {
     public class CellSetData
     {
+        const string XML_CellSetData = "csd";
+
         string m_CubeName = String.Empty;
         public string CubeName
         {
@@ -136,57 +140,90 @@ namespace Ranet.Olap.Core.Data
 
         Cache2D<CellData> m_Cells2D = new Cache2D<CellData>();
 
-        internal void Serialize(XmlWriter writer)
+        internal void DeserializeData(string DataStr)
         {
-            if (writer == null)
-                return;
+            var cellDatas = Jayrock.Json.Conversion.JsonConvert.Import(DataStr) as JsonArray;
+            var Values = cellDatas.GetArray(0);
+            var DisplayValues = cellDatas.GetArray(1);
+            var Styles = cellDatas.GetArray(2);
+            int axes0Len = this.Axes.Count > 0 ? this.Axes[0].Positions.Count : 0;
+            int axes1Len = this.Axes.Count > 1 ? this.Axes[1].Positions.Count : 0;
+            var PropNames = cellDatas[cellDatas.Length - 1] as JsonArray;
+            int CellOrdinal = 0;
 
-            // Начало
-            writer.WriteStartElement("CellSetData");
-            // Свойства
-            writer.WriteElementString("CubeName", this.CubeName.ToString(CultureInfo.InvariantCulture));
-            // Соедиение
-            Connection.Serialize(writer);
-            
-            // Оси - начало
-            writer.WriteStartElement("Axes");
-            foreach (AxisData axis in Axes)
+            if (this.Axes.Count > 0)
             {
-                axis.Serialize(writer);
+                int cellsCount = Values.Count;
+                for (int j = 0; j < cellsCount; j++)
+                {
+                    var cellData = new CellData();
+                    cellData.Axis0_Coord = axes0Len > 0 ? j % axes0Len : -1;    // axes0Len может быть 0 и при этом будет одна ячейка (дефолтная). И осей при этом в CellSet нету.
+                    cellData.Axis1_Coord = axes1Len > 0 ? j / axes0Len : -1;
+                    var cellValueData = new CellValueData();
+                    var prop = new PropertyData("CellOrdinal", CellOrdinal);
+                    cellValueData.Properties.Add(prop);
+                    object val = Values[CellOrdinal];
+                    if (val != null)
+                    //val = ((JsonNumber)val).ToDouble();
+                    {
+                        if (val is JsonString)
+                        {
+                            val = val.ToString();
+                        }
+                        else if (val is JsonNumber)
+                        {
+                            var propvalStr = val.ToString();
+                            if (propvalStr.Contains('.'))
+                                val = ((JsonNumber)val).ToDouble();
+                            else
+                                val = ((JsonNumber)val).ToInt32();
+                        }
+                    }
+
+                    cellValueData.Value = val;
+                    prop = new PropertyData("VALUE", val);
+                    cellValueData.Properties.Add(prop);
+                    var props = cellDatas.GetArray(3 + Styles.GetInt32(CellOrdinal));
+                    string FORMAT_STRING = null;
+                    for (int k = 0; k < PropNames.Length; k++)
+                    {
+                        object propval = props[k];
+                        if (propval != null)
+                        {
+                            if (propval is JsonString)
+                            {
+                                propval = propval.ToString();
+                            }
+                            else if (propval is JsonNumber)
+                            {
+                                var propvalStr = propval.ToString();
+                                if (propvalStr.Contains('.'))
+                                    propval = ((JsonNumber)propval).ToDouble();
+                                else
+                                    propval = ((JsonNumber)propval).ToInt32();
+                            }
+                        }
+                        var propName = PropNames[k].ToString();
+                        //if (propName == "FORMAT_STRING")
+                        //    FORMAT_STRING = (string)propval;
+                        prop = new PropertyData(propName, propval);
+                        cellValueData.Properties.Add(prop);
+                    }
+
+                    //if (val == null)
+                    //    cellValueData.DisplayValue = null;
+                    //else if (FORMAT_STRING != null)
+                    //    cellValueData.DisplayValue = ((double)val).ToString(FORMAT_STRING);
+                    //else
+                    //    cellValueData.DisplayValue = val.ToString();
+                    cellValueData.DisplayValue = DisplayValues[CellOrdinal++].ToString();
+
+                    prop = new PropertyData("FORMATTED_VALUE", cellValueData.DisplayValue);
+                    cellValueData.Properties.Add(prop);
+                    cellData.Value = cellValueData;
+                    Cells.Add(cellData);
+                }
             }
-            // Оси - конец
-            writer.WriteEndElement();
-
-            // Ячейки - начало
-            writer.WriteStartElement("Cells");
-            foreach (CellData cell in Cells)
-            {
-                cell.Serialize(writer);
-            }
-            // Ячейки - конец
-            writer.WriteEndElement();
-
-            // Конец
-            writer.WriteEndElement();
-        }
-
-        public static String Serialize(CellSetData cs)
-        {
-            StringBuilder sb = new StringBuilder();
-
-            if (cs != null)
-            {
-                //XmlWriterSettings settings = new XmlWriterSettings();
-                //settings.ConformanceLevel = ConformanceLevel.Fragment;
-
-                //XmlWriter writer = XmlWriter.Create(sb, settings);
-                XmlWriter writer = XmlWriter.Create(sb);
-                cs.Serialize(writer);
-                writer.Close();
-
-
-            }
-            return sb.ToString();
         }
 
         internal static CellSetData Deserialize(XmlReader reader)
@@ -196,35 +233,131 @@ namespace Ranet.Olap.Core.Data
                 try
                 {
                     if (!(reader.NodeType == XmlNodeType.Element &&
-                        reader.Name == "CellSetData"))
+                        reader.Name == XML_CellSetData))
                     {
-                        reader.ReadToFollowing("CellSetData");
+                        reader.ReadToFollowing(XML_CellSetData);
                     }
 
                     CellSetData target = new CellSetData();
-                    // Начало - CellSetData
-                    reader.ReadStartElement("CellSetData");
 
-                    // Свойства
-                    reader.ReadStartElement("CubeName");
-                    if (reader.NodeType == XmlNodeType.Text)
-                    {
-                        target.CubeName = reader.ReadContentAsString();
-                        reader.ReadEndElement();
-                    }
+                    // Начало - CellSetData
+                    reader.ReadStartElement(XML_CellSetData);
+
+                    var data = Jayrock.Json.Conversion.JsonConvert.Import(reader.Value) as JsonArray;
+                    
+                    // Имя куба
+                    target.CubeName = data[0] != null ? data[0].ToString() : String.Empty;
 
                     // Соединение
-                    target.Connection = ConnectionInfo.Deserialize(reader);
+                    var connection = data.GetArray(1);
+                    target.Connection.ConnectionID = connection[0].ToString();
+                    target.Connection.ConnectionString = connection[1].ToString();
+
+                    reader.Read();
 
                     // Оси
                     reader.ReadStartElement("Axes");
-                    AxisData axis = null;
-                    do
+
+                    var axes = Jayrock.Json.Conversion.JsonConvert.Import(reader.Value) as JsonArray;
+                    for (int a = 0; a < axes.Count; a++)
                     {
-                        axis = AxisData.Deserialize(reader);
-                        if (axis != null)
-                            target.Axes.Add(axis);
-                    } while (axis != null);
+                        var axis_data = axes.GetArray(a);
+                        AxisData axis = new AxisData();
+                        axis.AxisNum = a;
+                        // Название оси
+                        axis.Name = axis_data[0].ToString();
+                        // Позиции 
+                        var positions = axis_data.GetArray(1);
+
+                        for (int p = 0; p < positions.Count; p++)
+                        {
+                            var position_data = positions.GetArray(p);
+                            PositionData pos = new PositionData();
+
+                            for (int m = 0; m < position_data.Count; m++)
+                            {
+                                var member_data = position_data.GetArray(m);
+                                PositionMemberData member = new PositionMemberData(Convert.ToInt32(member_data[0]));
+                                member.DrilledDown = Convert.ToBoolean(member_data[1]);
+                                pos.Members.Add(member);
+                            }
+
+                            axis.Positions.Add(pos);
+                        }
+
+                        // Названаия свойств
+                        var PropertiesNames = axis_data.GetArray(2);
+                        // Названаия пользовательских свойств
+                        var MemberPropertiesNames = axis_data.GetArray(3);
+                        // Элементы оси
+                        var members = axis_data.GetArray(4);
+
+                        // Варианты стиля
+                        var equalsMemberProps = axis_data.GetArray(5);
+                        // Описание стиля
+                        var equalsMemberPropertiesNames = axis_data.GetArray(6);
+
+                        for (int m = 0; m < members.Count; m++)
+                        {
+                            var member_data = members.GetArray(m);
+                            var Settings = member_data.GetArray(0);
+                            var PropertiesValues = member_data.GetArray(1);
+                            var MemberPropertiesValues = member_data.GetArray(2);
+                            int MemberPropertiesStyleId = Convert.ToInt32(member_data[3]);
+
+                            MemberData member = new MemberData();
+                            int x = 0;
+                            member.Caption = Settings[x++].ToString();
+                            member.Description = Settings[x++].ToString();
+                            member.Name = Settings[x++].ToString();
+                            member.UniqueName = Settings[x++].ToString();
+                            member.ChildCount = Convert.ToInt32(Settings[x++].ToString());
+                            member.DrilledDown = Convert.ToBoolean(Settings[x++].ToString());
+                            member.LevelDepth = Convert.ToInt32(Settings[x++].ToString());
+                            member.LevelName = Settings[x++].ToString();
+                            member.HierarchyUniqueName = Settings[x++].ToString();
+                            member.ParentSameAsPrevious = Convert.ToBoolean(Settings[x++].ToString());
+
+                            for (int j = 0; j < PropertiesValues.Length; j++)
+                            {
+                                member.Properties.Add(new PropertyData(PropertiesNames[j].ToString(), PropertiesValues[j]));
+                            }
+                            for (int j = 0; j < MemberPropertiesValues.Length; j++)
+                            {
+                                member.MemberProperties.Add(new PropertyData(MemberPropertiesNames[j].ToString(), MemberPropertiesValues[j]));
+                            }
+
+                            var member_equalsPropsValues = equalsMemberProps.GetArray(MemberPropertiesStyleId);
+                            for (int k = 0; k < equalsMemberPropertiesNames.Length; k++)
+                            {
+                                object propval = member_equalsPropsValues[k];
+                                if (propval != null)
+                                {
+                                    if (propval is JsonString)
+                                    {
+                                        propval = propval.ToString();
+                                    }
+                                    else if (propval is JsonNumber)
+                                    {
+                                        var propvalStr = propval.ToString();
+                                        if (propvalStr.Contains('.'))
+                                            propval = ((JsonNumber)propval).ToDouble();
+                                        else
+                                            propval = ((JsonNumber)propval).ToInt32();
+                                    }
+                                }
+                                var propName = equalsMemberPropertiesNames[k].ToString();
+                                member.MemberProperties.Add(new PropertyData(propName, propval));
+                            }
+
+                            axis.Members.Add(axis.Members.Count, member);
+                        }
+
+                        target.Axes.Add(axis);
+                    }
+
+                    reader.Read();
+
                     if (reader.NodeType == XmlNodeType.EndElement &&
                         reader.Name == "Axes")
                     {
@@ -233,31 +366,27 @@ namespace Ranet.Olap.Core.Data
 
                     // Ячейки
                     reader.ReadStartElement("Cells");
-                    CellData cell = null;
-                    do
-                    {
-                        cell = CellData.Deserialize(reader);
-                        if (cell != null)
-                            target.Cells.Add(cell);
-                    } while (cell != null);
+
+                    var strData = reader.Value;
+                    target.DeserializeData(strData);
+                    reader.Read();
+
                     if (reader.NodeType == XmlNodeType.EndElement &&
                         reader.Name == "Cells")
                     {
                         reader.ReadEndElement();
                     }
-
                     // Конец - CellSetData
                     if (reader.NodeType == XmlNodeType.EndElement &&
-                        reader.Name == "CellSetData")
+                        reader.Name == XML_CellSetData)
                     {
                         reader.ReadEndElement();
                     }
                     return target;
                 }
-                catch (XmlException ex)
+                catch (XmlException)
                 {
-                    throw ex;
-                    //return null;
+                    throw;
                 }
             }
             return null;
@@ -274,12 +403,6 @@ namespace Ranet.Olap.Core.Data
             }
             else
                 return null;
-        //    StringReader str_reader = new StringReader(str);
-        //    XmlReader reader = XmlReader.Create(str_reader);
-
-        //    XmlWriter writer = XmlWriter.Create(reader);
-        //    this.Serialize(writer);
-        //    writer.Close();
         }
     }
 }

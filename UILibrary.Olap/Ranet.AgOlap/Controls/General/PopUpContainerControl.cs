@@ -47,7 +47,7 @@ namespace Ranet.AgOlap.Controls.General
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto});
 
 
-            SelectedItemTextBox = new TextBox(){ IsReadOnly = true, IsTabStop = false };
+            SelectedItemTextBox = new SimpleTextBox(){ IsReadOnly = true, IsTabStop = false };
             SelectedItemTextBox.VerticalAlignment = VerticalAlignment.Stretch;
             SelectedItemTextBox.Margin = new Thickness(0);
             SelectedItemTextBox.Padding = new Thickness(2, 0, 0, 0);

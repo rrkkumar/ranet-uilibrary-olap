@@ -1,7 +1,7 @@
 Extra permissions for source code.
 You have to take into account copyright information for every source file specifically.
 
-Ranet.UILibrary.Olap (Ranet.AgOlap.Mdx,Ranet.AgOlap.Mdx) uses and provide
+Ranet.UILibrary.Olap (Ranet.Olap.Mdx,Ranet.AgOlap.Mdx) uses and provides
 modified Antlr.Runtime source code in accordance with license thereunder:
 
 [The "BSD licence"]

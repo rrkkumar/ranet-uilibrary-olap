@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using Ranet.Olap.Core.Metadata;
 using Ranet.Olap.Core.Providers;
 using Ranet.Olap.Core.Providers.ClientServer;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Commands
 {
@@ -149,106 +150,106 @@ namespace Ranet.AgOlap.Commands
             return args;
         }
 
-        public static MemberChoiceQuery CreateGetChildrenMembersQueryArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String memberUniqueName, String startLevelUniqueName, long begin, long count)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.StartLevelUniqueName = startLevelUniqueName;
-            args.QueryType = MemberChoiceQueryType.GetChildrenMembers;
-            args.BeginIndex = begin;
-            args.Count = count;
-            args.MemberUniqueName = memberUniqueName;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetChildrenMembersQueryArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String memberUniqueName, String startLevelUniqueName, long begin, long count)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.StartLevelUniqueName = startLevelUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.GetChildrenMembers;
+        //    args.BeginIndex = begin;
+        //    args.Count = count;
+        //    args.MemberUniqueName = memberUniqueName;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateGetRootMembersArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, long begin, long count)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.StartLevelUniqueName = startLevelUniqueName;
-            args.QueryType = MemberChoiceQueryType.GetRootMembers;
-            args.BeginIndex = begin;
-            args.Count = count;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetRootMembersArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, long begin, long count)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.StartLevelUniqueName = startLevelUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.GetRootMembers;
+        //    args.BeginIndex = begin;
+        //    args.Count = count;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateLoadSetWithAscendantsArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String set)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.QueryType = MemberChoiceQueryType.LoadSetWithAscendants;
-            args.Set = set;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateLoadSetWithAscendantsArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String set)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.LoadSetWithAscendants;
+        //    args.Set = set;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateGetRootMembersCountArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.StartLevelUniqueName = startLevelUniqueName;
-            args.QueryType = MemberChoiceQueryType.GetRootMembersCount;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetRootMembersCountArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.StartLevelUniqueName = startLevelUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.GetRootMembersCount;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateGetMemberArgs(String connectionString, String cubeName, String subCube, String memberUniqueName)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.MemberUniqueName = memberUniqueName;
-            args.QueryType = MemberChoiceQueryType.GetMember;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetMemberArgs(String connectionString, String cubeName, String subCube, String memberUniqueName)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.MemberUniqueName = memberUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.GetMember;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateGetMembersArgs(String connectionString, String cubeName, String subCube, String set)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.Set = set;
-            args.QueryType = MemberChoiceQueryType.GetMembers;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetMembersArgs(String connectionString, String cubeName, String subCube, String set)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.Set = set;
+        //    args.QueryType = MemberChoiceQueryType.GetMembers;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateFindMembersArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, FilterOperationBase filter)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.StartLevelUniqueName = startLevelUniqueName;
-            args.QueryType = MemberChoiceQueryType.FindMembers;
-            args.SubCube = subCube;
-            args.Filter = filter;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateFindMembersArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, FilterOperationBase filter)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.StartLevelUniqueName = startLevelUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.FindMembers;
+        //    args.SubCube = subCube;
+        //    args.Filter = filter;
+        //    return args;
+        //}
 
-        public static MemberChoiceQuery CreateGetAscendantsArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, String memberUniqueName)
-        {
-            MemberChoiceQuery args = new MemberChoiceQuery();
-            args.Connection = connectionString;
-            args.CubeName = cubeName;
-            args.HierarchyUniqueName = hierarchyUniqueName;
-            args.StartLevelUniqueName = startLevelUniqueName;
-            args.QueryType = MemberChoiceQueryType.GetAscendants;
-            args.MemberUniqueName = memberUniqueName;
-            args.SubCube = subCube;
-            return args;
-        }
+        //public static MemberChoiceQuery CreateGetAscendantsArgs(String connectionString, String cubeName, String subCube, String hierarchyUniqueName, String startLevelUniqueName, String memberUniqueName)
+        //{
+        //    MemberChoiceQuery args = new MemberChoiceQuery();
+        //    args.Connection = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.HierarchyUniqueName = hierarchyUniqueName;
+        //    args.StartLevelUniqueName = startLevelUniqueName;
+        //    args.QueryType = MemberChoiceQueryType.GetAscendants;
+        //    args.MemberUniqueName = memberUniqueName;
+        //    args.SubCube = subCube;
+        //    return args;
+        //}
 
         public static MetadataQuery CreateLoadLevelPropertiesArgs(String connectionString, String cubeName, String dimensionUniqueName, String hierarchyUniqueName, String levelUniqueName)
         {
@@ -266,7 +267,8 @@ namespace Ranet.AgOlap.Commands
         {
             MdxQueryArgs args = new MdxQueryArgs();
             args.Connection = connectionString;
-            args.Query = query;
+            args.Type = QueryTypes.Select;
+            args.Queries.Add(query);
             return args;
         }
 
@@ -279,14 +281,13 @@ namespace Ranet.AgOlap.Commands
             return args;
         }
 
-        public static PerformMemberActionArgs CreatePerformMemberActionArgs(String connectionString, 
-            ShortMemberInfo member,
+        public static PerformMemberActionArgs CreatePerformMemberActionArgs( 
+            MemberInfo member,
             int axisIndex,
             MemberActionType action,
-            List<ShortMemberInfo> ascendants)
+            List<MemberInfo> ascendants)
         {
             PerformMemberActionArgs args = new PerformMemberActionArgs();
-            args.Connection = connectionString;
             args.Member = member;
             args.AxisIndex = axisIndex;
             args.Action = action;
@@ -294,14 +295,14 @@ namespace Ranet.AgOlap.Commands
             return args;
         }
 
-        public static UpdateCubeArgs CreateUpdateCubeArgs(String connectionString, String cubeName, List<UpdateEntry> entries)
-        {
-            UpdateCubeArgs args = new UpdateCubeArgs();
-            args.ConnectionString = connectionString;
-            args.CubeName = cubeName;
-            args.Entries = entries;
-            return args;
-        }
+        //public static UpdateCubeArgs CreateUpdateCubeArgs(String connectionString, String cubeName, List<UpdateEntry> entries)
+        //{
+        //    UpdateCubeArgs args = new UpdateCubeArgs();
+        //    args.ConnectionString = connectionString;
+        //    args.CubeName = cubeName;
+        //    args.Entries = entries;
+        //    return args;
+        //}
 
         //public static InvokeSchema CreateRunNavigationCommandSchema(string contextId, String dataSourceId, HistoryNavigationActionType actionType)
         //{

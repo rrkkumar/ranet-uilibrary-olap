@@ -39,17 +39,17 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         /// <param name="uniqueName">Уникальное имя мембера</param>
         /// <param name="caption">Заголовок мембера</param>
         /// <param name="state">состояние</param>
-        public MemberChoiceSettings(MemberDataWrapper info, SelectStates state)
+        public MemberChoiceSettings(MemberData info, SelectStates state)
         {
             m_Info = info;
             m_SelectState = state;
         }
 
-        private MemberDataWrapper m_Info = null;
+        private MemberData m_Info = null;
         /// <summary>
         /// Информация об элементе
         /// </summary>
-        public MemberDataWrapper Info
+        public MemberData Info
         {
             get { return m_Info; }
             set { m_Info = value; }
@@ -63,7 +63,7 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             get {
                 if (Info != null)
                 {
-                    return Info.Member.UniqueName;
+                    return Info.UniqueName;
                 }
                 return String.Empty;
             }
@@ -78,7 +78,7 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             {
                 if (Info != null)
                 {
-                    return Info.Member.Caption;
+                    return Info.Caption;
                 }
                 return String.Empty;
             }

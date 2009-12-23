@@ -45,8 +45,8 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             }
         }
 
-		public RootOlapMemberInfo(MemberDataWrapper member, Modes mode)
-            : base (member, mode)
+		public RootOlapMemberInfo(MemberData member)
+            : base (member)
 		{
 		}
 
@@ -82,7 +82,7 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
         /// Добавляет элемент в иерархию MemberNodeInfo
         /// </summary>
         /// <param name="member">Member, информация о котором должна быть добавлена в иерархию</param>
-        public OlapMemberInfo AddMemberToHierarchy(MemberDataWrapper info)
+        public OlapMemberInfo AddMemberToHierarchy(MemberData info)
         {
             //Задача: Добавить OlapMemberInfo в иерархию 
             //Возможные варианты:
@@ -93,13 +93,13 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
             //Таким образом в иерархию добавляется не только элемент, но и полностью ветка его родителей (если ее не было)
 
             //Ищем информацию о данном члене измерения в загруженной иерархии
-            OlapMemberInfo memberInfo = FindMember(info.Member.UniqueName);
+            OlapMemberInfo memberInfo = FindMember(info.UniqueName);
 
             //Если элемент в иерархии не найден, то его нужно добавить
             if (memberInfo == null)
             {
                 //Создаем OlapMemberInfo
-                memberInfo = new OlapMemberInfo(info, Mode);
+                memberInfo = new OlapMemberInfo(info);
                 // Подписываемся у каждого добавленного элемента на событие - изменение состояния всей иерархии
                 // данное событие генерит элемент, послуживший инициатором рекурсивного обновления состояний в дереве
                 memberInfo.HierarchyStateChanged += new StateChangedEventHandler(memberInfo_HierarchyStateChanged);
@@ -111,7 +111,16 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
                 bool foundParentHierarchy = true;
                 while (foundParentHierarchy)
                 {
-                    String parentUniqueName = addedHierarchy.Info.ParentUniqueName;
+                    String parentUniqueName = String.Empty;
+                    if (addedHierarchy.Info != null)
+                    {
+                        PropertyData prop = addedHierarchy.Info.GetMemberProperty(MemberData.PARENT_UNIQUE_NAME_PROPERTY);
+                        if (prop != null && prop.Value != null)
+                        {
+                            parentUniqueName = prop.Value.ToString();
+                        }
+                    }
+
                     if (String.IsNullOrEmpty(parentUniqueName))
                     {
                         //Добавляем в коллекцию корневых элементов

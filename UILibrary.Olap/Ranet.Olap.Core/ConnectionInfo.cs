@@ -97,9 +97,9 @@ namespace Ranet.Olap.Core
                     }
                     return target;
                 }
-                catch (XmlException ex)
+                catch (XmlException)
                 {
-                    throw ex;
+                    throw;
                     //return null;
                 }
             }

@@ -176,14 +176,14 @@ namespace Ranet.AgOlap.Controls
             if (e.Error != null)
             {
                 ShowErrorInTree(parentNode);
-                LogManager.LogException(Localization.CubeChoiceControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
                 ShowErrorInTree(parentNode);
-                LogManager.LogMessage(Localization.CubeChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 

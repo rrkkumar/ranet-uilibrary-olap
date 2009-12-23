@@ -80,10 +80,10 @@ namespace Ranet.AgOlap.Controls.MemberChoice
                     MemberItemControl ctrl = null;
                     if (useStateIcons)
                     {
-                        ctrl = new MemberItemControl(info.Info.Member, MemberChoiceControl.GetIconImage(info));
+                        ctrl = new MemberItemControl(info.Info, MemberChoiceControl.GetIconImage(info));
                     }
                     else
-                        ctrl = new MemberItemControl(info.Info.Member);
+                        ctrl = new MemberItemControl(info.Info);
                     ctrl.Tag = info;
                     LayoutRoot.Children.Add(ctrl);
                     Grid.SetRow(ctrl, row);

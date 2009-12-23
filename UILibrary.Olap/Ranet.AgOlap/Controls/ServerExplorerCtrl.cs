@@ -47,50 +47,114 @@ namespace Ranet.AgOlap.Controls
         /// </summary>
         public bool ShowAllCubes;
 
-        CustomTree Tree = null;
+        CubeBrowserCtrl m_CubeBrowser;
+        public CubeBrowserCtrl CubeBrowser
+        {
+            get { return m_CubeBrowser; }
+        }
+
         ComboBoxEx Cubes_ComboBox = null;
 
         public ServerExplorerCtrl()
         {
-            Tree = new CustomTree();
-            Tree.Margin = new Thickness(0, 3, 0, 0);
+            m_CubeBrowser = new CubeBrowserCtrl();
+            m_CubeBrowser.Margin = new Thickness(0, 3, 0, 0);
 
             Border border = new Border() { BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
             Grid LayoutRoot = new Grid() { Margin = new Thickness(3) };
+            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(22) });
             LayoutRoot.RowDefinitions.Add(new RowDefinition());
+
+            var cubesComboHeader = new HeaderControl(UriResources.Images.Cube16, Localization.MdxDesigner_Cube) { Margin = new Thickness(0, 5, 0, 3) };
 
             Cubes_ComboBox = new ComboBoxEx();
             Cubes_ComboBox.SelectionChanged += new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
 
+            LayoutRoot.Children.Add(cubesComboHeader);
             LayoutRoot.Children.Add(Cubes_ComboBox);
-            LayoutRoot.Children.Add(Tree);
-            Grid.SetRow(Tree, 1);
+            Grid.SetRow(Cubes_ComboBox, 1);
+            LayoutRoot.Children.Add(m_CubeBrowser);
+            Grid.SetRow(m_CubeBrowser, 2);
 
             border.Child = LayoutRoot;
             base.Content = border;
 
-            Tree.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(Tree_SelectedItemChanged);
+            m_OlapDataLoader = GetOlapDataLoader();
+
+            m_CubeBrowser.OlapDataLoader = GetOlapDataLoader();
+            
+            m_CubeBrowser.SelectedItemChanged += new EventHandler<ItemEventArgs>(m_CubeBrowser_SelectedItemChanged);
+
+            Cubes_ComboBox.IsEnabled = false;
+            m_CubeBrowser.IsEnabled = false;
         }
 
-        void Cubes_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void m_CubeBrowser_SelectedItemChanged(object sender, ItemEventArgs e)
         {
-            RefreshTree();
-        }
-
-        void Tree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            InfoBase info = null;
-            CubeTreeNode node = e.NewValue as CubeTreeNode;
-            if (node != null)
-            {
-                info = node.Info;
-            }
+            var info_Node = m_CubeBrowser.SelectedNode as InfoBaseTreeNode;
+            InfoBase info = info_Node != null ? info_Node.Info : null;
             Raise_SelectedItemChanged(info);
         }
 
-        #region Свойства для настройки на OLAP
+        public event EventHandler<CustomEventArgs<String>> CubeSelected;
 
+        Dictionary<String, CubeDefInfo> m_MetadataCache = new Dictionary<string, CubeDefInfo>();
+
+        void Cubes_ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bool initCubeBrowser = true;
+            if (e.RemovedItems != null && e.RemovedItems.Count > 0)
+            {
+                EventHandler<CustomEventArgs<String>> handler = this.CubeSelected;
+                if (handler != null)
+                {
+                    var args = new CustomEventArgs<String>(CurrentCubeName);
+                    handler(this, args);
+                    // Если событие обработано и пришла отмена, то значит переключать куб не надо
+                    if (args.Cancel)
+                    {
+                        initCubeBrowser = false;
+                        // Вручную возвращаем куб обратно
+                        //Cubes_ComboBox.SelectionChanged -= new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
+                        //Cubes_ComboBox.Combo.SelectedItem = e.RemovedItems != null && e.RemovedItems.Count > 0 ? e.RemovedItems[0] : null;
+                        //Cubes_ComboBox.SelectionChanged += new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
+                    }
+                }
+            }
+
+            if (initCubeBrowser)
+            {
+                // Кэшируем если данные уже были загружены
+                if (!String.IsNullOrEmpty(m_CubeBrowser.CubeName) &&
+                    m_CubeBrowser.CubeInfo != null)
+                {
+                    if (m_MetadataCache.ContainsKey(m_CubeBrowser.CubeName))
+                    {
+                        m_MetadataCache[m_CubeBrowser.CubeName] = m_CubeBrowser.CubeInfo;
+                    }
+                    else
+                    {
+                        m_MetadataCache.Add(m_CubeBrowser.CubeName, m_CubeBrowser.CubeInfo);
+                    }
+                }
+                
+                m_CubeBrowser.CubeName = CurrentCubeName;
+                // Используем кэш если возможно
+                if (m_MetadataCache.ContainsKey(m_CubeBrowser.CubeName) && m_MetadataCache[m_CubeBrowser.CubeName] != null)
+                    m_CubeBrowser.Initialize(m_MetadataCache[m_CubeBrowser.CubeName]);
+                else
+                    m_CubeBrowser.Initialize();
+            }
+        }
+
+        public void RefreshCubeMetadata()
+        {
+            m_CubeBrowser.CubeName = CurrentCubeName;
+            m_CubeBrowser.Initialize();
+        }
+
+        #region Свойства для настройки на OLAP
         private String m_Connection = String.Empty;
         /// <summary>
         /// ID соединения
@@ -104,12 +168,28 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_Connection = value;
+                m_CubeBrowser.Connection = value;
             }
         }
 
+        private String m_CubeName = String.Empty;
+        /// <summary>
+        /// Имя куба
+        /// </summary>
+        public String CubeName
+        {
+            get
+            {
+                return m_CubeName;
+            }
+            set
+            {
+                m_CubeName = value;
+            }
+        }
         #endregion Свойства для настройки на OLAP
 
-        String CurrentCubeName
+        public String CurrentCubeName
         {
             get
             {
@@ -135,487 +215,111 @@ namespace Ranet.AgOlap.Controls
 
         public void Initialize()
         {
-            ClearTree();
+            m_MetadataCache.Clear();
+            Cubes_ComboBox.Clear();
+            m_CubeBrowser.Clear();
 
-            GetCubes();
-        }
-
-        void ClearTree()
-        {
-            Tree.Items.Clear();
-            m_KPIGroupNodes.Clear();
-            m_HierarchyGroupNodes.Clear();
-            m_MeasuresGroupNodes.Clear();
-        }
-
-        private void RefreshTree()
-        {
-            ClearTree();
-
-            CreateRootCubeNode();
-        }
-
-        #region Дерево: Кубы
-        void CreateRootCubeNode()
-        {
-            CubeDefInfo info = CurrentCube;
-            if (info != null)
+            Cubes_ComboBox.IsEnabled = CanSelectCube;
+            if (String.IsNullOrEmpty(CubeName) && !CanSelectCube)
             {
-                //Будем выводить информацию для всего куба
-                CubeTreeNode cubeNode = new CubeTreeNode(info);
-                Tree.Items.Add(cubeNode);
-
-                cubeNode.Expanded += new RoutedEventHandler(cubeNode_Expanded);
-
-                // Добавляем узел KPIs
-                KPIsFolderTreeNode kpisNode = new KPIsFolderTreeNode();
-                cubeNode.Items.Add(kpisNode);
-                kpisNode.IsWaiting = true;
-                kpisNode.Expanded += new RoutedEventHandler(kpisNode_Expanded);
-
-                // Добавляем узел Measures
-                MeasuresFolderTreeNode measuresNode = new MeasuresFolderTreeNode();
-                measuresNode.Text = "Measures";
-                cubeNode.Items.Add(measuresNode);
-                measuresNode.Icon = UriResources.Images.Measure16;
-                measuresNode.IsWaiting = true;
-                measuresNode.Expanded += new RoutedEventHandler(measuresNode_Expanded);
-
-                cubeNode.IsWaiting = true;
-                cubeNode.IsExpanded = true;
-            }
-        }
-
-        void cubeNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            CubeTreeNode cubeNode = sender as CubeTreeNode;
-            if (cubeNode != null && !cubeNode.IsInitialized)
-            {
-                GetDimensions(cubeNode);
-            }
-        }
-        #endregion Дерево: Кубы
-
-        #region Дерево: Измерения
-        void GetDimensions(CubeTreeNode cubeNode)
-        {
-            if (cubeNode != null)
-            {
-                cubeNode.IsWaiting = true;
+                MessageBox.Show(Localization.ServerExplorer_CubePropertyError, Localization.ServerExplorerControl_Name, MessageBoxButton.OK);
+                return;
             }
 
-            MetadataQuery args = CommandHelper.CreateGetDimensionsQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, cubeNode));
-        }
-        
-        void GetDimensions_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<DimensionInfo> dimensions = XmlSerializationUtility.XmlStr2Obj<List<DimensionInfo>>(e.Result.Content);
-            if (dimensions != null)
+            if (CanSelectCube)
             {
-                foreach (DimensionInfo info in dimensions)
-                {
-                    if (info.DimensionType != DimensionInfoTypeEnum.Measure)
-                    {
-                        DimensionTreeNode dimNode = new DimensionTreeNode(info);
-                        dimNode.IsWaiting = true;
-                        dimNode.Expanded += new RoutedEventHandler(dimNode_Expanded);
-                        if (parentNode == null)
-                            Tree.Items.Add(dimNode);
-                        else
-                            parentNode.Items.Add(dimNode);
-                    }
-                }
-            }
-        }
-
-        void dimNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            DimensionTreeNode dimNode = sender as DimensionTreeNode;
-            if (dimNode != null && !dimNode.IsInitialized)
-            {
-                MetadataQuery args = CommandHelper.CreateGetHierarchiesQueryArgs(Connection, CurrentCubeName, (dimNode.Info as DimensionInfo).UniqueName);
-                Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, dimNode));
-            }
-        }
-
-        #endregion Дерево: Измерения
-
-        #region Дерево: Иераррхии
-        void GetHierarchies_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<HierarchyInfo> hierarchies = XmlSerializationUtility.XmlStr2Obj<List<HierarchyInfo>>(e.Result.Content);
-            if (hierarchies != null)
-            {
-                foreach (HierarchyInfo info in hierarchies)
-                {
-                    CustomTreeNode groupNode = null;
-
-                    //Иерархии могут быть сгруппированы в папки. Причем папки могут быть вложенными. Например: "Динамика\\Оборачиваемость"
-                    if (!String.IsNullOrEmpty(info.DisplayFolder))
-                    {
-                        // Если папка по такому же полному пути уже создана то все Ок
-                        if (m_HierarchyGroupNodes.ContainsKey(info.DisplayFolder))
-                        {
-                            groupNode = m_HierarchyGroupNodes[info.DisplayFolder];
-                        }
-                        else
-                        {
-                            CustomTreeNode prevNode = parentNode;
-                            // Разбиваем полный путь на составляющие и создаем папку для каждой из них
-                            String[] groups = info.DisplayFolder.Split(new String[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-                            if (groups != null)
-                            {
-                                foreach (String groupName in groups)
-                                {
-                                    // Создаем узел для группы
-                                    if (!String.IsNullOrEmpty(groupName))
-                                    {
-                                        if (m_HierarchyGroupNodes.ContainsKey(groupName))
-                                        {
-                                            prevNode = m_HierarchyGroupNodes[groupName];
-                                        }
-                                        else
-                                        {
-                                            groupNode = new FolderTreeNode();
-                                            groupNode.Text = groupName;
-                                            m_HierarchyGroupNodes[groupName] = groupNode;
-
-                                            if (prevNode == null)
-                                                Tree.Items.Add(groupNode);
-                                            else
-                                                prevNode.Items.Add(groupNode);
-
-                                            prevNode = groupNode;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (groupNode == null)
-                        groupNode = parentNode;
-
-                    HierarchyTreeNode hierarchyNode = new HierarchyTreeNode(info);
-                    hierarchyNode.IsWaiting = true;
-                    hierarchyNode.Expanded += new RoutedEventHandler(hierarchyNode_Expanded);
-                    if (groupNode == null)
-                        Tree.Items.Add(hierarchyNode);
-                    else
-                        groupNode.Items.Add(hierarchyNode);
-
-                }
-            }
-        }
-
-        void hierarchyNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            HierarchyTreeNode hierarchyNode = sender as HierarchyTreeNode;
-            if (hierarchyNode != null && !hierarchyNode.IsInitialized)
-            {
-                GetLevels(hierarchyNode);
-            }
-        }
-        #endregion Дерево: Иерархии
-
-        #region Дерево: Уровни
-        private void GetLevels(HierarchyTreeNode node)
-        {
-            String dimUniqueName = String.Empty;
-            String hierarchyUniqueName = String.Empty;
-            if (node != null)
-            {
-                dimUniqueName = (node.Info as HierarchyInfo).ParentDimensionId;
-                hierarchyUniqueName = (node.Info as HierarchyInfo).UniqueName;
-            }
-
-            MetadataQuery args = CommandHelper.CreateGetLevelsQueryArgs(Connection, CurrentCubeName, dimUniqueName, hierarchyUniqueName);
-            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
-        }
-
-        void GetLevels_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<LevelInfo> levels = XmlSerializationUtility.XmlStr2Obj<List<LevelInfo>>(e.Result.Content);
-            if (levels != null)
-            {
-                int indx = 0;
-                bool useAllLevel = true;
-                foreach (LevelInfo info in levels)
-                {
-                    LevelTreeNode levelNode = new LevelTreeNode(info);
-
-                    //Если нулевой уровень не All, то иконку ставим как для уровня 1
-                    if (indx == 0 && info.LevelType != LevelInfoTypeEnum.All)
-                        useAllLevel = false;
-                    if (!useAllLevel)
-                        levelNode.UseAllLevelIcon = false;
-
-                    if (parentNode == null)
-                        Tree.Items.Add(levelNode);
-                    else
-                        parentNode.Items.Add(levelNode);
-                    indx++;
-                }
-            }
-        }
-        #endregion Дерево: Уровни
-
-        #region Дерево: KPI
-        void kpisNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            KPIsFolderTreeNode kpisNode = sender as KPIsFolderTreeNode;
-            if (kpisNode != null && !kpisNode.IsInitialized)
-            {
-                GetKPIs(kpisNode);
-            }
-        }
-
-        private void GetKPIs(KPIsFolderTreeNode node)
-        {
-            MetadataQuery args = CommandHelper.CreateGetKPIsQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
-        }
-
-        void GetKPIs_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<KpiInfo> kpis = XmlSerializationUtility.XmlStr2Obj<List<KpiInfo>>(e.Result.Content);
-            if (kpis != null)
-            {
-                foreach (KpiInfo info in kpis)
-                {
-                    CustomTreeNode groupNode = null;
-
-                    //String groupName = String.Empty;
-                    //Показатели могут быть сгруппированы в группы. Причем папки могут быть вложенными. Например: "Динамика\\Оборачиваемость"
-                    if (!String.IsNullOrEmpty(info.DisplayFolder))
-                    {
-                        // Если папка по такому же полному пути уже создана то все Ок
-                        if (m_KPIGroupNodes.ContainsKey(info.DisplayFolder))
-                        {
-                            groupNode = m_KPIGroupNodes[info.DisplayFolder];
-                        }
-                        else
-                        {
-                            CustomTreeNode prevNode = parentNode;
-                            // Разбиваем полный путь на составляющие и создаем папку для каждой из них
-                            String[] groups = info.DisplayFolder.Split(new String[] { "\\" }, StringSplitOptions.RemoveEmptyEntries);
-                            if (groups != null)
-                            {
-                                foreach (String groupName in groups)
-                                {
-                                    // Создаем узел для группы
-                                    if (!String.IsNullOrEmpty(groupName))
-                                    {
-                                        if (m_KPIGroupNodes.ContainsKey(groupName))
-                                        {
-                                            prevNode = m_KPIGroupNodes[groupName];
-                                        }
-                                        else
-                                        {
-                                            groupNode = new FolderTreeNode();
-                                            groupNode.Text = groupName;
-                                            m_KPIGroupNodes[groupName] = groupNode;
-
-                                            if (prevNode == null)
-                                                Tree.Items.Add(groupNode);
-                                            else
-                                                prevNode.Items.Add(groupNode);
-
-                                            prevNode = groupNode;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    if (groupNode == null)
-                        groupNode = parentNode;
-
-                    KpiTreeNode node = new KpiTreeNode(info);
-
-                    if (groupNode == null)
-                        Tree.Items.Add(node);
-                    else
-                        groupNode.Items.Add(node);
-
-                }
-            } 
-        }
-        #endregion Дерево: KPI
-
-        #region Дерево: Меры
-        void measuresNode_Expanded(object sender, RoutedEventArgs e)
-        {
-            MeasuresFolderTreeNode measuresNode = sender as MeasuresFolderTreeNode;
-            if (measuresNode != null && !measuresNode.IsInitialized)
-            {
-                GetMeasures(measuresNode);
-            }
-        }
-
-        private void GetMeasures(MeasuresFolderTreeNode node)
-        {
-            MetadataQuery args = CommandHelper.CreateGetMeasuresQueryArgs(Connection, CurrentCubeName);
-            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, node));
-        }
-
-        void GetMeasures_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
-        {
-            List<MeasureInfo> measures = XmlSerializationUtility.XmlStr2Obj<List<MeasureInfo>>(e.Result.Content);
-            if (measures != null)
-            {
-                foreach (MeasureInfo info in measures)
-                {
-                    CustomTreeNode groupNode = null;
-                    String groupName = String.Empty;
-                    //Показатели могут быть сгруппированы в группы
-                    PropertyInfo pi = info.GetProperty("MEASUREGROUP_NAME");
-                    if (pi != null && pi.Value != null)
-                    {
-                        groupName = pi.Value.ToString();
-                    }
-                    // Создаем узел для группы
-                    if (!String.IsNullOrEmpty(groupName))
-                    {
-                        if (m_MeasuresGroupNodes.ContainsKey(groupName))
-                        {
-                            groupNode = m_MeasuresGroupNodes[groupName];
-                        }
-                        else
-                        {
-                            groupNode = new FolderTreeNode();
-                            groupNode.Text = groupName;
-                            m_MeasuresGroupNodes[groupName] = groupNode;
-
-                            if (parentNode == null)
-                                Tree.Items.Add(groupNode);
-                            else
-                                parentNode.Items.Add(groupNode);
-                        }
-                    }
-
-                    if (groupNode == null)
-                        groupNode = parentNode;
-
-                    MeasureTreeNode node = new MeasureTreeNode(info);
-                    if (groupNode == null)
-                        Tree.Items.Add(node);
-                    else
-                        groupNode.Items.Add(node);
-                }
-            }
-        }
-        #endregion Дерево: Меры
-
-        IDataLoader m_Loader = null;
-        public IDataLoader Loader
-        {
-            set
-            {
-                if (m_Loader != null)
-                {
-                    m_Loader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-                }
-                m_Loader = value;
-                m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-            }
-            get
-            {
-                if (m_Loader == null)
-                {
-                    m_Loader = new OlapDataLoader(URL);
-                    m_Loader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-                }
-                return m_Loader;
-            }
-        }
-
-        void ShowErrorInTree(CustomTreeNode parentNode)
-        {
-            if (parentNode != null)
-            {
-                parentNode.IsError = true;
+                GetCubes();
             }
             else
             {
-                Tree.IsError = true;
+                // Если выбрать куб нельзя, то нет смысла запрашивать список кубов
+                InitCubesList(new List<CubeDefInfo>() { new CubeDefInfo() { Name = CubeName, Caption = CubeName } });
             }
         }
 
-        void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
+        protected virtual IDataLoader GetOlapDataLoader()
+        {
+            return new OlapDataLoader(URL);
+        }
+
+        IDataLoader m_OlapDataLoader = null;
+        public IDataLoader OlapDataLoader
+        {
+            get
+            {
+                return m_OlapDataLoader;
+            }
+            set
+            {
+                if(value == null)
+                {
+                    throw new ArgumentException("OlapDataLoader not must be null.");
+                }
+                if (m_OlapDataLoader != null)
+                {
+                    m_OlapDataLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                }
+
+                m_OlapDataLoader = value;
+                m_CubeBrowser.OlapDataLoader = value;
+
+                if (value != null)
+                {
+                    m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                }
+            }
+        }
+
+        void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
             CustomTreeNode parentNode = null;
-            UserSchemaWrapper<MetadataQuery, CustomTreeNode> wrapper = e.UserState as UserSchemaWrapper<MetadataQuery, CustomTreeNode>;
-            if (wrapper != null)
+
+            // Метаданные
+            UserSchemaWrapper<MetadataQuery, CustomTreeNode> metadata_wrapper = e.UserState as UserSchemaWrapper<MetadataQuery, CustomTreeNode>;
+            if (metadata_wrapper != null && metadata_wrapper.Schema.QueryType == MetadataQueryType.GetCubes)
             {
-                parentNode = wrapper.UserData;
-                if (parentNode != null)
-                {
-                    parentNode.IsWaiting = false;
-                }
-                else
-                {
-                    Tree.IsWaiting = false;
-                }
+                Cubes_ComboBox.Clear();
             }
 
             if (e.Error != null)
             {
-                ShowErrorInTree(parentNode);
-                if (wrapper != null && wrapper.Schema.QueryType == MetadataQueryType.GetCubes)
+                m_CubeBrowser.ShowErrorInTree(parentNode);
+                if (metadata_wrapper != null && metadata_wrapper.Schema.QueryType == MetadataQueryType.GetCubes)
                 {
                     Cubes_ComboBox.IsEnabled = false;
                     Cubes_ComboBox.Clear();
                 }
-                LogManager.LogException(Localization.ServerExplorerControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
-                ShowErrorInTree(parentNode);
-                if (wrapper != null && wrapper.Schema.QueryType == MetadataQueryType.GetCubes)
+                if (metadata_wrapper != null && metadata_wrapper.Schema.QueryType == MetadataQueryType.GetCubes)
                 {
                     Cubes_ComboBox.IsEnabled = false;
                     Cubes_ComboBox.Clear();
                 }
-                LogManager.LogMessage(Localization.ServerExplorerControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 
-            if (wrapper != null)
+            if (metadata_wrapper != null)
             {
-                switch (wrapper.Schema.QueryType)
+                switch (metadata_wrapper.Schema.QueryType)
                 {
                     case MetadataQueryType.GetCubes:
                         GetCubes_InvokeCommandCompleted(e, parentNode);
                         break;
-                    case MetadataQueryType.GetDimensions:
-                        GetDimensions_InvokeCommandCompleted(e, parentNode);
-                        break;
-                    case MetadataQueryType.GetHierarchies:
-                        GetHierarchies_InvokeCommandCompleted(e, parentNode);
-                        break;
-                    case MetadataQueryType.GetLevels:
-                        GetLevels_InvokeCommandCompleted(e, parentNode);
-                        break;
-                    case MetadataQueryType.GetKPIs:
-                        GetKPIs_InvokeCommandCompleted(e, parentNode);
-                        break;
-                    case MetadataQueryType.GetMeasures:
-                        GetMeasures_InvokeCommandCompleted(e, parentNode);
-                        break;
                 }
             }
-
         }
 
         #region Кубы
         void GetCubes()
         {
-            Cubes_ComboBox.IsEnabled = false;
+            m_CubeBrowser.IsEnabled = false;
+            Cubes_ComboBox.SelectionChanged -= new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
             Cubes_ComboBox.Clear();
 
             String NODE_TEXT = Localization.Loading;
@@ -625,37 +329,106 @@ namespace Ranet.AgOlap.Controls
             item.Content = ctrl;
             Cubes_ComboBox.Combo.Items.Add(item);
             Cubes_ComboBox.Combo.SelectedIndex = 0;
+            Cubes_ComboBox.SelectionChanged += new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
 
             MetadataQuery args = CommandHelper.CreateGetCubesQueryArgs(Connection);
-            Loader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, null));
+            if (OlapDataLoader != null)
+            {
+                OlapDataLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                LogManager.LogInformation(this, this.Name + " - Loading cubes.");
+                OlapDataLoader.LoadData(args, new UserSchemaWrapper<MetadataQuery, CustomTreeNode>(args, null));
+            }
+            else
+            { 
+                throw new Exception("OlapDataLoader NotFiniteNumberException initialized.");
+            }
         }
 
         void GetCubes_InvokeCommandCompleted(DataLoaderEventArgs e, CustomTreeNode parentNode)
         {
-            Cubes_ComboBox.Clear();
-            Cubes_ComboBox.IsEnabled = true;
-
+            OlapDataLoader.DataLoaded -= new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
             List<CubeDefInfo> cubes = XmlSerializationUtility.XmlStr2Obj<List<CubeDefInfo>>(e.Result.Content);
+            InitCubesList(cubes);
+        }
+
+        void InitCubesList(List<CubeDefInfo> cubes)
+        {
+            Cubes_ComboBox.Clear();
+            Cubes_ComboBox.IsEnabled = cubes != null && CanSelectCube;
+            m_CubeBrowser.IsEnabled = cubes != null;
+
+            object toSelect = null;
             if (cubes != null)
             {
                 foreach (CubeDefInfo info in cubes)
                 {
                     if (ShowAllCubes || info.Type == CubeInfoType.Cube)
                     {
-                        Cubes_ComboBox.Combo.Items.Add(new CubeItemControl(info));
+                        var item = new CubeItemControl(info, false);
+                        if (info.Name == CubeName)
+                            toSelect = item;
+                        Cubes_ComboBox.Combo.Items.Add(item);
                     }
                 }
             }
 
-            if (Cubes_ComboBox.Combo.Items.Count > 0)
+            if (toSelect != null)
             {
-                Cubes_ComboBox.Combo.SelectedIndex = 0;
+                Cubes_ComboBox.Combo.SelectedItem = toSelect;
+            }
+            else
+            {
+                if (Cubes_ComboBox.Combo.Items.Count > 0)
+                {
+                    Cubes_ComboBox.Combo.SelectedIndex = 0;
+                }
             }
         }
         #endregion Кубы
 
-        Dictionary<String, CustomTreeNode> m_KPIGroupNodes = new Dictionary<String, CustomTreeNode>();
-        Dictionary<String, CustomTreeNode> m_HierarchyGroupNodes = new Dictionary<String, CustomTreeNode>();
-        Dictionary<String, CustomTreeNode> m_MeasuresGroupNodes = new Dictionary<String, CustomTreeNode>();
+        public override string URL
+        {
+            get
+            {
+                return base.URL;
+            }
+            set
+            {
+                base.URL = value;
+                OlapDataLoader olapDataLoader = OlapDataLoader as OlapDataLoader;
+                if (olapDataLoader != null)
+                {
+                    olapDataLoader.URL = value;
+                }
+
+                m_CubeBrowser.URL = value;
+                OlapDataLoader cube_olapDataLoader = m_CubeBrowser.OlapDataLoader as OlapDataLoader;
+                if (cube_olapDataLoader != null)
+                {
+                    cube_olapDataLoader.URL = value;
+                }
+            }
+        }
+
+        public override ILogService LogManager
+        {
+            get { return base.LogManager; }
+            set
+            {
+                base.LogManager = value;
+                m_CubeBrowser.LogManager = value;
+            }
+        }
+
+        bool m_CanSelectCube = false;
+        /// <summary>
+        /// Возможность выбрать куб из списка
+        /// </summary>
+        public bool CanSelectCube
+        {
+            get { return m_CanSelectCube; }
+            set { m_CanSelectCube = value; }
+        }
     }
 }

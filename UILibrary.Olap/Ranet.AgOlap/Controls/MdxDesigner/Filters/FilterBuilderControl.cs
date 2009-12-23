@@ -134,7 +134,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
             }
         }
 
-        bool MemberChoiceIsInitialized = false;
+        public bool MemberChoiceIsInitialized = false;
 
         public void Initialize(Composite_FilterWrapper filter)
         {

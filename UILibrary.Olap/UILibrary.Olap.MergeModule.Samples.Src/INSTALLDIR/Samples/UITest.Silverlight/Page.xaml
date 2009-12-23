@@ -74,7 +74,7 @@
 					<TextBlock Grid.Row="0" Margin="0,0,0,0" Text="Query:"/>
 					<TextBox   Grid.Row="1" x:Name="pivorGrid_query" AcceptsReturn="True" />
 					<TextBlock Grid.Row="2" Margin="0,0,0,0" Text="Update Script:"/>
-					<TextBox  Grid.Row="3" x:Name="pivorGrid_updateScript" AcceptsReturn="True"/>
+					<TextBox  Grid.Row="3" x:Name="pivorGrid_updateScript" AcceptsReturn="True" />
 					<Button   Grid.Row="4" Content="Initialize PivotGrid" Height="22" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click"/>
 					<pivotgrid_controls:UpdateablePivotGridControl
 										Grid.Row="5" x:Name="pivotGridControl" />

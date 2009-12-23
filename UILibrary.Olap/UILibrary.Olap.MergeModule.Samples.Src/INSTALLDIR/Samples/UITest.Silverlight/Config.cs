@@ -54,7 +54,6 @@ namespace UILibrary.Olap.UITestApplication
 		public class Data
 		{
 			public string ConectionStringOLAP;
-			public string HostDirectory;
 			public string InitializeWebServiceUrl;
 			public string ConnectionStringId { get { return "OLAPConnectionString"; } }
 			public string DataWebServiceUrl;
@@ -65,64 +64,88 @@ namespace UILibrary.Olap.UITestApplication
 			public void SetDefault()
 			{
 				ConectionStringOLAP = @"Data Source=.\sql2008;Integrated Security=SSPI;Initial Catalog=Adventure Works DW";
-				HostDirectory = new Uri(Application.Current.Host.Source, @"../").AbsoluteUri;
-				InitializeWebServiceUrl = new Uri(Application.Current.Host.Source, @"../InitializeWebService.asmx").AbsoluteUri;
-				DataWebServiceUrl = new Uri(Application.Current.Host.Source, @"../OlapWebService.asmx").AbsoluteUri;
+				InitializeWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"InitializeWebService.asmx").AbsoluteUri;
+				DataWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
 			}
 		}
-		public static void CheckDataService(Action OnSuccess)
+		public static void CheckDataService(Action OnSuccess, Action OnError)
 		{
 			try
 			{
 				string wdUrl = _Default.DataWebServiceUrl;
 
-				var wds = new Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
-				 ("OlapWebServiceSoap"
-				 , new EndpointAddress(wdUrl)
-				 );
+				var wds = Ranet.AgOlap.Services.ServiceManager.CreateService
+				<Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
+				, Ranet.AgOlap.OlapWebService.OlapWebServiceSoap
+				>(wdUrl);
+
 				wds.PerformOlapServiceActionCompleted += (object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e) =>
 				{
 					if (e.Error == null)
 					{
-						if (e.Result=="OK")
+						if (e.Result == "OK")
 						{
-							if(OnSuccess!=null)
+							if (OnSuccess != null)
 								OnSuccess();
-								
+
 						}
 						else if (e.Result == null)
+						{
 							MessageBox.Show("Data service has returned 'null'", "Error", MessageBoxButton.OK);
+							if (OnError != null)
+								OnError();
+
+						}
 						else
+						{
 							MessageBox.Show(e.Result, "Error", MessageBoxButton.OK);
+							if (OnError != null)
+								OnError();
+						}
 					}
 					else
+					{
 						MessageBox.Show(e.Error.ToString(), "Error", MessageBoxButton.OK);
+						if (OnError != null)
+							OnError();
+					}
 				};
-				wds.PerformOlapServiceActionAsync("CheckExist","");
+				wds.PerformOlapServiceActionAsync("CheckExist", "");
 			}
 			catch (Exception E)
 			{
 				MessageBox.Show(E.ToString(), "Error", MessageBoxButton.OK);
+				if (OnError != null)
+					OnError();
 			}
 		}
-		public static void Init(string connectionStringId, string connectionString, Action OnSuccess)
+		public static void Init(string connectionStringId, string connectionString, Action OnSuccess, Action OnError)
 		{
-			var service =
-			 new InitializeWebServiceSoapClient
-			 ("InitializeWebServiceSoap"
-			 , new EndpointAddress(_Default.InitializeWebServiceUrl)
-			 );
+			var service = Ranet.AgOlap.Services.ServiceManager.CreateService
+			 <InitializeWebServiceSoapClient
+			 , InitializeWebServiceSoap
+			 >(_Default.InitializeWebServiceUrl);
+
 			service.InitConnectionStringCompleted += (object sender, Init.InitConnectionStringCompletedEventArgs e) =>
 			{
 				if (e.Error == null)
 				{
 					if (e.Result == null)
-						CheckDataService(OnSuccess);
+						CheckDataService(OnSuccess, OnError);
 					else
+					{
 						MessageBox.Show(e.Result, "Error", MessageBoxButton.OK);
+						if (OnError != null)
+							OnError();
+
+					}
 				}
 				else
+				{
 					MessageBox.Show(e.Error.ToString(), "Error", MessageBoxButton.OK);
+					if (OnError != null)
+						OnError();
+				}
 			};
 			service.InitConnectionStringAsync(connectionStringId, connectionString);
 		}

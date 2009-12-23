@@ -42,6 +42,11 @@ namespace Ranet.AgOlap.Controls.General.Tree
 
     public class CustomTree : TreeView
     {
+        public CustomTree()
+        {
+            DefaultStyleKey = typeof(CustomTree);
+        }
+
         public bool IsWaiting
         {
             set
@@ -227,37 +232,42 @@ namespace Ranet.AgOlap.Controls.General.Tree
 
         public TreeViewItem GetSpecialNode(SpecialNodes nodeType)
         {
-            foreach (object obj in Items)
+            try
             {
-                switch (nodeType)
+                foreach (object obj in Items)
                 {
-                    case SpecialNodes.Wait:
-                        WaitTreeNode wait = obj as WaitTreeNode;
-                        if (wait != null)
-                            return wait;
-                        break;
-                    case SpecialNodes.LoadNext:
-                        LoadNextTreeNode next = obj as LoadNextTreeNode;
-                        if (next != null)
-                            return next;
-                        break;
-                    case SpecialNodes.Error:
-                        ErrorTreeNode error = obj as ErrorTreeNode;
-                        if (error != null)
-                            return error;
-                        break;
+                    switch (nodeType)
+                    {
+                        case SpecialNodes.Wait:
+                            WaitTreeNode wait = obj as WaitTreeNode;
+                            if (wait != null)
+                                return wait;
+                            break;
+                        case SpecialNodes.LoadNext:
+                            LoadNextTreeNode next = obj as LoadNextTreeNode;
+                            if (next != null)
+                                return next;
+                            break;
+                        case SpecialNodes.Error:
+                            ErrorTreeNode error = obj as ErrorTreeNode;
+                            if (error != null)
+                                return error;
+                            break;
 
-                    //case SpecialNodes.LoadAll:
-                    //    LoadAllTreeNode all = obj as LoadAllTreeNode;
-                    //    if (all != null)
-                    //        return all;
-                    //    break;
-                    //case SpecialNodes.ReloadAll:
-                    //    ReloadAllTreeNode reload = obj as ReloadAllTreeNode;
-                    //    if (reload != null)
-                    //        return reload;
-                    //    break;
+                        //case SpecialNodes.LoadAll:
+                        //    LoadAllTreeNode all = obj as LoadAllTreeNode;
+                        //    if (all != null)
+                        //        return all;
+                        //    break;
+                        //case SpecialNodes.ReloadAll:
+                        //    ReloadAllTreeNode reload = obj as ReloadAllTreeNode;
+                        //    if (reload != null)
+                        //        return reload;
+                        //    break;
+                    }
                 }
+            }catch
+            {
             }
             return null;
         }

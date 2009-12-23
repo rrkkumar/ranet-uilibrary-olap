@@ -5,7 +5,9 @@
     xmlns:buttons="clr-namespace:Ranet.AgOlap.Controls.Buttons"
     xmlns:general="clr-namespace:Ranet.AgOlap.Controls.General"
     xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows"
-    xmlns:datagrid="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+    xmlns:data="clr-namespace:Ranet.AgOlap.Controls.Data"
+    xmlns:swc_data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data"
+    xmlns:combo="clr-namespace:Ranet.AgOlap.Controls.Combo"         
     >
 	<!--	/*   
     Copyright (C) 2009 Galaktika Corporation ZAO
@@ -33,51 +35,51 @@
             <RowDefinition></RowDefinition>
             <RowDefinition Height="Auto"></RowDefinition>
         </Grid.RowDefinitions>
-        <datagrid:DataGrid AutoGenerateColumns="False" x:Name="coordinatesGrid">
-            <datagrid:DataGrid.Columns>
-                <datagrid:DataGridTemplateColumn Width="150" Header="Settings" IsReadOnly="False">
-                    <datagrid:DataGridTemplateColumn.CellTemplate>
+        <data:RanetDataGrid AutoGenerateColumns="False" x:Name="coordinatesGrid">
+            <data:RanetDataGrid.Columns>
+                <swc_data:DataGridTemplateColumn Width="150" Header="Settings" IsReadOnly="False">
+                    <swc_data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <!--<ComboBox SelectedItem="{Binding Accessibility}" Margin="5,0,0,0" VerticalAlignment="Center"></ComboBox>-->
                                 <TextBlock Text="{Binding Accessibility}" Foreground="Black" Margin="5,0,0,0" VerticalAlignment="Center"></TextBlock>
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellTemplate>
-                    <datagrid:DataGridTemplateColumn.CellEditingTemplate>
+                    </swc_data:DataGridTemplateColumn.CellTemplate>
+                    <swc_data:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <ComboBox SelectedItem="{Binding Accessibility, Mode=TwoWay}" 
+                            <combo:RanetComboBox SelectedItem="{Binding Accessibility, Mode=TwoWay}" 
                                       ItemsSource="{Binding StatesList}" 
-                                      x:Name="myComboBox" Loaded="myComboBox_Loaded"></ComboBox>
+                                      x:Name="myComboBox" Loaded="myComboBox_Loaded"></combo:RanetComboBox>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellEditingTemplate>
-                </datagrid:DataGridTemplateColumn>
+                    </swc_data:DataGridTemplateColumn.CellEditingTemplate>
+                </swc_data:DataGridTemplateColumn>
                 
                 <!--<datagrid:DataGridTextColumn Width="100" IsReadOnly="True" Header="Dimension" Binding="{Binding DimensionCaption}"> </datagrid:DataGridTextColumn>-->
-                <datagrid:DataGridTemplateColumn Width="100" Header="Dimension" IsReadOnly="True">
-                    <datagrid:DataGridTemplateColumn.CellTemplate>
+                <swc_data:DataGridTemplateColumn Width="100" Header="Dimension" IsReadOnly="True">
+                    <swc_data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="{Binding DimensionCaption}" Foreground="Gray" Margin="5,0,0,0" VerticalAlignment="Center"></TextBlock>
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellTemplate>
-                </datagrid:DataGridTemplateColumn>
+                    </swc_data:DataGridTemplateColumn.CellTemplate>
+                </swc_data:DataGridTemplateColumn>
                 
                 <!--<datagrid:DataGridTextColumn Width="100" IsReadOnly="True" Header="Hierarchy" Binding="{Binding HierarchyCaption}"></datagrid:DataGridTextColumn>-->
-                <datagrid:DataGridTemplateColumn Width="100" Header="Hierarchy" IsReadOnly="True">
-                    <datagrid:DataGridTemplateColumn.CellTemplate>
+                <swc_data:DataGridTemplateColumn Width="100" Header="Hierarchy" IsReadOnly="True">
+                    <swc_data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <TextBlock Text="{Binding HierarchyCaption}" Foreground="Gray" Margin="5,0,0,0" VerticalAlignment="Center"></TextBlock>
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellTemplate>
-                </datagrid:DataGridTemplateColumn>
+                    </swc_data:DataGridTemplateColumn.CellTemplate>
+                </swc_data:DataGridTemplateColumn>
 
                 <!--<datagrid:DataGridTextColumn Width="100" Header="Header_1" x:Name="source_Column" Binding="{Binding SourceMemberUniqueName}"> </datagrid:DataGridTextColumn>-->
-                <datagrid:DataGridTemplateColumn Width="150" Header="Source" IsReadOnly="False">
-                    <datagrid:DataGridTemplateColumn.CellTemplate>
+                <swc_data:DataGridTemplateColumn Width="150" Header="Source" IsReadOnly="False">
+                    <swc_data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -90,8 +92,8 @@
                                 <copy:DeleteButton Grid.Column="2" x:Name="DeleteSource_Button" Margin="2,0,3,0" Click="DeleteSource_Button_Click" Visibility ="{Binding ModifyControlsVisibility}"></copy:DeleteButton>
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellTemplate>
-                    <datagrid:DataGridTemplateColumn.CellEditingTemplate>
+                    </swc_data:DataGridTemplateColumn.CellTemplate>
+                    <swc_data:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -102,11 +104,11 @@
                                 <!--<Button Grid.Column="1" Width="22" Height="22"></Button>-->
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellEditingTemplate>
-                </datagrid:DataGridTemplateColumn>
+                    </swc_data:DataGridTemplateColumn.CellEditingTemplate>
+                </swc_data:DataGridTemplateColumn>
 
-                <datagrid:DataGridTemplateColumn Width="150" Header="Destination" IsReadOnly="False">
-                    <datagrid:DataGridTemplateColumn.CellTemplate>
+                <swc_data:DataGridTemplateColumn Width="150" Header="Destination" IsReadOnly="False">
+                    <swc_data:DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -119,8 +121,8 @@
                                 <copy:DeleteButton Grid.Column="2" x:Name="DeleteDestination_Button" Margin="2,0,3,0" Click="DeleteDestination_Button_Click" Visibility ="{Binding ModifyControlsVisibility}"></copy:DeleteButton>
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellTemplate>
-                    <datagrid:DataGridTemplateColumn.CellEditingTemplate>
+                    </swc_data:DataGridTemplateColumn.CellTemplate>
+                    <swc_data:DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
                             <Grid>
                                 <Grid.ColumnDefinitions>
@@ -131,10 +133,10 @@
                                 <!--<Button Grid.Column="1" Width="22" Height="22"></Button>-->
                             </Grid>
                         </DataTemplate>
-                    </datagrid:DataGridTemplateColumn.CellEditingTemplate>
-                </datagrid:DataGridTemplateColumn>
-            </datagrid:DataGrid.Columns>
-        </datagrid:DataGrid>
+                    </swc_data:DataGridTemplateColumn.CellEditingTemplate>
+                </swc_data:DataGridTemplateColumn>
+            </data:RanetDataGrid.Columns>
+        </data:RanetDataGrid>
         <CheckBox Grid.Row="1" IsChecked="true" Margin="0,5,0,0"  x:Name="ShowNotEmptyCheckBox"></CheckBox>
     </Grid>
 </UserControl>

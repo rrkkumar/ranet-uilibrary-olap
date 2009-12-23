@@ -29,7 +29,7 @@ namespace Ranet.AgOlap.Controls.General
             m_ComboBox = new ComboBoxEx();
             LayoutRoot.Children.Add(m_ComboBox);
 
-            m_TextBox = new TextBox();
+            m_TextBox = new RichTextBox();
             LayoutRoot.Children.Add(m_TextBox);
             m_TextBox.Visibility = Visibility.Collapsed;
             m_TextBox.KeyUp += new KeyEventHandler(m_TextBox_KeyUp);

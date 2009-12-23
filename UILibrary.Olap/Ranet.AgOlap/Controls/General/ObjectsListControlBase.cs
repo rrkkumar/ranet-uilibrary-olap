@@ -17,7 +17,9 @@ namespace Ranet.AgOlap.Controls.General
 {
     public class CustomEventArgs<T> : EventArgs
     {
-        public readonly T Args;
+        public readonly T Args = default(T);
+        public bool Handled = false;
+        public bool Cancel = false;
 
         public CustomEventArgs(T args)
         {
@@ -62,6 +64,23 @@ namespace Ranet.AgOlap.Controls.General
             this.Content = LayoutRoot;
 
             this.Loaded += new RoutedEventHandler(ObjectsListControlBase_Loaded);
+            m_Tree.KeyDown += new KeyEventHandler(m_Tree_KeyDown);
+        }
+
+        void m_Tree_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                T current = CurrentObject;
+                if (current != null)
+                {
+                    EventHandler<CustomEventArgs<T>> handler = ObjectSelected;
+                    if (handler != null)
+                    {
+                        handler(this, new CustomEventArgs<T>(current));
+                    }
+                }
+            }
         }
 
         void ObjectsListControlBase_Loaded(object sender, RoutedEventArgs e)
@@ -72,6 +91,7 @@ namespace Ranet.AgOlap.Controls.General
                 if (node != null)
                 {
                     node.IsSelected = true;
+                    node.Focus();
                 }
             }
         }
@@ -190,6 +210,10 @@ namespace Ranet.AgOlap.Controls.General
                         grdIsWaiting.Visibility = Visibility.Collapsed;
                     }
                     this.IsEnabled = !value;
+                    if (this.IsEnabled)
+                    {
+                        m_Tree.Focus();
+                    }
                     m_IsWaiting = value;
                 }
             }
@@ -209,14 +233,45 @@ namespace Ranet.AgOlap.Controls.General
 
         public void Initialize(List<T> list)
         {
+            if (list != null && list.Count > 0)
+                Initialize(list, list[0]);
+            else
+                Initialize(list, default(T));
+        }
+        
+        public void Initialize(List<T> list, T toSelect)
+        {
             m_List = list;
             m_Tree.Items.Clear();
+
+            TreeNode<T> select = null;
             if (list != null)
             {
                 foreach (T descr in list)
                 {
-                    AddItemNode(descr);
+                    TreeNode<T> node = AddItemNode(descr);
+                    if (descr.Equals(toSelect))
+                    {
+                        select = node;
+                    }
                 }
+            }
+
+            if (select != null)
+            {
+                // Через событие делаем узел выбранным (иначе на нем фокус не ставится)
+                select.Loaded += new RoutedEventHandler(node_Loaded);
+            }
+        }
+
+        void node_Loaded(object sender, RoutedEventArgs e)
+        {
+            TreeNode<T> node = sender as TreeNode<T>;
+            if (node != null)
+            {
+                node.Loaded -= new RoutedEventHandler(node_Loaded);
+                node.IsSelected = true;
+                node.Focus();
             }
         }
 
@@ -252,17 +307,19 @@ namespace Ranet.AgOlap.Controls.General
             }
         }
 
-        void AddItemNode(T item)
+        TreeNode<T> AddItemNode(T item)
         {
+            TreeNode<T> node = null;
             if (item != null)
             {
-                TreeNode<T> node = BuildTreeNode(item);
+                node = BuildTreeNode(item);
                 if (node != null)
                 {
                     node.MouseDoubleClick += new MouseDoubleClickEventHandler(node_MouseDoubleClick);
                     m_Tree.Items.Add(node);
                 }
             }
+            return node;
         }
 
         public virtual TreeNode<T> BuildTreeNode(T item)

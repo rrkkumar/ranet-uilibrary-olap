@@ -31,10 +31,9 @@ namespace Ranet.Olap.Core.Providers.ClientServer
             ActionType = OlapActionTypes.UpdateCube;
         }
         
-        public String PivotID = String.Empty;
         public string ConnectionString = string.Empty;
         public string CubeName = string.Empty;
-        //public string Script = string.Empty;
+        public string Script = string.Empty;
 
         public List<UpdateEntry> Entries = new List<UpdateEntry>();
     }

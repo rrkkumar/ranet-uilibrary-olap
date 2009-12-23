@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*   
+    Copyright (C) 2009 Galaktika Corporation ZAO
+
+    This file is a part of Ranet.UILibrary.Olap
+ 
+    Ranet.UILibrary.Olap is a free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+      
+    You should have received a copy of the GNU General Public License
+    along with Ranet.UILibrary.Olap.  If not, see
+  	<http://www.gnu.org/licenses/> 
+  
+    If GPL v.3 is not suitable for your products or company,
+    Galaktika Corp provides Ranet.UILibrary.Olap under a flexible commercial license
+    designed to meet your specific usage and distribution requirements.
+    If you have already obtained a commercial license from Galaktika Corp,
+    you can use this file under those license terms.
+*/
+
+using System;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -51,6 +72,26 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             set { m_FormatString = value; }
         }
 
+        Color m_BackColor = Colors.Transparent;
+        /// <summary>
+        /// Цвет фона
+        /// </summary>
+        public Color BackColor
+        {
+            get { return m_BackColor; }
+            set { m_BackColor = value; }
+        }
+
+        Color m_ForeColor = Colors.Transparent;
+        /// <summary>
+        /// Цвет фона
+        /// </summary>
+        public Color ForeColor
+        {
+            get { return m_ForeColor; }
+            set { m_ForeColor = value; }
+        }
+
         public String GetScript()
         {
             // [Measures].[Сумма] * 5, FORMAT_STRING = "#,#.00", ASSOCIATED_MEASURE_GROUP = 'Товарно финансовые потоки', DISPLAY_FOLDER = 'Тест', NON_EMPTY_BEHAVIOR = {[Сумма] }
@@ -80,6 +121,16 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
                     script.AppendFormat(", NON_EMPTY_BEHAVIOR = {0}", "{" + nonEmpty + "}");
                 }
 
+                if (BackColor != Colors.Transparent)
+                {
+                    script.AppendFormat(", BACK_COLOR = Rgb({0},{1},{2})", BackColor.R.ToString(), BackColor.G.ToString(), BackColor.B.ToString());
+                }
+
+                if (ForeColor != Colors.Transparent)
+                {
+                    script.AppendFormat(", FORE_COLOR = Rgb({0},{1},{2})", ForeColor.R.ToString(), ForeColor.G.ToString(), ForeColor.B.ToString());
+                }
+
                 return script.ToString();
             }
             return String.Empty;
@@ -91,6 +142,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             ret.Name = Name;
             ret.Expression = Expression;
             ret.FormatString = FormatString;
+            ret.BackColor = BackColor;
+            ret.ForeColor = ForeColor;
 
             foreach (var item in NonEmptyBehavior)
             {

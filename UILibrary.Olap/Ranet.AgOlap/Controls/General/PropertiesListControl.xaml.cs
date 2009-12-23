@@ -54,8 +54,9 @@ namespace Ranet.AgOlap.Controls.General
 
     public partial class PropertiesListControl : UserControl
     {
-        DataGridTextColumn propertyColumn = null;
-        DataGridTextColumn valueColumn = null;
+        internal readonly DataGridTextColumn propertyColumn = null;
+        internal readonly DataGridTextColumn valueColumn = null;
+
         public PropertiesListControl()
         {
             InitializeComponent();
@@ -102,87 +103,14 @@ namespace Ranet.AgOlap.Controls.General
             grid.ItemsSource = list;
         }
 
-        public void Initialize(IProperties propertiesOwner)
+        public void Initialize(List<PropertyItem> list)
         {
-            MemberInfo mi = propertiesOwner as MemberInfo;
-            List<PropertyItem> list = new List<PropertyItem>();
-            if (propertiesOwner != null && propertiesOwner.PropertiesDictionary != null)
+            if (list == null)
             {
-                foreach (KeyValuePair<String, object> pair in propertiesOwner.PropertiesDictionary)
-                {
-                    PropertyItem item = new PropertyItem();
-                    item.Property = pair.Key;
-                    if (item.Property == "DrilledDown" && mi != null)
-                    {
-                        // Элементы на оси объединяются если идут подряд одинаковые. При этом значение данного свойства формируется по ИЛИ
-                        item.Value = mi.DrilledDown.ToString();
-                    }
-                    else
-                    {
-                        if (pair.Value != null)
-                        {
-                            item.Value = pair.Value.ToString();
-                        }
-                        else
-                        {
-                            item.Value = String.Empty;
-                        }
-                    }
-                    list.Add(item);
-                }
+                list = new List<PropertyItem>();
             }
             grid.ItemsSource = list;
         }
 
-        public void Initialize(IPropertiesData propertiesOwner)
-        {
-            List<PropertyItem> list = new List<PropertyItem>();
-            if (propertiesOwner != null)
-            {
-                foreach (PropertyData pair in propertiesOwner.Properties)
-                {
-                    PropertyItem item = new PropertyItem();
-                    item.Property = pair.Name;
-                    if (pair.Value != null)
-                    {
-                        item.Value = pair.Value.ToString();
-                    }
-                    else
-                    {
-                        item.Value = String.Empty;
-                    }
-                    list.Add(item);
-                }
-            }
-            grid.ItemsSource = list;
-        }
-
-        public void Initialize(MemberData propertiesOwner)
-        {
-            List<PropertyItem> list = new List<PropertyItem>();
-            if (propertiesOwner != null)
-            {
-                foreach (PropertyData pair in propertiesOwner.MemberProperties)
-                {
-                    PropertyItem item = new PropertyItem();
-
-                    String caption = pair.Name;
-                    if (caption.StartsWith("-") && caption.EndsWith("-"))
-                        caption = caption.Trim('-');
-                    item.Property = caption;
-
-                    if (pair.Value != null)
-                    {
-                        item.Value = pair.Value.ToString();
-                    }
-                    else
-                    {
-                        item.Value = String.Empty;
-                    }
-                    list.Add(item);
-                }
-            }
-            grid.ItemsSource = list;
-        }
     }
 }

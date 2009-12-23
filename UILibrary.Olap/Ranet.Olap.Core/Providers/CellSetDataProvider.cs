@@ -221,7 +221,7 @@ namespace Ranet.Olap.Core.Providers
                             tmp.Add(i, line);
                         }
                         
-                        MemberData member = pos.Members[i];
+                        MemberData member = m_CellSet_Descr.Axes[axisNum].Members[pos.Members[i].Id];
 
                         // Если PARENT_UNIQUE_NAME запрашивалось то берем его, иначе будем спрашивать у куба 
                         String parentUniqueName = GetMemberPropertyValue(member, "PARENT_UNIQUE_NAME");
@@ -317,8 +317,13 @@ namespace Ranet.Olap.Core.Providers
                         }
                         else
                         {
-                            field.DrilledDown = field.DrilledDown | member.DrilledDown;
                             line.Add(field);
+                        }
+
+
+                        if (field != null && !field.IsCalculated)
+                        {
+                            field.DrilledDown = field.DrilledDown | pos.Members[i].DrilledDown;
                         }
 
                         container = field.Children; 
@@ -400,6 +405,14 @@ namespace Ranet.Olap.Core.Providers
 
             info.UniqueName = member.UniqueName;
 
+            // В коллекцию свойств добавляем Properties
+            foreach (PropertyData pair in member.Properties)
+            {
+                String caption = pair.Name;
+                if (!info.PropertiesDictionary.ContainsKey(caption))
+                    info.PropertiesDictionary.Add(caption, pair.Value);
+            }
+
             // В коллекцию свойств добавляем MemberProperties
             foreach (PropertyData pair in member.MemberProperties)
             {
@@ -409,6 +422,14 @@ namespace Ranet.Olap.Core.Providers
 
                 if (!info.PropertiesDictionary.ContainsKey(caption))
                     info.PropertiesDictionary.Add(caption, pair.Value);
+            }
+
+            // Для вычисляемых элементов свойство DrilledDown работает неправильно. 
+            // Признаком того, что это вычисляемый элемент считаем KEY0 == null. В этом случае сбрасываем DrilledDown
+            if (info.PropertiesDictionary.ContainsKey(MemberInfo.KEY0_PROPERTY) &&
+                info.PropertiesDictionary[MemberInfo.KEY0_PROPERTY] == null)
+            {
+                info.DrilledDown = false;                
             }
         }
 
@@ -489,7 +510,7 @@ namespace Ranet.Olap.Core.Providers
                 if (m_CellSet_Descr.Axes[i].Positions.Count > 0 &&
                     m_CellSet_Descr.Axes[i].Positions[0].Members.Count > 0)
                 {
-                    MemberInfo member = this.CreateInvisibleMemberInfo(m_CellSet_Descr.Axes[i].Positions[0].Members[0]);
+                    MemberInfo member = this.CreateInvisibleMemberInfo(m_CellSet_Descr.Axes[i].Members[m_CellSet_Descr.Axes[i].Positions[0].Members[0].Id]);
                     res.Add(member);
                 }
             }

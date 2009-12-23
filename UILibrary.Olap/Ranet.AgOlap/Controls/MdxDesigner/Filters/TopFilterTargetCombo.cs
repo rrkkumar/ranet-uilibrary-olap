@@ -29,6 +29,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using Ranet.AgOlap.Controls.Combo;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
 {
@@ -40,7 +41,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
         {
             Grid LayoutRoot = new Grid();
 
-            comboBox = new ComboBox();
+            comboBox = new RanetComboBox();
             LayoutRoot.Children.Add(comboBox);
 
             comboBox.Items.Add(new TopFilterTargetItemControl(TopFilterTargetTypes.Items));

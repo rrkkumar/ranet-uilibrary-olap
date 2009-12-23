@@ -59,48 +59,83 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             }
         }
 
-        bool m_IsReadyToDrop = false;
-        public bool IsReadyToDrop
+        public void HighlightDrop(Point point)
         {
-            get { return m_IsReadyToDrop; }
-            set
+            if (IsEnabled)
             {
-                if (m_IsReadyToDrop != value)
+                Rect expression_Bounds = AgControlBase.GetSLBounds(txtExpression);
+                if (expression_Bounds.Contains(point))
                 {
-                    m_IsReadyToDrop = value;
-                    if (value)
-                    {
-                        brdExpression.BorderBrush = new SolidColorBrush(Color.FromArgb(50, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
-                        brdExpression.Background = new SolidColorBrush(Color.FromArgb(20, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
-                    }
-                    else
-                    {
-                        brdExpression.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                        brdExpression.Background = new SolidColorBrush(Colors.Transparent);
-                    }
+                    txtExpression.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 1, Opacity = 0.8, Color = Colors.Blue };
                 }
+                else
+                {
+                    txtExpression.Effect = null;
+                }
+
+                Rect name_Bounds = AgControlBase.GetSLBounds(txtName);
+                if (name_Bounds.Contains(point))
+                {
+                    txtName.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 1, Opacity = 0.8, Color = Colors.Blue };
+                }
+                else
+                {
+                    txtName.Effect = null;
+                }
+            }
+            else
+            {
+                txtName.Effect = null;
+                txtExpression.Effect = null;
             }
         }
 
         public void Drop(Point point, String str)
         {
-            if (IsReadyToDrop && !String.IsNullOrEmpty(str))
+            if (!String.IsNullOrEmpty(str))
             {
-                txtExpression.Text += " " + str;
+                if (CanDropToName(point))
+                {
+                    txtName.Text += " " + str;
+                    txtName.Effect = null;
+                }
+                if (CanDropToExpression(point))
+                {
+                    txtExpression.Text += " " + str;
+                    txtExpression.Effect = null;
+                }
             }
         }
 
-        public bool CanDrop(Point point)
+        bool CanDropToName(Point point)
         {
             if (IsEnabled)
             {
-                Rect expression_Bounds = AgControlBase.GetSLBounds(brdExpression);
+                Rect name_Bounds = AgControlBase.GetSLBounds(txtName);
+                if (name_Bounds.Contains(point))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool CanDropToExpression(Point point)
+        {
+            if (IsEnabled)
+            {
+                Rect expression_Bounds = AgControlBase.GetSLBounds(txtExpression);
                 if (expression_Bounds.Contains(point))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        public bool CanDrop(Point point)
+        {
+            return CanDropToName(point) | CanDropToExpression(point);
         }
 
         void txtScript_TextChanged(object sender, TextChangedEventArgs e)

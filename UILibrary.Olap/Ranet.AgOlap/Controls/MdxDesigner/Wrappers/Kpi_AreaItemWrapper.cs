@@ -58,6 +58,11 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
         {
             Name = info.Name;
             Type = type;
+            Custom_KpiGoal = info.Custom_KpiGoal;
+            Custom_KpiStatus = info.Custom_KpiStatus;
+            Custom_KpiTrend = info.Custom_KpiTrend;
+            Custom_KpiValue = info.Custom_KpiValue;
+
         }
 
         String m_Custom_KpiTrend = String.Empty;

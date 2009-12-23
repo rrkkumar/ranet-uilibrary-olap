@@ -15,47 +15,85 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
-                        <RowDefinition Height="Auto"></RowDefinition>
+
                     </Grid.RowDefinitions>
                     
                     <!-- Имя -->
                     <TextBlock Grid.Row="0" x:Name="lblName" Text="Name:"></TextBlock>
-                    <TextBox Grid.Row="1" x:Name="txtName" Margin="0,3,0,0"></TextBox>
+                    <general:RichTextBox Grid.Row="1" x:Name="txtName" Margin="0,3,0,0"></general:RichTextBox>
                     
                    
                     <!-- Выражение -->
-                    <Border x:Name="brdExpression" Grid.Row="2" Background="Transparent" BorderBrush="Transparent" BorderThickness="2" Padding="0">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"></RowDefinition>
-                                <RowDefinition></RowDefinition>
-                            </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" x:Name="lblExpression" Text="Expression:" Margin="0,3,0,0"></TextBlock>
-                            <TextBox Grid.Row="1" x:Name="txtExpression" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0"></TextBox>
-                        </Grid>
-                    </Border>
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" x:Name="lblExpression" Text="Expression:" Margin="0,3,0,0"></TextBlock>
+                        <general:RichTextBox Grid.Row="1" x:Name="txtExpression" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"></general:RichTextBox>
+                    </Grid>
                     
-                    <!-- Строка форматирования -->
                     <Grid Grid.Row="3" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
 
-                        <TextBlock x:Name="lblFormatString" Text="Format String:" ></TextBlock>
-                        <general:EditableComboBox Grid.Column="1" x:Name="comboFormatString" Margin="5,0,0,0"></general:EditableComboBox>
+                        <!-- Non-Empty Behavior -->
+                        <TextBlock x:Name="lblNonEmptyBehavior" Text="Non-empty Behavior:" ></TextBlock>
+                        <combo:CheckedComboBox Grid.Column="1" x:Name="comboNonEmptyBehavior" Margin="5,0,0,0"></combo:CheckedComboBox>
+
+                        <!-- Строка форматирования -->
+                        <TextBlock Grid.Row="1" x:Name="lblFormatString" Text="Format String:" Margin="0,5,0,0"></TextBlock>
+                        <general:EditableComboBox Grid.Row="1" Grid.Column="1" x:Name="comboFormatString" Margin="5,5,0,0"></general:EditableComboBox>
+
+                        <!-- Цвет фона -->
+                        <TextBlock Grid.Row="2" x:Name="lblBackColor" Text="Back Color:" Margin="0,5,0,0"></TextBlock>
+                        <combo:ColorPicker Grid.Row="2" Grid.Column="1" x:Name="comboBackColor" Margin="5,5,0,0"></combo:ColorPicker>
+                        
+                        <!-- Цвет шрифта -->
+                        <TextBlock Grid.Row="3" x:Name="lblForeColor" Text="Fore Color:" Margin="0,5,0,0"></TextBlock>
+                        <combo:ColorPicker Grid.Row="3" Grid.Column="1" x:Name="comboForeColor" Margin="5,5,0,0"></combo:ColorPicker>
+
                     </Grid>
 
-                    <!-- Non-Empty Behavior -->
-                    <Grid Grid.Row="4" Margin="0,5,0,0">
+                    <!-- Цвет фона -->
+                    <!--<Grid Grid.Row="4" Margin="0,5,0,0">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="lblBackColor" Text="Back Color:" ></TextBlock>
+                        <combo:ColorPicker Grid.Column="1" x:Name="comboBackColor" Margin="5,0,0,0"></combo:ColorPicker>
+                    </Grid>-->
+
+                    <!-- Цвет шрифта -->
+                    <!--<Grid Grid.Row="5" Margin="0,5,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock x:Name="lblForeColor" Text="Fore Color:" ></TextBlock>
+                        <combo:ColorPicker Grid.Column="1" x:Name="comboForeColor" Margin="5,0,0,0"></combo:ColorPicker>
+                    </Grid>-->
+                    
+                    <!-- Non-Empty Behavior -->
+                    <!--<Grid Grid.Row="6" Margin="0,5,0,0">
                             <ColumnDefinition Width="Auto"></ColumnDefinition>
                             <ColumnDefinition></ColumnDefinition>
                         </Grid.ColumnDefinitions>
 
                         <TextBlock x:Name="lblNonEmptyBehavior" Text="Non-empty Behavior:" ></TextBlock>
                         <combo:CheckedComboBox Grid.Column="1" x:Name="comboNonEmptyBehavior" Margin="5,0,0,0"></combo:CheckedComboBox>
-                    </Grid>
+                    </Grid>-->
 
                 </Grid>
             </swc:TabItem>
@@ -70,10 +108,10 @@
 
                     <!-- Имя -->
                     <TextBlock Grid.Row="0" x:Name="lblName1" Text="Name:"></TextBlock>
-                    <TextBox Grid.Row="1" x:Name="txtName1" Margin="0,3,0,0" IsReadOnly="True"></TextBox>
+                    <general:RichTextBox Grid.Row="1" x:Name="txtName1" Margin="0,3,0,0" IsReadOnly="True"></general:RichTextBox>
                     <!-- Скрипт -->
                     <TextBlock Grid.Row="2" x:Name="lblScript" Text="Script:" Margin="0,3,0,0"></TextBlock>
-                    <TextBox Grid.Row="3" x:Name="txtScript" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0" IsReadOnly="True"></TextBox>
+                    <general:RichTextBox Grid.Row="3" x:Name="txtScript" AcceptsReturn="True" TextWrapping="Wrap" Margin="0,3,0,0" IsReadOnly="True" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto"></general:RichTextBox>
                 </Grid>
             </swc:TabItem>
         </swc:TabControl>

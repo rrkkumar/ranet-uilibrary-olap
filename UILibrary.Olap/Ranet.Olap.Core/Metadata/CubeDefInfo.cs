@@ -172,5 +172,18 @@ namespace Ranet.Olap.Core.Metadata
         public CubeDefInfo()
         {
         }
+
+        private static CubeDefInfo m_Empty;
+        public static CubeDefInfo Empty
+        {
+            get
+            {
+                if (m_Empty == null)
+                {
+                    m_Empty = new CubeDefInfo();
+                }
+                return m_Empty;
+            }
+        }
     }
 }

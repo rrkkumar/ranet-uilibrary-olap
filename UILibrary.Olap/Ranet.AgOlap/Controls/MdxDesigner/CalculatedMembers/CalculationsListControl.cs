@@ -222,6 +222,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
                     {
                         m_Tree.SelectedItemChanged -= new RoutedPropertyChangedEventHandler<object>(m_Tree_SelectedItemChanged);
                         selected.IsSelected = true;
+                        selected.Focus();
                         EventHandler<SelectionChangedEventArgs<CalculationInfoBase>> handler = SelectionChanged;
                         if (handler != null)
                         {
@@ -233,41 +234,24 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
             }
         }
 
-        //Dictionary<String, CalculationInfoBase> m_Members = null;
-        //public Dictionary<String, CalculationInfoBase> Members
-        //{
-        //    get {
-        //        if (m_Members == null)
-        //        {
-        //            m_Members = new Dictionary<String, CalculationInfoBase>();
-        //        }
-        //        return m_Members;
-        //    }
-        //}
-
-        //Dictionary<String, CalculationInfoBase> m_Sets = null;
-        //public Dictionary<String, CalculationInfoBase> Sets
-        //{
-        //    get {
-        //        if (m_Sets == null)
-        //        {
-        //            m_Sets = new Dictionary<String, CalculationInfoBase>();
-        //        }
-        //        return m_Sets;
-        //    }
-        //}
-
         public void Initialize(Dictionary<String, CalculationInfoBase> members, Dictionary<String, CalculationInfoBase> sets)
         {
-            ClearTree();
-            //m_Members = members;
-            //m_Sets = sets;
+            Initialize(members, sets, null);
+        }
 
+        public void Initialize(Dictionary<String, CalculationInfoBase> members, Dictionary<String, CalculationInfoBase> sets, CalculationInfoBase toSelect)
+        {
+            ClearTree();
+
+            // Default selected node
+            TreeNode<CalculationInfoBase> selected = null;
             if (members != null)
             {
                 foreach (CalculationInfoBase info in members.Values)
                 {
                     TreeNode<CalculationInfoBase> node = new TreeNode<CalculationInfoBase>(info.Name, UriResources.Images.CustomMeasure16, info);
+                    if(selected == null || info == toSelect)
+                        selected = node;
                     m_CalculatedMembers_Node.Items.Add(node);
                 }
             }
@@ -277,8 +261,28 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
                 foreach (CalculationInfoBase info in sets.Values)
                 {
                     TreeNode<CalculationInfoBase> node = new TreeNode<CalculationInfoBase>(info.Name, UriResources.Images.CustomNamedSet16, info);
+                    if (selected == null || info == toSelect)
+                        selected = node;
                     m_NamedSets_Node.Items.Add(node);
                 }
+            }
+
+            // Делаем выбранным узел (тот который указан, либо первый из имеющихся)
+            if (selected != null)
+            {
+                // Через событие делаем узел выбранным (иначе на нем фокус не ставится)
+                selected.Loaded += new RoutedEventHandler(node_Loaded);
+            }
+        }
+
+        void node_Loaded(object sender, RoutedEventArgs e)
+        {
+            TreeNode<CalculationInfoBase> node = sender as TreeNode<CalculationInfoBase>;
+            if (node != null)
+            {
+                node.Loaded -= new RoutedEventHandler(node_Loaded);
+                node.IsSelected = true;
+                node.Focus();
             }
         }
 
@@ -302,70 +306,6 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
                 }
             }
         }
-
-        //public void AddItem(T item)
-        //{
-        //    if (item != null)
-        //    {
-        //        List.Add(item);
-        //        AddItemNode(item);
-        //        CurrentObject = item;
-        //    }
-        //}
-
-        //public void DeleteItem(T item)
-        //{
-        //    if (item != null)
-        //    {
-        //        if(List.Contains(item))
-        //            List.Remove(item);
-        //        foreach (object obj in m_Tree.Items)
-        //        {
-        //            TreeNode<T> node = obj as TreeNode<T>;
-        //            if (node != null && node.Info.Equals(item))
-        //            {
-        //                m_Tree.Items.Remove(node);
-        //                return;
-        //            }
-        //        }
-        //    }
-        //}
-
-        //void AddItemNode(T item)
-        //{
-        //    if (item != null)
-        //    {
-
-        //        if (node != null)
-        //        {
-        //            node.MouseDoubleClick += new MouseDoubleClickEventHandler(node_MouseDoubleClick);
-        //            m_Tree.Items.Add(node);
-        //        }
-        //    }
-        //}
-
-        //public virtual TreeNode<T> BuildTreeNode(T item)
-        //{
-        //    return new TreeNode<T>("Node", null, item);
-        //}
-
-        //void node_MouseDoubleClick(object sender, EventArgs e)
-        //{
-        //    TreeNode<T> node = sender as TreeNode<T>;
-        //    if (node != null && node.Info != null)
-        //    {
-        //        EventHandler<CustomEventArgs<T>> handler = ObjectSelected;
-        //        if (handler != null)
-        //        {
-        //            handler(this, new CustomEventArgs<T>(node.Info));
-        //        }
-        //    }
-        //}
-
-        //public virtual bool Contains(String name)
-        //{
-        //    return false;
-        //}
     }
 }
 

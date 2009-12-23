@@ -52,9 +52,6 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
     public class PivotAreaContainer : UserControl
     {
         Grid LayoutRoot;
-        Border m_Border;
-        TextBlock m_Caption;
-        Image m_Icon;
         HeaderControl m_Header;
         
         AreaItemsList m_ItemsList;
@@ -88,15 +85,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             LayoutRoot.Children.Add(m_ItemsList);
             Grid.SetRow(m_ItemsList, 1);
 
-            m_Border = new Border();
-            m_Border.BorderBrush = new SolidColorBrush(Colors.Transparent);
-            m_Border.Background = new SolidColorBrush(Colors.Transparent);
-            m_Border.BorderThickness = new Thickness(2);
-            m_Border.Padding = new Thickness(0);
-
-            m_Border.Child = LayoutRoot;
-
-            this.Content = m_Border;
+            this.Content = LayoutRoot;
         }
 
         void m_ItemsList_ItemsListChanged(object sender, EventArgs e)
@@ -230,13 +219,11 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
                     m_IsReadyToDrop = value;
                     if (value)
                     {
-                        m_Border.BorderBrush = new SolidColorBrush(Color.FromArgb(50, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
-                        m_Border.Background = new SolidColorBrush(Color.FromArgb(20, Colors.Blue.R, Colors.Blue.G, Colors.Blue.B));
+                        m_ItemsList.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 1, Opacity = 0.8, Color = Colors.Blue };
                     }
                     else
                     {
-                        m_Border.BorderBrush = new SolidColorBrush(Colors.Transparent);
-                        m_Border.Background = new SolidColorBrush(Colors.Transparent);
+                        m_ItemsList.Effect = null;
                     }
                 }
             }

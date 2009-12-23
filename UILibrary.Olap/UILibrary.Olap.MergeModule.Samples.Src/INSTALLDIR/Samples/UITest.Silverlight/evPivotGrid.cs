@@ -8,7 +8,7 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void initPivotGridButton_Click(object sender, RoutedEventArgs e)
 		{
-			pivotGridControl.URL = WSDataUrl;
+			// pivotGridControl.URL = WSDataUrl;
 			pivotGridControl.Connection = ConnectionStringId;
 			pivotGridControl.Query = pivorGrid_query.Text;
 			pivotGridControl.UpdateScript = pivorGrid_updateScript.Text;

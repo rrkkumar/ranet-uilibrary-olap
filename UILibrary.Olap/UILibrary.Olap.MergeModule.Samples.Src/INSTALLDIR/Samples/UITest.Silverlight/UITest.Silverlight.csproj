@@ -112,9 +112,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\MdxFormatter.SilverLight\MdxFormatter.SilverLight.csproj">
       <Project>{3A01BB53-38F8-4B94-974B-FB3B80DD2781}</Project>
       <Name>MdxFormatter.SilverLight</Name>

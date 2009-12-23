@@ -256,8 +256,8 @@ namespace Ranet.Olap.Core
             
             for(int i = 2; i< pivotDataProvider.Provider.CellSet_Description.Axes.Count; i++)
             {
-                string hierarchy = pivotDataProvider.Provider.CellSet_Description.Axes[i].Positions[0].Members[0].HierarchyUniqueName;
-                string level = pivotDataProvider.Provider.CellSet_Description.Axes[i].Positions[0].Members[0].Caption;
+                string hierarchy = pivotDataProvider.Provider.CellSet_Description.Axes[i].Members[pivotDataProvider.Provider.CellSet_Description.Axes[i].Positions[0].Members[0].Id].HierarchyUniqueName;
+                string level = pivotDataProvider.Provider.CellSet_Description.Axes[i].Members[pivotDataProvider.Provider.CellSet_Description.Axes[i].Positions[0].Members[0].Id].Caption;
 
                 currentRow = document.CreateElement("s", "Row", spreadsheetNamespace);
                 table.AppendChild(currentRow);
@@ -292,7 +292,7 @@ namespace Ranet.Olap.Core
                     int indexColumn = startColumn;
                     foreach (PositionData position in pivotDataProvider.Provider.CellSet_Description.Axes[0].Positions)
                     {
-                        MemberData member = position.Members[memberIndex];
+                        MemberData member = pivotDataProvider.Provider.CellSet_Description.Axes[0].Members[position.Members[memberIndex].Id];
 
                         string value = member.Caption;
                         WriteCell(value, "String", axisStyle, indexColumn, true);
@@ -391,9 +391,9 @@ namespace Ranet.Olap.Core
                     currentRow = document.CreateElement("s", "Row", spreadsheetNamespace);
                     table.AppendChild(currentRow);
                     int indexCell = 1;
-                    foreach (MemberData member in position.Members)
+                    foreach (PositionMemberData pos_member in position.Members)
                     {
-
+                        MemberData member = pivotDataProvider.Provider.CellSet_Description.Axes[1].Members[pos_member.Id];
                         string value = member.Caption;
                         WriteCell(value, "String", axisStyle, indexCell, true);
                         indexCell++;

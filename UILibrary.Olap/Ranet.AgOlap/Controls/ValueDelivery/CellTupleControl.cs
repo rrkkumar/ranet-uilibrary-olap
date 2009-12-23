@@ -32,6 +32,8 @@ using System.Windows.Shapes;
 using System.Collections.Generic;
 using System.ServiceModel.Channels;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Controls.Data;
+using Ranet.AgOlap.Controls.General;
 
 namespace Ranet.AgOlap.Controls.ValueDelivery
 {
@@ -70,11 +72,15 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
     {
         CellInfo m_Cell = null;
         DataGrid m_Grid;
+        internal readonly DataGridTextColumn HierarchyColumn;
+        internal readonly DataGridTextColumn MemberColumn;
 
         public CellTupleControl()
         {
+            StyleContainer styleContainer = new StyleContainer();
+
             Grid LayoutRoot = new Grid();
-            m_Grid = new DataGrid();
+            m_Grid = new RanetDataGrid();
             m_Grid.AutoGenerateColumns = false;
             m_Grid.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             m_Grid.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
@@ -83,15 +89,29 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
             m_Grid.SelectionChanged += new SelectionChangedEventHandler(m_Grid_SelectionChanged);
             LayoutRoot.Children.Add(m_Grid);
 
-            DataGridTextColumn hierarchyColumn = new DataGridTextColumn();
-            hierarchyColumn.Header = Localization.ValueDeliveryControl_Hierarchy;
-            hierarchyColumn.Binding= new System.Windows.Data.Binding("Hierarchy");
-            m_Grid.Columns.Add(hierarchyColumn);
+            HierarchyColumn = new DataGridTextColumn();
+            HierarchyColumn.Header = Localization.ValueDeliveryControl_Hierarchy;
+            HierarchyColumn.Binding= new System.Windows.Data.Binding("Hierarchy");
+            m_Grid.Columns.Add(HierarchyColumn);
 
-            DataGridTextColumn memberColumn = new DataGridTextColumn();
-            memberColumn.Header = Localization.ValueDeliveryControl_Member;
-            memberColumn.Binding = new System.Windows.Data.Binding("Caption");
-            m_Grid.Columns.Add(memberColumn);
+            MemberColumn = new DataGridTextColumn();
+            MemberColumn.Header = Localization.ValueDeliveryControl_Member;
+            MemberColumn.Binding = new System.Windows.Data.Binding("Caption");
+            m_Grid.Columns.Add(MemberColumn);
+
+            if (styleContainer.Resources != null)
+            {
+                if (styleContainer.Resources.Contains("DataGridGlowStyle"))
+                    m_Grid.Style = styleContainer.Resources["DataGridGlowStyle"] as Style;
+                if (styleContainer.Resources.Contains("DataGridGlowRowStyle"))
+                    m_Grid.RowStyle = styleContainer.Resources["DataGridGlowRowStyle"] as Style;
+                if (styleContainer.Resources.Contains("DataGridGlowRowHeaderStyle"))
+                    m_Grid.RowHeaderStyle = styleContainer.Resources["DataGridGlowRowHeaderStyle"] as Style;
+                if (styleContainer.Resources.Contains("DataGridGlowCellStyle"))
+                    m_Grid.CellStyle = styleContainer.Resources["DataGridGlowCellStyle"] as Style;
+                if (styleContainer.Resources.Contains("DataGridColumnHeaderGlow"))
+                    m_Grid.ColumnHeaderStyle = styleContainer.Resources["DataGridColumnHeaderGlow"] as Style;
+            }
 
             this.Content = LayoutRoot;
         }
@@ -116,10 +136,13 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
             m_Cell = cell;
 
             List<TupleItem> list = new List<TupleItem>();
-            IDictionary<String, MemberInfo> tuple = m_Cell.GetTuple();
-            foreach (MemberInfo member in tuple.Values)
+            if (m_Cell != null)
             {
-                list.Add(new TupleItem(member));
+                IDictionary<String, MemberInfo> tuple = m_Cell.GetTuple();
+                foreach (MemberInfo member in tuple.Values)
+                {
+                    list.Add(new TupleItem(member));
+                }
             }
             m_Grid.ItemsSource = list;
             if (list.Count > 0)

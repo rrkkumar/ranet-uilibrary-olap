@@ -31,62 +31,88 @@ namespace Ranet.Olap.Core.Providers
 {
     public class OlapMetadataProvider 
     {
-        public readonly String ConnectionString = String.Empty;
+        public readonly ConnectionInfo Connection = null;
 
-        public OlapMetadataProvider(String connStr)
+        public OlapMetadataProvider(ConnectionInfo connection)
         {
-            if(String.IsNullOrEmpty(connStr))
-                throw new ArgumentNullException("connStr");
+            if (connection == null)
+            {
+                System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Connection in Constructor equal Null \r\n",
+                    DateTime.Now.ToString());
 
-            ConnectionString = connStr;
+                throw new ArgumentNullException("connection");
+            }
+
+            Connection = connection;
         }
 
         public Dictionary<String, MeasureInfo> GetMeasures(String cubeName)
         {
-            Dictionary<String, MeasureInfo> list = new Dictionary<String, MeasureInfo>();
-
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
+            try
             {
-                foreach (Measure measure in cube.Measures)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measures List Started \r\n cubeName: '{1}'",
+                    DateTime.Now.ToString(), cubeName);
+
+                Dictionary<String, MeasureInfo> list = new Dictionary<String, MeasureInfo>();
+
+                CubeDef cube = FindCube(cubeName);
+                if (cube != null)
                 {
-                    MeasureInfo info = InfoHelper.CreateMeasureInfo(measure);
-                    if (info != null)
+                    foreach (Measure measure in cube.Measures)
                     {
-                        if (!list.ContainsKey(info.UniqueName))
-                            list.Add(info.UniqueName, info);
+                        MeasureInfo info = InfoHelper.CreateMeasureInfo(measure);
+                        if (info != null)
+                        {
+                            if (!list.ContainsKey(info.UniqueName))
+                                list.Add(info.UniqueName, info);
+                        }
                     }
                 }
-            }
 
-            return list;
+                return list;
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measures List Completed ",
+                    DateTime.Now.ToString(), cubeName);
+            }
         }
 
         public MeasureInfo GetMeasure(String cubeName, String measureUniqueName)
         {
-            if (String.IsNullOrEmpty(measureUniqueName))
-                return null;
-
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
+            try
             {
-                foreach (Measure measure in cube.Measures)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measure '{1}' Started \r\n cubeName: '{2}'",
+                    DateTime.Now.ToString(), measureUniqueName, cubeName);
+
+                if (String.IsNullOrEmpty(measureUniqueName))
+                    return null;
+
+                CubeDef cube = FindCube(cubeName);
+                if (cube != null)
                 {
-                    MeasureInfo info = InfoHelper.CreateMeasureInfo(measure);
-                    if (info != null)
+                    foreach (Measure measure in cube.Measures)
                     {
-                        if (info.UniqueName.ToLower() == measureUniqueName.ToLower())
-                            return info;
+                        MeasureInfo info = InfoHelper.CreateMeasureInfo(measure);
+                        if (info != null)
+                        {
+                            if (info.UniqueName.ToLower() == measureUniqueName.ToLower())
+                                return info;
+                        }
                     }
                 }
-            }
 
-            return null;
+                return null;
+            }
+            finally
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measure '{1}' Completed ",
+                    DateTime.Now.ToString(), measureUniqueName, cubeName);
+            }
         }
 
-        protected virtual AdomdConnection GetConnection(String connectionString)
+        protected virtual AdomdConnection GetConnection()
         {
-            AdomdConnection conn = new AdomdConnection(connectionString);
+            AdomdConnection conn = new AdomdConnection(Connection.ConnectionString);
             conn.Open();
             return conn;
         }
@@ -98,27 +124,39 @@ namespace Ranet.Olap.Core.Providers
         /// <returns></returns>
         public Dictionary<String, KpiInfo> GetKPIs(String cubeName)
         {
-            Dictionary<String, KpiInfo> list = new Dictionary<String, KpiInfo>();
-
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
+            try
             {
-                foreach (Kpi kpi in cube.Kpis)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Kpis List Started \r\n cubeName: '{1}'", 
+                    DateTime.Now.ToString(), cubeName);
+
+                Dictionary<String, KpiInfo> list = new Dictionary<String, KpiInfo>();
+
+                CubeDef cube = FindCube(cubeName);
+                if (cube != null)
                 {
-                    KpiInfo info = InfoHelper.CreateKpiInfo(kpi);
-                    if (info != null)
+                    foreach (Kpi kpi in cube.Kpis)
                     {
-                        if (!list.ContainsKey(info.Name))
-                            list.Add(info.Name, info);
+                        KpiInfo info = InfoHelper.CreateKpiInfo(kpi);
+                        if (info != null)
+                        {
+                            if (!list.ContainsKey(info.Name))
+                                list.Add(info.Name, info);
+                        }
                     }
                 }
-            }
-            else
-            {
-                throw new Exception(String.Format("Cube: {0} not found in base. Connection string: {1}.", cubeName, ConnectionString));
-            }
+                else
+                {
+                    String str = String.Format(Localization.MetadataResponseException_CubeNotFound, cubeName, Connection.ConnectionID);
+                    System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                        DateTime.Now.ToString(), cubeName, str); 
+                    throw new OlapMetadataResponseException(str);
+                }
 
-            return list;
+                return list;
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Kpis List Completed \r\n", DateTime.Now.ToString());
+            }
         }
 
         /// <summary>
@@ -128,235 +166,318 @@ namespace Ranet.Olap.Core.Providers
         /// <returns></returns>
         public KpiInfo GetKPI(String cubeName, String kpiName)
         {
-            if(String.IsNullOrEmpty(kpiName))
-                return null;
-
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
+            try
             {
-                foreach (Kpi kpi in cube.Kpis)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Kpi '{1}' Started \r\n cubeName: '{2}'", 
+                    DateTime.Now.ToString(), kpiName, cubeName);
+
+                if (String.IsNullOrEmpty(kpiName))
+                    return null;
+
+                CubeDef cube = FindCube(cubeName);
+                if (cube != null)
                 {
-                    KpiInfo info = InfoHelper.CreateKpiInfo(kpi);
-                    if (info != null && info.Name.ToLower() == kpiName.ToLower())
+                    foreach (Kpi kpi in cube.Kpis)
                     {
-                        return info;
+                        KpiInfo info = InfoHelper.CreateKpiInfo(kpi);
+                        if (info != null && info.Name.ToLower() == kpiName.ToLower())
+                        {
+                            return info;
+                        }
                     }
                 }
+                return null;
             }
-            return null;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Kpi '{1}' Completed \r\n", DateTime.Now.ToString(), kpiName);
+            }
         }
 
         public Dictionary<String, LevelInfo> GetLevels(string cubeName, string dimensionUniqueName, string hierarchyUniqueName)
         {
-            Dictionary<String, LevelInfo> list = new Dictionary<String, LevelInfo>();
-
-            // Ищем иерархию
-            Hierarchy hierarchy = FindHierarchy(cubeName, dimensionUniqueName, hierarchyUniqueName);
-            if (hierarchy != null)
+            try
             {
-                foreach (Level level in hierarchy.Levels)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Levels List Started \r\n cubeName: '{1}' \r\n dimensionUniqueName: '{2}' \r\n hierarchyUniqueName: '{3}' ",
+                    DateTime.Now.ToString(), cubeName, dimensionUniqueName, hierarchyUniqueName);
+
+                Dictionary<String, LevelInfo> list = new Dictionary<String, LevelInfo>();
+
+                // Ищем иерархию
+                Hierarchy hierarchy = FindHierarchy(cubeName, dimensionUniqueName, hierarchyUniqueName);
+                if (hierarchy != null)
                 {
-                    LevelInfo info = InfoHelper.CreateLevelInfo(level);
-                    if (info != null)
+                    foreach (Level level in hierarchy.Levels)
                     {
-                        if (!list.ContainsKey(info.UniqueName))
-                            list.Add(info.UniqueName, info);
+                        LevelInfo info = InfoHelper.CreateLevelInfo(level);
+                        if (info != null)
+                        {
+                            if (!list.ContainsKey(info.UniqueName))
+                                list.Add(info.UniqueName, info);
+                        }
                     }
                 }
+                return list;
             }
-            return list;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Levels List Completed ",
+                    DateTime.Now.ToString());
+            }
         }
 
         public LevelInfo GetLevel(string cubeName, string dimensionUniqueName, string hierarchyUniqueName, String levelUniqueName)
         {
-            // Ищем уровень
-            Level level = FindLevel(cubeName, dimensionUniqueName, hierarchyUniqueName, levelUniqueName);
-            if(level != null)
+            try
             {
-                return InfoHelper.CreateLevelInfo(level);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Level '{1}' Started \r\n cubeName: '{2}' \r\n dimensionUniqueName: '{3}'", 
+                    DateTime.Now.ToString(), levelUniqueName, cubeName, dimensionUniqueName);
+
+                // Ищем уровень
+                Level level = FindLevel(cubeName, dimensionUniqueName, hierarchyUniqueName, levelUniqueName);
+                if (level != null)
+                {
+                    return InfoHelper.CreateLevelInfo(level);
+                }
+                return null;
             }
-            return null;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Level '{1}' Completed \r\n", DateTime.Now.ToString(), levelUniqueName);            
+            }
         }
 
         public Dictionary<String, LevelPropertyInfo> GetLevelProperties(string cubeName, string dimensionUniqueName, string hierarchyUniqueName, String levelUniqueName)
         {
-            Dictionary<String, LevelPropertyInfo> list = new Dictionary<String, LevelPropertyInfo>();
-            // Ищем уровень
-            Level level = FindLevel(cubeName, dimensionUniqueName, hierarchyUniqueName, levelUniqueName);
-            if (level != null)
+            try
             {
-                // Свойства уровня - атрибуты
-                AdomdConnection conn = GetConnection(ConnectionString);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Level '{1}' Properties Started \r\n cubeName: '{2}' \r\n dimensionUniqueName: '{3}' \r\n hierarchyUniqueName: '{4}' ",
+                    DateTime.Now.ToString(), levelUniqueName, cubeName, dimensionUniqueName, hierarchyUniqueName);
 
-                AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-                restrictions.Add("CATALOG_NAME", conn.Database);
-                restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-                restrictions.Add("DIMENSION_UNIQUE_NAME", dimensionUniqueName);
-                restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchyUniqueName);
-                restrictions.Add("LEVEL_UNIQUE_NAME", level.UniqueName);
-
-                DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_PROPERTIES", restrictions);
-                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                Dictionary<String, LevelPropertyInfo> list = new Dictionary<String, LevelPropertyInfo>();
+                // Ищем уровень
+                Level level = FindLevel(cubeName, dimensionUniqueName, hierarchyUniqueName, levelUniqueName);
+                if (level != null)
                 {
-                    DataTable table = ds.Tables[0];
+                    // Свойства уровня - атрибуты
+                    AdomdConnection conn = GetConnection();
 
-                    if (ds.Tables[0].Columns.Count > 0)
+                    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                    restrictions.Add("CATALOG_NAME", conn.Database);
+                    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
+                    restrictions.Add("DIMENSION_UNIQUE_NAME", dimensionUniqueName);
+                    restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchyUniqueName);
+                    restrictions.Add("LEVEL_UNIQUE_NAME", level.UniqueName);
+
+                    DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_PROPERTIES", restrictions);
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                     {
-                        object obj = null;
-                        foreach (DataRow row in ds.Tables[0].Rows)
+                        DataTable table = ds.Tables[0];
+
+                        if (ds.Tables[0].Columns.Count > 0)
                         {
-                            Type type = null;
-                            if (table.Columns.Contains("DATA_TYPE"))
+                            object obj = null;
+                            foreach (DataRow row in ds.Tables[0].Rows)
                             {
-                                obj = row["DATA_TYPE"];
-                                System.Data.OleDb.OleDbType oleDbType = (System.Data.OleDb.OleDbType)(Convert.ToInt32(obj));
-                                type = OleDbTypeConverter.Convert(oleDbType);
+                                Type type = null;
+                                if (table.Columns.Contains("DATA_TYPE"))
+                                {
+                                    obj = row["DATA_TYPE"];
+                                    System.Data.OleDb.OleDbType oleDbType = (System.Data.OleDb.OleDbType)(Convert.ToInt32(obj));
+                                    type = OleDbTypeConverter.Convert(oleDbType);
+                                }
+
+                                String name = String.Empty;
+                                if (table.Columns.Contains("PROPERTY_NAME"))
+                                {
+                                    obj = row["PROPERTY_NAME"];
+                                    if (obj != null)
+                                        name = obj.ToString();
+                                }
+
+                                String caption = String.Empty;
+                                if (table.Columns.Contains("PROPERTY_CAPTION"))
+                                {
+                                    obj = row["PROPERTY_CAPTION"];
+                                    if (obj != null)
+                                        caption = obj.ToString();
+                                }
+
+                                String description = String.Empty;
+                                if (table.Columns.Contains("DESCRIPTION"))
+                                {
+                                    obj = row["DESCRIPTION"];
+                                    if (obj != null)
+                                        description = obj.ToString();
+                                }
+
+                                int propertyType = 0;
+                                if (table.Columns.Contains("PROPERTY_TYPE"))
+                                {
+                                    obj = row["PROPERTY_TYPE"];
+                                    if (obj != null)
+                                        propertyType = Convert.ToInt32(obj);
+                                }
+
+                                LevelPropertyInfo lpi = new LevelPropertyInfo();
+                                lpi.Caption = caption;
+                                lpi.Description = description;
+                                lpi.Name = name;
+                                lpi.ParentLevelId = level.UniqueName;
+                                //lpi.DataType = type;
+                                if ((propertyType & 0x04) == 0x04)
+                                    lpi.IsSystem = true;
+
+                                lpi.PropertyType = propertyType;
+
+                                //info.LevelProperties.Add(lpi);
+                                list.Add(lpi.Name, lpi);
                             }
-
-                            String name = String.Empty;
-                            if (table.Columns.Contains("PROPERTY_NAME"))
-                            {
-                                obj = row["PROPERTY_NAME"];
-                                if (obj != null)
-                                    name = obj.ToString();
-                            }
-
-                            String caption = String.Empty;
-                            if (table.Columns.Contains("PROPERTY_CAPTION"))
-                            {
-                                obj = row["PROPERTY_CAPTION"];
-                                if (obj != null)
-                                    caption = obj.ToString();
-                            }
-
-                            String description = String.Empty;
-                            if (table.Columns.Contains("DESCRIPTION"))
-                            {
-                                obj = row["DESCRIPTION"];
-                                if (obj != null)
-                                    description = obj.ToString();
-                            }
-
-                            int propertyType = 0;
-                            if (table.Columns.Contains("PROPERTY_TYPE"))
-                            {
-                                obj = row["PROPERTY_TYPE"];
-                                if (obj != null)
-                                    propertyType = Convert.ToInt32(obj);
-                            }
-
-                            LevelPropertyInfo lpi = new LevelPropertyInfo();
-                            lpi.Caption = caption;
-                            lpi.Description = description;
-                            lpi.Name = name;
-                            lpi.ParentLevelId = level.UniqueName;
-                            //lpi.DataType = type;
-                            if ((propertyType & 0x04) == 0x04)
-                                 lpi.IsSystem = true;
-
-                            lpi.PropertyType = propertyType;
-
-                            //info.LevelProperties.Add(lpi);
-                            list.Add(lpi.Name, lpi);
                         }
                     }
-                }
 
-                //list.Add(info);
+                    //list.Add(info);
+                }
+                return list;
             }
-            return list;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Level '{1}' Properties Completed ", DateTime.Now.ToString(), levelUniqueName);
+            }
         }
 
         public DimensionInfo GetDimensionToHierarchy(String cubeName, String hierarchyUniqueName)
         {
-            if (!String.IsNullOrEmpty(hierarchyUniqueName) && !String.IsNullOrEmpty(cubeName))
+            try
             {
-                AdomdConnection conn = GetConnection(ConnectionString);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimension To Hierarchy '{1}' Started \r\n cubeName: '{2}' ",
+                    DateTime.Now.ToString(), hierarchyUniqueName, cubeName);
+
+                if (!String.IsNullOrEmpty(hierarchyUniqueName) && !String.IsNullOrEmpty(cubeName))
+                {
+                    AdomdConnection conn = GetConnection();
+                    CubeDef cube = FindCube(cubeName);
+                    if (cube != null)
+                    {
+                        foreach (Dimension dim in cube.Dimensions)
+                        {
+                            foreach (Hierarchy hierarchy in dim.Hierarchies)
+                            {
+                                if (hierarchy.UniqueName.ToLower() == hierarchyUniqueName.ToLower())
+                                {
+                                    return InfoHelper.CreateDimensionInfo(dim);
+                                }
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimension To Hierarchy Completed \r\n", DateTime.Now.ToString());
+            }
+        }
+
+        public HierarchyInfo GetHierarchy(String cubeName, string dimensionUniqueName, string hierarchyUniqueName)
+        {
+            try
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Hierarchy '{1}' Started \r\n cubeName: '{2}'", 
+                    DateTime.Now.ToString(), hierarchyUniqueName, cubeName);
+
+                AdomdConnection conn = GetConnection();
+
+                Hierarchy hierarchy = FindHierarchy(cubeName, dimensionUniqueName, hierarchyUniqueName);
+                if (hierarchy != null)
+                {
+                    return InfoHelper.CreateHierarchyInfo(hierarchy);
+                }
+
+                return null;
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Hierarchy '{1}' Completed \r\n", DateTime.Now.ToString(), hierarchyUniqueName);
+            }
+        }
+
+        public Dictionary<String, HierarchyInfo> GetHierarchies(String cubeName, string dimensionUniqueName)
+        {
+            try
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Hierarchies Started \r\n cubeName: '{1}' \r\n dimensionUniqueName: '{2}'", 
+                    DateTime.Now.ToString(), cubeName, dimensionUniqueName);
+
+                Dictionary<String, HierarchyInfo> list = new Dictionary<String, HierarchyInfo>();
+                AdomdConnection conn = GetConnection();
+
+                Dimension dim = FindDimension(cubeName, dimensionUniqueName);
+                if (dim != null)
+                {
+                    foreach (Hierarchy hierarchy in dim.Hierarchies)
+                    {
+                        HierarchyInfo info = InfoHelper.CreateHierarchyInfo(hierarchy);
+                        if (info != null)
+                        {
+                            if (!list.ContainsKey(info.UniqueName))
+                                list.Add(info.UniqueName, info);
+                        }
+                    }
+                }
+
+                return list;
+            }
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Hierarchies Completed \r\n", DateTime.Now.ToString());
+            }
+        }
+
+        public Dictionary<String, DimensionInfo> GetDimensions(string cubeName)
+        {
+            try
+            {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimensions List Started \r\n cubeName: '{1}' ",
+                    DateTime.Now.ToString(), cubeName);
+
+                Dictionary<String, DimensionInfo> list = new Dictionary<String, DimensionInfo>();
+                AdomdConnection conn = GetConnection();
                 CubeDef cube = FindCube(cubeName);
                 if (cube != null)
                 {
                     foreach (Dimension dim in cube.Dimensions)
                     {
-                        foreach (Hierarchy hierarchy in dim.Hierarchies)
+                        DimensionInfo info = InfoHelper.CreateDimensionInfo(dim);
+                        if (info != null)
                         {
-                            if (hierarchy.UniqueName.ToLower() == hierarchyUniqueName.ToLower())
+                            if (!list.ContainsKey(info.UniqueName))
                             {
-                                return InfoHelper.CreateDimensionInfo(dim);
+                                list.Add(info.UniqueName, info);
                             }
                         }
                     }
                 }
+                return list;
             }
-            return null;
-        }
-
-        public HierarchyInfo GetHierarchy(String cubeName, string dimensionUniqueName, string hierarchyUniqueName)
-        {
-            AdomdConnection conn = GetConnection(ConnectionString);
-
-            Hierarchy hierarchy = FindHierarchy(cubeName, dimensionUniqueName, hierarchyUniqueName);
-            if (hierarchy != null)
-            {
-                return InfoHelper.CreateHierarchyInfo(hierarchy);
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimensions List Completed \r\n ",
+                    DateTime.Now.ToString(), cubeName);
             }
-
-            return null;
-        }
-
-        public Dictionary<String, HierarchyInfo> GetHierarchies(String cubeName, string dimensionUniqueName)
-        {
-            Dictionary<String, HierarchyInfo> list = new Dictionary<String, HierarchyInfo>();
-            AdomdConnection conn = GetConnection(ConnectionString);
-
-            Dimension dim = FindDimension(cubeName, dimensionUniqueName);
-            if (dim != null)
-            {
-                foreach (Hierarchy hierarchy in dim.Hierarchies)
-                {
-                    HierarchyInfo info = InfoHelper.CreateHierarchyInfo(hierarchy);
-                    if (info != null)
-                    {
-                        if (!list.ContainsKey(info.UniqueName))
-                            list.Add(info.UniqueName, info);
-                    }
-                }
-            }
-
-            return list;
-        }
-
-        public Dictionary<String, DimensionInfo> GetDimensions(string cubeName)
-        {
-            Dictionary<String, DimensionInfo> list = new Dictionary<String, DimensionInfo>();
-            AdomdConnection conn = GetConnection(ConnectionString);
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
-            {
-                foreach (Dimension dim in cube.Dimensions)
-                {
-                    DimensionInfo info = InfoHelper.CreateDimensionInfo(dim);
-                    if (info != null)
-                    {
-                        if (!list.ContainsKey(info.UniqueName))
-                        {
-                            list.Add(info.UniqueName, info);
-                        }
-                    }
-                }
-            }
-            return list;
         }
 
         public DimensionInfo GetDimension(string cubeName, String dimensionUniqueName)
         {
-            AdomdConnection conn = GetConnection(ConnectionString);
-
-            Dimension dimension = FindDimension(cubeName, dimensionUniqueName);
-            if (dimension != null)
+            try
             {
-                return InfoHelper.CreateDimensionInfo(dimension);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimension '{1}' Started \r\n cubeName: '{2}' ", 
+                    DateTime.Now.ToString(), dimensionUniqueName, cubeName);
+
+                AdomdConnection conn = GetConnection();
+
+                Dimension dimension = FindDimension(cubeName, dimensionUniqueName);
+                if (dimension != null)
+                {
+                    return InfoHelper.CreateDimensionInfo(dimension);
+                }
+                return null;
             }
-            return null;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Dimension '{1}' From Cube '{2}' Completed", DateTime.Now.ToString(), dimensionUniqueName, cubeName);
+            }
         }
 
         /// <summary>
@@ -365,154 +486,164 @@ namespace Ranet.Olap.Core.Providers
         /// <returns></returns>
         public CubeDefInfo  GetCubeMetadata(String cubeName, MetadataQueryType type)
         {
-            CubeDef cube = FindCube(cubeName);
-            if (cube != null)
+            try
             {
-                CubeDefInfo cube_info = InfoHelper.CreateCubeInfo(cube);
-                foreach (Dimension dim in cube.Dimensions)
-                {
-                    DimensionInfo dim_info = InfoHelper.CreateDimensionInfo(dim);
-                    cube_info.Dimensions.Add(dim_info);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Getting Cube '{1}' Metadata Started",
+                    DateTime.Now.ToString(), cubeName);
 
-                    foreach (Hierarchy hierarchy in dim.Hierarchies)
+                CubeDef cube = FindCube(cubeName);
+                if (cube != null)
+                {
+                    CubeDefInfo cube_info = InfoHelper.CreateCubeInfo(cube);
+                    foreach (Dimension dim in cube.Dimensions)
                     {
-                        HierarchyInfo hier_info = InfoHelper.CreateHierarchyInfo(hierarchy);
-                        dim_info.Hierarchies.Add(hier_info);
+                        DimensionInfo dim_info = InfoHelper.CreateDimensionInfo(dim);
+                        cube_info.Dimensions.Add(dim_info);
 
-                        foreach (Level level in hierarchy.Levels)
+                        foreach (Hierarchy hierarchy in dim.Hierarchies)
                         {
-                            LevelInfo level_info = InfoHelper.CreateLevelInfo(level);
-                            hier_info.Levels.Add(level_info);
-                        }
+                            HierarchyInfo hier_info = InfoHelper.CreateHierarchyInfo(hierarchy);
+                            dim_info.Hierarchies.Add(hier_info);
 
-                        //AdomdConnection conn = GetConnection(ConnectionString);
-
-                        //// Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.All
-                        //try
-                        //{
-                        //    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-                        //    restrictions.Add("CATALOG_NAME", conn.Database);
-                        //    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-                        //    restrictions.Add("DIMENSION_UNIQUE_NAME", dim.UniqueName);
-                        //    restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchy.UniqueName);
-                        //    restrictions.Add("MEMBER_TYPE", 2/*MemberTypeEnum.All*/);
-
-                        //    DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
-                        //    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                        //    {
-                        //        DataTable table = ds.Tables[0];
-                        //        if (table.Columns.Contains("MEMBER_UNIQUE_NAME"))
-                        //        {
-                        //            object obj = ds.Tables[0].Rows[0]["MEMBER_UNIQUE_NAME"];
-                        //            if (obj != null)
-                        //                hier_info.Custom_AllMemberUniqueName = obj.ToString();
-                        //        }
-                        //    }
-                        //}catch
-                        //{
-                        //}
-
-                        //// Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.Unknown
-                        //try
-                        //{
-                        //    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-                        //    restrictions.Add("CATALOG_NAME", conn.Database);
-                        //    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-                        //    restrictions.Add("DIMENSION_UNIQUE_NAME", dim.UniqueName);
-                        //    restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchy.UniqueName);
-                        //    restrictions.Add("MEMBER_TYPE", 0 /*MemberTypeEnum.Unknown.All*/);
-
-                        //    DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
-                        //    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                        //    {
-                        //        DataTable table = ds.Tables[0];
-                        //        if (table.Columns.Contains("MEMBER_UNIQUE_NAME"))
-                        //        {
-                        //            object obj = ds.Tables[0].Rows[0]["MEMBER_UNIQUE_NAME"];
-                        //            if (obj != null)
-                        //                hier_info.Custom_UnknownMemberUniqueName = obj.ToString();
-                        //        }
-                        //    }
-                        //}
-                        //catch
-                        //{
-                        //}
-                    }
-                }
-
-                foreach (Kpi kpi in cube.Kpis)
-                {
-                    KpiInfo kpi_info = InfoHelper.CreateKpiInfo(kpi);
-                    cube_info.Kpis.Add(kpi_info);
-                }
-
-                foreach (Measure measure in cube.Measures)
-                {
-                    MeasureInfo measure_info = InfoHelper.CreateMeasureInfo(measure);
-                    cube_info.Measures.Add(measure_info);
-                }
-
-                foreach (NamedSet set in cube.NamedSets)
-                {
-                    NamedSetInfo set_info = InfoHelper.CreateNamedSetInfo(set);
-                    cube_info.NamedSets.Add(set_info);
-                }
-
-                if (type == MetadataQueryType.GetCubeMetadata_AllMembers)
-                {
-                    AdomdConnection conn = GetConnection(ConnectionString);
-                    // Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.All
-                    try
-                    {
-                        AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-                        restrictions.Add("CATALOG_NAME", conn.Database);
-                        restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-                        restrictions.Add("MEMBER_TYPE", 2/*MemberTypeEnum.All*/);
-
-                        DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
-                        if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-                        {
-                            DataTable table = ds.Tables[0];
-                            if (table.Columns.Contains("MEMBER_UNIQUE_NAME") &&
-                                table.Columns.Contains("HIERARCHY_UNIQUE_NAME") &&
-                                table.Columns.Contains("DIMENSION_UNIQUE_NAME"))
+                            foreach (Level level in hierarchy.Levels)
                             {
-                                foreach (DataRow row in ds.Tables[0].Rows)
-                                {
-                                    String dimension_UniqueName = row["DIMENSION_UNIQUE_NAME"] != null ? row["DIMENSION_UNIQUE_NAME"].ToString() : String.Empty;
-                                    String hierarchy_UniqueName = row["HIERARCHY_UNIQUE_NAME"] != null ? row["HIERARCHY_UNIQUE_NAME"].ToString() : String.Empty;
-                                    String member_UniqueName = row["MEMBER_UNIQUE_NAME"] != null ? row["MEMBER_UNIQUE_NAME"].ToString() : String.Empty;
+                                LevelInfo level_info = InfoHelper.CreateLevelInfo(level);
+                                hier_info.Levels.Add(level_info);
+                            }
 
-                                    if (!String.IsNullOrEmpty(dimension_UniqueName) &&
-                                        !String.IsNullOrEmpty(hierarchy_UniqueName) &&
-                                        !String.IsNullOrEmpty(member_UniqueName))
+                            //AdomdConnection conn = GetConnection(ConnectionString);
+
+                            //// Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.All
+                            //try
+                            //{
+                            //    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                            //    restrictions.Add("CATALOG_NAME", conn.Database);
+                            //    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
+                            //    restrictions.Add("DIMENSION_UNIQUE_NAME", dim.UniqueName);
+                            //    restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchy.UniqueName);
+                            //    restrictions.Add("MEMBER_TYPE", 2/*MemberTypeEnum.All*/);
+
+                            //    DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
+                            //    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                            //    {
+                            //        DataTable table = ds.Tables[0];
+                            //        if (table.Columns.Contains("MEMBER_UNIQUE_NAME"))
+                            //        {
+                            //            object obj = ds.Tables[0].Rows[0]["MEMBER_UNIQUE_NAME"];
+                            //            if (obj != null)
+                            //                hier_info.Custom_AllMemberUniqueName = obj.ToString();
+                            //        }
+                            //    }
+                            //}catch
+                            //{
+                            //}
+
+                            //// Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.Unknown
+                            //try
+                            //{
+                            //    AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                            //    restrictions.Add("CATALOG_NAME", conn.Database);
+                            //    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
+                            //    restrictions.Add("DIMENSION_UNIQUE_NAME", dim.UniqueName);
+                            //    restrictions.Add("HIERARCHY_UNIQUE_NAME", hierarchy.UniqueName);
+                            //    restrictions.Add("MEMBER_TYPE", 0 /*MemberTypeEnum.Unknown.All*/);
+
+                            //    DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
+                            //    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                            //    {
+                            //        DataTable table = ds.Tables[0];
+                            //        if (table.Columns.Contains("MEMBER_UNIQUE_NAME"))
+                            //        {
+                            //            object obj = ds.Tables[0].Rows[0]["MEMBER_UNIQUE_NAME"];
+                            //            if (obj != null)
+                            //                hier_info.Custom_UnknownMemberUniqueName = obj.ToString();
+                            //        }
+                            //    }
+                            //}
+                            //catch
+                            //{
+                            //}
+                        }
+                    }
+
+                    foreach (Kpi kpi in cube.Kpis)
+                    {
+                        KpiInfo kpi_info = InfoHelper.CreateKpiInfo(kpi);
+                        cube_info.Kpis.Add(kpi_info);
+                    }
+
+                    foreach (Measure measure in cube.Measures)
+                    {
+                        MeasureInfo measure_info = InfoHelper.CreateMeasureInfo(measure);
+                        cube_info.Measures.Add(measure_info);
+                    }
+
+                    foreach (NamedSet set in cube.NamedSets)
+                    {
+                        NamedSetInfo set_info = InfoHelper.CreateNamedSetInfo(set);
+                        cube_info.NamedSets.Add(set_info);
+                    }
+
+                    if (type == MetadataQueryType.GetCubeMetadata_AllMembers)
+                    {
+                        AdomdConnection conn = GetConnection();
+                        // Для каждой иерархии пытаемся определить элемент, который имеет тип MemberTypeEnum.All
+                        try
+                        {
+                            AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                            restrictions.Add("CATALOG_NAME", conn.Database);
+                            restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
+                            restrictions.Add("MEMBER_TYPE", 2/*MemberTypeEnum.All*/);
+
+                            DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEMBERS", restrictions);
+                            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                            {
+                                DataTable table = ds.Tables[0];
+                                if (table.Columns.Contains("MEMBER_UNIQUE_NAME") &&
+                                    table.Columns.Contains("HIERARCHY_UNIQUE_NAME") &&
+                                    table.Columns.Contains("DIMENSION_UNIQUE_NAME"))
+                                {
+                                    foreach (DataRow row in ds.Tables[0].Rows)
                                     {
-                                        DimensionInfo dimension = cube_info.GetDimension(dimension_UniqueName);
-                                        if (dimension != null)
+                                        String dimension_UniqueName = row["DIMENSION_UNIQUE_NAME"] != null ? row["DIMENSION_UNIQUE_NAME"].ToString() : String.Empty;
+                                        String hierarchy_UniqueName = row["HIERARCHY_UNIQUE_NAME"] != null ? row["HIERARCHY_UNIQUE_NAME"].ToString() : String.Empty;
+                                        String member_UniqueName = row["MEMBER_UNIQUE_NAME"] != null ? row["MEMBER_UNIQUE_NAME"].ToString() : String.Empty;
+
+                                        if (!String.IsNullOrEmpty(dimension_UniqueName) &&
+                                            !String.IsNullOrEmpty(hierarchy_UniqueName) &&
+                                            !String.IsNullOrEmpty(member_UniqueName))
                                         {
-                                            HierarchyInfo hierarchy = dimension.GetHierarchy(hierarchy_UniqueName);
-                                            if (hierarchy != null)
+                                            DimensionInfo dimension = cube_info.GetDimension(dimension_UniqueName);
+                                            if (dimension != null)
                                             {
-                                                hierarchy.Custom_AllMemberUniqueName = member_UniqueName;
+                                                HierarchyInfo hierarchy = dimension.GetHierarchy(hierarchy_UniqueName);
+                                                if (hierarchy != null)
+                                                {
+                                                    hierarchy.Custom_AllMemberUniqueName = member_UniqueName;
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
+                        catch (Exception ex)
+                        {
+                            //throw ex;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        //throw ex;
-                    }
+
+                    cube_info.MeasureGroups = GetMeasureGroups(cubeName);
+
+                    return cube_info;
                 }
 
-                cube_info.MeasureGroups = GetMeasureGroups(cubeName);
-
-                return cube_info;
+                return null;
             }
-
-            return null;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Getting Cube '{1}' Metadata Completed",
+    DateTime.Now.ToString(), cubeName);
+            }
         }
 
 
@@ -522,18 +653,26 @@ namespace Ranet.Olap.Core.Providers
         /// <returns></returns>
         public Dictionary<String, CubeDefInfo> GetCubes()
         {
-            Dictionary<String, CubeDefInfo> list = new Dictionary<String, CubeDefInfo>();
-            AdomdConnection conn = GetConnection(ConnectionString);
-            foreach (CubeDef cube in conn.Cubes)
+            try
             {
-                CubeDefInfo info = InfoHelper.CreateCubeInfo(cube);
-                if (info != null)
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Getting Cubes List Started", DateTime.Now.ToString());
+
+                Dictionary<String, CubeDefInfo> list = new Dictionary<String, CubeDefInfo>();
+                AdomdConnection conn = GetConnection();
+                foreach (CubeDef cube in conn.Cubes)
                 {
-                    if (!list.ContainsKey(info.Name))
-                        list.Add(info.Name, info);
+                    CubeDefInfo info = InfoHelper.CreateCubeInfo(cube);
+                    if (info != null)
+                    {
+                        if (!list.ContainsKey(info.Name))
+                            list.Add(info.Name, info);
+                    }
                 }
+                return list;
             }
-            return list;
+            finally {
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Getting Cubes List Completed", DateTime.Now.ToString());
+            }
         }
 
         private CubeDef FindCube(String cubeName)
@@ -541,7 +680,7 @@ namespace Ranet.Olap.Core.Providers
             if (!String.IsNullOrEmpty(cubeName))
             {
                 String name = OlapHelper.ConvertToNormalStyle(cubeName);
-                AdomdConnection conn = GetConnection(ConnectionString);
+                AdomdConnection conn = GetConnection();
                 foreach (CubeDef cube in conn.Cubes)
                 {
                     if (cube.Name.ToLower() == name.ToLower())
@@ -551,13 +690,16 @@ namespace Ranet.Olap.Core.Providers
                 }
             }
 
-            throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_CubeNotFound, cubeName));
+            String str = String.Format(Localization.MetadataResponseException_CubeNotFound, cubeName, Connection.ConnectionID);
+            System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                DateTime.Now.ToString(), cubeName, str);
+            throw new OlapMetadataResponseException(str);
             //return null;
         }
 
         private Dimension FindDimension(String cubeName, String dimensionUniqueName)
         {
-            AdomdConnection conn = GetConnection(ConnectionString);
+            AdomdConnection conn = GetConnection();
             CubeDef cube = FindCube(cubeName);
             if (cube != null)
             {
@@ -570,13 +712,17 @@ namespace Ranet.Olap.Core.Providers
                 }
             }
 
-            throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_DimensionByUniqueName_InCube_NotFound, dimensionUniqueName, cubeName));
+            String str = String.Format(Localization.MetadataResponseException_DimensionByUniqueName_InCube_NotFound, dimensionUniqueName, cubeName, Connection.ConnectionID);
+            System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                DateTime.Now.ToString(), cubeName, str);
+            throw new OlapMetadataResponseException(str);
+
             //return null;
         }
 
         private Hierarchy FindHierarchy(String cubeName, String dimensionUniqueName, String hierarchyUniqueName)
         {
-            AdomdConnection conn = GetConnection(ConnectionString);
+            AdomdConnection conn = GetConnection();
             if (!String.IsNullOrEmpty(dimensionUniqueName))
             {
                 Dimension dim = FindDimension(cubeName, dimensionUniqueName);
@@ -590,7 +736,10 @@ namespace Ranet.Olap.Core.Providers
                         }
                     }
                 }
-                throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound, hierarchyUniqueName, dimensionUniqueName));
+                String str = String.Format(Localization.MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound, hierarchyUniqueName, dimensionUniqueName, Connection.ConnectionID);
+                System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                    DateTime.Now.ToString(), cubeName, str);
+                throw new OlapMetadataResponseException(str);
             }
             else
             {
@@ -608,7 +757,10 @@ namespace Ranet.Olap.Core.Providers
                         }
                     }
                 }
-                throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_HierarchyByUniqueName_InCube_NotFound, hierarchyUniqueName, cubeName));
+                String str = String.Format(Localization.MetadataResponseException_HierarchyByUniqueName_InCube_NotFound, hierarchyUniqueName, cubeName, Connection.ConnectionID);
+                System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                    DateTime.Now.ToString(), cubeName, str);
+                throw new OlapMetadataResponseException(str);
             }
             //return null;
         }
@@ -624,184 +776,32 @@ namespace Ranet.Olap.Core.Providers
                         return level;
                 }
             }
-            throw new OlapMetadataResponseException(String.Format(Localization.MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound, levelUniqueName, hierarchyUniqueName));
+            String str = String.Format(Localization.MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound, levelUniqueName, hierarchyUniqueName, Connection.ConnectionID);
+            System.Diagnostics.Trace.TraceError("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider: {1} \r\n",
+                DateTime.Now.ToString(), cubeName, str);
+            throw new OlapMetadataResponseException(str);
             //return null;
         }
 
         public List<MeasureGroupInfo> GetMeasureGroups(String cubeName)
         {
-            Dictionary<String, MeasureGroupInfo> list = new Dictionary<String, MeasureGroupInfo>();
-            AdomdConnection conn = GetConnection(ConnectionString);
-
-            AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
-            restrictions.Add("CATALOG_NAME", conn.Database);
-            if(!String.IsNullOrEmpty(cubeName))
+            try
             {
-                restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-            }
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measures Groups List Started \r\n cubeName: '{1}'",
+                    DateTime.Now.ToString(), cubeName);
 
-            #region Получение списка групп мер
-            DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEASUREGROUPS", restrictions);
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                DataTable table = ds.Tables[0];
+                Dictionary<String, MeasureGroupInfo> list = new Dictionary<String, MeasureGroupInfo>();
+                AdomdConnection conn = GetConnection();
 
-                if (ds.Tables[0].Columns.Count > 0)
+                AdomdRestrictionCollection restrictions = new AdomdRestrictionCollection();
+                restrictions.Add("CATALOG_NAME", conn.Database);
+                if (!String.IsNullOrEmpty(cubeName))
                 {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        MeasureGroupInfo info = new MeasureGroupInfo();
-                        if (table.Columns.Contains("CATALOG_NAME"))
-                        {
-                            if(row["CATALOG_NAME"] != null)
-                            {
-                                info.CatalogName = row["CATALOG_NAME"].ToString();
-                            }
-                        }
-
-                        if (table.Columns.Contains("CUBE_NAME"))
-                        {
-                            if (row["CUBE_NAME"] != null)
-                            {
-                                info.CubeName = row["CUBE_NAME"].ToString();
-                            }
-                        }
-
-                        if (table.Columns.Contains("MEASUREGROUP_NAME"))
-                        {
-                            if (row["MEASUREGROUP_NAME"] != null)
-                            {
-                                info.Name = row["MEASUREGROUP_NAME"].ToString();
-                            }
-                        }
-
-                        if (table.Columns.Contains("DESCRIPTION"))
-                        {
-                            if (row["DESCRIPTION"] != null)
-                            {
-                                info.Description = row["DESCRIPTION"].ToString();
-                            }
-                        }
-
-                        if (table.Columns.Contains("MEASUREGROUP_CAPTION"))
-                        {
-                            if (row["MEASUREGROUP_CAPTION"] != null)
-                            {
-                                info.Caption = row["MEASUREGROUP_CAPTION"].ToString();
-                            }
-                        }
-
-                        if (table.Columns.Contains("IS_WRITE_ENABLED"))
-                        {
-                            if (row["IS_WRITE_ENABLED"] != null)
-                            {
-                                info.IsWriteEnabled = Convert.ToBoolean(row["IS_WRITE_ENABLED"]);
-                            }
-                        }
-
-                        if(!list.ContainsKey(info.Name))
-                        {
-                            list.Add(info.Name, info);
-                        }
-                    }
+                    restrictions.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
                 }
-            }
-            #endregion Получение списка групп мер
 
-            #region Получение списка мер и распознавание для каких групп мер они относятся
-            ds = conn.GetSchemaDataSet("MDSCHEMA_MEASURES", restrictions);
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                DataTable table = ds.Tables[0];
-
-                if (ds.Tables[0].Columns.Count > 0)
-                {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        String measuresGroupName = string.Empty;
-                        if (table.Columns.Contains("MEASUREGROUP_NAME"))
-                        {
-                            if(row["MEASUREGROUP_NAME"] != null)
-                            {
-                                measuresGroupName = row["MEASUREGROUP_NAME"].ToString();
-                            }
-                        }
-
-                        String measureUniqueName = String.Empty; 
-                        if (table.Columns.Contains("MEASURE_UNIQUE_NAME"))
-                        {
-                            if (row["MEASURE_UNIQUE_NAME"] != null)
-                            {
-                                measureUniqueName = row["MEASURE_UNIQUE_NAME"].ToString();
-                            }
-                        }
-
-                        if (!String.IsNullOrEmpty(measuresGroupName) &&
-                            !String.IsNullOrEmpty(measureUniqueName))
-                        {
-                            if (list.ContainsKey(measuresGroupName))
-                            {
-                                if (!list[measuresGroupName].Measures.Contains(measureUniqueName))
-                                    list[measuresGroupName].Measures.Add(measureUniqueName);
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion Получение списка мер и распознавание для каких групп мер они относятся
-
-            #region Получение списка KPI и распознавание для каких групп мер они относятся
-            ds = conn.GetSchemaDataSet("MDSCHEMA_KPIS", restrictions);
-            if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
-            {
-                DataTable table = ds.Tables[0];
-
-                if (ds.Tables[0].Columns.Count > 0)
-                {
-                    foreach (DataRow row in ds.Tables[0].Rows)
-                    {
-                        String kpiName = string.Empty;
-                        if (table.Columns.Contains("KPI_NAME"))
-                        {
-                            if (row["KPI_NAME"] != null)
-                            {
-                                kpiName = row["KPI_NAME"].ToString();
-                            }
-                        }
-
-                        String measuresGroupName = string.Empty;
-                        if (table.Columns.Contains("MEASUREGROUP_NAME"))
-                        {
-                            if (row["MEASUREGROUP_NAME"] != null)
-                            {
-                                measuresGroupName = row["MEASUREGROUP_NAME"].ToString();
-                            }
-                        }
-
-                        if (!String.IsNullOrEmpty(measuresGroupName) &&
-                            !String.IsNullOrEmpty(kpiName))
-                        {
-                            if (list.ContainsKey(measuresGroupName))
-                            {
-                                if (!list[measuresGroupName].Kpis.Contains(kpiName))
-                                    list[measuresGroupName].Kpis.Add(kpiName);
-                            }
-                        }
-                    }
-                }
-            }
-            #endregion Получение списка KPI и распознавание для каких групп мер они относятся
-
-            #region Получение списка измерений для каждой группы мер (MDSCHEMA_DIMENSIONS как оказалось не содержит информации о принадлежности измерения к группе мер - поэтому делаем несколько запросов MDSCHEMA_MEASUREGROUP_DIMENSIONS)
-
-            foreach (MeasureGroupInfo info in list.Values)
-            {
-                AdomdRestrictionCollection restrictions1 = new AdomdRestrictionCollection();
-                restrictions1.Add("CATALOG_NAME", conn.Database);
-                restrictions1.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
-                restrictions1.Add("MEASUREGROUP_NAME", info.Name);
-                ds = conn.GetSchemaDataSet("MDSCHEMA_MEASUREGROUP_DIMENSIONS", restrictions1);
-
+                #region Получение списка групп мер
+                DataSet ds = conn.GetSchemaDataSet("MDSCHEMA_MEASUREGROUPS", restrictions);
                 if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
                 {
                     DataTable table = ds.Tables[0];
@@ -810,31 +810,197 @@ namespace Ranet.Olap.Core.Providers
                     {
                         foreach (DataRow row in ds.Tables[0].Rows)
                         {
-                            if (table.Columns.Contains("DIMENSION_UNIQUE_NAME"))
+                            MeasureGroupInfo info = new MeasureGroupInfo();
+                            if (table.Columns.Contains("CATALOG_NAME"))
                             {
-                                if (row["DIMENSION_UNIQUE_NAME"] != null)
+                                if (row["CATALOG_NAME"] != null)
                                 {
-                                    String dimensionUniqueName = row["DIMENSION_UNIQUE_NAME"].ToString();
-                                    if (!String.IsNullOrEmpty(dimensionUniqueName))
+                                    info.CatalogName = row["CATALOG_NAME"].ToString();
+                                }
+                            }
+
+                            if (table.Columns.Contains("CUBE_NAME"))
+                            {
+                                if (row["CUBE_NAME"] != null)
+                                {
+                                    info.CubeName = row["CUBE_NAME"].ToString();
+                                }
+                            }
+
+                            if (table.Columns.Contains("MEASUREGROUP_NAME"))
+                            {
+                                if (row["MEASUREGROUP_NAME"] != null)
+                                {
+                                    info.Name = row["MEASUREGROUP_NAME"].ToString();
+                                }
+                            }
+
+                            if (table.Columns.Contains("DESCRIPTION"))
+                            {
+                                if (row["DESCRIPTION"] != null)
+                                {
+                                    info.Description = row["DESCRIPTION"].ToString();
+                                }
+                            }
+
+                            if (table.Columns.Contains("MEASUREGROUP_CAPTION"))
+                            {
+                                if (row["MEASUREGROUP_CAPTION"] != null)
+                                {
+                                    info.Caption = row["MEASUREGROUP_CAPTION"].ToString();
+                                }
+                            }
+
+                            if (table.Columns.Contains("IS_WRITE_ENABLED"))
+                            {
+                                if (row["IS_WRITE_ENABLED"] != null)
+                                {
+                                    info.IsWriteEnabled = Convert.ToBoolean(row["IS_WRITE_ENABLED"]);
+                                }
+                            }
+
+                            if (!list.ContainsKey(info.Name))
+                            {
+                                list.Add(info.Name, info);
+                            }
+                        }
+                    }
+                }
+                #endregion Получение списка групп мер
+
+                #region Получение списка мер и распознавание для каких групп мер они относятся
+                ds = conn.GetSchemaDataSet("MDSCHEMA_MEASURES", restrictions);
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataTable table = ds.Tables[0];
+
+                    if (ds.Tables[0].Columns.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            String measuresGroupName = string.Empty;
+                            if (table.Columns.Contains("MEASUREGROUP_NAME"))
+                            {
+                                if (row["MEASUREGROUP_NAME"] != null)
+                                {
+                                    measuresGroupName = row["MEASUREGROUP_NAME"].ToString();
+                                }
+                            }
+
+                            String measureUniqueName = String.Empty;
+                            if (table.Columns.Contains("MEASURE_UNIQUE_NAME"))
+                            {
+                                if (row["MEASURE_UNIQUE_NAME"] != null)
+                                {
+                                    measureUniqueName = row["MEASURE_UNIQUE_NAME"].ToString();
+                                }
+                            }
+
+                            if (!String.IsNullOrEmpty(measuresGroupName) &&
+                                !String.IsNullOrEmpty(measureUniqueName))
+                            {
+                                if (list.ContainsKey(measuresGroupName))
+                                {
+                                    if (!list[measuresGroupName].Measures.Contains(measureUniqueName))
+                                        list[measuresGroupName].Measures.Add(measureUniqueName);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Получение списка мер и распознавание для каких групп мер они относятся
+
+                #region Получение списка KPI и распознавание для каких групп мер они относятся
+                ds = conn.GetSchemaDataSet("MDSCHEMA_KPIS", restrictions);
+                if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                {
+                    DataTable table = ds.Tables[0];
+
+                    if (ds.Tables[0].Columns.Count > 0)
+                    {
+                        foreach (DataRow row in ds.Tables[0].Rows)
+                        {
+                            String kpiName = string.Empty;
+                            if (table.Columns.Contains("KPI_NAME"))
+                            {
+                                if (row["KPI_NAME"] != null)
+                                {
+                                    kpiName = row["KPI_NAME"].ToString();
+                                }
+                            }
+
+                            String measuresGroupName = string.Empty;
+                            if (table.Columns.Contains("MEASUREGROUP_NAME"))
+                            {
+                                if (row["MEASUREGROUP_NAME"] != null)
+                                {
+                                    measuresGroupName = row["MEASUREGROUP_NAME"].ToString();
+                                }
+                            }
+
+                            if (!String.IsNullOrEmpty(measuresGroupName) &&
+                                !String.IsNullOrEmpty(kpiName))
+                            {
+                                if (list.ContainsKey(measuresGroupName))
+                                {
+                                    if (!list[measuresGroupName].Kpis.Contains(kpiName))
+                                        list[measuresGroupName].Kpis.Add(kpiName);
+                                }
+                            }
+                        }
+                    }
+                }
+                #endregion Получение списка KPI и распознавание для каких групп мер они относятся
+
+                #region Получение списка измерений для каждой группы мер (MDSCHEMA_DIMENSIONS как оказалось не содержит информации о принадлежности измерения к группе мер - поэтому делаем несколько запросов MDSCHEMA_MEASUREGROUP_DIMENSIONS)
+
+                foreach (MeasureGroupInfo info in list.Values)
+                {
+                    AdomdRestrictionCollection restrictions1 = new AdomdRestrictionCollection();
+                    restrictions1.Add("CATALOG_NAME", conn.Database);
+                    restrictions1.Add("CUBE_NAME", OlapHelper.ConvertToNormalStyle(cubeName));
+                    restrictions1.Add("MEASUREGROUP_NAME", info.Name);
+                    ds = conn.GetSchemaDataSet("MDSCHEMA_MEASUREGROUP_DIMENSIONS", restrictions1);
+
+                    if (ds != null && ds.Tables.Count > 0 && ds.Tables[0].Rows.Count > 0)
+                    {
+                        DataTable table = ds.Tables[0];
+
+                        if (ds.Tables[0].Columns.Count > 0)
+                        {
+                            foreach (DataRow row in ds.Tables[0].Rows)
+                            {
+                                if (table.Columns.Contains("DIMENSION_UNIQUE_NAME"))
+                                {
+                                    if (row["DIMENSION_UNIQUE_NAME"] != null)
                                     {
-                                        if (!info.Dimensions.Contains(dimensionUniqueName))
-                                            info.Dimensions.Add(dimensionUniqueName);
+                                        String dimensionUniqueName = row["DIMENSION_UNIQUE_NAME"].ToString();
+                                        if (!String.IsNullOrEmpty(dimensionUniqueName))
+                                        {
+                                            if (!info.Dimensions.Contains(dimensionUniqueName))
+                                                info.Dimensions.Add(dimensionUniqueName);
+                                        }
                                     }
                                 }
                             }
                         }
                     }
                 }
-            }
-            #endregion Получение списка KPI и распознавание для каких групп мер они относятся
+                #endregion Получение списка KPI и распознавание для каких групп мер они относятся
 
-            List<MeasureGroupInfo> result = new List<MeasureGroupInfo>();
-            foreach (MeasureGroupInfo info in list.Values)
+                List<MeasureGroupInfo> result = new List<MeasureGroupInfo>();
+                foreach (MeasureGroupInfo info in list.Values)
+                {
+                    result.Add(info);
+                }
+
+                return result;
+            }
+            finally
             {
-                result.Add(info);
+                System.Diagnostics.Trace.TraceInformation("{0} Ranet.Olap.Core.Providers.OlapMetadataProvider Get Measures Groups List Completed ",
+                    DateTime.Now.ToString());
             }
-
-            return result;
         }
 
     }

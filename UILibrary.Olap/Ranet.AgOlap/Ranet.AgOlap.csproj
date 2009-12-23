@@ -14,6 +14,10 @@
     <SilverlightApplication>false</SilverlightApplication>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>false</ThrowErrorsInValidation>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>..\!ProductInfo\Galaktika.OpenSource.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
@@ -70,6 +74,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Ranet.AgZipLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
+      <HintPath>..\dll\Ranet.AgZipLib.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -102,12 +109,23 @@
     <Compile Include="Common.cs" />
     <Compile Include="Controls\Combo\CheckedComboBox.cs" />
     <Compile Include="Controls\Combo\CheckedListBoxItem.cs" />
+    <Compile Include="Controls\Combo\ColorPicker.xaml.cs">
+      <DependentUpon>ColorPicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Combo\ComboBoxItemData.cs" />
+    <Compile Include="Controls\Combo\RanetComboBox.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <Compile Include="Controls\Data\RanetDataGrid.cs" />
     <Compile Include="Controls\Forms\ModalDialog.cs" />
+    <Compile Include="Controls\General\OlapTransactionManager.cs" />
     <Compile Include="Controls\General\ButtonMaximizeForm.cs" />
+    <Compile Include="Controls\General\ButtonMinMaxForm.xaml.cs">
+      <DependentUpon>ButtonMinMaxForm.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\General\CheckedHeaderControl.cs" />
+    <Compile Include="Controls\General\RenetGridSplitter.cs" />
+    <Compile Include="Controls\General\SessionHolder.cs" />
     <Compile Include="Controls\General\CustomPanel.xaml.cs">
       <DependentUpon>CustomPanel.xaml</DependentUpon>
     </Compile>
@@ -117,10 +135,12 @@
     <Compile Include="Controls\General\ItemControls\ErrorItemControl.cs" />
     <Compile Include="Controls\General\ItemControls\MeasureGroupItemControl.cs" />
     <Compile Include="Controls\General\ItemControls\MeasureItemControl.cs" />
+    <Compile Include="Controls\General\PlusMinusButton.cs" />
     <Compile Include="Controls\General\Tree\CalculatedMemberTreeNode.cs" />
     <Compile Include="Controls\General\Tree\CalculatedNamedSetTreeNode.cs" />
     <Compile Include="Controls\General\Tree\MemberLiteTreeNode.cs" />
     <Compile Include="Controls\General\Tree\NamedSetTreeNode.cs" />
+    <Compile Include="Controls\List\RanetListBox.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationInfoBase.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationsListControl.cs" />
     <Compile Include="Controls\General\MeasureGroupCombo.cs" />
@@ -190,13 +210,21 @@
     <Compile Include="Controls\OlapBrowserControl.cs" />
     <Compile Include="Controls\PivotGrid\CellChangesCache.cs" />
     <Compile Include="Controls\PivotGrid\Controls\CellControl.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\CellPropertiesControl.xaml.cs">
+      <DependentUpon>CellPropertiesControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Controls\DrillThroughControl.xaml.cs">
+      <DependentUpon>DrillThroughControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PivotGrid\Controls\ExpanderControl.xaml.cs">
       <DependentUpon>ExpanderControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Controls\ListMemberControl.xaml.cs">
+      <DependentUpon>ListMemberControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\PivotGrid\Controls\PivotGridControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\PivotGridItem.cs" />
     <Compile Include="Controls\PivotGrid\CustomGridSplitter.cs" />
-    <Compile Include="Controls\PivotGrid\FastCommandHelper.cs" />
     <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceObject.cs" />
     <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceOptions.cs" />
     <Compile Include="Controls\PivotGrid\Conditions\CellCondition.cs" />
@@ -216,6 +244,24 @@
     <Compile Include="Controls\PivotGrid\Editors\ICustomCellEditor.cs" />
     <Compile Include="Controls\PivotGrid\Editors\TextBoxCellEditor.cs" />
     <Compile Include="Controls\PivotGrid\MemberInfoWrapper.cs" />
+    <Compile Include="Controls\TransactionStateButton.cs" />
+    <Compile Include="Providers\DataSourceInfoArgs.cs" />
+    <Compile Include="Providers\DataTableView.cs" />
+    <Compile Include="Providers\MemberActions\DrillActionContainer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Providers\MemberActions\HistoryItem.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Providers\MemberActions\HistoryManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Providers\MemberActionType.cs" />
+    <Compile Include="Providers\QueryProvider.cs" />
+    <Compile Include="Providers\PerformMemberActionArgs.cs" />
+    <Compile Include="Providers\PivotQueryManager.cs" />
+    <Compile Include="Providers\PivotGridToolBarInfo.cs" />
+    <Compile Include="Providers\PivotInitializeArgs.cs" />
     <Compile Include="Controls\PivotGrid\SelectionManager.cs" />
     <Compile Include="Controls\Storage\ObjectDescriptionListControl.cs" />
     <Compile Include="Controls\ToolBar\AutoHeightPanel.cs" />
@@ -256,7 +302,6 @@
     <Compile Include="Controls\General\ItemControls\MemberInfoItemControl.cs" />
     <Compile Include="Controls\General\OlapCmdUpdateStringFormatter.cs" />
     <Compile Include="Controls\General\PropertiesControl.cs" />
-    <Compile Include="Controls\General\PropertiesDialog.cs" />
     <Compile Include="Controls\General\RichTextBox.cs" />
     <Compile Include="Controls\General\Tree\DragDropControl.cs" />
     <Compile Include="Controls\General\Tree\ErrorTreeNode.cs" />
@@ -381,7 +426,6 @@
     <Compile Include="Controls\MemberChoicePopUp.cs" />
     <Compile Include="Controls\General\ItemControls\MemberItemControl.cs" />
     <Compile Include="Controls\MemberChoice\MembersListControl.cs" />
-    <Compile Include="Controls\MemberChoice\OlapHelper.cs" />
     <Compile Include="Controls\General\Tree\MemberTreeNode.cs" />
     <Compile Include="Controls\MemberChoice\Filter\OperandItemControl.xaml.cs">
       <DependentUpon>OperandItemControl.xaml</DependentUpon>
@@ -419,13 +463,20 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Localization.resx</DependentUpon>
     </Compile>
+    <Compile Include="Providers\UpdateEntry.cs" />
+    <Compile Include="Providers\UpdateScriptParser.cs" />
     <Compile Include="Service References\OlapWebService\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Reference.svcmap</DependentUpon>
     </Compile>
+    <Compile Include="Services\ServiceManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\Combo\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\ContextMenu\ContextMenuItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -439,6 +490,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\General\BusyControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\General\ButtonMinMaxForm.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
@@ -466,7 +521,19 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\PivotGrid\Controls\CellPropertiesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Controls\DrillThroughControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\PivotGrid\Controls\ExpanderControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Controls\ListMemberControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
@@ -631,6 +698,7 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Resource Include="Controls\Images\ErrorSmall.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
@@ -738,12 +806,15 @@
       <Project>{9BC5FB19-403A-4221-919B-7000334A03CD}</Project>
       <Name>Ranet.AgOlap.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Ranet.Olap.Mdx\Ranet.AgOlap.Mdx.csproj">
+      <Project>{FA8CC918-2E96-491B-AD8A-BDC5860A2FAC}</Project>
+      <Name>Ranet.AgOlap.Mdx</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadataStorage Include="Service References\OlapWebService\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Controls\Tmp\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />

@@ -41,37 +41,37 @@ namespace Ranet.AgOlap.Controls.Forms
 
     public class ModalDialog
     {
-        FloatingDialog m_Dialog = null;
+        public readonly FloatingDialog Dialog = null;
 
         public double MinWidth
         {
-            get { return m_Dialog.MinWidth; }
-            set { m_Dialog.MinWidth = value; }
+            get { return Dialog.MinWidth; }
+            set { Dialog.MinWidth = value; }
         }
 
         public double MinHeight
         {
-            get { return m_Dialog.MinHeight; }
-            set { m_Dialog.MinHeight = value; }
+            get { return Dialog.MinHeight; }
+            set { Dialog.MinHeight = value; }
         }
         
         public double Width
         {
-            get { return m_Dialog.Width; }
-            set { m_Dialog.Width = value; }
+            get { return Dialog.Width; }
+            set { Dialog.Width = value; }
         }
 
         public double Height
         {
-            get { return m_Dialog.Height; }
-            set { m_Dialog.Height = value; }
+            get { return Dialog.Height; }
+            set { Dialog.Height = value; }
         }
         
         bool m_ContentIsInitialized = false;
         public String Caption
         {
-            get { return m_Dialog.Caption; }
-            set { m_Dialog.Caption = value; }
+            get { return Dialog.Caption; }
+            set { Dialog.Caption = value; }
         }
 
         RanetButton OkButton;
@@ -80,8 +80,8 @@ namespace Ranet.AgOlap.Controls.Forms
         Grid gridContentContainer;
         public ModalDialog()
         {
-            m_Dialog = new FloatingDialog();
-            m_Dialog.Caption = String.Empty;
+            Dialog = new FloatingDialog();
+            Dialog.Caption = String.Empty;
 
             Grid PopUpLayoutRoot = new Grid();
             PopUpLayoutRoot.RowDefinitions.Add(new RowDefinition() { });
@@ -108,11 +108,11 @@ namespace Ranet.AgOlap.Controls.Forms
             PopUpLayoutRoot.Children.Add(buttonsPanel);
             Grid.SetRow(buttonsPanel, 1);
 
-            m_Dialog.SetContent(PopUpLayoutRoot);
-            m_Dialog.DialogClosed += new EventHandler<DialogResultArgs>(m_Dialog_DialogClosed);
-            m_Dialog.BeforeClosed += new EventHandler<DialogResultArgs>(m_Dialog_BeforeClosed);
+            Dialog.SetContent(PopUpLayoutRoot);
+            Dialog.DialogClosed += new EventHandler<DialogResultArgs>(m_Dialog_DialogClosed);
+            Dialog.BeforeClosed += new EventHandler<DialogResultArgs>(m_Dialog_BeforeClosed);
             //m_Dialog.Width = 500;
-            m_Dialog.MinWidth = OkButton.Width + CancelButton.Width + 20;
+            Dialog.MinWidth = OkButton.Width + CancelButton.Width + 20;
             //m_Dialog.Height = 400;
         }
 
@@ -169,7 +169,7 @@ namespace Ranet.AgOlap.Controls.Forms
 
         void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            m_Dialog.Close(); 
+            Dialog.Close(DialogResult.Cancel); 
         }
 
         void OkButton_Click(object sender, RoutedEventArgs e)
@@ -178,17 +178,17 @@ namespace Ranet.AgOlap.Controls.Forms
             if (args.Cancel)
                 return;
 
-            m_Dialog.Close(); 
+            Dialog.Close(DialogResult.OK); 
         }
 
         public void Show()
         {
-            m_Dialog.Show();
+            Dialog.Show();
         }
 
         public void Close()
         {
-            m_Dialog.Close();
+            Dialog.Close();
         }
 
         void m_Dialog_DialogClosed(object sender, DialogResultArgs e)
@@ -201,7 +201,6 @@ namespace Ranet.AgOlap.Controls.Forms
         }
 
         public event EventHandler<DialogResultArgs> DialogOk;
-        public event EventHandler<DialogResultArgs> DialogCancel;
         public event EventHandler<DialogResultArgs> DialogClosed;
 
         DialogResultArgs Raise_DialogOk()
@@ -219,7 +218,7 @@ namespace Ranet.AgOlap.Controls.Forms
 
         public void ListenKeys(bool value)
         {
-            m_Dialog.ListenKeys(value);
+            Dialog.ListenKeys(value);
         }
     }
 }

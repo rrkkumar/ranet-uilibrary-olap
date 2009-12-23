@@ -35,9 +35,9 @@ namespace Ranet.AgOlap.Controls.General.Tree
 {
     public class MemberLiteTreeNode : CustomTreeNode
     {
-        public readonly MemberDataWrapper Info = null;
+        public readonly MemberData Info = null;
 
-        public MemberLiteTreeNode(MemberDataWrapper info)
+        public MemberLiteTreeNode(MemberData info)
             : base()
         {
             Info = info;
@@ -53,8 +53,8 @@ namespace Ranet.AgOlap.Controls.General.Tree
             {
                 m_MemberVisualizationType = value;
                 // Определяем что именно нужно светить в контроле
-                if (Info != null && Info.Member != null)
-                    Text = Info.Member.GetText(m_MemberVisualizationType);
+                if (Info != null && Info != null)
+                    Text = Info.GetText(m_MemberVisualizationType);
                 else
                     Text = String.Empty;
             }

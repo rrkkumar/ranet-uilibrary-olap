@@ -20,6 +20,7 @@
 */
 
 using System;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
@@ -56,44 +57,16 @@ using Ranet.AgOlap.Controls.MemberChoice.ClientServer;
 using Ranet.AgOlap.Controls.ValueCopy;
 using Ranet.Olap.Core.Providers;
 using Ranet.Olap.Core.Providers.ClientServer;
+using Ranet.AgOlap.Providers;
+using Ranet.AgOlap.Controls.Data;
 
 namespace Ranet.AgOlap.Controls
 {
     public class UpdateablePivotGridControl : AgControlBase
     {
-        //private bool m_IsWaiting = false;
-        //public bool IsWaiting
-        //{
-        //    get { 
-        //        return m_IsWaiting; 
-        //    }
-        //    set {
+        const string MEMBER_ACTION = "MEMBER_ACTION";
+        const string SERVICE_COMMAND = "SERVICE_COMMAND";
 
-        //        if (m_IsWaiting != value)
-        //        {
-        //            if (value)
-        //            {
-        //                this.Cursor = Cursors.Wait;
-        //            }
-        //            else
-        //            {
-        //                this.Cursor = Cursors.Arrow;    
-        //            }
-        //            m_IsWaiting = value;
-        //        }
-        //    }
-        //}
-
-        //ScrollablePivotGrid m_ScrollableDataControl = null;
-        //protected ScrollablePivotGrid ScrollableDataControl
-        //{
-        //    get
-        //    {
-        //        return m_ScrollableDataControl;
-        //    }
-        //}
-
-        //PivotGridPanel m_PivotGridPanel;
         PivotGridControl m_PivotGrid;
         public PivotGridControl PivotGrid
         {
@@ -102,14 +75,6 @@ namespace Ranet.AgOlap.Controls
                 return m_PivotGrid;
             }
         }
-
-        //public PivotGridPanel PivotPanelControl
-        //{
-        //    get
-        //    {
-        //        return m_PivotGridPanel;
-        //    }
-        //}
 
         Grid LayoutRoot = new Grid();
         RanetToolBar ToolBar = new RanetToolBar();
@@ -120,22 +85,21 @@ namespace Ranet.AgOlap.Controls
         protected RanetToolBarButton ToBeginButton = null;
         protected RanetToolBarButton ToEndButton = null;
         protected RanetToolBarSplitter NavigationToolBarSplitter = null;
-        RanetToolBarButton GoToFocusedCellButton = null;
+        protected RanetToolBarButton GoToFocusedCellButton = null;
 
-        RanetToolBarButton RestoreDefaultSizeButton = null;
-        RanetToggleButton HideEmptyColumnsButton = null;
-        RanetToggleButton HideEmptyRowsButton = null;
-        RanetToggleButton EditButton = null;
-        RanetToggleButton UseChangesCasheButton = null;
-        RanetToolBarButton ConfirmEditButton = null;
-        RanetToolBarButton CancelEditButton = null;
-        RanetToolBarButton ExportToExcelButton = null;
-        RanetToolBarButton CopyToClipboardButton = null;
-        RanetToolBarButton PasteFromClipboardButton = null;
-        RanetToggleButton RotateAxesButton = null;
-        RanetToggleButton HideHintsButton = null;
-        ZoomingToolBarControl ZoomControl = null;
-
+        protected RanetToolBarButton RestoreDefaultSizeButton = null;
+        protected RanetToggleButton HideEmptyColumnsButton = null;
+        protected RanetToggleButton HideEmptyRowsButton = null;
+        protected RanetToggleButton EditButton = null;
+        protected RanetToggleButton UseChangesCasheButton = null;
+        protected RanetToolBarButton ConfirmEditButton = null;
+        protected RanetToolBarButton CancelEditButton = null;
+        protected RanetToolBarButton ExportToExcelButton = null;
+        protected RanetToolBarButton CopyToClipboardButton = null;
+        protected RanetToolBarButton PasteFromClipboardButton = null;
+        protected RanetToggleButton RotateAxesButton = null;
+        protected RanetToggleButton HideHintsButton = null;
+        protected ZoomingToolBarControl ZoomControl = null;
 
         public event RoutedEventHandler ExportToExcelClick;
         protected void OnExportToExcelClick()
@@ -176,12 +140,20 @@ namespace Ranet.AgOlap.Controls
                     {
                         this.Cursor = Cursors.Arrow;
                         grdIsWaiting.Visibility = Visibility.Collapsed;
+                        // Set Focus to PivotGrid
+                        this.LayoutUpdated += new EventHandler(UpdateablePivotGridControl_LayoutUpdated);
                     }
                     this.IsEnabled = !value;
                     m_IsWaiting = value;
                     this.UpdateLayout();
                 }
             }
+        }
+
+        void UpdateablePivotGridControl_LayoutUpdated(object sender, EventArgs e)
+        {
+            this.LayoutUpdated -= new EventHandler(UpdateablePivotGridControl_LayoutUpdated);
+            PivotGrid.Focus();
         }
 
         public bool UseModifyDataConfirm = false;
@@ -365,6 +337,22 @@ namespace Ranet.AgOlap.Controls
             //m_ScrollableDataControl.ScrollView.AddMouseWheelSupport();
 
             this.KeyDown += new KeyEventHandler(UpdateablePivotGridControl_KeyDown);
+        
+            OlapTransactionManager.AfterCommandComplete += new EventHandler<TransactionCommandResultEventArgs>(AnalysisTransactionManager_AfterCommandComplete);
+        }
+
+        ~UpdateablePivotGridControl()
+        {
+            OlapTransactionManager.AfterCommandComplete -= new EventHandler<TransactionCommandResultEventArgs>(AnalysisTransactionManager_AfterCommandComplete);
+        }
+
+        protected virtual void AnalysisTransactionManager_AfterCommandComplete(object sender, TransactionCommandResultEventArgs e)
+        {
+            if (e.Connection == this.Connection)
+            {
+                PivotGrid.LocalChanges.Clear();
+                Refresh();
+            }            
         }
 
         void UpdateablePivotGridControl_KeyDown(object sender, KeyEventArgs e)
@@ -423,6 +411,12 @@ namespace Ranet.AgOlap.Controls
             PivotGrid.Cells_UseHint = PivotGrid.Rows_UseHint = PivotGrid.Columns_UseHint = !HideHintsButton.IsChecked.Value;
         }
 
+        protected virtual PivotQueryManager GetDataManager()
+        {
+            //return new PivotDataManager(new ConnectionInfo(Connection, Connection), Query, UpdateScript);
+            return new PivotQueryManager(Query, UpdateScript);
+        }
+
         protected virtual IDataLoader GetOlapDataLoader()
         {
             return new OlapDataLoader(URL);
@@ -472,16 +466,16 @@ namespace Ranet.AgOlap.Controls
 
         void PivotGrid_DrillDownMember(object sender, MemberActionEventArgs args)
         {
-            // Если в кэше есть изменения, то нужно спросить об их сохранении
-            if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
-            {
-                MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-                //PopUpQuestionDialog dlg = SaveChangesDlg;
-                //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(ColumnsControl_SaveChanges_DialogClosed);
-                //dlg.Tag = args;
-                //dlg.Show();
-                return;
-            }
+            //NEW!!! Если в кэше есть изменения, то нужно спросить об их сохранении
+            //if (UseChangesCashe && PivotGrid.LocalChanges.CellChanges.Count > 0)
+            //{
+            //    MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
+            //    //PopUpQuestionDialog dlg = SaveChangesDlg;
+            //    //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(ColumnsControl_SaveChanges_DialogClosed);
+            //    //dlg.Tag = args;
+            //    //dlg.Show();
+            //    return;
+            //}
 
             if (args.Axis == 0 || args.Axis == 1)
             {
@@ -497,10 +491,10 @@ namespace Ranet.AgOlap.Controls
 
         void CopyToClipboardoButton_Click(object sender, RoutedEventArgs e)
         {
-            CopyCellsToClipboard();
+            CopyCellsToClipboard(null);
         }
 
-        protected bool ExportToExcelFile = true;
+        public bool ExportToExcelFile = true;
 
         void ExportToExcelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -519,7 +513,7 @@ namespace Ranet.AgOlap.Controls
             }
             catch (Exception ex)
             {
-                LogManager.LogException(Localization.PivotGridControl_Name, ex);
+                LogManager.LogError(this, ex.ToString());
             }
         }
 
@@ -540,7 +534,7 @@ namespace Ranet.AgOlap.Controls
             {
                 foreach (CellInfo cell in PivotGrid.Selection)
                 {
-                    m_CellChanges.RemoveChanges(new CellValueChangedEventArgs(cell, String.Empty));                
+                    PivotGrid.LocalChanges.RemoveChange(cell);                
                 }
                 UpdateEditToolBarButtons();
             }
@@ -564,19 +558,19 @@ namespace Ranet.AgOlap.Controls
                     GetDataSourceInfo(null);
                     break;
                 case ControlActionType.ShowProperties:
-                    PropertiesDialog dlg = new PropertiesDialog();
-                    dlg.PropertiesControl.Initialize(e.UserData);
-
+                    ModalDialog dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
+                    PropertiesControl properties = new PropertiesControl();
+                    properties.Initialize(e.UserData);
+                    dlg.Content = properties;
+                    dlg.Caption = Localization.MemberPropertiesDialog_Caption;
                     Panel panel = GetRootPanel(this);
                     if (panel != null)
                     {
-                        panel.Children.Add(dlg.Dlg.PopUpControl);
+                        panel.Children.Add(dlg.Dialog.PopUpControl);
                     }
-
                     // На время убираем контекстное меню сводной таблицы
-                    dlg.Dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                    dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
                     PivotGrid.UseContextMenu = false;
-
                     dlg.Show();
                     break;
                 case ControlActionType.ShowAttributes:
@@ -585,6 +579,9 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
+        /// <summary>
+        /// Кэш атрибутов для иерархии
+        /// </summary>
         Dictionary<String, List<LevelPropertyInfo>> m_LevelProperties = new Dictionary<string, List<LevelPropertyInfo>>();
 
         void ShowMemberAttributes(MemberInfo member)
@@ -594,7 +591,8 @@ namespace Ranet.AgOlap.Controls
                 if (!m_LevelProperties.ContainsKey(member.HierarchyUniqueName))
                 {
                     IsWaiting = true;
-                    MetadataQuery args = FastCommandHelper.CreateLoadLevelPropertiesArgs(Connection, m_CSDescr.CubeName, String.Empty, member.HierarchyUniqueName, String.Empty);
+                    LogManager.LogInformation(this, this.Name + " - Loading level attributes.");
+                    MetadataQuery args = CommandHelper.CreateLoadLevelPropertiesArgs(Connection, m_CSDescr.CubeName, String.Empty, member.HierarchyUniqueName, String.Empty);
                     OlapDataLoader.LoadData(args, new MemberInfoWrapper<MetadataQuery>(member, args));
                 }
                 else
@@ -604,27 +602,64 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        void ShowMemberAttributes(MemberDataWrapper member)
+        ModalDialog m_DrillthroughDialog = null;
+        void ShowDrillthroughResult(CellInfo cell, DataTableWrapper tableWrapper)
+        {
+            if (tableWrapper != null)
+            {
+                if (m_DrillthroughDialog == null)
+                {
+                    m_DrillthroughDialog = new ModalDialog() { Width = 600, Height = 500, DialogStyle = ModalDialogStyles.OK };
+                    m_DrillthroughDialog.Caption = Localization.DrillthroughDialog_Caption;
+                    m_DrillthroughDialog.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                }
+                //RanetDataGrid grid = new RanetDataGrid();
+                //grid.Initialize(tableWrapper);
+
+                DrillThroughControl grid = new DrillThroughControl();
+                grid.Initialize(cell, tableWrapper);
+                m_DrillthroughDialog.Content = grid;
+                Panel panel = GetRootPanel(this);
+                if (panel != null && !panel.Children.Contains(m_DrillthroughDialog.Dialog.PopUpControl))
+                {
+                    panel.Children.Add(m_DrillthroughDialog.Dialog.PopUpControl);
+                }
+                // На время убираем контекстное меню сводной таблицы
+                PivotGrid.UseContextMenu = false;
+                m_DrillthroughDialog.Show();
+            }
+        }
+
+        void ShowMemberAttributes(MemberData member)
         {
             if (member != null)
             {
-                PropertiesDialog dlg = new PropertiesDialog();
-                dlg.PropertiesControl.Initialize(member.Member);
+                ModalDialog dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
+                PropertiesControl properties = new PropertiesControl();
+                properties.Initialize(member);
+                dlg.Content = properties;
+                dlg.Caption = Localization.CustomPropertiesDialog_Caption;
                 Panel panel = GetRootPanel(this);
                 if (panel != null)
                 {
-                    panel.Children.Add(dlg.Dlg.PopUpControl);
+                    panel.Children.Add(dlg.Dialog.PopUpControl);
                 }
-                dlg.Show(Localization.CustomPropertiesDialog_Caption);
+                // На время убираем контекстное меню сводной таблицы
+                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                PivotGrid.UseContextMenu = false;
+                dlg.Show();
             }
         }
 
         void LoadMemberAttributes(MemberInfo member, List<LevelPropertyInfo> properties)
         {
             IsWaiting = true;
-            MemberChoiceQuery args = FastCommandHelper.CreateGetMemberArgs(Connection, m_CSDescr.CubeName, String.Empty, member.UniqueName);
-            args.Properties = properties;
-            OlapDataLoader.LoadData(args, new MemberInfoWrapper<MemberChoiceQuery>(member, args));
+
+            QueryProvider provider = new QueryProvider(m_CSDescr.CubeName, String.Empty, member.HierarchyUniqueName);
+            String query = provider.GetMember(member.UniqueName, properties);
+            LogManager.LogInformation(this, this.Name + " - Loading custom member properties.");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, "CUSTOM_MEMBER_PROPERTIES");
         }
 
 
@@ -645,25 +680,14 @@ namespace Ranet.AgOlap.Controls
             switch (e.Action)
             {
                 case ControlActionType.ShowMDX:
-                    UpdateEntry entry = new UpdateEntry();
-                    IDictionary<String, MemberInfo> tuple = e.UserData.GetTuple();
-                    foreach (MemberInfo mi in tuple.Values)
-                    {
-                        ShortMemberInfo tuple_mi = new ShortMemberInfo();
-                        tuple_mi.HierarchyUniqueName = mi.HierarchyUniqueName;
-                        tuple_mi.UniqueName = mi.UniqueName;
-                        tuple_mi.LevelDepth = mi.LevelDepth;
-
-                        entry.Tuple.Add(tuple_mi);
-                    }
-
+                    UpdateEntry entry = new UpdateEntry(e.UserData);
                     try
                     {
                         entry.OldValue = e.UserData.CellDescr.Value.Value.ToString();
                     }
                     catch { }
 
-                    CellValueChangedEventArgs change = m_CellChanges.FindLastChange(e.UserData);
+                    UpdateEntry change = PivotGrid.LocalChanges.FindChange(e.UserData);
                     if (change != null)
                     {
                         entry.NewValue = change.NewValue;
@@ -672,19 +696,19 @@ namespace Ranet.AgOlap.Controls
                     GetDataSourceInfo(entry);
                     break;
                 case ControlActionType.ShowProperties:
-                    PropertiesDialog dlg = new PropertiesDialog();
-                    dlg.PropertiesControl.Initialize(e.UserData);
-
+                    ModalDialog dlg = new ModalDialog() {Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
+                    CellPropertiesControl properties = new CellPropertiesControl();
+                    properties.Initialize(e.UserData);
+                    dlg.Content = properties;
+                    dlg.Caption = Localization.CellPropertiesDialog_Caption;
                     Panel panel = GetRootPanel(this);
                     if (panel != null)
                     {
-                        panel.Children.Add(dlg.Dlg.PopUpControl);
+                        panel.Children.Add(dlg.Dialog.PopUpControl);
                     }
-
                     // На время убираем контекстное меню сводной таблицы
-                    dlg.Dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                    dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
                     PivotGrid.UseContextMenu = false;
-
                     dlg.Show();
                     break;
                 case ControlActionType.ValueDelivery:
@@ -694,14 +718,35 @@ namespace Ranet.AgOlap.Controls
                     ShowValueCopyDialog(e.UserData);
                     break;
                 case ControlActionType.Copy:
-                    CopyCellsToClipboard();
+                    CopyCellsToClipboard(e.UserData);
                     break;
                 case ControlActionType.Paste:
                     PasteCellsFromClipboard(e.UserData);
                     break;
+                case ControlActionType.DrillThrough:
+                    DrillThroughCell(e.UserData);
+                    break;
             }
         }
 
+        #region DrillThrough
+        void DrillThroughCell(CellInfo cell)
+        {
+            if(DataManager != null)
+            {
+                String query = DataManager.BuildDrillThrough(cell);
+                if (!String.IsNullOrEmpty(query))
+                {
+                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                    query_args.Type = QueryTypes.DrillThrough;
+                    LogManager.LogInformation(this, this.Name + " - DrillThrough cell");
+                    IsWaiting = true;
+                    OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<String, CellInfo>("DRILLTHROUGH_CELL", cell));
+                }
+            }
+        }
+
+        #endregion
         #region Copy-Paste to Clipboard
         void PasteCellsFromClipboard(CellInfo cell)
         {
@@ -754,7 +799,7 @@ namespace Ranet.AgOlap.Controls
 
                 // Обходим буфер и меняем значения ячеек
                 int row_index = 0;
-                List<CellValueChangedEventArgs> changes = new List<CellValueChangedEventArgs>();
+                List<UpdateEntry> changes = new List<UpdateEntry>();
                 int start_ColumnIndex = 0;
                 int start_RowIndex = 0;
                 if (cell != null)
@@ -777,13 +822,13 @@ namespace Ranet.AgOlap.Controls
                         {
                             if (String.IsNullOrEmpty(val))
                             {
-                                // Крахотко Саша 07.04.2009 (11:46):
+                                // КC:
                                 // записывать НОЛЬ только в том случае если у нас было какое-то число, если числа не было (в ячейке было null) то оставлять null
-                                if (destination_cell.Value != null || destination_cell.IsModified)
+                                if (destination_cell.Value != null || PivotGrid.LocalChanges.FindChange(destination_cell) != null)
                                 {
-                                    PivotGrid.ChangeCell(destination_cell, "0");
-                                    CellValueChangedEventArgs e = new CellValueChangedEventArgs(destination_cell, "0");
-                                    changes.Add(e);
+                                    UpdateEntry entry = new UpdateEntry(destination_cell, "0");
+                                    PivotGrid.ChangeCell(destination_cell, entry);
+                                    changes.Add(entry);
                                     continue;
                                 }
                             }
@@ -803,9 +848,9 @@ namespace Ranet.AgOlap.Controls
                                             continue;
                                     }
 
-                                    PivotGrid.ChangeCell(destination_cell, new_val.ToString());
-                                    CellValueChangedEventArgs e = new CellValueChangedEventArgs(destination_cell, new_val.ToString());
-                                    changes.Add(e);
+                                    UpdateEntry entry = new UpdateEntry(destination_cell, new_val.ToString());
+                                    PivotGrid.ChangeCell(destination_cell, entry);
+                                    changes.Add(entry);
                                 }
                                 catch { }
                             }
@@ -819,9 +864,17 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        void CopyCellsToClipboard()
+        void CopyCellsToClipboard(CellInfo current)
         {
+            // Если PivotGrid.Selection содержит 1 элемент, то это ячейка с фокусом. 
+            // Для копирования в данном случае используем текущую ячейку, на которой кликали правой кнопкой мыши (она может отличаться от ячейки с фокусом)
             IList<CellInfo> cells = PivotGrid.Selection;
+            if (current != null && cells.Count < 2)
+            {
+                cells.Clear();
+                cells.Add(current);
+            }
+            
             if (cells != null && cells.Count > 0)
             {
                 // Ячейки для опреации копирования должны быть в прямоугольной области. Причем область должна быть без пустот
@@ -872,12 +925,15 @@ namespace Ranet.AgOlap.Controls
                 }
 
                 if (min_col > -1 && max_col > -1 && max_col >= min_col &&
-                    min_row > -1 && max_row > -1 && max_row >= min_row)
+                    max_row >= min_row &&
+                    min_row >= -1 && max_row >= -1) // min_row и max_row могут быть равны -1 для случая когда в запросе только одна ось
                 {
                     // Теперь определяем массив (двумерный) с размерностью, которую мы определили
                     // И пытаемся заполнить массив тем что есть. Если потом останутся в нем дырки (null) то область получается незамкнутая
-                    int col_count = max_col - min_col + 1;
-                    int row_count = max_row - min_row + 1;
+                    // Учитываем запросы с одной осью. Кол-во строк и столбцов не может быть меньше 1.
+                    int col_count = Math.Max(max_col - min_col + 1, 1);
+                    int row_count = Math.Max(max_row - min_row + 1, 1);
+
                     List<List<String>> list = new List<List<string>>();
                     for (int row_index = 0; row_index < row_count; row_index++)
                     {
@@ -893,14 +949,16 @@ namespace Ranet.AgOlap.Controls
                     // Разбрасываем значения ячеек на свои места
                     foreach (CellInfo cell in cells)
                     {
-                        int row_indx = cell.CellDescr.Axis1_Coord - min_row;
-                        int col_indx = cell.CellDescr.Axis0_Coord - min_col;
+                        // Учитываем запросы с одной осью. Индекс не может быть отрицательным
+                        int row_indx = Math.Max(cell.CellDescr.Axis1_Coord - min_row, 0);
+                        int col_indx = Math.Max(cell.CellDescr.Axis0_Coord - min_col, 0);
                         if (row_indx >= 0 && row_indx < row_count &&
                             col_indx >= 0 && col_indx < col_count)
                         {
-                            if (cell.IsModified)
+                            UpdateEntry change = PivotGrid.LocalChanges.FindChange(cell);
+                            if (change != null)
                             {
-                                list[row_indx][col_indx] = cell.ModifiedValue;
+                                list[row_indx][col_indx] = change.NewValue;
                             }
                             else
                             {
@@ -962,7 +1020,7 @@ namespace Ranet.AgOlap.Controls
             if (m_CSDescr != null && cell != null && cell.IsUpdateable)
             {
                 // Если в кэше есть изменения, то нужно спросить об их сохранении
-                if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
+                if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
                 {
                     MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
                     return;
@@ -1016,7 +1074,8 @@ namespace Ranet.AgOlap.Controls
                 if (m_CubeMetaData == null)
                 {
                     copyControl.IsBusy = true;
-                    MetadataQuery args = FastCommandHelper.CreateGetCubeMetadataArgs(Connection, m_CSDescr.CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
+                    MetadataQuery args = CommandHelper.CreateGetCubeMetadataArgs(Connection, m_CSDescr.CubeName, MetadataQueryType.GetCubeMetadata_AllMembers);
+                    LogManager.LogInformation(this, this.Name + " - Loading cube metadata.");
                     OlapDataLoader.LoadData(args, sender);
                 }
                 else
@@ -1038,10 +1097,10 @@ namespace Ranet.AgOlap.Controls
                     String query = copyControl.BuildCopyScript();
                     if (!String.IsNullOrEmpty(query))
                     {
-                        MdxQueryArgs args = FastCommandHelper.CreateMdxQueryArgs(Connection, query);
-                        args.PivotID = this.GetHashCode().ToString();
-                        args.Type = QueryExecutingType.NonQuery;
+                        MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                        args.Type = QueryTypes.Update;
                         IsWaiting = true;
+                        LogManager.LogInformation(this, this.Name + " - Copy values.");
                         OlapDataLoader.LoadData(args, "ValueCopyDialog_OkButton");
                     }
                     else
@@ -1059,7 +1118,7 @@ namespace Ranet.AgOlap.Controls
             if (m_CSDescr != null && cell != null && cell.IsUpdateable)
             {
                 // Если в кэше есть изменения, то нужно спросить об их сохранении
-                if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
+                if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
                 {
                     MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
                     return;
@@ -1104,7 +1163,7 @@ namespace Ranet.AgOlap.Controls
                         value = value.Replace(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator, ".");
 
                         List<UpdateEntry> entries = new List<UpdateEntry>();
-                        UpdateEntry entry = BuildUpdateEntry(new CellValueChangedEventArgs(DeliveryControl.Cell, value));
+                        UpdateEntry entry = new UpdateEntry(DeliveryControl.Cell, value);
                         DeliveryControl.GetDeliveredMembers();
                         entries.Add(entry);
 
@@ -1116,22 +1175,18 @@ namespace Ranet.AgOlap.Controls
                             value = value.Replace(System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.CurrencyDecimalSeparator, ".");
 
                             UpdateEntry item_entry = new UpdateEntry();
-                            IDictionary<String, MemberInfo> tuple = DeliveryControl.Cell.GetTuple();
-                            foreach (MemberInfo mi in tuple.Values)
+                            foreach (var tuple_item in DeliveryControl.Cell.Tuple)
                             {
-                                ShortMemberInfo tuple_mi = new ShortMemberInfo();
-                                tuple_mi.HierarchyUniqueName = mi.HierarchyUniqueName;
-                                if (mi.HierarchyUniqueName != item.Member.HierarchyUniqueName)
+                                String uniqueName = String.Empty;
+                                if (tuple_item.Key != item.Member.HierarchyUniqueName)
                                 {
-                                    tuple_mi.UniqueName = mi.UniqueName;
-                                    tuple_mi.LevelDepth = mi.LevelDepth;
+                                    uniqueName = tuple_item.Value;
                                 }
                                 else
                                 {
-                                    tuple_mi.UniqueName = item.Member.UniqueName;
-                                    tuple_mi.LevelDepth = item.Member.LevelDepth;
+                                    uniqueName = item.Member.UniqueName;
                                 }
-                                item_entry.Tuple.Add(tuple_mi);
+                                item_entry.Tuple.Add(tuple_item.Key, uniqueName);
                             }
                             item_entry.NewValue = value;
                             try
@@ -1154,8 +1209,8 @@ namespace Ranet.AgOlap.Controls
         {
             if (e != null && !String.IsNullOrEmpty(e.Query))
             {
-                MdxQueryArgs args = FastCommandHelper.CreateMdxQueryArgs(Connection, e.Query);
-                args.PivotID = this.GetHashCode().ToString();
+                MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, e.Query);
+                LogManager.LogInformation(this, this.Name + " - Delivery value.");
                 OlapDataLoader.LoadData(args, sender);
             }
         }
@@ -1206,19 +1261,25 @@ namespace Ranet.AgOlap.Controls
         //}
 
 
+        /// <summary>
+        /// Получает информацию о источнике данных
+        /// </summary>
+        /// <param name="userData"></param>
         void GetDataSourceInfo(UpdateEntry userData)
         {
-            ServiceCommandArgs args = new ServiceCommandArgs(ServiceCommandType.GetDataSourceInfo, userData);
-            args.PivotID = this.GetHashCode().ToString();
-            IsWaiting = true;
-            OlapDataLoader.LoadData(args, args);
+            if (DataManager != null)
+            {
+                DataSourceInfoArgs info = DataManager.GetDataSourceInfo(userData);
+                info.ConnectionString = Connection;
+                ShowDataSourceInfo(info);
+            }
         }
 
         void dlg_CloseDialog(DialogResult e)
         {
             if (e == DialogResult.Yes)
             {
-                SaveChanges(m_CellChanges.CellChanges);
+                SaveChanges(PivotGrid.LocalChanges.GetCellChanges());
                 return;
             }
             if (e == DialogResult.No)
@@ -1226,54 +1287,6 @@ namespace Ranet.AgOlap.Controls
                 CancelChanges();
                 return;
             }
-        }
-
-        UpdateEntry BuildUpdateEntry(CellValueChangedEventArgs arg)
-        {
-            UpdateEntry entry = null;
-            if (arg != null)
-            {
-                entry = new UpdateEntry();
-
-                IDictionary<String, MemberInfo> tuple = arg.Cell.GetTuple();
-                foreach (MemberInfo mi in tuple.Values)
-                {
-                    ShortMemberInfo tuple_mi = new ShortMemberInfo();
-                    tuple_mi.HierarchyUniqueName = mi.HierarchyUniqueName;
-                    tuple_mi.UniqueName = mi.UniqueName;
-                    tuple_mi.LevelDepth = mi.LevelDepth;
-
-                    entry.Tuple.Add(tuple_mi);
-                }
-                entry.NewValue = arg.NewValue;
-                try
-                {
-                    entry.OldValue = arg.Cell.CellDescr.Value.Value.ToString();
-                }
-                catch
-                {
-                }
-            }
-            return entry;
-        }
-
-        void SaveChanges(List<CellValueChangedEventArgs> changes)
-        {
-            List<UpdateEntry> entries = new List<UpdateEntry>();
-
-            if (changes != null)
-            {
-                foreach (CellValueChangedEventArgs arg in changes)
-                {
-                    UpdateEntry entry = BuildUpdateEntry(arg);
-                    if (entry != null)
-                    {
-                        entries.Add(entry);
-                    }
-                }
-            }
-
-            SaveChanges(entries);
         }
 
         void SaveChanges(List<UpdateEntry> entries)
@@ -1287,9 +1300,9 @@ namespace Ranet.AgOlap.Controls
 
         void CancelChanges()
         {
-            if (m_CellChanges.CellChanges.Count > 0)
+            if (PivotGrid.LocalChanges.Count > 0)
             {
-                m_CellChanges.CellChanges.Clear();
+                PivotGrid.LocalChanges.Clear();
                 UpdateEditToolBarButtons();
 
                 RunServiceCommand(ServiceCommandType.Refresh);
@@ -1314,13 +1327,13 @@ namespace Ranet.AgOlap.Controls
                     return;
             }
             ExportSizeInfo();
-            SaveChanges(m_CellChanges.CellChanges);
+            SaveChanges(PivotGrid.LocalChanges.GetCellChanges());
         }
 
         void UseChangesCasheButton_Checked(object sender, RoutedEventArgs e)
         {
             // Если в кэше есть изменения, то нужно спросить об их сохранении
-            if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
+            if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
             {
                 MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
                 //PopUpQuestionDialog dlg = SaveChangesDlg;
@@ -1347,7 +1360,7 @@ namespace Ranet.AgOlap.Controls
         void EditButton_Click(object sender, RoutedEventArgs e)
         {
             // Если в кэше есть изменения, то нужно спросить об их сохранении
-            if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
+            if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
             {
                 MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
                 //PopUpQuestionDialog dlg = SaveChangesDlg;
@@ -1403,28 +1416,22 @@ namespace Ranet.AgOlap.Controls
 
         void CellsControl_CellValueChanged(object sender, CellValueChangedEventArgs e)
         {
-            //if (!IsWaiting)
-            List<CellValueChangedEventArgs> changes = new List<CellValueChangedEventArgs>();
-            changes.Add(e);
-            PerformCellChanges(changes);
+            PerformCellChanges(e.Changes);
         }
 
-        void PerformCellChanges(List<CellValueChangedEventArgs> changes_list)
+        void PerformCellChanges(List<UpdateEntry> changes_list)
         {
             if (changes_list != null)
             {
+                foreach (var e in changes_list)
+                {
+                    PivotGrid.LocalChanges.Add(e);
+                }
+
                 if (!UseChangesCashe)
                 {
                     SaveChanges(changes_list);
                     return;
-                }
-                else
-                {
-                    foreach (CellValueChangedEventArgs e in changes_list)
-                    {
-                        m_CellChanges.RemoveChanges(e);
-                        m_CellChanges.CellChanges.Add(e);
-                    }
                 }
 
                 UpdateEditToolBarButtons();
@@ -1435,7 +1442,7 @@ namespace Ranet.AgOlap.Controls
         {
             if (String.IsNullOrEmpty(UpdateScript))
             {
-                LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + String.Format(Localization.ControlSettingsNotInitialized_Message, Localization.UpdateScript_PropertyDesc));
+                LogManager.LogError(this, String.Format(Localization.ControlSettingsNotInitialized_Message, Localization.UpdateScript_PropertyDesc));
                 return;
             }
 
@@ -1446,19 +1453,25 @@ namespace Ranet.AgOlap.Controls
                 cubeName = m_CSDescr.CubeName;
                 connectionString = m_CSDescr.Connection.ConnectionString;
             }
-            UpdateCubeArgs args = FastCommandHelper.CreateUpdateCubeArgs(connectionString, cubeName, entries);
-            args.PivotID = this.GetHashCode().ToString();
+
             IsWaiting = true;
-            OlapDataLoader.LoadData(args, args);
+
+            MdxQueryArgs args = new MdxQueryArgs();
+            args.Connection = Connection;
+            args.Type = QueryTypes.Update;
+            args.Queries = DataManager.BuildUpdateScripts(cubeName, entries);
+            LogManager.LogInformation(this, this.Name + " - Update cube started.");
+            OlapDataLoader.LoadData(args, entries);
+
+            //UpdateCubeArgs args = CommandHelper.CreateUpdateCubeArgs(connectionString, cubeName, entries);
+            //args.Script = DataManager != null ? DataManager.UpdateScript : String.Empty;
+            //IsWaiting = true;
+            //OlapDataLoader.LoadData(args, args);
         }
 
         protected void UpdateButtons()
         {
-            // Пока что сделаем так, чтобы не моргало. UpdateToolbarButtons(null);
-            PivotGridToolBarInfo args = new PivotGridToolBarInfo();
-            args.PivotID = this.GetHashCode().ToString();
-            IsWaiting = true;
-            OlapDataLoader.LoadData(args, args);
+            UpdateToolbarButtons(DataManager != null ? DataManager.GetToolBarInfo() : null);
         }
 
         void UpdateToolbarButtons(PivotGridToolBarInfo info)
@@ -1496,30 +1509,38 @@ namespace Ranet.AgOlap.Controls
 
         protected virtual void PerformMemberAction(MemberActionEventArgs e)
         {
-            //IsWaiting = true;
-            IList<MemberInfo> full_tuple = new List<MemberInfo>();
+            List<MemberInfo> full_tuple = new List<MemberInfo>();
             e.Member.CollectAncestors(full_tuple, true);
 
-            List<ShortMemberInfo> list = new List<ShortMemberInfo>();
-            foreach (MemberInfo mi in full_tuple)
+            PerformMemberActionArgs args = CommandHelper.CreatePerformMemberActionArgs(
+                e.Member, e.Axis, e.Action, full_tuple);
+
+            if (DataManager != null)
             {
-                ShortMemberInfo olap_mi = new ShortMemberInfo();
-                olap_mi.UniqueName = mi.UniqueName;
-                olap_mi.HierarchyUniqueName = mi.HierarchyUniqueName;
-                olap_mi.LevelDepth = mi.LevelDepth;
-                list.Add(olap_mi);
+                String query = DataManager.PerformMemberAction(args);
+                if (!String.IsNullOrEmpty(query))
+                {
+                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                    ExecuteMemberAction(query_args, args);
+                }
             }
+        }
 
-            ShortMemberInfo member = new ShortMemberInfo();
-            member.UniqueName = e.Member.UniqueName;
-            member.HierarchyUniqueName = e.Member.HierarchyUniqueName;
-            member.LevelDepth = e.Member.LevelDepth;
+        protected virtual void ExecuteMemberAction(MdxQueryArgs query_args, PerformMemberActionArgs args)
+        {
+            if (args != null && query_args != null)
+            {
+                IsWaiting = true;
+                LogManager.LogInformation(this, this.Name + String.Format(" - {0} member {1}", args.Action.ToString(), args.Member != null ? args.Member.UniqueName : "<null>"));
+                OlapDataLoader.LoadData(query_args, args);
+            }
+        }
 
-            PerformMemberActionArgs args = FastCommandHelper.CreatePerformMemberActionArgs(Connection,
-                member, e.Axis, e.Action, list);
-            args.PivotID = this.GetHashCode().ToString();
-            IsWaiting = true;
-            OlapDataLoader.LoadData(args, args);
+        PivotQueryManager m_DataManager = null;
+        public PivotQueryManager DataManager
+        {
+            get { return m_DataManager; }
+            set { m_DataManager = value; }
         }
 
         IDataLoader m_OlapDataLoader = null;
@@ -1533,7 +1554,10 @@ namespace Ranet.AgOlap.Controls
                 }
 
                 m_OlapDataLoader = value;
-                m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                if (m_OlapDataLoader != null)
+                {
+                    m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
+                }
             }
             get
             {
@@ -1550,14 +1574,14 @@ namespace Ranet.AgOlap.Controls
                 // Exception
                 if (e.Error != null)
                 {
-                    LogManager.LogException(Localization.PivotGridControl_Name, e.Error);
+                    LogManager.LogError(this, e.Error.ToString());
                     return;
                 }
 
                 // Exception or Message from Olap-Service
                 if (e.Result.ContentType == InvokeContentType.Error)
                 {
-                    LogManager.LogMessage(Localization.PivotGridControl_Name, Localization.Error + "! " + e.Result.Content);
+                    LogManager.LogError(this, e.Result.Content);
                     return;
                 }
 
@@ -1578,7 +1602,6 @@ namespace Ranet.AgOlap.Controls
                 {
                     if (!string.IsNullOrEmpty(e.Result.Content))
                     {
-                        //CellSetData cs_descr = XmlSerializationUtility.XmlStr2Obj<CellSetData>(e.Result);
                         CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
                         dilivery.InitializeMembersList(new CellSetDataProvider(cs_descr));
                     }
@@ -1590,7 +1613,6 @@ namespace Ranet.AgOlap.Controls
                 {
                     if (!string.IsNullOrEmpty(e.Result.Content))
                     {
-                        //CellSetData cs_descr = XmlSerializationUtility.XmlStr2Obj<CellSetData>(e.Result);
                         CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
                         Initialize(cs_descr);
                     }
@@ -1598,71 +1620,98 @@ namespace Ranet.AgOlap.Controls
                     {
                         Initialize(null);
                     }
-                    stopWaiting = false;
                     return;
                 }
 
                 PerformMemberActionArgs action_args = e.UserState as PerformMemberActionArgs;
                 if (action_args != null)
                 {
-                    stopWaiting = false;
                     MemberActionCompleted(e);
                     return;
                 }
 
-                ServiceCommandArgs service_args = e.UserState as ServiceCommandArgs;
-                if (service_args != null)
+                if(e.UserState != null && e.UserState is ServiceCommandType)
                 {
-                    ServiceCommandType actionType = service_args.Command;
-                    if (actionType == ServiceCommandType.GetDataSourceInfo)
+                    ServiceCommandType actionType = (ServiceCommandType)(ServiceCommandType.Parse(typeof(ServiceCommandType), e.UserState.ToString(), true));
+                    // Save to File
+                    if (actionType == ServiceCommandType.ExportToExcel)
+                    {
+                        if (ExportToExcelFile)
+                        {
+                            SaveToFile(e.Result.Content);
+                            return;
+                        }
+                    }
+                    else
                     {
                         if (!string.IsNullOrEmpty(e.Result.Content))
                         {
-                            DataSourceInfoArgs info = XmlSerializationUtility.XmlStr2Obj<DataSourceInfoArgs>(e.Result.Content);
-                            ShowDataSourceInfo(info);
+                            CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
+                            Initialize(cs_descr);
                         }
-                        return;
                     }
 
-                    // Save to File
-                    if (actionType == ServiceCommandType.ExportToExcel && ExportToExcelFile)
-                    {
-                        SaveToFile(e.Result.Content);
-                        return;
-                    }
-
-                    if (!string.IsNullOrEmpty(e.Result.Content))
-                    {
-                        //CellSetData cs_descr = XmlSerializationUtility.XmlStr2Obj<CellSetData>(e.Result);
-                        CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
-                        Initialize(cs_descr);
-                    }
-                    //this.Focus();
-                    stopWaiting = false;
                     UpdateButtons();
-                    ServiceCommandCompleted(service_args);
+                    ServiceCommandCompleted(actionType);
                     return;
                 }
 
-                PivotGridToolBarInfo toolbar_args = e.UserState as PivotGridToolBarInfo;
-                if (toolbar_args != null)
+                //PivotGridToolBarInfo toolbar_args = e.UserState as PivotGridToolBarInfo;
+                //if (toolbar_args != null)
+                //{
+                //    if (!string.IsNullOrEmpty(e.Result.Content))
+                //    {
+                //        toolbar_args = XmlSerializationUtility.XmlStr2Obj<PivotGridToolBarInfo>(e.Result.Content);
+                //        UpdateToolbarButtons(toolbar_args);
+                //    }
+                //    //this.Focus();
+                //    return;
+                //}
+
+                //UpdateCubeArgs update_Args = e.UserState as UpdateCubeArgs;
+                //if (update_Args != null)
+                List<UpdateEntry> entries = e.UserState as List<UpdateEntry>;
+                if (entries != null)
                 {
-                    if (!string.IsNullOrEmpty(e.Result.Content))
+                    // Результат - коллекция строк. Если на какой-то ячейке произошла ошибка, то в соотв. строке будет ее текст
+                    List<String> results = XmlSerializationUtility.XmlStr2Obj<List<String>>(e.Result.Content);
+                    if (results != null && results.Count == entries.Count)
                     {
-                        toolbar_args = XmlSerializationUtility.XmlStr2Obj<PivotGridToolBarInfo>(e.Result.Content);
-                        UpdateToolbarButtons(toolbar_args);
-                    }
-                    //this.Focus();
-                    return;
-                }
+                        StringBuilder sb = new StringBuilder();
+                        var successful = new List<UpdateEntry>();
+                        for (int i = 0; i < results.Count; i++)
+                        {
+                            if (String.IsNullOrEmpty(results[i]))
+                            {
+                                // No error
+                                entries[i].Error = String.Empty;
+                                // Update is successful. 
+                                successful.Add(entries[i]);
+                                // Update is successful. Remove this change from local cache
+                                PivotGrid.LocalChanges.RemoveChange(entries[i]);
+                            }
+                            else
+                            {
+                                // Error message
+                                entries[i].Error = results[i];
+                                sb.AppendLine(results[i]);
+                                PivotGrid.LocalChanges.Add(entries[i]);
+                            }
+                        }
+                        // Add cell changes to Transaction cache
+                        if (successful.Count > 0)
+                        {
+                            OlapTransactionManager.AddPendingChanges(Connection, successful);
+                        }
 
-                UpdateCubeArgs update_Args = e.UserState as UpdateCubeArgs;
-                if (update_Args != null)
-                {
-                    stopWaiting = false;
-                    m_CellChanges.CellChanges.Clear();
+                        if(!String.IsNullOrEmpty(sb.ToString()))
+                        {
+                            LogManager.LogError(this, sb.ToString());
+                        }
+                    }
+
                     UpdateEditToolBarButtons();
-                    UpdateCubeCompleted(update_Args);
+                    UpdateCubeCompleted();
                     //this.Focus();
                     return;
                 }
@@ -1689,22 +1738,30 @@ namespace Ranet.AgOlap.Controls
                     }
                 }
 
-                MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
-                if (member_args != null)
+                UserSchemaWrapper<String, CellInfo> user_wrapper = e.UserState as UserSchemaWrapper<String, CellInfo>;
+                if (user_wrapper != null && user_wrapper.Schema == "DRILLTHROUGH_CELL")
                 {
-                    switch (member_args.UserData.QueryType)
+                    if (!String.IsNullOrEmpty(e.Result.Content))
                     {
-                        case MemberChoiceQueryType.GetMember:
-                            MemberDataWrapper member = null;
+                        DataTableWrapper tableWrapper = XmlSerializationUtility.XmlStr2Obj<DataTableWrapper>(e.Result.Content);
+                        ShowDrillthroughResult(user_wrapper.UserData, tableWrapper);
+                    }
+                }
+
+                //MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
+                //if (member_args != null)
+                if(e.UserState != null && e.UserState.ToString() == "CUSTOM_MEMBER_PROPERTIES")
+                {
+                    //switch (member_args.UserData.QueryType)
+                    {
+                        //case MemberChoiceQueryType.GetMember:
+
+                            MemberData member = null;
                             if (!String.IsNullOrEmpty(e.Result.Content))
                             {
-                                try
-                                {
-                                    member = XmlSerializationUtility.XmlStr2Obj<MemberDataWrapper>(e.Result.Content);
-                                }
-                                catch
-                                {
-                                }
+                                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                                if(cellSet !=null && cellSet.Axes.Count > 0 && cellSet.Axes[0].Members.Count > 0)
+                                member = cellSet.Axes[0].Members[0];
                             }
 
                             if (member != null)
@@ -1715,7 +1772,7 @@ namespace Ranet.AgOlap.Controls
                             {
                                 MessageBox.Show(Localization.PivotGrid_CustomProperties_NotFound, Localization.Warning, MessageBoxButton.OK);
                             }
-                            break;
+                            //break;
                     }
                 }
             }
@@ -1757,16 +1814,16 @@ namespace Ranet.AgOlap.Controls
             }
             catch (Exception ex)
             {
-                LogManager.LogException(Localization.PivotGridControl_Name, ex);
+                LogManager.LogError(this, ex.ToString());
             }
         }
 
-        protected virtual void ServiceCommandCompleted(ServiceCommandArgs args)
+        protected virtual void ServiceCommandCompleted(ServiceCommandType commandType)
         { 
         
         }
 
-        protected virtual void UpdateCubeCompleted(UpdateCubeArgs e)
+        protected virtual void UpdateCubeCompleted()
         {
             RunServiceCommand(ServiceCommandType.Refresh);
         }
@@ -1805,17 +1862,22 @@ namespace Ranet.AgOlap.Controls
 
             ResetSettings();
 
+            m_DataManager = GetDataManager();
+
+            // Clear Pivot Grid
+            Initialize(null);
+
             // Если запрос пустой, то данные с сервера не читаем
             if (!String.IsNullOrEmpty(Query))
             {
-                PivotInitializeArgs args = FastCommandHelper.CreatePivotInitializeArgs(Connection, Query, UpdateScript);
-                args.PivotID = this.GetHashCode().ToString();
-                IsWaiting = true;
-                OlapDataLoader.LoadData(args, args);
-            }
-            else
-            {
-                Initialize(null);
+                PivotInitializeArgs args = CommandHelper.CreatePivotInitializeArgs(Connection, Query, UpdateScript);
+                if (DataManager != null)
+                {
+                    IsWaiting = true;
+                    LogManager.LogInformation(this, this.Name + " - Initialization started.");
+                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, DataManager.RefreshQuery());
+                    OlapDataLoader.LoadData(query_args, args);
+                }
             }
         }
 
@@ -1851,13 +1913,18 @@ namespace Ranet.AgOlap.Controls
             }
             finally
             {
-                //IsWaiting = false;
+                IsWaiting = false;
             }
+        }
+
+        public void Refresh()
+        {
+            RunServiceCommand(ServiceCommandType.Refresh);
         }
 
         private void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            RunServiceCommand(ServiceCommandType.Refresh);
+            Refresh();
         }
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
@@ -1867,23 +1934,52 @@ namespace Ranet.AgOlap.Controls
 
         private void RunServiceCommand(ServiceCommandType actionType)
         {
-            if (UseChangesCashe && m_CellChanges.CellChanges.Count > 0)
-            {
-                MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-                //PopUpQuestionDialog dlg = SaveChangesDlg;
-                //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(RunService_SaveChanges_DialogClosed);
-                //dlg.Tag = actionType;
-                //dlg.Show();
-                return;
-            }
+            //NEW!!! if (UseChangesCashe && PivotGrid.LocalChanges.CellChanges.Count > 0)
+            //{
+            //    MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
+            //    //PopUpQuestionDialog dlg = SaveChangesDlg;
+            //    //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(RunService_SaveChanges_DialogClosed);
+            //    //dlg.Tag = actionType;
+            //    //dlg.Show();
+            //    return;
+            //}
 
             if (actionType == ServiceCommandType.Refresh)
                 ExportSizeInfo();
 
-            ServiceCommandArgs args = new ServiceCommandArgs(actionType);
-            args.PivotID = this.GetHashCode().ToString();
-            IsWaiting = true;
-            OlapDataLoader.LoadData(args, args);
+            if (DataManager != null)
+            {
+                switch (actionType)
+                {
+                    case ServiceCommandType.GetDataSourceInfo:
+                        break;
+                    default:
+                        String query = DataManager.PerformServiceCommand(actionType);
+                        if (!String.IsNullOrEmpty(query))
+                        {
+                            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                            // Export to Excel execute on server
+                            if (actionType == ServiceCommandType.ExportToExcel)
+                            {
+                                query_args.ActionType = OlapActionTypes.ExportToExcel;
+                            }
+
+                            ExecuteServiceCommand(query_args, actionType);
+                        }
+                        break;
+                }
+            }
+            //OlapDataLoader.LoadData(args, args);
+        }
+
+        protected virtual void ExecuteServiceCommand(MdxQueryArgs query_args, ServiceCommandType actionType)
+        {
+            if (query_args != null)
+            {
+                IsWaiting = true;
+                LogManager.LogInformation(this, this.Name + " - Service command: " + actionType.ToString());
+                OlapDataLoader.LoadData(query_args, actionType);
+            }
         }
 
         public CellControl FocusedCell
@@ -1985,11 +2081,6 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        /// <summary>
-        /// Кэш измененных ячеек
-        /// </summary>
-        CellChangesCache m_CellChanges = new CellChangesCache();
-
         void UpdateEditToolBarButtons()
         {
             UpdateEditToolBarButtons(false);
@@ -2029,7 +2120,7 @@ namespace Ranet.AgOlap.Controls
                     if (EditButton.IsChecked.Value)
                     {
                         ConfirmEditButton.IsEnabled = CancelEditButton.IsEnabled =
-                            m_CellChanges.CellChanges.Count > 0/* || m_AllocationArgs.Count > 0*/;
+                            PivotGrid.LocalChanges.Count > 0/* || m_AllocationArgs.Count > 0*/;
                         /*btnModifications.Enabled = true;*/
                     }
                     else
@@ -2054,21 +2145,17 @@ namespace Ranet.AgOlap.Controls
 
         #region Свойства для настройки на OLAP
         /// <summary>
-        /// 
-        /// </summary>
-        private String m_Connection = String.Empty;
-        /// <summary>
         /// Описание соединения с БД для идентификации соединения на сервере (строка соединения либо ID)
         /// </summary>
         public String Connection
         {
             get
             {
-                return m_Connection;
+                return PivotGrid.Connection;
             }
             set
             {
-                m_Connection = value;
+                PivotGrid.Connection = value;
             }
         }
         #endregion Свойства для настройки на OLAP
@@ -2126,25 +2213,31 @@ namespace Ranet.AgOlap.Controls
 
         public void ImportSizeInfo()
         {
-            IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-            if (isoStore != null)
+            try
             {
-                if (isoStore.FileExists(IsoStorageFile))
+                IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                if (isoStore != null)
                 {
-                    IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(IsoStorageFile, System.IO.FileMode.Open, isoStore);
-                    StreamReader reader = new StreamReader(isoStream);
-                    String Text = reader.ReadToEnd();
-                    reader.Close();
-
-                    if (!String.IsNullOrEmpty(Text))
+                    if (isoStore.FileExists(IsoStorageFile))
                     {
-                        PivotGridSizeInfo sizeInfo = XmlSerializationUtility.XmlStr2Obj<PivotGridSizeInfo>(Text);
-                        if (sizeInfo != null)
+                        IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(IsoStorageFile, System.IO.FileMode.Open, isoStore);
+                        StreamReader reader = new StreamReader(isoStream);
+                        String Text = reader.ReadToEnd();
+                        reader.Close();
+
+                        if (!String.IsNullOrEmpty(Text))
                         {
-                            PivotGrid.SetSizeInfo(sizeInfo);
+                            PivotGridSizeInfo sizeInfo = XmlSerializationUtility.XmlStr2Obj<PivotGridSizeInfo>(Text);
+                            if (sizeInfo != null)
+                            {
+                                PivotGrid.SetSizeInfo(sizeInfo);
+                            }
                         }
                     }
                 }
+            }
+            catch
+            {
             }
         }
 
@@ -2153,14 +2246,18 @@ namespace Ranet.AgOlap.Controls
             PivotGridSizeInfo sizeInfo = PivotGrid.GetSizeInfo();
             if (sizeInfo != null)
             {
-                IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
-                if (isoStore != null)
+                try
                 {
-                    IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(IsoStorageFile, System.IO.FileMode.Create, isoStore);
-                    StreamWriter writer = new StreamWriter(isoStream);
-                    writer.Write(XmlSerializationUtility.Obj2XmlStr(sizeInfo));
-                    writer.Close();
+                    IsolatedStorageFile isoStore = IsolatedStorageFile.GetUserStoreForApplication();
+                    if (isoStore != null)
+                    {
+                        IsolatedStorageFileStream isoStream = new IsolatedStorageFileStream(IsoStorageFile, System.IO.FileMode.Create, isoStore);
+                        StreamWriter writer = new StreamWriter(isoStream);
+                        writer.Write(XmlSerializationUtility.Obj2XmlStr(sizeInfo));
+                        writer.Close();
+                    }
                 }
+                catch { }
             }
         }
 
@@ -2266,6 +2363,12 @@ namespace Ranet.AgOlap.Controls
             set {
                 PivotGrid.CustomCellsConditions = value; 
             }
+        }
+
+        public bool DrillThroughCells
+        {
+            get { return PivotGrid.DrillThroughCells; }
+            set { PivotGrid.DrillThroughCells = value; }
         }
     }
 }

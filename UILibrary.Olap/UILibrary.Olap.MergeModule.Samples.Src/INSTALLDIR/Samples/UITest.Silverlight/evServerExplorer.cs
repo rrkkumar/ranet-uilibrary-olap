@@ -8,7 +8,7 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void initServerExplorerButton_Click(object sender, RoutedEventArgs e)
 		{
-			serverExplorerControl.URL = WSDataUrl;
+			// serverExplorerControl.URL = WSDataUrl;
 			serverExplorerControl.Connection = ConnectionStringId;
 			serverExplorerControl.ShowAllCubes = false;
 			if (AllCubes.IsChecked!=null)

@@ -31,6 +31,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.General.Tree;
 using Ranet.AgOlap.Controls.General.ItemControls;
+using Ranet.AgOlap.Controls.Combo;
 
 namespace Ranet.AgOlap.Controls.General
 {
@@ -51,7 +52,7 @@ namespace Ranet.AgOlap.Controls.General
             m_ComboContent.HorizontalAlignment = HorizontalAlignment.Stretch;
             m_ComboContent.HorizontalContentAlignment = HorizontalAlignment.Stretch;
 
-            m_Combo = new ComboBox();
+            m_Combo = new RanetComboBox();
             m_Combo.Height = 22;
             m_ComboContent.Content = m_Combo;
             m_Combo.SelectionChanged += new SelectionChangedEventHandler(m_Combo_SelectionChanged);
@@ -62,9 +63,12 @@ namespace Ranet.AgOlap.Controls.General
         public void Clear()
         {
             m_Combo.SelectionChanged -= new SelectionChangedEventHandler(m_Combo_SelectionChanged);
-            m_Combo = new ComboBox();
-            m_Combo.Height = 22;
-            m_ComboContent.Content = m_Combo;
+            m_Combo.Items.Clear();
+            //m_Combo.SelectionChanged -= new SelectionChangedEventHandler(m_Combo_SelectionChanged);
+            //m_Combo = new RanetComboBox();
+            //m_Combo.Height = 22;
+            //m_ComboContent.Content = m_Combo;
+            //m_Combo.SelectionChanged += new SelectionChangedEventHandler(m_Combo_SelectionChanged);
             m_Combo.SelectionChanged += new SelectionChangedEventHandler(m_Combo_SelectionChanged);
         }
 

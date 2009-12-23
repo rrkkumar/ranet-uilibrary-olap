@@ -11,7 +11,7 @@ using System.Windows.Shapes;
 
 namespace Ranet.AgOlap.Controls.General
 {
-    public interface IClonable
+    public interface ICloneable
     {
         object Clone();
     }

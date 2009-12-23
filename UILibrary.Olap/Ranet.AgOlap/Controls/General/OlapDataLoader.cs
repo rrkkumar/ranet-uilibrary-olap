@@ -32,83 +32,99 @@ using System.Windows.Shapes;
 using Ranet.Olap.Core;
 using Ranet.AgOlap.Controls.General.ClientServer;
 using Ranet.Olap.Core.Providers.ClientServer;
+using Ranet.ZipLib;
+using System.Collections.Generic;
+using System.Linq;
+using Ranet.AgOlap.Providers;
+using Ranet.AgOlap.Controls.PivotGrid;
 
 namespace Ranet.AgOlap.Controls.General
 {
-    public class OlapDataLoader : IDataLoader
-    {
-        String m_URL = String.Empty;
-        public String URL
-        {
-            get { return m_URL; }
-            set { m_URL = value; }
-        }
-        
-        public OlapDataLoader(String url)
-        {
-            URL = url;
-        }
+	public class OlapDataLoader : IDataLoader
+	{
+        internal static SessionHolder IdHolder = new SessionHolder();
 
-        #region IDataLoader Members
+		String m_URL = String.Empty;
+		public String URL
+		{
+			get { return m_URL; }
+			set { m_URL = value; }
+		}
 
-        void ModifyEndPoint(OlapWebService.OlapWebServiceSoapClient service)
-        {
-            if (service != null)
+		public OlapDataLoader(String url)
+		{
+			URL = url;
+		}
+
+		#region IDataLoader Members
+
+		public void LoadData(OlapActionBase schema, object state)
+		{
+			var service = Services.ServiceManager.CreateService
+			< OlapWebService.OlapWebServiceSoapClient
+			, OlapWebService.OlapWebServiceSoap
+            >(URL); //>(URL, new TimeSpan(0, 5, 0));
+
+            MdxQueryArgs mdxQuery = schema as MdxQueryArgs;
+            if (mdxQuery != null)
             {
-                if (!String.IsNullOrEmpty(URL))
+                mdxQuery.SessionId = IdHolder[mdxQuery.Connection];
+            }
+			service.PerformOlapServiceActionCompleted += new EventHandler<Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs>(service_PerformOlapServiceActionCompleted);
+			service.PerformOlapServiceActionAsync(schema.ActionType.ToString(), XmlSerializationUtility.Obj2XmlStr(schema, Common.Namespace), state);
+		}
+
+		void service_PerformOlapServiceActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e)
+		{
+			InvokeResultDescriptor result = null;
+			if (e.Error == null)
+			{
+				result = InvokeResultDescriptor.Deserialize(e.Result);
+			}
+
+            if (result != null)
+            {
+                String connectionId = String.Empty;
+                if (result.Headers.Contains(InvokeResultDescriptor.SESSION_ID) &&
+                    result.Headers.Contains(InvokeResultDescriptor.CONNECTION_ID))
                 {
-                    service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(URL));
+                    Header session_header = result.Headers[InvokeResultDescriptor.SESSION_ID];
+                    Header connection_header = result.Headers[InvokeResultDescriptor.CONNECTION_ID];
+                    if (connection_header != null)
+                    {
+                        connectionId = connection_header.Value;
+                        if (session_header != null)
+                        {
+                            IdHolder[connection_header.Value] = session_header.Value;
+                        }
+                    }
                 }
-                else
+
+                if (result.IsArchive)
                 {
-                    service.Endpoint.Address = new System.ServiceModel.EndpointAddress(new Uri(Application.Current.Host.Source, "/OlapWebService.asmx"));
+                    result.Content = ZipCompressor.DecompressFromBase64String(result.Content);
+                    result.IsArchive = false;
                 }
             }
-        }
 
-        public void LoadData(OlapActionBase schema, object state)
-        {
-            OlapWebService.OlapWebServiceSoapClient service = new Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient();
-            ModifyEndPoint(service);
-            
-            service.PerformOlapServiceActionCompleted += new EventHandler<Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs>(service_PerformOlapServiceActionCompleted);
-            service.PerformOlapServiceActionAsync(schema.ActionType.ToString(), XmlSerializationUtility.Obj2XmlStr(schema, Common.Namespace), state);
-        }
+			Raise_DataLoaded(new DataLoaderEventArgs(result, e.Error, e.UserState));
+		}
 
-        void service_PerformOlapServiceActionCompleted(object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e)
-        {
-            InvokeResultDescriptor result = null;
-            if (e.Error == null)
-            {
-                result = XmlSerializationUtility.XmlStr2Obj<InvokeResultDescriptor>(e.Result);
-            }
-            //if (result != null)
-            //{
-                //if (result.IsArchive)
-                //{
-                //    result.Content = ZipCompressor.DecompressFromBase64String(result.Content);
-                //    result.IsArchive = false;
-                //}
+		void Raise_DataLoaded(DataLoaderEventArgs args)
+		{
+			EventHandler<DataLoaderEventArgs> handler = this.DataLoaded;
+			if (handler != null)
+			{
+				handler(this, args);
+			}
+		}
 
-                Raise_DataLoaded(new DataLoaderEventArgs(result, e.Error, e.UserState));
-            //}
-        }
+		#endregion
 
-        void Raise_DataLoaded(DataLoaderEventArgs args)
-        {
-            EventHandler<DataLoaderEventArgs> handler = this.DataLoaded;
-            if (handler != null)
-            {
-                handler(this, args);
-            }
-        }
+		#region IDataLoader Members
 
-        #endregion
+		public event EventHandler<DataLoaderEventArgs> DataLoaded;
 
-        #region IDataLoader Members
-
-        public event EventHandler<DataLoaderEventArgs> DataLoaded;
-
-        #endregion
-    }
+		#endregion
+	}
 }

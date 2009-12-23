@@ -35,6 +35,7 @@ using Ranet.AgOlap.Controls.Buttons;
 using Ranet.AgOlap.Features;
 using Ranet.AgOlap.Controls.ToolBar;
 using Ranet.Olap.Core.Providers.ClientServer;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.DataSourceInfo
 {
@@ -61,11 +62,11 @@ namespace Ranet.AgOlap.Controls.DataSourceInfo
             LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
             // Строка соединения
-            TextBlock connectionString_Label = new TextBlock() { Text = Localization.ConnectionString + ":" };
+            TextBlock connectionString_Label = new TextBlock() { Text = Localization.Connection + ":" };
             LayoutRoot.Children.Add(connectionString_Label);
 
-            connectionString = new RichTextBox() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, IsReadOnly = true };
-            connectionString.Height = 80;
+            connectionString = new RichTextBox() {IsReadOnly = true };
+            connectionString.Height = 22;
             connectionString.Margin = new Thickness(0, 5, 0, 0);
             LayoutRoot.Children.Add(connectionString);
             Grid.SetRow(connectionString, 1);
@@ -265,10 +266,10 @@ namespace Ranet.AgOlap.Controls.DataSourceInfo
             m_Args = args;
             if (args != null)
             {
-                mdxQuery.Text = args.MDXQuery;
-                updateScript.Text = args.UpdateScript;
-                connectionString.Text = args.ConnectionString;
-                movedAxes_MdxQuery.Text = args.MovedAxes_MDXQuery;
+                mdxQuery.Text = args.MDXQuery != null ? args.MDXQuery : String.Empty;
+                updateScript.Text = args.UpdateScript != null ? args.UpdateScript : String.Empty;
+                connectionString.Text = args.ConnectionString != null ? args.ConnectionString : String.Empty;
+                movedAxes_MdxQuery.Text = args.MovedAxes_MDXQuery != null ? args.MovedAxes_MDXQuery : String.Empty;
                 if (!String.IsNullOrEmpty(args.Parsed_MDXQuery))
                 { 
                     parseMdx.Visibility = Visibility.Visible; 

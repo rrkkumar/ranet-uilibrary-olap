@@ -193,9 +193,9 @@ namespace Ranet.AgOlap.Controls
                             PopUpContainer.Text = Localization.MemberChoice_MultiSelect; //"<Множественный выбор>";
                         else
                         {
-                            if (cs.Info != null && cs.Info.Member != null)
+                            if (cs.Info != null && cs.Info != null)
                             {
-                                PopUpContainer.Text = cs.Info.Member.GetText(MemberVisualizationType);
+                                PopUpContainer.Text = cs.Info.GetText(MemberVisualizationType);
                             }
                             else
                             {

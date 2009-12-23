@@ -39,6 +39,7 @@ using Ranet.AgOlap.Controls.ContextMenu;
 using Ranet.Olap.Core.Providers.ClientServer;
 using System.Windows.Media.Imaging;
 using Ranet.Olap.Core.Data;
+using Ranet.AgOlap.Providers;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
@@ -131,26 +132,30 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             if (IsInteractive)
             {
-                // Текст отображаем подчеркнутым чтобы использовать как гиперссылку
-                CaptionText.TextDecorations = TextDecorations.Underline;
+                CaptionText.MouseEnter += new MouseEventHandler(MemberControl_MouseEnter);
+                CaptionText.MouseLeave += new MouseEventHandler(MemberControl_MouseLeave);
                 CaptionText.MouseLeftButtonDown += new MouseButtonEventHandler(CaptionText_MouseLeftButtonDown);
 
-                ExpanderControl expander = new ExpanderControl();
-                expander.Height = expander.Width = Math.Max(5, 9 * Scale);
-              
-                if (Member.DrilledDown)
-                    expander.IsExpanded = true;
-
-                if (Member.ChildCount > 0)
+                PlusMinusButton expander = null;
+             
+                if (Member.ChildCount > 0 && !Member.IsCalculated)
                 {
-                    expander.MouseLeftButtonUp += new MouseButtonEventHandler(image_MouseLeftButtonUp);
+                    expander = new PlusMinusButton();
+                    if (Member.DrilledDown)
+                        expander.IsExpanded = true;
+                    expander.CheckedChanged += new EventHandler(expander_CheckedChanged);
                     UseExpandingCommands = true;
+                    expander.Height = expander.Width = Math.Max(5, 9 * Scale);
+                    LayoutRoot.Children.Add(expander);
                 }
                 else
                 {
-                    expander.Opacity = 0.2;
+                    ListMemberControl ctrl = new ListMemberControl();
+                    ctrl.Opacity = 0.35;
+                    ctrl.Height = ctrl.Width = Math.Max(5, 9 * Scale);
+                    LayoutRoot.Children.Add(ctrl);
                 }
-                LayoutRoot.Children.Add(expander);
+
             }
 
             // Название элемента
@@ -311,6 +316,42 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             this.Content = m_Border;
         }
 
+        void MemberControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CaptionText.TextDecorations = null;
+            //if (m_EllipsisText != null)
+            //{
+            //    m_EllipsisText.TextDecorations = null;
+            //}
+        }
+
+        void MemberControl_MouseEnter(object sender, MouseEventArgs e)
+        {
+            // Текст отображаем подчеркнутым чтобы использовать как гиперссылку
+            CaptionText.TextDecorations = TextDecorations.Underline;
+            //if (m_EllipsisText != null)
+            //{
+            //    m_EllipsisText.TextDecorations = TextDecorations.Underline;
+            //}
+        }
+
+        void expander_CheckedChanged(object sender, EventArgs e)
+        {
+            MemberActionType action = MemberActionType.Expand;
+            if (Member.DrilledDown)
+                action = MemberActionType.Collapse;
+
+            PlusMinusButton expander = sender as PlusMinusButton;
+            if (expander != null)
+            {
+                expander.CheckedChanged -= new EventHandler(expander_CheckedChanged);
+                expander.IsChecked = new bool?(!expander.IsChecked.Value);
+                expander.CheckedChanged += new EventHandler(expander_CheckedChanged);
+            }
+
+            Raise_DrillDownMember(action);
+        }
+
         void CaptionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             Raise_DrillDownMember(MemberActionType.DrillDown);
@@ -469,16 +510,5 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
         #endregion События
-
-        void image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            e.Handled = true;
-
-            MemberActionType action = MemberActionType.Expand;
-            if (Member.DrilledDown)
-                action = MemberActionType.Collapse;
-
-            Raise_DrillDownMember(action);
-        }
     }
 }

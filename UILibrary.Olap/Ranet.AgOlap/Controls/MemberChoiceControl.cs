@@ -50,6 +50,8 @@ using Ranet.AgOlap.Controls.MemberChoice;
 using Ranet.AgOlap.Controls.General.ItemControls;
 using Ranet.AgOlap.Controls.Tab;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Providers;
+using Ranet.Olap.Core.Providers.ClientServer;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -277,7 +279,9 @@ namespace Ranet.AgOlap.Controls
                 mdxSetTab_LayoutRoot.Children.Add(selected_buttons_panel);
                 Grid.SetRow(selected_buttons_panel, 1);
 
-                mdxSetTextBox = new TextBox() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, IsReadOnly = true };
+                mdxSetTextBox = new SimpleTextBox() { AcceptsReturn = true, TextWrapping = TextWrapping.Wrap, IsReadOnly = true };
+                mdxSetTextBox.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+                mdxSetTextBox.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
                 mdxSetTextBox.Margin = new Thickness(0, 0, 0, 0);
                 mdxSetTextBox.BorderBrush = new SolidColorBrush(Colors.Black);
                 mdxSetTab_LayoutRoot.Children.Add(mdxSetTextBox);
@@ -307,11 +311,13 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
+        public readonly QueryProvider DataManager = new QueryProvider();
+
         void ChangeCurrentMember(MemberTreeNode node)
         {
             if (node != null)
             {
-                m_CurrentMember = node.MemberInfo.Info.Member;
+                m_CurrentMember = node.MemberInfo.Info;
             }
             else
             {
@@ -340,7 +346,7 @@ namespace Ranet.AgOlap.Controls
                 MemberTreeNode treeNode = membersTree.SelectedItem as MemberTreeNode;
                 if (treeNode != null)
                 {
-                    m_CurrentMember = treeNode.MemberInfo.Info.Member;
+                    m_CurrentMember = treeNode.MemberInfo.Info;
                 }
                 else
                 {
@@ -427,7 +433,7 @@ namespace Ranet.AgOlap.Controls
 
             if (treeNode != null)
             {
-                m_CurrentMember = treeNode.MemberInfo.Info.Member;
+                m_CurrentMember = treeNode.MemberInfo.Info;
             }
             else
             {
@@ -457,9 +463,10 @@ namespace Ranet.AgOlap.Controls
                 if (m_CurrentMember != null && m_Properties != null)
                 {
                     m_CurrentMemberControl.IsLoading = true;
-                    MemberChoiceQuery args = CommandHelper.CreateGetMemberArgs(Connection, CubeName, SubCube, m_CurrentMember.UniqueName);
-                    args.Properties = m_Properties;
-                    OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+                    String query = DataManager.GetMember(m_CurrentMember.UniqueName, m_Properties);
+                    LogManager.LogInformation(this, this.Name + " - Loading member properties.");
+                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                    OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetMember, null));
                 }
                 else
                 {
@@ -502,13 +509,16 @@ namespace Ranet.AgOlap.Controls
 
         void RefreshButton_Click(object sender, RoutedEventArgs e)
         {
-            ClearTree();
+            //m_OlapMemberInfoHierarchy = new RootOlapMemberInfo(MemberData.Empty);
 
-            //Получаем элементы
-            if (useStepLoading)
-                LoadRootMembers(0, Step);
-            else
-                LoadRootMembers(-1, -1);
+            //ClearTree();
+
+            ////Получаем элементы
+            //if (useStepLoading)
+            //    LoadRootMembers(0, Step);
+            //else
+            //    LoadRootMembers(-1, -1);
+            RefreshTree(false);
         }
 
         void RunSearch_Button_Click(object sender, RoutedEventArgs e)
@@ -583,6 +593,7 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_CubeName = value;
+                DataManager.Cube = value;
             }
         }
 
@@ -599,6 +610,7 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_SubCube = value;
+                DataManager.SubCube = value;
             }
         }
 
@@ -618,6 +630,7 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_HierarchyName = value;
+                DataManager.HierarchyUniqueName = value;
             }
         }
         #endregion Свойства для настройки на OLAP
@@ -695,6 +708,19 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
+        String CurrentLevelUniqueName
+        {
+            get
+            {
+                LevelItemControl ctrl = Levels_ComboBox.Combo.SelectedItem as LevelItemControl;
+                if (ctrl != null)
+                {
+                    return ctrl.Info.UniqueName;
+                }
+                return StartLevelUniqueName;
+            }
+        }
+
         /// <summary>
         /// Флажок. Выводить элементы ТОЛЬКО верхнего уровня
         /// </summary>
@@ -725,20 +751,22 @@ namespace Ranet.AgOlap.Controls
             Levels_ComboBox.IsEnabled = false;
             Levels_ComboBox.Clear();
 
+            Levels_ComboBox.SelectionChanged -= new SelectionChangedEventHandler(Levels_ComboBox_SelectionChanged);
+
             if (String.IsNullOrEmpty(CubeName))
             {
-                LogManager.LogMessage(Localization.MemberChoiceControl_Name, Localization.Error + "! " + String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.CubeName_PropertyDesc));
+                LogManager.LogError(this, String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.CubeName_PropertyDesc));
                 return;
             }
 
             if (String.IsNullOrEmpty(HierarchyUniqueName))
             {
-                LogManager.LogMessage(Localization.MemberChoiceControl_Name, Localization.Error + "! " + String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.HierarchyUniqueName_PropertyDesc));
+                LogManager.LogError(this, String.Format(Localization.ControlPropertyNotInitialized_Message, Localization.HierarchyUniqueName_PropertyDesc));
                 return;
             }
 
             Levels_ComboBox.IsWaiting = true;
-
+            LogManager.LogInformation(this, this.Name + " - Loading levels information.");
             MetadataQuery args = CommandHelper.CreateGetLevelsQueryArgs(Connection, CubeName, String.Empty, HierarchyUniqueName);
             OlapDataLoader.LoadData(args, args);
         }
@@ -793,7 +821,6 @@ namespace Ranet.AgOlap.Controls
             LevelItemControl ctrl = Levels_ComboBox.Combo.SelectedItem as LevelItemControl;
             if (ctrl != null)
             {
-                StartLevelUniqueName = ctrl.Info.UniqueName;
                 RefreshTree(false);
             }
         }
@@ -822,14 +849,15 @@ namespace Ranet.AgOlap.Controls
         void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)
         {
             MemberTreeNode parentNode = null;
-            UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode> wrapper = e.UserState as UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>;
+
+            UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode> wrapper = e.UserState as UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>;
             if (wrapper != null)
             {
-                if (wrapper.Schema.QueryType != MemberChoiceQueryType.GetAscendants &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMember &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.GetMembers &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.LoadSetWithAscendants &&
-                    wrapper.Schema.QueryType != MemberChoiceQueryType.FindMembers)
+                if (wrapper.Schema != MemberChoiceQueryType.GetAscendants &&
+                    wrapper.Schema != MemberChoiceQueryType.GetMember &&
+                    wrapper.Schema != MemberChoiceQueryType.GetMembers &&
+                    wrapper.Schema != MemberChoiceQueryType.LoadSetWithAscendants &&
+                    wrapper.Schema != MemberChoiceQueryType.FindMembers)
                 {
                     parentNode = wrapper.UserData;
                     if (parentNode != null)
@@ -843,6 +871,7 @@ namespace Ranet.AgOlap.Controls
                 }
             }
 
+
             MetadataQuery args = e.UserState as MetadataQuery;
 
             if (e.Error != null)
@@ -853,7 +882,7 @@ namespace Ranet.AgOlap.Controls
                         Levels_ComboBox.IsError = true;
                 }
 
-                LogManager.LogException(Localization.MemberChoiceControl_Name, e.Error);
+                LogManager.LogError(this, e.Error.ToString());
                 return;
             }
 
@@ -865,7 +894,7 @@ namespace Ranet.AgOlap.Controls
                         Levels_ComboBox.IsError = true;
                 }
 
-                LogManager.LogMessage(Localization.MemberChoiceControl_Name, Localization.Error + "! " + e.Result.Content);
+                LogManager.LogError(this, e.Result.Content);
                 return;
             }
 
@@ -885,7 +914,7 @@ namespace Ranet.AgOlap.Controls
                         MemberTreeNode treeNode = membersTree.SelectedItem as MemberTreeNode;
                         if (treeNode != null)
                         {
-                            m_CurrentMember = treeNode.MemberInfo.Info.Member;
+                            m_CurrentMember = treeNode.MemberInfo.Info;
                         }
                         else
                         {
@@ -901,11 +930,11 @@ namespace Ranet.AgOlap.Controls
 
             if (wrapper != null)
             {
-                switch (wrapper.Schema.QueryType)
+                switch (wrapper.Schema)
                 {
-                    case MemberChoiceQueryType.GetRootMembersCount:
-                        Service_GetRootMembersCountCompleted(e, parentNode);
-                        break;
+                    //case MemberChoiceQueryType.GetRootMembersCount:
+                    //    Service_GetRootMembersCountCompleted(e, parentNode);
+                    //    break;
                     case MemberChoiceQueryType.GetRootMembers:
                         service_GetRootMembersCompleted(e, parentNode);
                         break;
@@ -933,21 +962,20 @@ namespace Ranet.AgOlap.Controls
 
         void GetMember_InvokeCommandCompleted(DataLoaderEventArgs e)
         {
-            MemberDataWrapper member = null;
+            List<MemberData> members = new List<MemberData>();
             if (!String.IsNullOrEmpty(e.Result.Content))
             {
-                try
-                {
-                    member = XmlSerializationUtility.XmlStr2Obj<MemberDataWrapper>(e.Result.Content);
-                }
-                catch
-                {
-                }
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
             }
+
+            MemberData member = null;
+            if (members.Count > 0)
+                member = members[0];
 
             if (member != null)
             {
-                m_CurrentMemberControl.Initialize(member.Member);
+                m_CurrentMemberControl.Initialize(member);
             }
             else
             {
@@ -969,7 +997,7 @@ namespace Ranet.AgOlap.Controls
             m_IsInitialized = true;
         }
 
-        long m_RootMembersCubeCount = 0;
+        //long m_RootMembersCubeCount = 0;
 
         /// <summary>
         /// Перерисовывает дерево. Информация о выбранных элементах остается
@@ -990,7 +1018,9 @@ namespace Ranet.AgOlap.Controls
             //m_TreeNodes.Clear();
 
             ClearTree();
-            m_RootMembersCubeCount = 0;
+
+            //m_RootMembersCubeCount = 0;
+
             m_LevelPropertiesIsLoaded = false;
 
             if (reloadSelection)
@@ -1001,7 +1031,8 @@ namespace Ranet.AgOlap.Controls
             }
             else
             {
-                GetRootMembersCount();
+                Load();
+                //GetRootMembersCount();
             }
 
             m_IsInitialized = true;
@@ -1009,10 +1040,15 @@ namespace Ranet.AgOlap.Controls
 
         private void GetRootMembersCount()
         {
-            membersTree.IsWaiting = true;
+            String query = String.Empty;
+            if (String.IsNullOrEmpty(CurrentLevelUniqueName))
+                query = DataManager.GetMembersCount(0);
+            else
+                query = DataManager.GetMembersCount(CurrentLevelUniqueName);
 
-            MemberChoiceQuery args = CommandHelper.CreateGetRootMembersCountArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName);
-            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+            LogManager.LogInformation(this, this.Name + " - Calculating root members count.");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetRootMembersCount, null));
         }
 
         void ClearTree()
@@ -1029,26 +1065,28 @@ namespace Ranet.AgOlap.Controls
             filterBuilder.Tree.IsError = true;
         }
 
-        void Service_GetRootMembersCountCompleted(DataLoaderEventArgs e, MemberTreeNode parentNode)
+        //void Service_GetRootMembersCountCompleted(DataLoaderEventArgs e, MemberTreeNode parentNode)
+        void Load()
         {
             membersTree.IsWaiting = false;
             membersTree.IsFullLoaded = true;
 
-            m_RootMembersCubeCount = 0;
+            //m_RootMembersCubeCount = 0;
 
-            if (e.Result.ContentType == InvokeContentType.Error)
-            {
-                ClearTree();
-                membersTree.IsError = true;
+            //if (e.Result.ContentType == InvokeContentType.Error)
+            //{
+            //    ClearTree();
+            //    membersTree.IsError = true;
 
-                SetFilterBuilderToError();
-                return;
-            }
+            //    SetFilterBuilderToError();
+            //    return;
+            //}
 
-            if (!String.IsNullOrEmpty(e.Result.Content))
-            {
-                m_RootMembersCubeCount = long.Parse(e.Result.Content);
-            }
+            //if (!String.IsNullOrEmpty(e.Result.Content))
+            //{
+            //    CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+            //    m_RootMembersCubeCount = DataManager.GetCount(cellSet);
+            //}
 
             //Получаем элементы
             if (useStepLoading)
@@ -1059,10 +1097,18 @@ namespace Ranet.AgOlap.Controls
 
         private void LoadRootMembers(long begin, long count)
         {
+            ClearTree();
             membersTree.IsWaiting = true;
 
-            MemberChoiceQuery args = CommandHelper.CreateGetRootMembersArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, begin, count);
-            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+            String query = String.Empty;
+            if (String.IsNullOrEmpty(CurrentLevelUniqueName))
+                query = DataManager.GetHierarchyMembers(0, begin, count);
+            else
+                query = DataManager.GetLevelMembers(CurrentLevelUniqueName, begin, count);
+
+            LogManager.LogInformation(this, this.Name + " - Loading root members.");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetRootMembers, null));
         }
 
         void SelectNode(MemberTreeNode node)
@@ -1091,7 +1137,12 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
 
             CreateChildNodes(null, members);
 
@@ -1133,13 +1184,16 @@ namespace Ranet.AgOlap.Controls
             //4. Добавляем в иерархию элементы Set и у станавливаем их в нужное состояние
             //	
 
-            RootOlapMemberInfo memberInfoHierarchy = new RootOlapMemberInfo(MemberDataWrapper.Empty, Mode);
+            RootOlapMemberInfo memberInfoHierarchy = new RootOlapMemberInfo(MemberData.Empty);
             memberInfoHierarchy.HierarchyStateChanged += new OlapMemberInfo.StateChangedEventHandler(OlapMemberInfoHierarchy_HierarchyStateChanged);
 
             if (SelectedInfo.Count == 0)
             {
-                if(!LoadSetWithAscendants(m_SelectedSet))
-                    GetRootMembersCount();
+                if (!LoadSetWithAscendants(m_SelectedSet))
+                {
+                    //GetRootMembersCount();
+                    Load();
+                }
                 return memberInfoHierarchy;
             }
 
@@ -1159,14 +1213,18 @@ namespace Ranet.AgOlap.Controls
 
             if (String.IsNullOrEmpty(Set))
             {
-                GetRootMembersCount();
+//                GetRootMembersCount();
+                Load();
                 return memberInfoHierarchy;
             }
 
             Set = "{" + Set + "}";
 
-            if(!LoadSetWithAscendants(Set))
-                GetRootMembersCount();
+            if (!LoadSetWithAscendants(Set))
+            {
+                Load();
+                //GetRootMembersCount();
+            }
 
             return memberInfoHierarchy;
         }
@@ -1176,8 +1234,10 @@ namespace Ranet.AgOlap.Controls
             if (!String.IsNullOrEmpty(Set))
             {
                 //Читаем данные о предках
-                MemberChoiceQuery args = CommandHelper.CreateLoadSetWithAscendantsArgs(Connection, CubeName, SubCube, HierarchyUniqueName, Set);
-                OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+                String query = DataManager.LoadSetWithAscendants(Set);
+                LogManager.LogInformation(this, this.Name + " - Loading members with ascendants.");
+                MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.LoadSetWithAscendants, null));
                 return true;
             }
             return false;
@@ -1194,11 +1254,17 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
+
             if (members != null)
             {
                 #region Строим иерархию c предками
-                foreach (MemberDataWrapper info in members)
+                foreach (MemberData info in members)
                 {
                     OlapMemberInfo memberInfo = OlapMemberInfoHierarchy.AddMemberToHierarchy(info);
                 }
@@ -1207,8 +1273,10 @@ namespace Ranet.AgOlap.Controls
                 if (SelectedInfo.Count == 0 && !String.IsNullOrEmpty(m_SelectedSet))
                 {
                     //Читаем данные о выбранных элементах
-                    MemberChoiceQuery args = CommandHelper.CreateGetMembersArgs(Connection, CubeName, SubCube, m_SelectedSet);
-                    OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+                    String query = DataManager.GetMembers(m_SelectedSet);
+                    LogManager.LogInformation(this, this.Name + " - Loading selected members.");
+                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                    OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetMembers, null));
                 }
                 else
                 {
@@ -1221,7 +1289,8 @@ namespace Ranet.AgOlap.Controls
                     #endregion Устанавливаем нужные состояния для элементов
                 }
             }
-            GetRootMembersCount();
+            //GetRootMembersCount();
+            Load();
         }
 
         void GetMembers_InvokeCommandCompleted(DataLoaderEventArgs e)
@@ -1233,12 +1302,18 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
+
             if (members != null)
             {
-                foreach (MemberDataWrapper wrapper in members)
+                foreach (MemberData wrapper in members)
                 {
-                    OlapMemberInfo memberInfo = OlapMemberInfoHierarchy.FindMember(wrapper.Member.UniqueName);
+                    OlapMemberInfo memberInfo = OlapMemberInfoHierarchy.FindMember(wrapper.UniqueName);
 
                     //Если элемент найден, то переводим в новое состояние
                     if (memberInfo != null)
@@ -1280,23 +1355,6 @@ namespace Ranet.AgOlap.Controls
 
         bool m_LevelPropertiesIsLoaded = false;
 
-        List<MemberDataWrapper> UnPackMembers(String str)
-        {
-            List<MemberDataWrapper> members = null;
-            if (!String.IsNullOrEmpty(str))
-            {
-                try
-                {
-                    members = XmlSerializationUtility.XmlStr2Obj<List<MemberDataWrapper>>(str);
-                }
-                catch
-                {
-                    return null;
-                }
-            }
-            return members;
-        }
-
         /// <summary>
         /// Иерархия OlapMemberInfo
         /// </summary>
@@ -1307,7 +1365,7 @@ namespace Ranet.AgOlap.Controls
             {
                 if (m_OlapMemberInfoHierarchy == null)
                 {
-                    m_OlapMemberInfoHierarchy = new RootOlapMemberInfo(MemberDataWrapper.Empty, Mode);
+                    m_OlapMemberInfoHierarchy = new RootOlapMemberInfo(MemberData.Empty);
                     m_OlapMemberInfoHierarchy.HierarchyStateChanged += new OlapMemberInfo.StateChangedEventHandler(OlapMemberInfoHierarchy_HierarchyStateChanged);
                 }
                 return m_OlapMemberInfoHierarchy;
@@ -1317,19 +1375,6 @@ namespace Ranet.AgOlap.Controls
         void OlapMemberInfoHierarchy_HierarchyStateChanged(OlapMemberInfo sender)
         {
             GenerateSetBySelectionState();
-        }
-
-        /// <summary>
-        /// Режим работы 
-        /// </summary>
-        private Modes mode = Modes.BM;
-
-        private Modes Mode
-        {
-            get
-            {
-                return mode;
-            }
         }
 
         /// <summary>
@@ -1361,7 +1406,7 @@ namespace Ranet.AgOlap.Controls
         /// </summary>
         Dictionary<String, MemberTreeNode> m_TreeNodes = new Dictionary<String, MemberTreeNode>();
 
-        void CreateChildNodes(MemberTreeNode parent, List<MemberDataWrapper> members)
+        void CreateChildNodes(MemberTreeNode parent, List<MemberData> members)
         {
             if (members == null || members.Count == 0)
                 return;
@@ -1369,21 +1414,26 @@ namespace Ranet.AgOlap.Controls
             List<OlapMemberInfo> infos = new List<OlapMemberInfo>();
             List<OlapMemberInfo> to_Collapse = new List<OlapMemberInfo>();
 
-            foreach (MemberDataWrapper wrapper in members)
+            for (int i = 0; i < members.Count; i++)
             {
+                MemberData wrapper = members[i];
+                // Грузим Step+1 элемент, а отображать будем только Step штук. Если в ответе придет Step+1 элемент, то значит нужно отображать узел LoadNext
+                if (UseStepLoading && members.Count > Step && i >= (members.Count - 1))
+                    break;
+
                 // Каждый из элементов помещаем в иерархию
                 OlapMemberInfo info = OlapMemberInfoHierarchy.AddMemberToHierarchy(wrapper);
                 if (info != null)
                 {
-                    if (info.CubeChildrenCount != wrapper.RealChildrenCount)
+                    long realCount = QueryProvider.GetRealChildrenCount(wrapper);
+                    if (info.CubeChildrenCount != realCount)
                     {
                         to_Collapse.Add(info);
-                        info.CubeChildrenCount = wrapper.RealChildrenCount;
+                        info.CubeChildrenCount = realCount;
                     }
                     infos.Add(info);
                 }
             }
-
 
             //Если известен родительский узел дерева. То получаем его OlapMemberInfo
             if (parent != null)
@@ -1506,7 +1556,8 @@ namespace Ranet.AgOlap.Controls
             //Если режим Частичной загрузки, то сверяем количество загруженных элементов и количество элементов в кубе
             if (useStepLoading)
             {
-                if (AllChildrenMembersAddedToTreeNode(parent) == false)
+                // Грузим Step+1 элемент, а отображать будем только Step штук. Если в ответе придет Step+1 элемент, то значит нужно отображать узел LoadNext
+                if (members.Count > Step)
                 {
                     if (loadNextIndex == -1)
                     {
@@ -1661,87 +1712,87 @@ namespace Ranet.AgOlap.Controls
             //}
         }
 
-        /// <summary>
-        /// Проверяет все ли дочерние мемберы для указанного узла добавлены в дерево
-        /// </summary>
-        /// <param name="parent"></param>
-        /// <returns></returns>
-        private bool AllChildrenMembersAddedToTreeNode(MemberTreeNode node)
-        {
-            //long loadedChildrenCount = 0;
-            long cubeChildrenCount = 0;
-            /*if (node == null)	// - корневой узел
-            {
-                loadedChildrenCount = membersTree.Items.Count;
-                cubeChildrenCount = m_RootMembersCubeCount;
+        ///// <summary>
+        ///// Проверяет все ли дочерние мемберы для указанного узла добавлены в дерево
+        ///// </summary>
+        ///// <param name="parent"></param>
+        ///// <returns></returns>
+        //private bool AllChildrenMembersAddedToTreeNode(MemberTreeNode node)
+        //{
+        //    //long loadedChildrenCount = 0;
+        //    long cubeChildrenCount = 0;
+        //    /*if (node == null)	// - корневой узел
+        //    {
+        //        loadedChildrenCount = membersTree.Items.Count;
+        //        cubeChildrenCount = m_RootMembersCubeCount;
 
-                if (loadedChildrenCount < cubeChildrenCount)
-                {
-                    return false;
-                }
-                else
-                    return true;
-            }
-            else
-            {
-                loadedChildrenCount = node.Items.Count;
+        //        if (loadedChildrenCount < cubeChildrenCount)
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //            return true;
+        //    }
+        //    else
+        //    {
+        //        loadedChildrenCount = node.Items.Count;
 
-                OlapMemberInfo info = node.MemberInfo;
-                cubeChildrenCount = info.CubeChildrenCount;
+        //        OlapMemberInfo info = node.MemberInfo;
+        //        cubeChildrenCount = info.CubeChildrenCount;
 
-                if (loadedChildrenCount < cubeChildrenCount)
-                {
-                    return false;
-                }
-                else
-                    return true;
-            }*/
-            //Количество загруженных узлов - это количество узлов - 2 (узел "Загрузить далее", узел "Загрузить все")
-            long loadedChildrenCount = 0;
+        //        if (loadedChildrenCount < cubeChildrenCount)
+        //        {
+        //            return false;
+        //        }
+        //        else
+        //            return true;
+        //    }*/
+        //    //Количество загруженных узлов - это количество узлов - 2 (узел "Загрузить далее", узел "Загрузить все")
+        //    long loadedChildrenCount = 0;
 
-            if (node == null)
-            {
-                cubeChildrenCount = m_RootMembersCubeCount;
-                // Догружаем в корень дерева
-                loadedChildrenCount = membersTree.Items.Count;
+        //    if (node == null)
+        //    {
+        //        cubeChildrenCount = m_RootMembersCubeCount;
+        //        // Догружаем в корень дерева
+        //        loadedChildrenCount = membersTree.Items.Count;
 
-                int offset = 0;
-                for (int i = membersTree.Items.Count - 1, x = 1; i >= 0; i--, x++)
-                {
-                    LoadNextTreeNode loadNext = membersTree.Items[i] as LoadNextTreeNode;
-                    if (loadNext != null)
-                    {
-                        offset = x;
-                        break;
-                    }
-                }
-                loadedChildrenCount -= offset;
-            }
-            else
-            {
-                cubeChildrenCount = node.MemberInfo.CubeChildrenCount;
-                //Догружаем в элемент
-                loadedChildrenCount = node.Items.Count;
+        //        int offset = 0;
+        //        for (int i = membersTree.Items.Count - 1, x = 1; i >= 0; i--, x++)
+        //        {
+        //            LoadNextTreeNode loadNext = membersTree.Items[i] as LoadNextTreeNode;
+        //            if (loadNext != null)
+        //            {
+        //                offset = x;
+        //                break;
+        //            }
+        //        }
+        //        loadedChildrenCount -= offset;
+        //    }
+        //    else
+        //    {
+        //        cubeChildrenCount = node.MemberInfo.CubeChildrenCount;
+        //        //Догружаем в элемент
+        //        loadedChildrenCount = node.Items.Count;
 
-                int offset = 0;
-                for (int i = node.Items.Count - 1, x = 1; i >= 0; i--, x++)
-                {
-                    LoadNextTreeNode loadNext = node.Items[i] as LoadNextTreeNode;
-                    if (loadNext != null)
-                    {
-                        offset = x;
-                        break;
-                    }
-                }
-                loadedChildrenCount -= offset;
-            }
-            if (loadedChildrenCount < cubeChildrenCount)
-            {
-                return false;
-            }
-            else
-                return true;
-        }
+        //        int offset = 0;
+        //        for (int i = node.Items.Count - 1, x = 1; i >= 0; i--, x++)
+        //        {
+        //            LoadNextTreeNode loadNext = node.Items[i] as LoadNextTreeNode;
+        //            if (loadNext != null)
+        //            {
+        //                offset = x;
+        //                break;
+        //            }
+        //        }
+        //        loadedChildrenCount -= offset;
+        //    }
+        //    if (loadedChildrenCount < cubeChildrenCount)
+        //    {
+        //        return false;
+        //    }
+        //    else
+        //        return true;
+        //}
 
         void MemberNode_Expanded(object sender, RoutedEventArgs e)
         {
@@ -1791,8 +1842,11 @@ namespace Ranet.AgOlap.Controls
         /// <param name="uniqueName"></param>
         private void LoadAscendants(String uniqueName)
         {
-            MemberChoiceQuery args = CommandHelper.CreateGetAscendantsArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, uniqueName);
-            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+            String query = DataManager.GetAscendants(CurrentLevelUniqueName, uniqueName);
+            LogManager.LogInformation(this, this.Name + " - Loading ascendants for '" + uniqueName + "'");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetAscendants, null));
+
         }
 
         private void LoadLevelProperties()
@@ -1803,6 +1857,7 @@ namespace Ranet.AgOlap.Controls
             // Чистим результат поиска
             findResultTree.Items.Clear();
 
+            LogManager.LogInformation(this, this.Name + " - Loading levels attributes.");
             MetadataQuery args = CommandHelper.CreateLoadLevelPropertiesArgs(Connection, CubeName, String.Empty, HierarchyUniqueName, String.Empty);
             OlapDataLoader.LoadData(args, args);
         }
@@ -1827,8 +1882,16 @@ namespace Ranet.AgOlap.Controls
 
             OlapMemberInfo info = item.MemberInfo;
 
-            MemberChoiceQuery args = CommandHelper.CreateGetChildrenMembersQueryArgs(Connection, CubeName, SubCube, HierarchyUniqueName, info.UniqueName, StartLevelUniqueName, begin, count);
-            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, item));
+            //MemberChoiceQuery args = CommandHelper.CreateGetChildrenMembersQueryArgs(Connection, CubeName, SubCube, HierarchyUniqueName, info.UniqueName, CurrentLevelUniqueName, begin, count);
+            //OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, item));
+
+            // Грузим Step+1 элемент, а отображать будем только Step штук. Если в ответе придет Step+1 элемент, то значит нужно отображать узел LoadNext
+            if (count != -1)
+                count += 1;
+            String query = DataManager.GetChildrenMembers(info.UniqueName, begin, count);
+            LogManager.LogInformation(this, this.Name + " - Loading children for '" + info.UniqueName + "'");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.GetChildrenMembers, item));
         }
 
         void Service_GetChildrenMembersCompleted(DataLoaderEventArgs e, MemberTreeNode parentNode)
@@ -1840,7 +1903,12 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
 
             CreateChildNodes(parentNode, members);
         }
@@ -1851,84 +1919,32 @@ namespace Ranet.AgOlap.Controls
                 return null;
 
             BitmapImage res = null;
-            if (memberInfo.Mode == Modes.BM)
+
+            switch (memberInfo.SelectState)
             {
-                switch (memberInfo.SelectState)
-                {
-                    case SelectStates.Not_Initialized:
-                    case SelectStates.Not_Selected:
-                        res = UriResources.Images.NotSelected16;
-                        break;
-                    case SelectStates.Selected_Self:
-                    case SelectStates.Selected_By_Parent:
-                        res = UriResources.Images.Selected16;
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                        res = UriResources.Images.SelectedChildren16;
-                        break;
-                    case SelectStates.Labeled_As_Parent:
-                        res = UriResources.Images.HasSelectedChildren16;
-                        break;
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        res = UriResources.Images.HasExcludedChildren16;
-                        break;
-                    default:
-                        break;
-                }
+                case SelectStates.Not_Initialized:
+                case SelectStates.Not_Selected:
+                    res = UriResources.Images.NotSelected16;
+                    break;
+                case SelectStates.Selected_Self:
+                case SelectStates.Selected_By_Parent:
+                    res = UriResources.Images.Selected16;
+                    break;
+                case SelectStates.Selected_With_Children:
+                case SelectStates.Selected_By_Parent_With_Children:
+                    res = UriResources.Images.SelectedChildren16;
+                    break;
+                case SelectStates.Labeled_As_Parent:
+                    res = UriResources.Images.HasSelectedChildren16;
+                    break;
+                case SelectStates.Selected_With_Children_Has_Excluded:
+                case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
+                    res = UriResources.Images.HasExcludedChildren16;
+                    break;
+                default:
+                    break;
             }
 
-            if (memberInfo.Mode == Modes.Rows_Area)
-            {
-                switch (memberInfo.SelectState)
-                {
-                    case SelectStates.Not_Initialized:
-                    case SelectStates.Not_Selected:
-                        res = UriResources.Images.NotSelected16;
-                        break;
-                    case SelectStates.Selected_Self:
-                    case SelectStates.Selected_By_Parent:
-                        res = UriResources.Images.Selected16;
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                    case SelectStates.Labeled_As_Parent:
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        res = UriResources.Images.SelectedChildren16;
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            if (memberInfo.Mode == Modes.Filter_Area)
-            {
-                switch (memberInfo.SelectState)
-                {
-                    case SelectStates.Not_Initialized:
-                    case SelectStates.Not_Selected:
-                        res = UriResources.Images.NotSelected16;
-                        break;
-                    case SelectStates.Selected_By_Parent:
-                        res = UriResources.Images.Selected16;
-                        break;
-                    case SelectStates.Selected_With_Children:
-                    case SelectStates.Selected_By_Parent_With_Children:
-                        res = UriResources.Images.Selected16;
-                        break;
-                    case SelectStates.Labeled_As_Parent:
-                        res = UriResources.Images.HasSelectedChildren16;
-                        break;
-                    case SelectStates.Selected_With_Children_Has_Excluded:
-                    case SelectStates.Selected_By_Parent_With_Children_Has_Excluded:
-                        res = UriResources.Images.HasSelectedChildren16;
-                        break;
-                    default:
-                        break;
-                }
-            }
             return res;
         }
 
@@ -2133,8 +2149,12 @@ namespace Ranet.AgOlap.Controls
             //String strToSearch = findTextBox.Text;
             //if (!String.IsNullOrEmpty(strToSearch))
             //{
-            MemberChoiceQuery args = CommandHelper.CreateFindMembersArgs(Connection, CubeName, SubCube, HierarchyUniqueName, StartLevelUniqueName, filter);
-            OlapDataLoader.LoadData(args, new UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>(args, null));
+
+            String query = DataManager.SearchMembers(CurrentLevelUniqueName, filter);
+            LogManager.LogInformation(this, this.Name + " - Searching for members.");
+            MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+            OlapDataLoader.LoadData(query_args, new UserSchemaWrapper<MemberChoiceQueryType, MemberTreeNode>(MemberChoiceQueryType.FindMembers, null));
+
             //}
         }
 
@@ -2149,16 +2169,19 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
-            if (members == null)
-                return;
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
 
             //ClearTree();
             // CreateChildNodes(null, members);
 
             List<OlapMemberInfo> infos = new List<OlapMemberInfo>();
 
-            foreach (MemberDataWrapper wrapper in members)
+            foreach (MemberData wrapper in members)
             {
                 // Каждый из элементов помещаем в иерархию
                 OlapMemberInfo info = OlapMemberInfoHierarchy.AddMemberToHierarchy(wrapper);
@@ -2206,17 +2229,16 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode> wrapper = e.UserState as UserSchemaWrapper<MemberChoiceQuery, MemberTreeNode>;
-            if (wrapper == null)
-                return;
-
-            List<MemberDataWrapper> members = UnPackMembers(e.Result.Content);
-            if (members == null)
-                return;
+            List<MemberData> members = new List<MemberData>();
+            if (!String.IsNullOrEmpty(e.Result.Content))
+            {
+                CellSetData cellSet = CellSetData.Deserialize(e.Result.Content);
+                members = QueryProvider.GetMembers(cellSet);
+            }
 
             List<OlapMemberInfo> infos = new List<OlapMemberInfo>();
 
-            foreach (MemberDataWrapper member in members)
+            foreach (MemberData member in members)
             {
                 // Каждый из элементов помещаем в иерархию
                 OlapMemberInfo info = OlapMemberInfoHierarchy.AddMemberToHierarchy(member);
@@ -2255,7 +2277,16 @@ namespace Ranet.AgOlap.Controls
                     m_TreeNodes[info.UniqueName] = node;
 
                     MemberTreeNode parent = null;
-                    String parentUniqueName = info.Info.ParentUniqueName;
+                    String parentUniqueName = String.Empty;
+                    if (info.Info != null)
+                    {
+                        PropertyData prop = info.Info.GetMemberProperty(MemberData.PARENT_UNIQUE_NAME_PROPERTY);
+                        if (prop != null && prop.Value != null)
+                        {
+                            parentUniqueName = prop.Value.ToString();
+                        }
+                    }
+
                     if (!String.IsNullOrEmpty(parentUniqueName))
                     {
                         //Если родительский узел не задан, то узел добавится в корень
@@ -2267,8 +2298,7 @@ namespace Ranet.AgOlap.Controls
 
                     if (parent == null)
                     {
-                        if (membersTree.Items.Count < m_RootMembersCubeCount)
-                            membersTree.IsFullLoaded = false;
+                        membersTree.IsFullLoaded = false;
                         membersTree.Items.Add(node);
                         membersTree.IsWaiting = false;
                         //membersTree.IsReloadAll = true;
@@ -2287,9 +2317,9 @@ namespace Ranet.AgOlap.Controls
             }
 
             MemberTreeNode memberNode = null;
-            if (m_TreeNodes.ContainsKey(wrapper.Schema.MemberUniqueName))
+            if (infos.Count > 0 && m_TreeNodes.ContainsKey(infos[infos.Count -1].UniqueName))
             {
-                memberNode = m_TreeNodes[wrapper.Schema.MemberUniqueName];
+                memberNode = m_TreeNodes[infos[infos.Count - 1].UniqueName];
             }
 
             if (memberNode != null)
@@ -2399,11 +2429,8 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_MemberVisualizationType = value;
-                if (m_IsInitialized)
-                {
-                    RefreshTree(false);
-                }
             }
         }
+
     }
 }

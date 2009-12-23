@@ -157,7 +157,7 @@ namespace Ranet.AgOlap.Controls.ValueCopy
             TextBlock Label_Coefficient = new TextBlock() { Text = Localization.ValueCopyControl_Сoefficient, Margin = new Thickness(0, 5, 0, 0) };
             Row0_LayoutRoot.Children.Add(Label_Coefficient);
             Grid.SetRow(Label_Coefficient, 2);
-            m_Coefficient = new TextBox() { Text = "1", Margin = new Thickness(0, 5, 0, 0) };
+            m_Coefficient = new RichTextBox() { Text = "1", Margin = new Thickness(0, 5, 0, 0) };
             Row0_LayoutRoot.Children.Add(m_Coefficient);
             Grid.SetRow(m_Coefficient, 3);
 
@@ -166,7 +166,7 @@ namespace Ranet.AgOlap.Controls.ValueCopy
             Row0_LayoutRoot.Children.Add(Label_Value);
             Grid.SetRow(Label_Value, 2);
             Grid.SetColumn(Label_Value, 1);
-            m_Value = new TextBox() { Text = "0", Margin = new Thickness(5, 5, 0, 0) };
+            m_Value = new RichTextBox() { Text = "0", Margin = new Thickness(5, 5, 0, 0) };
             Row0_LayoutRoot.Children.Add(m_Value);
             Grid.SetRow(m_Value, 3);
             Grid.SetColumn(m_Value, 1);

@@ -43,6 +43,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid
         ShowProperties,
         ToolBar,
         ValueDelivery,
-        ValueCopy
+        ValueCopy,
+        DrillThrough
     }
 }
