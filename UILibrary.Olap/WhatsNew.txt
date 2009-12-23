@@ -1,5 +1,19 @@
-Nobember 05, 2009
-- Added library for zip/unzip ability.
+December 20, 2009
+- Core: JSon and ZIP using cuts down network traffic more than 10 times for large queries. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=4
+- Core: https/http switching is supported now. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=6
+- DataService: Fixed multithreading issues. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=3
+- MdxDesigner: Enabling users to remove items from filters, rows, columns, or data by dragging them out of the box.
+- MdxDesigner: Ability to select cube
+- MdxDesigner: Import/Export layout allows to remove old settings
+- PivotGrid: Display data if only rows or only columns are selected. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=2
+- PivotGrid: Changed (calculated, but not saved) cells are displayed as bold blue
+- PivotGrid: On calculation error the appropriate icon and error description are displayed 
+- PivotGrid: Added "DrillThrough" context menu item for cell (is not available for calculated cells and can be turned off programmatically)
+- PivotGrid: Changed icon for non expandable rows and columns ( [+] -> [*] )
+- ... small bug fixes
+
+November 05, 2009
+- Core: Added library for zip/unzip ability.
 
 October 20, 2009
 - Samples:  Added UI controls samples 
