@@ -15,3 +15,4 @@ glob:*.user
 glob:UILibrary.Olap/UILibrary.Olap.MergeModule.Samples.Src/INSTALLDIR/Samples/UITest.Web/ClientBin/UITest.xap
 glob:*.suo
 glob:*/Galaktika.OpenSource.snk
+glob:UILibrary.Olap/UILibrary.Olap.WixInstaller/License.rtf
