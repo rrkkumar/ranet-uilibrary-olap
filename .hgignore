@@ -2,3 +2,4 @@ glob:UILibrary.Olap/dll/System.*
 glob:UILibrary.Olap/Ranet.Olap.Mdx/Compiler/Parser/mdx.*
 glob:UILibrary.Olap/Ranet.Olap.Mdx/Compiler/Parser/antlrworks*
 glob:UILibrary.Olap/dll/Microsoft.*
+glob:Binaries/Release/*
