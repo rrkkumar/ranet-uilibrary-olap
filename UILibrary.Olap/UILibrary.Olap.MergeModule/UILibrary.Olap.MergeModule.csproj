@@ -144,9 +144,11 @@
     <Content Include="..\..\Binaries\Release\ru\Ranet.Olap.Core.resources.dll">
       <Link>INSTALLDIR\FRAMEWORK\BIN\RU\Ranet.Olap.Core.resources.dll</Link>
     </Content>
-    <Content Include="INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\!ProductInfo\Licenses\BSD-Antlr.Runtime.txt">
+      <Link>INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt</Link>
+    </Content>
     <Content Include="..\..\Binaries\Release\Ranet.AgZipLib.dll">
       <Link>INSTALLDIR\SILVERLIGHT\BIN\Ranet.AgZipLib.dll</Link>
     </Content>
@@ -198,7 +200,14 @@
     <Content Include="..\dll\SilverlightToolkit.License.txt">
       <Link>INSTALLDIR\Licenses\SilverlightToolkit.License.txt</Link>
     </Content>
-    <Content Include="INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.rtf">
+      <Link>INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.rtf</Link>
+    </None>
+    <None Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
+      <Link>INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf</Link>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

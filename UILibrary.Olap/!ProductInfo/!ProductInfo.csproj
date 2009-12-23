@@ -48,23 +48,54 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="!ProductInfo.Define" />
-    <None Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
-      <Link>Licenses\Ranet.UILibrary.Olap.License.ru.rtf</Link>
-    </None>
-    <None Include="..\UILibrary.Olap.WixInstaller\License.rtf">
-      <Link>Licenses\License.rtf</Link>
-    </None>
     <None Include="Galaktika.OpenSource.snk" />
     <None Include="TFSBuild.proj" />
     <None Include="TFSBuild.rsp" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\BSD-Antlr.Runtime.txt">
-      <Link>Licenses\BSD-Antlr.Runtime.txt</Link>
-    </Content>
-    <Content Include="..\UILibrary.Olap.MergeModule\INSTALLDIR\Licenses\GPL v.3.txt">
+    <None Include="..\dll\GPL v.3.txt">
       <Link>Licenses\GPL v.3.txt</Link>
-    </Content>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\dll\LGPL v.3.txt">
+      <Link>Licenses\LGPL v.3.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\dll\Ranet.Json.License.txt">
+      <Link>Licenses\Ranet.Json.License.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\dll\Ranet.ZipLib.License.txt">
+      <Link>Licenses\Ranet.ZipLib.License.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\dll\SilverlightToolkit.License.txt">
+      <Link>Licenses\SilverlightToolkit.License.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Licenses\Ranet.UILibrary.Olap.License.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Licenses\BSD-Antlr.Runtime.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\WhatsNew.txt">
+      <Link>Info\WhatsNew.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Readme.txt">
+      <Link>Info\Readme.txt</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

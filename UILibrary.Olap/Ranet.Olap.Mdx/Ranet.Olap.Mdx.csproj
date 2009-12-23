@@ -147,7 +147,6 @@
     <None Include="..\!ProductInfo\Galaktika.OpenSource.snk">
       <Link>Galaktika.OpenSource.snk</Link>
     </None>
-    <None Include="Properties\1.1" />
   </ItemGroup>
   <Import Project="$(Ranet)\BuildTools-1.0\TFScompatible.proj" Condition=" '$(Ranet)' != '' " />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

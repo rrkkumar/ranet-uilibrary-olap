@@ -110,7 +110,6 @@
     <Content Include="INSTALLDIR\Samples\UITest.Web\Default.htm" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.wsdl" />
   </ItemGroup>
   <ItemGroup>

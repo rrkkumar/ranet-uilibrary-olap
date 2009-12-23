@@ -17,7 +17,7 @@ namespace UILibrary.Olap.UITestApplication.Web
 	public class OlapWebService : Ranet.Web.Olap.OlapWebServiceBase
 	{
 		[WebMethod]
-	  public String PerformOlapServiceAction(String schemaType, String schema)
+	  public override String PerformOlapServiceAction(String schemaType, String schema)
 	  {
 			if (schemaType=="CheckExist")
 				return "OK";

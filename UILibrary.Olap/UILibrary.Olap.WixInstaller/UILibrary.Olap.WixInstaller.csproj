@@ -1,6 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
+    <BuildDependsOn>$(BuildDependsOn);CopyLicense</BuildDependsOn>
     <LocalizedStringFile>en</LocalizedStringFile>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -44,21 +45,21 @@
     <Compile Include="UILInstaller.Olap.wxs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\Readme.txt">
+      <Link>INSTALLDIR\Readme.txt</Link>
+    </Content>
     <Content Include="..\WhatsNew.txt">
       <Link>INSTALLDIR\WhatsNew.txt</Link>
     </Content>
-    <Content Include="INSTALLDIR\Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(Ranet)\BuildTools-1.0\ranet.wix.targets" Condition=" '$(Ranet)' != '' " />
-  <!--Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" /-->
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
+  <Target Name="CopyLicense">
+    <Copy SourceFiles="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.rtf" DestinationFiles="License.rtf" SkipUnchangedFiles="true" />
   </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <PropertyGroup>
+    <CompileDependsOn>$(CompileDependsOn);CopyLicense</CompileDependsOn>
+  </PropertyGroup>
 </Project>

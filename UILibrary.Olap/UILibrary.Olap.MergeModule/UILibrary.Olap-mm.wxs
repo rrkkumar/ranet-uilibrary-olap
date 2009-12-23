@@ -22,8 +22,6 @@
 		/>
 		
 		<ComponentGroupRef Id="all"/>
-		<!-- ComponentGroupRef Id="GAC"/ -->
     <ComponentGroupRef Id="Registry"/>
-		<ComponentRef Id="MainLic"/>
 	</Module>
 </Wix>

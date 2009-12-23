@@ -3,3 +3,15 @@ glob:UILibrary.Olap/Ranet.Olap.Mdx/Compiler/Parser/mdx.*
 glob:UILibrary.Olap/Ranet.Olap.Mdx/Compiler/Parser/antlrworks*
 glob:UILibrary.Olap/dll/Microsoft.*
 glob:Binaries/Release/*
+glob:*.vssscc
+glob:*/Bin/Release/*
+glob:*/obj/*
+glob:UILibrary.Olap/UILibrary.Olap.UITestApplication*
+glob:UILibrary.Olap/UILibrary.Olap.sln
+glob:UILibrary.Olap/UILibrary.Olap.MergeModule.Samples.Src/INSTALLDIR/Samples/UITest.Web/bin/*
+glob:*.vspscc
+glob:UILibrary.Olap/UILibrary.Olap.UITest.sln
+glob:*.user
+glob:UILibrary.Olap/UILibrary.Olap.MergeModule.Samples.Src/INSTALLDIR/Samples/UITest.Web/ClientBin/UITest.xap
+glob:*.suo
+glob:*/Galaktika.OpenSource.snk

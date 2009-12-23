@@ -4,10 +4,24 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id='C363' Guid='dfb0c36e-c1f0-43c8-bb8b-9ec3f79be6c7'>
+			<Component Id='C3983' Guid='514313cc-2d6e-4da6-b9a7-98b60d529636'>
 				<File
-					Id='I363'
-					Name='N363'
+					Id='I3983'
+					Name='N3983'
+					KeyPath='yes'
+					LongName='Readme.txt'
+					Source='..\Readme.txt'
+					Checksum='yes'
+					Compressed='yes'
+					DiskId='1'
+				/>
+			</Component>
+		</DirectoryRef>
+		<DirectoryRef Id='INSTALLDIR'>
+			<Component Id='C3984' Guid='dd397ae6-8d1b-4f8d-b182-d31131a26f1d'>
+				<File
+					Id='I3984'
+					Name='N3984'
 					KeyPath='yes'
 					LongName='WhatsNew.txt'
 					Source='..\WhatsNew.txt'
@@ -17,23 +31,9 @@
 				/>
 			</Component>
 		</DirectoryRef>
-		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id='C364' Guid='6dd83a6f-bd11-4608-9446-a2a9ab058abe'>
-				<File
-					Id='I364'
-					Name='N364'
-					KeyPath='yes'
-					LongName='Readme.txt'
-					Source='INSTALLDIR\Readme.txt'
-					Checksum='yes'
-					Compressed='yes'
-					DiskId='1'
-				/>
-			</Component>
-		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C363'/>
-			<ComponentRef Id='C364'/>
+			<ComponentRef Id='C3983'/>
+			<ComponentRef Id='C3984'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

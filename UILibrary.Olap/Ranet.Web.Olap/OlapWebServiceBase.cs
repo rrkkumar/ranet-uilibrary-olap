@@ -65,7 +65,7 @@ namespace Ranet.Web.Olap
         bool UseCompress = true;
 
         [WebMethod(EnableSession = true)]
-        public String PerformOlapServiceAction(String schemaType, String schema)
+        public virtual String PerformOlapServiceAction(String schemaType, String schema)
         {
             DateTime start = DateTime.Now;
             try
