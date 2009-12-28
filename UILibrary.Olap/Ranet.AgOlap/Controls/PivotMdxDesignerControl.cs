@@ -3277,5 +3277,12 @@ namespace Ranet.AgOlap.Controls
             get { return m_ServerExplorer.CanSelectCube; }
             set { m_ServerExplorer.CanSelectCube = value; }
         }
+        public string MdxQuery
+        {
+					get
+					{
+						return m_MdxQuery.Text;
+					}
+        }
     }
 }
