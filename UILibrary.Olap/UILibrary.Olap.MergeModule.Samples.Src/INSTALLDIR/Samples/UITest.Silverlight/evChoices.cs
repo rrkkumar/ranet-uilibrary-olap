@@ -17,7 +17,7 @@ namespace UILibrary.Olap.UITestApplication
 			if (cubeChoiceControl.SelectedInfo==null)
 				return;
 			
-			mdxDesigner_cubeName.Text=cubeChoiceControl.SelectedInfo.Name;
+			// mdxDesigner_cubeName.Text=cubeChoiceControl.SelectedInfo.Name;
 			getKPIsButton_Click(null, null);
 			getMeasuresButton_Click(null, null);
 			initDimensionChoiceButton_Click(null, null);

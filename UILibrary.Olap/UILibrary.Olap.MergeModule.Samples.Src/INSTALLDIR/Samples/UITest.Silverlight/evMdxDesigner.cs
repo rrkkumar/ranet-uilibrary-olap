@@ -8,22 +8,29 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)
 		{
-			//  pivotMdxDesignerControl.URL = WSDataUrl;
+			// NON required property
+			// by default URL= <BackToApplicationClientBin>\..\InitializeWebService.asmx
+			// pivotMdxDesignerControl.URL = WSDataUrl;
+
 			pivotMdxDesignerControl.Connection = ConnectionStringId;
-			pivotMdxDesignerControl.CubeName = mdxDesigner_cubeName.Text;
-			pivotMdxDesignerControl.SubCube = mdxDesigner_subCube.Text;
+			pivotMdxDesignerControl.CanSelectCube = true;
 			pivotMdxDesignerControl.AutoExecuteQuery = false;
 			pivotMdxDesignerControl.Initialize();
 		}
 		string MdxLayout = String.Empty;
 		void exportMdxLayoutButton_Click(object sender, RoutedEventArgs e)
 		{
-			MdxLayout = pivotMdxDesignerControl.ExportMdxLayoutInfo();
-			MessageBox.Show(MdxLayout, "This is exported MdxLayout", MessageBoxButton.OK);
+			mdxDesignerLayout.Text = pivotMdxDesignerControl.ExportMdxLayoutInfo();
+			MessageBox.Show("Mdx Designer Layout was exported. See Mdx Designer Layout tab.", "Information", MessageBoxButton.OK);
 		}
 		void importMdxLayoutButton_Click(object sender, RoutedEventArgs e)
 		{
-			pivotMdxDesignerControl.ImportMdxLayoutInfo(MdxLayout);
+			pivotMdxDesignerControl.ImportMdxLayoutInfo(mdxDesignerLayout.Text);
+		}
+		private void exportMDXQueryButton_Click(object sender, RoutedEventArgs e)
+		{
+			pivorGrid_query.Text=pivotMdxDesignerControl.MdxQuery;
+			MessageBox.Show("Mdx query was exported. See Mdx Query tab.", "Information", MessageBoxButton.OK);
 		}
 	}
 }

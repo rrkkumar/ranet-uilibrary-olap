@@ -4,10 +4,10 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4291' Guid='2ec666a3-8855-4041-856f-0d972964add3'>
+			<Component Id='C126' Guid='d8c86884-75d0-490f-8736-9b427781c767'>
 				<File
-					Id='I4291'
-					Name='N4291'
+					Id='I126'
+					Name='N126'
 					KeyPath='yes'
 					LongName='App.xaml.cs'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml.cs'
@@ -18,10 +18,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4292' Guid='523cd9bf-beac-4600-8cbc-4b72d04689f8'>
+			<Component Id='C127' Guid='18ca24a9-2243-42c9-ac79-80c24798eb91'>
 				<File
-					Id='I4292'
-					Name='N4292'
+					Id='I127'
+					Name='N127'
 					KeyPath='yes'
 					LongName='MainPage.xaml.cs'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml.cs'
@@ -32,10 +32,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight_Properties'>
-			<Component Id='C4293' Guid='4824c012-5a00-4ba6-a32f-ae481e37136e'>
+			<Component Id='C128' Guid='2a7bfe4f-38b1-441b-a6cd-e906159a2d11'>
 				<File
-					Id='I4293'
-					Name='N4293'
+					Id='I128'
+					Name='N128'
 					KeyPath='yes'
 					LongName='AssemblyInfo.cs'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AssemblyInfo.cs'
@@ -46,10 +46,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4294' Guid='74b407c7-824b-4fcc-a75e-82ff2b65ca24'>
+			<Component Id='C129' Guid='1b50bed5-8c5d-4c37-94a3-fe468b249205'>
 				<File
-					Id='I4294'
-					Name='N4294'
+					Id='I129'
+					Name='N129'
 					KeyPath='yes'
 					LongName='Program.cs'
 					Source='INSTALLDIR\Samples\MdxFormatter\Program.cs'
@@ -60,10 +60,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter_Properties'>
-			<Component Id='C4295' Guid='7dca61e6-5ea6-4e44-99d6-8e08124010a6'>
+			<Component Id='C130' Guid='3a38dcc3-768d-49f6-ad4f-2b3c99ba9fad'>
 				<File
-					Id='I4295'
-					Name='N4295'
+					Id='I130'
+					Name='N130'
 					KeyPath='yes'
 					LongName='AssemblyInfo.cs'
 					Source='INSTALLDIR\Samples\MdxFormatter\Properties\AssemblyInfo.cs'
@@ -74,10 +74,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4296' Guid='021ffa4e-5428-400c-8afa-86b47da2ad99'>
+			<Component Id='C131' Guid='f405236e-4e13-4e16-81b0-99a6fdf7d33e'>
 				<File
-					Id='I4296'
-					Name='N4296'
+					Id='I131'
+					Name='N131'
 					KeyPath='yes'
 					LongName='MdxFormatter.html'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.html'
@@ -88,10 +88,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight_Properties'>
-			<Component Id='C4297' Guid='70e683e5-7f7b-4cc2-ac02-2475cf591c96'>
+			<Component Id='C132' Guid='5b386479-0436-4b73-94c6-6c0622fae49f'>
 				<File
-					Id='I4297'
-					Name='N4297'
+					Id='I132'
+					Name='N132'
 					KeyPath='yes'
 					LongName='AppManifest.xml'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\Properties\AppManifest.xml'
@@ -102,10 +102,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples'>
-			<Component Id='C4298' Guid='011a9718-d3c7-4b5f-8132-a2e3c70aea31'>
+			<Component Id='C133' Guid='84145f09-6afa-4e62-a30f-bda398a4e9a2'>
 				<File
-					Id='I4298'
-					Name='N4298'
+					Id='I133'
+					Name='N133'
 					KeyPath='yes'
 					LongName='Ranet.UILibrary.Olap.Samples.sln'
 					Source='INSTALLDIR\Samples\Ranet.UILibrary.Olap.Samples.sln'
@@ -116,10 +116,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4299' Guid='8cd71549-3d6e-42da-b230-7ac00ecf9d70'>
+			<Component Id='C134' Guid='4352a387-a521-4b47-8ca8-e891d59e95a1'>
 				<File
-					Id='I4299'
-					Name='N4299'
+					Id='I134'
+					Name='N134'
 					KeyPath='yes'
 					LongName='TestKey.snk'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\TestKey.snk'
@@ -130,10 +130,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4300' Guid='efeb9f0d-8019-4ae1-a985-865ccd817c03'>
+			<Component Id='C135' Guid='9d8e8387-7228-4321-bf6c-c25e3099c551'>
 				<File
-					Id='I4300'
-					Name='N4300'
+					Id='I135'
+					Name='N135'
 					KeyPath='yes'
 					LongName='MdxSample.mdx'
 					Source='INSTALLDIR\Samples\MdxFormatter\MdxSample.mdx'
@@ -144,10 +144,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4301' Guid='f3f928e6-cddf-4a0b-a19a-dd5be8ee1fd2'>
+			<Component Id='C136' Guid='ed81f1d5-0140-4308-9904-486daf9483d4'>
 				<File
-					Id='I4301'
-					Name='N4301'
+					Id='I136'
+					Name='N136'
 					KeyPath='yes'
 					LongName='MdxSample00.mdx'
 					Source='INSTALLDIR\Samples\MdxFormatter\MdxSample00.mdx'
@@ -158,10 +158,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4302' Guid='fe7b3252-39dc-413b-82bc-0a4ebfa13aab'>
+			<Component Id='C137' Guid='bfd848f5-e91c-4766-8393-4b6dc85be679'>
 				<File
-					Id='I4302'
-					Name='N4302'
+					Id='I137'
+					Name='N137'
 					KeyPath='yes'
 					LongName='MdxSample01.mdx'
 					Source='INSTALLDIR\Samples\MdxFormatter\MdxSample01.mdx'
@@ -172,10 +172,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4303' Guid='d0cac6dc-59b8-4b50-acb8-303290477093'>
+			<Component Id='C138' Guid='4f9d6f4b-2abe-4401-a6ff-5845903cb572'>
 				<File
-					Id='I4303'
-					Name='N4303'
+					Id='I138'
+					Name='N138'
 					KeyPath='yes'
 					LongName='MdxSample02.mdx'
 					Source='INSTALLDIR\Samples\MdxFormatter\MdxSample02.mdx'
@@ -186,10 +186,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4304' Guid='d6ae0ccc-9ed5-42b8-8b05-cc369e87478c'>
+			<Component Id='C139' Guid='40c3c072-a920-45c6-beef-5f656de2621e'>
 				<File
-					Id='I4304'
-					Name='N4304'
+					Id='I139'
+					Name='N139'
 					KeyPath='yes'
 					LongName='TestKey.snk'
 					Source='INSTALLDIR\Samples\MdxFormatter\TestKey.snk'
@@ -200,10 +200,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4305' Guid='d46410c7-3426-4e49-915f-baaab088bd76'>
+			<Component Id='C140' Guid='f9b1b67b-9003-4335-b900-87b1e085f14a'>
 				<File
-					Id='I4305'
-					Name='N4305'
+					Id='I140'
+					Name='N140'
 					KeyPath='yes'
 					LongName='App.xaml'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\App.xaml'
@@ -214,10 +214,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4306' Guid='60e65867-2cac-450e-8c4d-54d603e31ff5'>
+			<Component Id='C141' Guid='e7adce64-6022-4369-9d06-e80064f35a46'>
 				<File
-					Id='I4306'
-					Name='N4306'
+					Id='I141'
+					Name='N141'
 					KeyPath='yes'
 					LongName='AppManifest.xaml'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\AppManifest.xaml'
@@ -228,10 +228,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4307' Guid='92fff79b-c468-4679-bd92-b55bd7302f60'>
+			<Component Id='C142' Guid='411b736b-69cf-4e6d-9b5f-5f04736612f1'>
 				<File
-					Id='I4307'
-					Name='N4307'
+					Id='I142'
+					Name='N142'
 					KeyPath='yes'
 					LongName='MainPage.xaml'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MainPage.xaml'
@@ -242,10 +242,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter.SilverLight'>
-			<Component Id='C4308' Guid='4a5b0cec-bd1c-4291-a3dd-739d0a4ff681'>
+			<Component Id='C143' Guid='af70e77e-dc2b-4ac2-aeae-1529f0182542'>
 				<File
-					Id='I4308'
-					Name='N4308'
+					Id='I143'
+					Name='N143'
 					KeyPath='yes'
 					LongName='MdxFormatter.SilverLight.csproj'
 					Source='INSTALLDIR\Samples\MdxFormatter.SilverLight\MdxFormatter.SilverLight.csproj'
@@ -256,10 +256,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_MdxFormatter'>
-			<Component Id='C4309' Guid='37c0e3d9-6a12-4d9b-b896-d3bb3e966f9e'>
+			<Component Id='C144' Guid='7b29f8a7-781a-46c7-9a78-43c8e82b43de'>
 				<File
-					Id='I4309'
-					Name='N4309'
+					Id='I144'
+					Name='N144'
 					KeyPath='yes'
 					LongName='MdxFormatter.csproj'
 					Source='INSTALLDIR\Samples\MdxFormatter\MdxFormatter.csproj'
@@ -270,10 +270,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_Properties'>
-			<Component Id='C4310' Guid='d827bdf9-e3da-45d2-a45a-e26e63dab773'>
+			<Component Id='C145' Guid='13bba5aa-a1fd-4e53-a786-9edda44d8d13'>
 				<File
-					Id='I4310'
-					Name='N4310'
+					Id='I145'
+					Name='N145'
 					KeyPath='yes'
 					LongName='AppManifest.xml'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\Properties\AppManifest.xml'
@@ -284,10 +284,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4311' Guid='a8956246-0374-4211-b392-71b96e74fde3'>
+			<Component Id='C146' Guid='a1407ff0-cb0b-41df-8b0d-c47df438705f'>
 				<File
-					Id='I4311'
-					Name='N4311'
+					Id='I146'
+					Name='N146'
 					KeyPath='yes'
 					LongName='UITest.Silverlight.csproj'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\UITest.Silverlight.csproj'
@@ -298,10 +298,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4312' Guid='5aa0c27c-f808-4da9-9528-ff070f67c7fa'>
+			<Component Id='C147' Guid='90e1b6bd-8e5d-48fa-893f-cfaecef8d423'>
 				<File
-					Id='I4312'
-					Name='N4312'
+					Id='I147'
+					Name='N147'
 					KeyPath='yes'
 					LongName='InitializeWebService.asmx'
 					Source='INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx'
@@ -312,10 +312,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4313' Guid='ec40e332-6f3c-4005-94f9-cc2ef9059932'>
+			<Component Id='C148' Guid='c5554710-1c10-4aa9-ac41-858d0c747539'>
 				<File
-					Id='I4313'
-					Name='N4313'
+					Id='I148'
+					Name='N148'
 					KeyPath='yes'
 					LongName='OlapWebService.asmx'
 					Source='INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx'
@@ -326,10 +326,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4314' Guid='784c30ba-4270-41fe-9cb9-7295eebc6720'>
+			<Component Id='C149' Guid='3d1b5b90-0c29-4143-8534-ff4a7090a3f0'>
 				<File
-					Id='I4314'
-					Name='N4314'
+					Id='I149'
+					Name='N149'
 					KeyPath='yes'
 					LongName='Silverlight.js'
 					Source='INSTALLDIR\Samples\UITest.Web\Silverlight.js'
@@ -340,10 +340,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4315' Guid='d9262390-3ed7-4133-b677-7af6455b6522'>
+			<Component Id='C150' Guid='8ac09a96-c446-4286-8477-449c67626344'>
 				<File
-					Id='I4315'
-					Name='N4315'
+					Id='I150'
+					Name='N150'
 					KeyPath='yes'
 					LongName='UITest.Web.csproj'
 					Source='INSTALLDIR\Samples\UITest.Web\UITest.Web.csproj'
@@ -354,10 +354,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4316' Guid='9765f8d9-b05e-45cd-b76c-e9b6a9926271'>
+			<Component Id='C151' Guid='79e506b6-e950-4ffd-acb8-8ffe200f1905'>
 				<File
-					Id='I4316'
-					Name='N4316'
+					Id='I151'
+					Name='N151'
 					KeyPath='yes'
 					LongName='App.xaml.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\App.xaml.cs'
@@ -368,10 +368,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4317' Guid='fbe7b232-f894-4a57-896d-df003e69a214'>
+			<Component Id='C152' Guid='3d726828-8afb-48c7-9495-c1fdb8805c3d'>
 				<File
-					Id='I4317'
-					Name='N4317'
+					Id='I152'
+					Name='N152'
 					KeyPath='yes'
 					LongName='Page.xaml.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\Page.xaml.cs'
@@ -382,10 +382,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_Properties'>
-			<Component Id='C4318' Guid='ec3ecbcc-e3f4-4c78-bf04-b96940204869'>
+			<Component Id='C153' Guid='74e67485-1daa-4c06-8931-bdbb826d8688'>
 				<File
-					Id='I4318'
-					Name='N4318'
+					Id='I153'
+					Name='N153'
 					KeyPath='yes'
 					LongName='AssemblyInfo.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\Properties\AssemblyInfo.cs'
@@ -396,10 +396,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4319' Guid='19b4f39a-e0a8-4cb7-9680-db8a06db0f4d'>
+			<Component Id='C154' Guid='f7ce83c9-4e9a-4622-8620-fec76cc5bcf0'>
 				<File
-					Id='I4319'
-					Name='N4319'
+					Id='I154'
+					Name='N154'
 					KeyPath='yes'
 					LongName='InitializeWebService.asmx.cs'
 					Source='INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx.cs'
@@ -410,10 +410,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4320' Guid='f52d9265-e213-470d-8e85-208599288bd4'>
+			<Component Id='C155' Guid='00d9b8d1-bc04-4b46-b531-1c5aea402cee'>
 				<File
-					Id='I4320'
-					Name='N4320'
+					Id='I155'
+					Name='N155'
 					KeyPath='yes'
 					LongName='OlapWebService.asmx.cs'
 					Source='INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx.cs'
@@ -424,10 +424,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web_Properties'>
-			<Component Id='C4321' Guid='2e2f50a7-a121-453f-b0fc-f7004e001b75'>
+			<Component Id='C156' Guid='84ac6bb7-0524-4304-9789-f8c295945267'>
 				<File
-					Id='I4321'
-					Name='N4321'
+					Id='I156'
+					Name='N156'
 					KeyPath='yes'
 					LongName='AssemblyInfo.cs'
 					Source='INSTALLDIR\Samples\UITest.Web\Properties\AssemblyInfo.cs'
@@ -438,10 +438,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4322' Guid='423e845e-cae2-440e-bd6f-2daed3c9f470'>
+			<Component Id='C157' Guid='5701f013-8f9e-4d93-93a6-5be229d87028'>
 				<File
-					Id='I4322'
-					Name='N4322'
+					Id='I157'
+					Name='N157'
 					KeyPath='yes'
 					LongName='Config.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\Config.cs'
@@ -452,10 +452,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4323' Guid='dca7afef-ac62-4825-a3b0-ee5a0d526339'>
+			<Component Id='C158' Guid='d1ad0b5c-c8a2-4fbd-a6fc-203ab17b7ce0'>
 				<File
-					Id='I4323'
-					Name='N4323'
+					Id='I158'
+					Name='N158'
 					KeyPath='yes'
 					LongName='evPivotGrid.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evPivotGrid.cs'
@@ -466,10 +466,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4324' Guid='b8cd0165-e21d-45ba-98cd-b93f2e80fcfc'>
+			<Component Id='C159' Guid='f0e70e65-be42-4388-a23d-a252e7fc9e48'>
 				<File
-					Id='I4324'
-					Name='N4324'
+					Id='I159'
+					Name='N159'
 					KeyPath='yes'
 					LongName='evChoices.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evChoices.cs'
@@ -480,10 +480,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4325' Guid='385f45bd-f17f-4115-84b1-ea630ec9a9c0'>
+			<Component Id='C160' Guid='59297506-342c-4e8d-9d44-a894a33aafbc'>
 				<File
-					Id='I4325'
-					Name='N4325'
+					Id='I160'
+					Name='N160'
 					KeyPath='yes'
 					LongName='Reference.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.cs'
@@ -494,10 +494,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4326' Guid='1c0c10da-4720-435f-b36f-2993e8d3f104'>
+			<Component Id='C161' Guid='cccc9bdd-1abe-4f69-888b-bfc9901dbd46'>
 				<File
-					Id='I4326'
-					Name='N4326'
+					Id='I161'
+					Name='N161'
 					KeyPath='yes'
 					LongName='evConfig.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evConfig.cs'
@@ -508,10 +508,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4327' Guid='dfd75ae9-b675-477d-aeb4-75273e988ce6'>
+			<Component Id='C162' Guid='5d730bf8-3d5e-4822-8b79-89320dd0c198'>
 				<File
-					Id='I4327'
-					Name='N4327'
+					Id='I162'
+					Name='N162'
 					KeyPath='yes'
 					LongName='evGauge.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evGauge.cs'
@@ -522,10 +522,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4328' Guid='5c5b6e2a-0b22-435a-8d03-323f06726727'>
+			<Component Id='C163' Guid='ec91f01c-f24d-4a18-b2cc-044797866052'>
 				<File
-					Id='I4328'
-					Name='N4328'
+					Id='I163'
+					Name='N163'
 					KeyPath='yes'
 					LongName='evMdxDesigner.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evMdxDesigner.cs'
@@ -536,10 +536,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4329' Guid='5feae087-a5f2-48e0-8dac-88c92e1f1fa9'>
+			<Component Id='C164' Guid='dc3c7f03-fdc1-4be8-9c84-8ef4b027723f'>
 				<File
-					Id='I4329'
-					Name='N4329'
+					Id='I164'
+					Name='N164'
 					KeyPath='yes'
 					LongName='evServerExplorer.cs'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\evServerExplorer.cs'
@@ -550,10 +550,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4330' Guid='cd872270-4178-49e6-b777-8a1d31259668'>
+			<Component Id='C165' Guid='3b67a7c9-a220-48a5-ba7d-d5db23f991b2'>
 				<File
-					Id='I4330'
-					Name='N4330'
+					Id='I165'
+					Name='N165'
 					KeyPath='yes'
 					LongName='App.xaml'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\App.xaml'
@@ -564,10 +564,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4331' Guid='2a4d3671-7fed-430a-980f-5dfe608ac1aa'>
+			<Component Id='C166' Guid='6ac3b258-c776-4661-aa7a-5188db954e8c'>
 				<File
-					Id='I4331'
-					Name='N4331'
+					Id='I166'
+					Name='N166'
 					KeyPath='yes'
 					LongName='Page.xaml'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\Page.xaml'
@@ -578,10 +578,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4332' Guid='35e30865-f5df-4693-b0df-0a9d0ad5bb3f'>
+			<Component Id='C167' Guid='c6d0523e-4a26-4080-828d-ee70da9397a7'>
 				<File
-					Id='I4332'
-					Name='N4332'
+					Id='I167'
+					Name='N167'
 					KeyPath='yes'
 					LongName='Web.config'
 					Source='INSTALLDIR\Samples\UITest.Web\Web.config'
@@ -592,10 +592,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight'>
-			<Component Id='C4333' Guid='7bb8e83c-35ab-4670-80a4-8710d120dbb6'>
+			<Component Id='C168' Guid='3028ac31-5165-4109-be03-0c9f51e31955'>
 				<File
-					Id='I4333'
-					Name='N4333'
+					Id='I168'
+					Name='N168'
 					KeyPath='yes'
 					LongName='ServiceReferences.ClientConfig'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\ServiceReferences.ClientConfig'
@@ -606,10 +606,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4334' Guid='52e03473-a02f-4164-9a28-9f917a71aeb1'>
+			<Component Id='C169' Guid='1e83cf44-7c77-4f1a-92c8-8440cd4abf2b'>
 				<File
-					Id='I4334'
-					Name='N4334'
+					Id='I169'
+					Name='N169'
 					KeyPath='yes'
 					LongName='configuration.svcinfo'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration.svcinfo'
@@ -620,10 +620,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4335' Guid='9156a8be-69ce-4b81-8525-cecf86d49e64'>
+			<Component Id='C170' Guid='d95f8e40-a83e-4c80-b12e-4b2a729bf8ba'>
 				<File
-					Id='I4335'
-					Name='N4335'
+					Id='I170'
+					Name='N170'
 					KeyPath='yes'
 					LongName='configuration91.svcinfo'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration91.svcinfo'
@@ -634,10 +634,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4336' Guid='aabe9e5f-3fcf-4f87-8f42-87d0b3df52e7'>
+			<Component Id='C171' Guid='3af7e32b-677a-40f0-8361-7cd54d9a4356'>
 				<File
-					Id='I4336'
-					Name='N4336'
+					Id='I171'
+					Name='N171'
 					KeyPath='yes'
 					LongName='InitializeWebService.disco'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.disco'
@@ -648,10 +648,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4337' Guid='e1553436-e7d4-4168-99f7-cbdc8e4a645e'>
+			<Component Id='C172' Guid='1509145c-57f8-4b06-abcc-a3fa4123afc1'>
 				<File
-					Id='I4337'
-					Name='N4337'
+					Id='I172'
+					Name='N172'
 					KeyPath='yes'
 					LongName='Reference.svcmap'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.svcmap'
@@ -662,10 +662,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Web'>
-			<Component Id='C4338' Guid='bd669bd0-7e87-4e6d-bb20-c9e0142f10df'>
+			<Component Id='C173' Guid='7892610c-aebe-4535-bbd0-454d14f1cc0d'>
 				<File
-					Id='I4338'
-					Name='N4338'
+					Id='I173'
+					Name='N173'
 					KeyPath='yes'
 					LongName='Default.htm'
 					Source='INSTALLDIR\Samples\UITest.Web\Default.htm'
@@ -676,10 +676,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Samples_UITest.Silverlight_SrvRef_Init'>
-			<Component Id='C4339' Guid='3b77c778-1a7a-4505-b664-7ccd98a4e533'>
+			<Component Id='C174' Guid='f5bfdd6b-168b-445f-9f92-4a0d3a2f6e59'>
 				<File
-					Id='I4339'
-					Name='N4339'
+					Id='I174'
+					Name='N174'
 					KeyPath='yes'
 					LongName='InitializeWebService.wsdl'
 					Source='INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.wsdl'
@@ -690,55 +690,55 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C4291'/>
-			<ComponentRef Id='C4292'/>
-			<ComponentRef Id='C4293'/>
-			<ComponentRef Id='C4294'/>
-			<ComponentRef Id='C4295'/>
-			<ComponentRef Id='C4296'/>
-			<ComponentRef Id='C4297'/>
-			<ComponentRef Id='C4298'/>
-			<ComponentRef Id='C4299'/>
-			<ComponentRef Id='C4300'/>
-			<ComponentRef Id='C4301'/>
-			<ComponentRef Id='C4302'/>
-			<ComponentRef Id='C4303'/>
-			<ComponentRef Id='C4304'/>
-			<ComponentRef Id='C4305'/>
-			<ComponentRef Id='C4306'/>
-			<ComponentRef Id='C4307'/>
-			<ComponentRef Id='C4308'/>
-			<ComponentRef Id='C4309'/>
-			<ComponentRef Id='C4310'/>
-			<ComponentRef Id='C4311'/>
-			<ComponentRef Id='C4312'/>
-			<ComponentRef Id='C4313'/>
-			<ComponentRef Id='C4314'/>
-			<ComponentRef Id='C4315'/>
-			<ComponentRef Id='C4316'/>
-			<ComponentRef Id='C4317'/>
-			<ComponentRef Id='C4318'/>
-			<ComponentRef Id='C4319'/>
-			<ComponentRef Id='C4320'/>
-			<ComponentRef Id='C4321'/>
-			<ComponentRef Id='C4322'/>
-			<ComponentRef Id='C4323'/>
-			<ComponentRef Id='C4324'/>
-			<ComponentRef Id='C4325'/>
-			<ComponentRef Id='C4326'/>
-			<ComponentRef Id='C4327'/>
-			<ComponentRef Id='C4328'/>
-			<ComponentRef Id='C4329'/>
-			<ComponentRef Id='C4330'/>
-			<ComponentRef Id='C4331'/>
-			<ComponentRef Id='C4332'/>
-			<ComponentRef Id='C4333'/>
-			<ComponentRef Id='C4334'/>
-			<ComponentRef Id='C4335'/>
-			<ComponentRef Id='C4336'/>
-			<ComponentRef Id='C4337'/>
-			<ComponentRef Id='C4338'/>
-			<ComponentRef Id='C4339'/>
+			<ComponentRef Id='C126'/>
+			<ComponentRef Id='C127'/>
+			<ComponentRef Id='C128'/>
+			<ComponentRef Id='C129'/>
+			<ComponentRef Id='C130'/>
+			<ComponentRef Id='C131'/>
+			<ComponentRef Id='C132'/>
+			<ComponentRef Id='C133'/>
+			<ComponentRef Id='C134'/>
+			<ComponentRef Id='C135'/>
+			<ComponentRef Id='C136'/>
+			<ComponentRef Id='C137'/>
+			<ComponentRef Id='C138'/>
+			<ComponentRef Id='C139'/>
+			<ComponentRef Id='C140'/>
+			<ComponentRef Id='C141'/>
+			<ComponentRef Id='C142'/>
+			<ComponentRef Id='C143'/>
+			<ComponentRef Id='C144'/>
+			<ComponentRef Id='C145'/>
+			<ComponentRef Id='C146'/>
+			<ComponentRef Id='C147'/>
+			<ComponentRef Id='C148'/>
+			<ComponentRef Id='C149'/>
+			<ComponentRef Id='C150'/>
+			<ComponentRef Id='C151'/>
+			<ComponentRef Id='C152'/>
+			<ComponentRef Id='C153'/>
+			<ComponentRef Id='C154'/>
+			<ComponentRef Id='C155'/>
+			<ComponentRef Id='C156'/>
+			<ComponentRef Id='C157'/>
+			<ComponentRef Id='C158'/>
+			<ComponentRef Id='C159'/>
+			<ComponentRef Id='C160'/>
+			<ComponentRef Id='C161'/>
+			<ComponentRef Id='C162'/>
+			<ComponentRef Id='C163'/>
+			<ComponentRef Id='C164'/>
+			<ComponentRef Id='C165'/>
+			<ComponentRef Id='C166'/>
+			<ComponentRef Id='C167'/>
+			<ComponentRef Id='C168'/>
+			<ComponentRef Id='C169'/>
+			<ComponentRef Id='C170'/>
+			<ComponentRef Id='C171'/>
+			<ComponentRef Id='C172'/>
+			<ComponentRef Id='C173'/>
+			<ComponentRef Id='C174'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

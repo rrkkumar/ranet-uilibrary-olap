@@ -13,11 +13,11 @@ namespace UILibrary.Olap.UITestApplication
 			pivotGridControl.Query = pivorGrid_query.Text;
 			pivotGridControl.UpdateScript = pivorGrid_updateScript.Text;
 			pivotGridControl.IsUpdateable = true;
-			pivotGridControl.ColumnsIsInteractive = false;
-			//pivotGridControl.UseColumnsAreaHint = false;
-			//pivotGridControl.UseRowsAreaHint = false;
-			//pivotGridControl.UseCellsAreaHint = false;
-			//pivotGridControl.MemberVisualizationType = Ranet.Olap.Core.Data.MemberVisualizationTypes.KeyAndCaption;
+			pivotGridControl.ColumnsIsInteractive = true;
+			pivotGridControl.UseColumnsAreaHint = true;
+			pivotGridControl.UseRowsAreaHint = true;
+			pivotGridControl.UseCellsAreaHint = true;
+			pivotGridControl.MemberVisualizationType = Ranet.Olap.Core.Data.MemberVisualizationTypes.KeyAndCaption;
 			pivotGridControl.Initialize();
 		}
 	}
