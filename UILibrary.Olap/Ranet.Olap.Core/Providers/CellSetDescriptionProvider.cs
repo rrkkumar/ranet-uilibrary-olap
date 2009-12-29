@@ -679,172 +679,98 @@ namespace Ranet.Olap.Core.Providers
             var props = new int[cs.Cells.Count];
             data.Add(props);
 
-            if (cs.Axes.Count > 0)
+            // Ячейки
+            for (int indx = 0; indx < cs.Cells.Count; indx++)
             {
-                if (cs.Axes.Count >= 2)
+                Cell cell = cs.Cells[indx];
+
+                object value = null;
+                string displayName = string.Empty;
+
+                if (cell != null)
                 {
-                    var axes0Len = cs.Axes[0].Positions.Count;
-
-                    for (int col = 0; col < cs.Axes[0].Positions.Count; col++)
+                    try
                     {
-                        for (int row = 0; row < cs.Axes[1].Positions.Count; row++)
-                        {
-                            int Axis0_Coord = col;
-                            int Axis1_Coord = row;
-
-                            Cell cell = GetCell(col, row);
-
-                            object value = null;
-                            string displayName = string.Empty;
-
-                            if (cell != null)
-                            {
-                                try
-                                {
-                                    displayName = cell.FormattedValue;
-                                }
-                                catch (Exception)
-                                {
-                                    displayName = CellValueData.ERROR;
-                                }
-
-                                try
-                                {
-                                    value = cell.Value;
-                                }
-                                catch (Exception exc)
-                                {
-                                    value = exc.ToString();
-                                }
-
-                                if (string.IsNullOrEmpty(displayName))
-                                {
-                                    if (value == null)
-                                    {
-                                        displayName = String.Empty;
-                                    }
-                                    else
-                                    {
-                                        displayName = value.ToString();
-                                    }
-                                }
-                            }
-
-                            var ind = Axis1_Coord * axes0Len + Axis0_Coord;
-                            values[ind] = value;
-                            displayValues[ind] = displayName;
-                            if (cell != null)
-                            {
-                                var propObj = new AdomdCellPropsObj(cell.CellProperties);
-                                int indProp = 0;
-                                if (!hash.TryGetValue(propObj, out indProp))
-                                {
-                                    indProp = propsList.Count;
-                                    hash[propObj] = indProp;
-                                    propsList.Add(propObj);
-                                }
-                                props[ind] = indProp;
-                            }
-                        }
+                        displayName = cell.FormattedValue;
                     }
-                }
-                else
-                {
-                    // cs.Axes.Count == 1
-                    for (int col = 0; col < cs.Axes[0].Positions.Count; col++)
+                    catch (Exception)
                     {
-                        int Axis0_Coord = col;
+                        displayName = CellValueData.ERROR;
+                    }
 
-                        Cell cell = GetCell(col);
+                    try
+                    {
+                        value = cell.Value;
+                    }
+                    catch (Exception exc)
+                    {
+                        value = exc.ToString();
+                    }
 
-                        object value = null;
-                        string displayName = string.Empty;
-
-                        if (cell != null)
+                    if (string.IsNullOrEmpty(displayName))
+                    {
+                        if (value == null)
                         {
-                            try
-                            {
-                                displayName = cell.FormattedValue;
-                            }
-                            catch (Exception)
-                            {
-                                displayName = CellValueData.ERROR;
-                            }
-
-                            try
-                            {
-                                value = cell.Value;
-                            }
-                            catch (Exception exc)
-                            {
-                                value = exc.ToString();
-                            }
-
-                            if (string.IsNullOrEmpty(displayName))
-                            {
-                                if (value == null)
-                                {
-                                    displayName = String.Empty;
-                                }
-                                else
-                                {
-                                    displayName = value.ToString();
-                                }
-                            }
+                            displayName = String.Empty;
                         }
-
-                        var ind = Axis0_Coord;
-                        values[ind] = value;
-                        displayValues[ind] = displayName;
-                        if (cell != null)
+                        else
                         {
-                            var propObj = new AdomdCellPropsObj(cell.CellProperties);
-                            int indProp = 0;
-                            if (!hash.TryGetValue(propObj, out indProp))
-                            {
-                                indProp = propsList.Count;
-                                hash[propObj] = indProp;
-                                propsList.Add(propObj);
-                            }
-                            props[ind] = indProp;
+                            displayName = value.ToString();
                         }
                     }
                 }
 
-                var propNames = new List<string>();
-                var propNamesHash = new Dictionary<string, int>();
-
-                for (int i = 0; i < propsList.Count; i++)
+                values[indx] = value;
+                displayValues[indx] = displayName;
+                if (cell != null)
                 {
-                    var po = propsList[i];
-                    var propVals = new object[propNames.Count];
-                    foreach (var p in po.props)
+                    var propObj = new AdomdCellPropsObj(cell.CellProperties);
+                    int indProp = 0;
+                    if (!hash.TryGetValue(propObj, out indProp))
                     {
-                        switch (p.Name)
-                        {
-                            case "CellOrdinal":
-                            case "VALUE":
-                            case "FORMATTED_VALUE":
-                                continue;
-                            default:
-                                int indx;
-                                if (!propNamesHash.TryGetValue(p.Name, out indx))
-                                {
-                                    indx = propNames.Count;
-                                    propNames.Add(p.Name);
-                                    propNamesHash[p.Name] = indx;
-                                    var newPropVals = new object[propNames.Count];
-                                    Array.Copy(propVals, newPropVals, propVals.Length);
-                                    propVals = newPropVals;
-                                }
-                                propVals[indx] = p.Value;
-                                break;
-                        }
+                        indProp = propsList.Count;
+                        hash[propObj] = indProp;
+                        propsList.Add(propObj);
                     }
-                    data.Add(propVals);
+                    props[indx] = indProp;
                 }
-                data.Add(propNames.ToArray());
             }
+
+            // Стили ячеек
+            var propNames = new List<string>();
+            var propNamesHash = new Dictionary<string, int>();
+
+            for (int i = 0; i < propsList.Count; i++)
+            {
+                var po = propsList[i];
+                var propVals = new object[propNames.Count];
+                foreach (var p in po.props)
+                {
+                    switch (p.Name)
+                    {
+                        case "CellOrdinal":
+                        case "VALUE":
+                        case "FORMATTED_VALUE":
+                            continue;
+                        default:
+                            int indx;
+                            if (!propNamesHash.TryGetValue(p.Name, out indx))
+                            {
+                                indx = propNames.Count;
+                                propNames.Add(p.Name);
+                                propNamesHash[p.Name] = indx;
+                                var newPropVals = new object[propNames.Count];
+                                Array.Copy(propVals, newPropVals, propVals.Length);
+                                propVals = newPropVals;
+                            }
+                            propVals[indx] = p.Value;
+                            break;
+                    }
+                }
+                data.Add(propVals);
+            }
+            data.Add(propNames.ToArray());
+
             var result = Jayrock.Json.Conversion.JsonConvert.ExportToString(data.ToArray());
             return result;
         }
@@ -872,8 +798,8 @@ namespace Ranet.Olap.Core.Providers
             {
                 return null;
             }
-            
-                return cell;
+
+            return cell;
         }
 
     }

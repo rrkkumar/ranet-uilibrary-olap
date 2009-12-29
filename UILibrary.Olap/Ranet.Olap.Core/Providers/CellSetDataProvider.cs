@@ -60,7 +60,7 @@ namespace Ranet.Olap.Core.Providers
             if (m_CellSet_Descr != null && 
                 Rows != null && // чтобы проинициализировать
                 Columns != null && // чтобы проинициализировать
-                column_index >= 0 &&
+                //column_index >= 0 &&
                 column_index < m_Columns_LowestMembers.Count &&
                 row_index < m_Rows_LowestMembers.Count) 
             {
@@ -87,7 +87,7 @@ namespace Ranet.Olap.Core.Providers
                         else
                         {
                             cell_Info = new CellInfo(cell_data,
-                               m_Columns_LowestMembers[column_index],
+                               column_index >= 0 ? m_Columns_LowestMembers[column_index] : MemberInfo.Empty,
                                MemberInfo.Empty, 
                                GetInvisibleCoords(column_index, row_index));
                         }

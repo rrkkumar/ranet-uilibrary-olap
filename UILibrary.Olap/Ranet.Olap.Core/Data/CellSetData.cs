@@ -97,7 +97,7 @@ namespace Ranet.Olap.Core.Data
 
         public CellData GetCellDescription(int col)
         {
-            if (col >= 0)
+            //if (col >= 0)
             {
                 foreach (CellData cell in Cells)
                 {
@@ -151,78 +151,75 @@ namespace Ranet.Olap.Core.Data
             var PropNames = cellDatas[cellDatas.Length - 1] as JsonArray;
             int CellOrdinal = 0;
 
-            if (this.Axes.Count > 0)
+            int cellsCount = Values.Count;
+            for (int j = 0; j < cellsCount; j++)
             {
-                int cellsCount = Values.Count;
-                for (int j = 0; j < cellsCount; j++)
+                var cellData = new CellData();
+                cellData.Axis0_Coord = axes0Len > 0 ? j % axes0Len : -1;    // axes0Len может быть 0 и при этом будет одна ячейка (дефолтная). И осей при этом в CellSet нету.
+                cellData.Axis1_Coord = axes1Len > 0 ? j / axes0Len : -1;
+                var cellValueData = new CellValueData();
+                var prop = new PropertyData("CellOrdinal", CellOrdinal);
+                cellValueData.Properties.Add(prop);
+                object val = Values[CellOrdinal];
+                if (val != null)
+                //val = ((JsonNumber)val).ToDouble();
                 {
-                    var cellData = new CellData();
-                    cellData.Axis0_Coord = axes0Len > 0 ? j % axes0Len : -1;    // axes0Len может быть 0 и при этом будет одна ячейка (дефолтная). И осей при этом в CellSet нету.
-                    cellData.Axis1_Coord = axes1Len > 0 ? j / axes0Len : -1;
-                    var cellValueData = new CellValueData();
-                    var prop = new PropertyData("CellOrdinal", CellOrdinal);
-                    cellValueData.Properties.Add(prop);
-                    object val = Values[CellOrdinal];
-                    if (val != null)
-                    //val = ((JsonNumber)val).ToDouble();
+                    if (val is JsonString)
                     {
-                        if (val is JsonString)
-                        {
-                            val = val.ToString();
-                        }
-                        else if (val is JsonNumber)
-                        {
-                            var propvalStr = val.ToString();
-                            if (propvalStr.Contains('.'))
-                                val = ((JsonNumber)val).ToDouble();
-                            else
-                                val = ((JsonNumber)val).ToInt32();
-                        }
+                        val = val.ToString();
                     }
-
-                    cellValueData.Value = val;
-                    prop = new PropertyData("VALUE", val);
-                    cellValueData.Properties.Add(prop);
-                    var props = cellDatas.GetArray(3 + Styles.GetInt32(CellOrdinal));
-                    string FORMAT_STRING = null;
-                    for (int k = 0; k < PropNames.Length; k++)
+                    else if (val is JsonNumber)
                     {
-                        object propval = props[k];
-                        if (propval != null)
-                        {
-                            if (propval is JsonString)
-                            {
-                                propval = propval.ToString();
-                            }
-                            else if (propval is JsonNumber)
-                            {
-                                var propvalStr = propval.ToString();
-                                if (propvalStr.Contains('.'))
-                                    propval = ((JsonNumber)propval).ToDouble();
-                                else
-                                    propval = ((JsonNumber)propval).ToInt32();
-                            }
-                        }
-                        var propName = PropNames[k].ToString();
-                        //if (propName == "FORMAT_STRING")
-                        //    FORMAT_STRING = (string)propval;
-                        prop = new PropertyData(propName, propval);
-                        cellValueData.Properties.Add(prop);
+                        var propvalStr = val.ToString();
+                        if (propvalStr.Contains('.'))
+                            val = ((JsonNumber)val).ToDouble();
+                        else
+                            val = ((JsonNumber)val).ToInt32();
                     }
-
-                    //if (val == null)
-                    //    cellValueData.DisplayValue = null;
-                    //else if (FORMAT_STRING != null)
-                    //    cellValueData.DisplayValue = ((double)val).ToString(FORMAT_STRING);
-                    //else
-                    //    cellValueData.DisplayValue = val.ToString();
-                    cellValueData.DisplayValue = DisplayValues[CellOrdinal++].ToString();
-
-                    prop = new PropertyData("FORMATTED_VALUE", cellValueData.DisplayValue);
-                    cellValueData.Properties.Add(prop);
-                    cellData.Value = cellValueData;
-                    Cells.Add(cellData);
                 }
+
+                cellValueData.Value = val;
+                prop = new PropertyData("VALUE", val);
+                cellValueData.Properties.Add(prop);
+                var props = cellDatas.GetArray(3 + Styles.GetInt32(CellOrdinal));
+                string FORMAT_STRING = null;
+                for (int k = 0; k < PropNames.Length; k++)
+                {
+                    object propval = props[k];
+                    if (propval != null)
+                    {
+                        if (propval is JsonString)
+                        {
+                            propval = propval.ToString();
+                        }
+                        else if (propval is JsonNumber)
+                        {
+                            var propvalStr = propval.ToString();
+                            if (propvalStr.Contains('.'))
+                                propval = ((JsonNumber)propval).ToDouble();
+                            else
+                                propval = ((JsonNumber)propval).ToInt32();
+                        }
+                    }
+                    var propName = PropNames[k].ToString();
+                    //if (propName == "FORMAT_STRING")
+                    //    FORMAT_STRING = (string)propval;
+                    prop = new PropertyData(propName, propval);
+                    cellValueData.Properties.Add(prop);
+                }
+
+                //if (val == null)
+                //    cellValueData.DisplayValue = null;
+                //else if (FORMAT_STRING != null)
+                //    cellValueData.DisplayValue = ((double)val).ToString(FORMAT_STRING);
+                //else
+                //    cellValueData.DisplayValue = val.ToString();
+                cellValueData.DisplayValue = DisplayValues[CellOrdinal++].ToString();
+
+                prop = new PropertyData("FORMATTED_VALUE", cellValueData.DisplayValue);
+                cellValueData.Properties.Add(prop);
+                cellData.Value = cellValueData;
+                Cells.Add(cellData);
             }
         }
 

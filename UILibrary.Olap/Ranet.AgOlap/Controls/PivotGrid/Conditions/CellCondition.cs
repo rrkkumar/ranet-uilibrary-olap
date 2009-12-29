@@ -29,6 +29,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 {
@@ -195,5 +196,82 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
         {
             RaisePropertyChanged();
         }
+
+        public override string ToString()
+        {
+            String Text = String.Empty;
+            String format1 = "{0} {1}";
+            String format2 = "{0} {1} and {2}";
+            switch (ConditionType)
+            {
+
+                case CellConditionType.Equal:
+                    Text = String.Format(format1, Localization.ValueFilter_Equal, Value1.ToString());
+                    break;
+                case CellConditionType.NotEqual:
+                    Text = String.Format(format1, Localization.ValueFilter_NotEqual, Value1.ToString());
+                    break;
+                case CellConditionType.Less:
+                    Text = String.Format(format1, Localization.ValueFilter_Less, Value1.ToString());
+                    break;
+                case CellConditionType.LessOrEqual:
+                    Text = String.Format(format1, Localization.ValueFilter_LessOrEqual, Value1.ToString());
+                    break;
+                case CellConditionType.Greater:
+                    Text = String.Format(format1, Localization.ValueFilter_Greater, Value1.ToString());
+                    break;
+                case CellConditionType.GreaterOrEqual:
+                    Text = String.Format(format1, Localization.ValueFilter_GreaterOrEqual, Value1.ToString());
+                    break;
+                case CellConditionType.Between:
+                    Text = String.Format(format2, Localization.ValueFilter_Between, Value1.ToString(), Value2.ToString());
+                    break;
+                case CellConditionType.NotBetween:
+                    Text = String.Format(format2, Localization.ValueFilter_NotBetween, Value1.ToString(), Value2.ToString());
+                    break;
+                case CellConditionType.None:
+                    Text = Localization.ComboBoxItem_None;
+                    break;
+                default:
+                    Text = ConditionType.ToString();
+                    break;
+            }
+            return Text;
+        }
+
+        public BitmapImage ToImage()
+        {
+            BitmapImage Icon = null;
+            switch (ConditionType)
+            {
+
+                case CellConditionType.Equal:
+                    Icon = UriResources.Images.Equal16;
+                    break;
+                case CellConditionType.NotEqual:
+                    Icon = UriResources.Images.NotEqual16;
+                    break;
+                case CellConditionType.Less:
+                    Icon = UriResources.Images.Less16;
+                    break;
+                case CellConditionType.LessOrEqual:
+                    Icon = UriResources.Images.LessOrEqual16;
+                    break;
+                case CellConditionType.Greater:
+                    Icon = UriResources.Images.Greater16;
+                    break;
+                case CellConditionType.GreaterOrEqual:
+                    Icon = UriResources.Images.GreaterOrEqual16;
+                    break;
+                case CellConditionType.Between:
+                    Icon = UriResources.Images.Between16;
+                    break;
+                case CellConditionType.NotBetween:
+                    Icon = UriResources.Images.NotBetween16;
+                    break;
+            }
+            return Icon;
+        }
+
     }
 }

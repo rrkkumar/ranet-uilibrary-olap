@@ -213,17 +213,16 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         if (conditions_descr != null)
                         {
                             if (Cell.CellDescr != null &&
-                                Cell.CellDescr.Value != null &&
-                                Cell.CellDescr.Value.Value != null)
+                                Cell.CellDescr.Value != null)
                             {
-                                try
-                                {
-                                    double value = Convert.ToDouble(Cell.CellDescr.Value.Value);
-                                    usedConditions = CellConditionsDescriptor.TestToConditions(value, conditions_descr);
-                                }
-                                catch (System.InvalidCastException)
-                                {
-                                }
+                                    try
+                                    {
+                                        double value = Cell.CellDescr.Value.Value != null ? Convert.ToDouble(Cell.CellDescr.Value.Value) : double.NaN;
+                                        usedConditions = CellConditionsDescriptor.TestToConditions(value, conditions_descr);
+                                    }
+                                    catch (System.InvalidCastException)
+                                    {
+                                    }
                             }
                         }
 
@@ -437,16 +436,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         border.BorderBrush = new SolidColorBrush(Colors.DarkGray);
                     }
 
-                    if (ShowLeftBorder)
-                    {
-                        border.BorderThickness = new Thickness(1, 0, 1, 1);
-                        m_LayoutPanel.Margin = new Thickness(-1, 0, 0, 0);
-                    }
-                    else
-                    {
-                        border.BorderThickness = new Thickness(0, 0, 1, 1);
-                        m_LayoutPanel.Margin = new Thickness(0);
-                    }
+                    int left_Thicknes = ShowLeftBorder == true ? 1 : 0;
+                    int up_Thicknes = ShowUpBorder == true ? 1 : 0;
+
+                    border.BorderThickness = new Thickness(left_Thicknes, up_Thicknes, 1, 1);
+                    m_LayoutPanel.Margin = new Thickness(left_Thicknes * -1, up_Thicknes * -1, 0, 0);
                 }
             }
         }
@@ -455,6 +449,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         /// Отображать левую границу ячейки (Когда ячейка в первой колонке, а области строк нет - 1 ось)
         /// </summary>
         public bool ShowLeftBorder = false;
+
+        /// <summary>
+        /// Отображать верхнюю границу ячейки (Когда ячейка в первой строке, а области колонок нет - select from [Adventure Works])
+        /// </summary>
+        public bool ShowUpBorder = false;
 
         public String Text
         {

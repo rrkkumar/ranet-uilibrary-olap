@@ -77,8 +77,6 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
 
         public CellTupleControl()
         {
-            StyleContainer styleContainer = new StyleContainer();
-
             Grid LayoutRoot = new Grid();
             m_Grid = new RanetDataGrid();
             m_Grid.AutoGenerateColumns = false;
@@ -98,20 +96,6 @@ namespace Ranet.AgOlap.Controls.ValueDelivery
             MemberColumn.Header = Localization.ValueDeliveryControl_Member;
             MemberColumn.Binding = new System.Windows.Data.Binding("Caption");
             m_Grid.Columns.Add(MemberColumn);
-
-            if (styleContainer.Resources != null)
-            {
-                if (styleContainer.Resources.Contains("DataGridGlowStyle"))
-                    m_Grid.Style = styleContainer.Resources["DataGridGlowStyle"] as Style;
-                if (styleContainer.Resources.Contains("DataGridGlowRowStyle"))
-                    m_Grid.RowStyle = styleContainer.Resources["DataGridGlowRowStyle"] as Style;
-                if (styleContainer.Resources.Contains("DataGridGlowRowHeaderStyle"))
-                    m_Grid.RowHeaderStyle = styleContainer.Resources["DataGridGlowRowHeaderStyle"] as Style;
-                if (styleContainer.Resources.Contains("DataGridGlowCellStyle"))
-                    m_Grid.CellStyle = styleContainer.Resources["DataGridGlowCellStyle"] as Style;
-                if (styleContainer.Resources.Contains("DataGridColumnHeaderGlow"))
-                    m_Grid.ColumnHeaderStyle = styleContainer.Resources["DataGridColumnHeaderGlow"] as Style;
-            }
 
             this.Content = LayoutRoot;
         }

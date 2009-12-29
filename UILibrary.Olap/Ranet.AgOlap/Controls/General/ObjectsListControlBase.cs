@@ -12,6 +12,7 @@ using Ranet.AgOlap.Controls.General.Tree;
 using Ranet.AgOlap.Controls.Storage;
 using System.Collections.Generic;
 using System.Windows.Media.Imaging;
+using Ranet.AgOlap.Controls.ToolBar;
 
 namespace Ranet.AgOlap.Controls.General
 {
@@ -39,18 +40,48 @@ namespace Ranet.AgOlap.Controls.General
         }
     }
 
-    public class ObjectsListControlBase<T> : UserControl
+    public class ObjectsListControlBase<T> : UserControl where T : new() 
     {
         protected CustomTree m_Tree;
         Grid grdIsWaiting;
+        RanetToolBar m_ToolBar;
+        protected RanetToolBarButton AddButton;
+        protected RanetToolBarButton DeleteButton;
+        protected RanetToolBarButton DeleteAllButton;
 
         public ObjectsListControlBase()
         {
             Grid LayoutRoot = new Grid();
+            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
+            LayoutRoot.RowDefinitions.Add(new RowDefinition());
+
+            m_ToolBar = new RanetToolBar();
+            LayoutRoot.Children.Add(m_ToolBar);
+
+            AddButton = new RanetToolBarButton();
+            AddButton.Content = UiHelper.CreateIcon(UriResources.Images.New16);
+            AddButton.Click += new RoutedEventHandler(m_AddButton_Click);
+            ToolTipService.SetToolTip(AddButton, Localization.Toolbar_NewButton_ToolTip);
+            m_ToolBar.AddItem(AddButton);
+
+            DeleteButton = new RanetToolBarButton();
+            DeleteButton.Content = UiHelper.CreateIcon(UriResources.Images.RemoveCross16);
+            DeleteButton.Click += new RoutedEventHandler(m_DeleteButton_Click);
+            DeleteButton.IsEnabled = false;
+            ToolTipService.SetToolTip(DeleteButton, Localization.Toolbar_DeleteButton_ToolTip);
+            m_ToolBar.AddItem(DeleteButton);
+
+            DeleteAllButton = new RanetToolBarButton();
+            DeleteAllButton.Content = UiHelper.CreateIcon(UriResources.Images.RemoveAllCross16);
+            DeleteAllButton.Click += new RoutedEventHandler(m_DeleteAllButton_Click);
+            DeleteAllButton.IsEnabled = false;
+            ToolTipService.SetToolTip(DeleteAllButton, Localization.Toolbar_DeleteAllButton_ToolTip);
+            m_ToolBar.AddItem(DeleteAllButton);
             
             m_Tree = new CustomTree() { BorderBrush = new SolidColorBrush(Colors.DarkGray) };
             m_Tree.SelectedItemChanged += new RoutedPropertyChangedEventHandler<object>(m_Tree_SelectedItemChanged);
             LayoutRoot.Children.Add(m_Tree);
+            Grid.SetRow(m_Tree, 1);
 
             grdIsWaiting = new Grid() { Background = new SolidColorBrush(Color.FromArgb(125, 0xFF, 0xFF, 0xFF)) };
             grdIsWaiting.Visibility = Visibility.Collapsed;
@@ -65,6 +96,42 @@ namespace Ranet.AgOlap.Controls.General
 
             this.Loaded += new RoutedEventHandler(ObjectsListControlBase_Loaded);
             m_Tree.KeyDown += new KeyEventHandler(m_Tree_KeyDown);
+        }
+
+        void m_DeleteAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(Localization.DeleteAll_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                OnDeleteAllButtonClick();
+            }
+        }
+
+        void m_DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (MessageBox.Show(Localization.DeleteCurrent_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            {
+                OnDeleteButtonClick();
+            }
+        }
+
+        void m_AddButton_Click(object sender, RoutedEventArgs e)
+        {
+            OnAddButtonClick();
+        }
+
+        protected virtual void OnAddButtonClick()
+        {
+            AddItem(new T());
+        }
+
+        protected virtual void OnDeleteButtonClick()
+        {
+            DeleteItem(CurrentObject);
+        }
+
+        protected virtual void OnDeleteAllButtonClick()
+        {
+            Initialize(null);
         }
 
         void m_Tree_KeyDown(object sender, KeyEventArgs e)
@@ -117,7 +184,7 @@ namespace Ranet.AgOlap.Controls.General
             else
             {
                 // Иногда по неясным причинам в e.NewValue приходит {object} хотя при установке IsSelected = true узел был корректный. Поэтому в случае если узел определить не удалось, считаем что выбран нулевой узел
-                if (m_Tree.Items.Count > 0)
+                if (e.NewValue != null && m_Tree.Items.Count > 0)
                 {
                     TreeNode<T> node0 = m_Tree.Items[0] as TreeNode<T>;
                     if (node0 != null)
@@ -132,6 +199,8 @@ namespace Ranet.AgOlap.Controls.General
             {
                 handler(this, new SelectionChangedEventArgs<T>(descr_old, descr_new));
             }
+
+            DeleteButton.IsEnabled = descr_new != null;
 
             Refresh();
         }
@@ -262,6 +331,9 @@ namespace Ranet.AgOlap.Controls.General
                 // Через событие делаем узел выбранным (иначе на нем фокус не ставится)
                 select.Loaded += new RoutedEventHandler(node_Loaded);
             }
+
+            DeleteButton.IsEnabled = CurrentObject != null;
+            DeleteAllButton.IsEnabled = m_Tree.Items.Count > 0;
         }
 
         void node_Loaded(object sender, RoutedEventArgs e)
@@ -301,10 +373,13 @@ namespace Ranet.AgOlap.Controls.General
                     if (node != null && node.Info.Equals(item))
                     {
                         m_Tree.Items.Remove(node);
-                        return;
+                        break;
                     }
                 }
             }
+
+            DeleteButton.IsEnabled = CurrentObject != null;
+            DeleteAllButton.IsEnabled = m_Tree.Items.Count > 0;
         }
 
         TreeNode<T> AddItemNode(T item)
@@ -319,6 +394,9 @@ namespace Ranet.AgOlap.Controls.General
                     m_Tree.Items.Add(node);
                 }
             }
+
+            DeleteButton.IsEnabled = CurrentObject != null;
+            DeleteAllButton.IsEnabled = m_Tree.Items.Count > 0;
             return node;
         }
 

@@ -228,6 +228,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_VericalMouseWhellSupport = new ScrollBarMouseWheelSupport();
             m_VericalMouseWhellSupport.AddMouseWheelSupport(m_VerticalScroll);
 
+            m_HorizontalMouseWhellSupport = new ScrollBarMouseWheelSupport() { IsHorizontal = true };
+            m_HorizontalMouseWhellSupport.AddMouseWheelSupport(m_HorizontalScroll);
+
             m_TooltipController = new TooltipController(this);
         }
 
@@ -261,6 +264,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         TooltipController m_TooltipController = null;
         ScrollBarMouseWheelSupport m_VericalMouseWhellSupport;
+        ScrollBarMouseWheelSupport m_HorizontalMouseWhellSupport;
 
         void m_HorizontalScroll_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
         {
@@ -1428,7 +1432,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 double max_width = GetMaxWidth();
 
                 int layout_column_index = ColumnsArea_BeginColumnIndex;
-                for (int i = ColumnsArea_FirstVisible_Coordinate.Column, indx = 0; i < layout.ColumnsLayout.Columns_Size; i++, indx++)
+                int columnsCount = layout.ColumnsLayout.Columns_Size;
+                // если в результате нет осей, а ячейки есть (select from [Adventure Works]), то они должны отображаться без области колонок
+                if (columnsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
+                    layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
+                {
+                    columnsCount = layout.PivotProvider.Provider.CellSet_Description.Cells.Count;
+                }
+
+                for (int i = ColumnsArea_FirstVisible_Coordinate.Column, indx = 0; i < columnsCount; i++, indx++)
                 {
                     // Пытаемся ПОЛУЧИТЬ данную колонку в гриде
                     ColumnDefinition current_column = null;
@@ -1985,20 +1997,32 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             int columnIndex = CellsArea_FirstVisible_Coordinate.Column;
             int layout_column_indx = 0;
             int layout_row_indx = 0;
-            foreach (MemberControl columnCtrl in ColumnsArea_LovestMemberControls)
+
+            bool hasColumnsArea = true;
+            int columnsCount = ColumnsArea_LovestMemberControls.Count;
+            // если в результате нет осей, а ячейки есть (select from [Adventure Works]), то они должны отображаться без области колонок
+            if (columnsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
+                layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
+            {
+                columnsCount = layout.PivotProvider.Provider.CellSet_Description.Cells.Count;
+                columnIndex = -1;
+                hasColumnsArea = false;
+            }
+
+            for(int column = 0; column < columnsCount; column++)
             {
                 int rowIndex = CellsArea_FirstVisible_Coordinate.Row;
                 layout_row_indx = 0;
                 int rowsCount = RowsArea_LovestMemberControls.Count;
 
-                bool hasRows = true;
+                bool hasRowsArea = true;
                 // если в результате только одна ось, ячейки есть. То они должны отображаться без области строк
                 if (rowsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
                     layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
                 {
                     rowsCount = 1;
                     rowIndex = -1;
-                    hasRows = false;
+                    hasRowsArea = false;
                 }
 
                 for (int row = 0; row < rowsCount; row++)
@@ -2013,7 +2037,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         {
                             m_CellControls_Dict.Add(cell_info, cell_Control);
                             // Left border
-                            cell_Control.ShowLeftBorder = !hasRows && layout_column_indx == 0;
+                            cell_Control.ShowLeftBorder = !hasRowsArea && layout_column_indx == 0;
+                            // Up border
+                            cell_Control.ShowUpBorder = !hasColumnsArea && layout_row_indx == 0;
 
                             cell_Control.Cell = cell_info;
                             if (cell_Control.IsFocused)
@@ -3135,6 +3161,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         case Key.Left:
                         case Key.Home:
                             isNavigation = true;
+                            // Учитываем запрос когда на оси 0 элементов нет, а ячейка есть
+                            if (m_LayoutProvider.PivotProvider.ColumnsArea.ColumnsCount == 0)
+                            {
+                                layout_column_index = -1;
+                                break;
+                            }
                             if (e.Key == Key.Home)
                             {
                                 // Переход на самую первую ячейку в строке
@@ -3170,6 +3202,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         case Key.Right:
                         case Key.End:
                             isNavigation = true;
+                            // Учитываем запрос когда на оси 0 элементов нет, а ячейка есть
+                            if (m_LayoutProvider.PivotProvider.ColumnsArea.ColumnsCount == 0)
+                            {
+                                layout_column_index = -1;
+                                break;
+                            }
                             if (e.Key == Key.End)
                             {
                                 // Переход на самую последнюю ячейку в строке
@@ -3209,8 +3247,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         m_TooltipController.Hide();
                     }
 
-                    if (layout_column_index >= 0 &&
-                        (layout_row_index >= 0 || (layout_row_index == -1 && m_LayoutProvider.PivotProvider.RowsArea.RowsCount == 0))) // Учитываем запросы с одной осью
+                    if ((layout_column_index >= 0 || (layout_column_index == -1 && m_LayoutProvider.PivotProvider.ColumnsArea.ColumnsCount == 0)) &&    // Учитываем запросы когда ось 0 пустая, а ячейка есть
+                        (layout_row_index >= 0 || (layout_row_index == -1 && m_LayoutProvider.PivotProvider.RowsArea.RowsCount == 0)))                  // Учитываем запросы с одной осью
                     {
                         if (isNavigation)
                         {
@@ -3462,6 +3500,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             HtmlPage.Document.DetachEvent("onmouseout", new EventHandler<HtmlEventArgs>(Document_OnMouseLeave));
             if (m_VericalMouseWhellSupport != null)
                 m_VericalMouseWhellSupport.ScrollAlways = false;
+            if (m_HorizontalMouseWhellSupport != null)
+                m_HorizontalMouseWhellSupport.ScrollAlways = false;
         }
 
         void CellsAreaControl_MouseEnter(object sender, MouseEventArgs e)
@@ -3471,6 +3511,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             HtmlPage.Document.AttachEvent("onmouseout", new EventHandler<HtmlEventArgs>(Document_OnMouseLeave));
             if (m_VericalMouseWhellSupport != null)
                 m_VericalMouseWhellSupport.ScrollAlways = true;
+            if (m_HorizontalMouseWhellSupport != null)
+                m_HorizontalMouseWhellSupport.ScrollAlways = true;
         }
 
         void Document_OnMouseLeave(object sender, HtmlEventArgs e)

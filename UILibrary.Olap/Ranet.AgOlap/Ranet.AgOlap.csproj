@@ -93,6 +93,7 @@
     </Reference>
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Controls.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
@@ -117,6 +118,7 @@
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
     <Compile Include="Controls\Data\RanetDataGrid.cs" />
+    <Compile Include="Controls\DateSlicerCtrl.cs" />
     <Compile Include="Controls\Forms\ModalDialog.cs" />
     <Compile Include="Controls\General\OlapTransactionManager.cs" />
     <Compile Include="Controls\General\ButtonMaximizeForm.cs" />
@@ -209,6 +211,20 @@
     <Compile Include="Controls\MdxDesigner\Wrappers\Value_FilterWrapper.cs" />
     <Compile Include="Controls\OlapBrowserControl.cs" />
     <Compile Include="Controls\PivotGrid\CellChangesCache.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellConditionControl.xaml.cs">
+      <DependentUpon>CellConditionControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Conditions\CellConditionListControl.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CustomCellConditionsEditor.xaml.cs">
+      <DependentUpon>CustomCellConditionsEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Conditions\CellConditionTypeCombo.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellConditionTypeItemControl.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\CellValueConditionControl.cs" />
+    <Compile Include="Controls\PivotGrid\Conditions\ConditionsDescriptorControl.xaml.cs">
+      <DependentUpon>ConditionsDescriptorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Conditions\ConditionsDescriptorListControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\CellControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\CellPropertiesControl.xaml.cs">
       <DependentUpon>CellPropertiesControl.xaml</DependentUpon>
@@ -521,6 +537,18 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\PivotGrid\Conditions\CellConditionControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Conditions\CustomCellConditionsEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Conditions\ConditionsDescriptorControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\PivotGrid\Controls\CellPropertiesControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
@@ -699,6 +727,8 @@
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
     <Resource Include="Controls\Images\ErrorSmall.png" />
+    <Resource Include="Controls\Images\New.png" />
+    <Resource Include="Controls\PivotGrid\Images\CellStyle.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>
@@ -752,6 +782,7 @@
     <Resource Include="Controls\MdxDesigner\Images\RowsArea.png" />
     <Resource Include="Controls\MdxDesigner\Images\Sum.png" />
     <Resource Include="Controls\MemberChoice\Images\States\LoadNext.png" />
+    <Resource Include="Controls\PivotGrid\Images\CellConditionsDesigner.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Localization.resx">

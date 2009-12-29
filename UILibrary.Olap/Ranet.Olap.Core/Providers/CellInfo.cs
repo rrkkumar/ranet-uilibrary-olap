@@ -175,11 +175,11 @@ namespace Ranet.Olap.Core.Providers
             if (String.IsNullOrEmpty(shortTupleToStr))
             {
                 StringBuilder sb = new StringBuilder();
-                if (this.ColumnMember != null && this.ColumnMember != null)
+                if (this.ColumnMember != null && this.ColumnMember != null && this.ColumnMember != MemberInfo.Empty)
                 {
                     sb.AppendLine(this.ColumnMember.Caption + " : " + this.ColumnMember.UniqueName);
                 }
-                if (this.RowMember != null && this.RowMember != null)
+                if (this.RowMember != null && this.RowMember != null && this.RowMember != MemberInfo.Empty)
                 {
                     sb.AppendLine(this.RowMember.Caption + " : " + this.RowMember.UniqueName);
                 }

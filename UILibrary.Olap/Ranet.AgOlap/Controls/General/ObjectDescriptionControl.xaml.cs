@@ -36,6 +36,8 @@ namespace Ranet.AgOlap.Controls.General
 {
     public partial class ObjectDescriptionControl : UserControl
     {
+        public event EventHandler EndEdit;
+
         bool m_IsReadOnly = false;
         public bool IsReadonly
         {
@@ -56,6 +58,21 @@ namespace Ranet.AgOlap.Controls.General
             lblName.Text = Localization.ObjectDescriptionControl_Name + ":";
             lblCaption.Text = Localization.ObjectDescriptionControl_Caption + ":";
             lblDescription.Text = Localization.ObjectDescriptionControl_Description + ":";
+
+            txtName.KeyDown += new KeyEventHandler(OnKeyDown);
+            txtCaption.KeyDown += new KeyEventHandler(OnKeyDown);
+        }
+
+        void OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                EventHandler handler = EndEdit;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+            }
         }
 
         public ObjectDescription Object

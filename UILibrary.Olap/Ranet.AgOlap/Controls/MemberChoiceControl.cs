@@ -494,6 +494,13 @@ namespace Ranet.AgOlap.Controls
 
                 if (node != null)
                 {
+                    // Все вышестоящие узлы раскрываем
+                    CustomTreeNode parentNode = node.Parent as CustomTreeNode;
+                    while (parentNode != null)
+                    {
+                        parentNode.IsExpanded = true;
+                        parentNode = parentNode.Parent as CustomTreeNode;
+                    }
                     // Если узел в дереве найден, то нужно просто переключиться на него
                     SelectNode(node);
 

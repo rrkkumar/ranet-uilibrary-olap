@@ -1469,6 +1469,7 @@
         </Setter>
     </Style>
     <!-- End of ScrollViewerGlowStyle -->
+    
     <!-- TreeView -->
     <Style TargetType="tree:CustomTree">
         <Setter Property="Background" Value="#FFFFFFFF"/>

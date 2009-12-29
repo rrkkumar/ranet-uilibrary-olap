@@ -127,7 +127,7 @@ namespace Ranet.AgOlap.Controls.Combo
                 }
             }
 
-            ColorItem custom = new ColorItem(color, "Custom");
+            ColorItem custom = new ColorItem(color, String.Format("({0},{1},{2},{3})", color.A.ToString(), color.R.ToString(), color.G.ToString(), color.B.ToString()));
             m_List.Add(custom);
             ColorsComboBox.SelectedItem = custom;
         }

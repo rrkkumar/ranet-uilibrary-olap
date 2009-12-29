@@ -81,7 +81,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
         /// <summary>
         /// Возвращает список условий, который удовлетворяет значение ячейки
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">Значение ячейки. double.NaN если значение равно NULL</param>
         /// <param name="conditions"></param>
         /// <returns></returns>
         public static List<CellCondition> TestToConditions(double value, CellConditionsDescriptor conditionDescriptor)
@@ -92,6 +92,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             List<CellCondition> list = new List<CellCondition>();
             foreach (CellCondition cond in conditionDescriptor.Conditions)
             {
+                // Если значение ячейки равно null, то value == double.NaN
+                // В этом случае пройдут только условия CellConditionType.None. Остальные во избежание казусов прокидываем
+                if (value == double.NaN && cond.ConditionType != CellConditionType.None)
+                    continue;
+
                 double val1, val2;
                 try
                 {
@@ -137,6 +142,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
                     case CellConditionType.NotEqual:
                         if (value != val1)
                             ok = true;
+                        break;
+                    case CellConditionType.None:
+                        ok = true;
                         break;
                 }
 

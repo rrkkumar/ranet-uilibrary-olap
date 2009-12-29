@@ -1,4 +1,24 @@
-﻿using System;
+﻿/*   
+    Copyright (C) 2009 Galaktika Corporation ZAO
+
+    This file is a part of Ranet.UILibrary.Olap
+ 
+    Ranet.UILibrary.Olap is a free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+      
+    You should have received a copy of the GNU General Public License
+    along with Ranet.UILibrary.Olap.  If not, see <http://www.gnu.org/licenses/>.
+  
+    If GPL v.3 is not suitable for your products or company,
+    Galaktika Corp provides Ranet.UILibrary.Olap under a flexible commercial license
+    designed to meet your specific usage and distribution requirements.
+    If you have already obtained a commercial license from Galaktika Corp,
+    you can use this file under those license terms.
+*/
+
+using System;
 using System.Text;
 using System.Windows;
 
@@ -9,32 +29,31 @@ namespace UILibrary.Olap.UITestApplication
 		void SetDefaultValues_Click(object sender, RoutedEventArgs e)
 		{
 			Config._Default.SetDefault();
+		}
+		void SaveCurrentValues_Click(object sender, RoutedEventArgs e)
+		{
 			Config.Save();
-			SetDefault();
+		}
+		private void LoadLastSavedValues_Click(object sender, RoutedEventArgs e)
+		{
+			Config.Load();
+			this.DataContext = Config._Default;
 		}
 		private void CheckConnection_Click(object sender, RoutedEventArgs e)
 		{
-			//Config._Default.HostDirectory = HostDirectory.Text;
 			CheckedInfo.Text = "Connection checking started...";
-			Config._Default.InitializeWebServiceUrl = InitializeWebServiceUrl.Text;
-			Config._Default.DataWebServiceUrl = DataServiceUrl.Text;
-			Config._Default.ConectionStringOLAP = OLAPConnectionString.Text;
 			Config.Init
-			(ConnectionStringId, OLAPConnectionString.Text
+			(ConnectionStringId, tbOLAPConnectionString.Text
 			, () =>
 			{
 				try
 				{
-
-					Config.Save();
 					CheckedInfo.Text = "Connection has been succesfully checked.";
-					System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
-					//Application.Current.Host.Content.NavigationState="Done!";
-					//MessageBox.Show(CheckedInfo.Text, "OK", MessageBoxButton.OK);
+					//System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
 					//initCubeChoiceButton_Click(null, null);
-					//initPivotGridButton_Click(null, null);
 					//initmdxDesignerButton_Click(null, null);
-					//initServerExplorerButton_Click(null, null);
+					//initPivotGridButton_Click(null, null);
+					initServerExplorerButton_Click(null, null);
 				}
 				catch (Exception E)
 				{

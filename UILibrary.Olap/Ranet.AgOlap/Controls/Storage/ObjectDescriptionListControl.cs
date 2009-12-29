@@ -39,6 +39,12 @@ namespace Ranet.AgOlap.Controls.Storage
 {
     public class ObjectDescriptionListControl : ObjectsListControlBase<ObjectStorageFileDescription>
     {
+        public ObjectDescriptionListControl()
+            : base()
+        {
+            AddButton.Visibility = Visibility.Collapsed;
+        }
+
         public override TreeNode<ObjectStorageFileDescription> BuildTreeNode(ObjectStorageFileDescription item)
         {
             BitmapImage icon = UriResources.Images.FileExtension16;
@@ -58,6 +64,37 @@ namespace Ranet.AgOlap.Controls.Storage
                 }
             }
             return false;
+        }
+
+        public event EventHandler<CustomEventArgs<ObjectStorageFileDescription>> CreateNewButtonClick;
+        public event EventHandler<CustomEventArgs<ObjectStorageFileDescription>> DeleteButtonClick;
+        public event EventHandler<CustomEventArgs<ObjectStorageFileDescription>> DeleteAllButtonClick;
+
+        protected override void OnAddButtonClick()
+        {
+            EventHandler<CustomEventArgs<ObjectStorageFileDescription>> handler = CreateNewButtonClick;
+            if (handler != null)
+            {
+                handler(this, new CustomEventArgs<ObjectStorageFileDescription>(CurrentObject));
+            }
+        }
+
+        protected override void OnDeleteButtonClick()
+        {
+            EventHandler<CustomEventArgs<ObjectStorageFileDescription>> handler = DeleteButtonClick;
+            if (handler != null)
+            {
+                handler(this, new CustomEventArgs<ObjectStorageFileDescription>(CurrentObject));
+            }
+        }
+
+        protected override void OnDeleteAllButtonClick()
+        {
+            EventHandler<CustomEventArgs<ObjectStorageFileDescription>> handler = DeleteAllButtonClick;
+            if (handler != null)
+            {
+                handler(this, new CustomEventArgs<ObjectStorageFileDescription>(CurrentObject));
+            }
         }
     }
 }

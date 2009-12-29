@@ -32,6 +32,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Browser;
+using System.Windows.Controls.Primitives;
 
 namespace Ranet.AgOlap.Features
 {
@@ -76,7 +77,11 @@ namespace Ranet.AgOlap.Features
 
             //Setup mouse move for the Silverlight element
             elementToAddMouseWheelSupportTo.MouseMove += new System.Windows.Input.MouseEventHandler(ElementMouseMove);
-            
+
+            elementToAddMouseWheelSupportTo.MouseEnter += new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_MouseEnter);
+            elementToAddMouseWheelSupportTo.MouseLeave += new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_MouseLeave);
+            elementToAddMouseWheelSupportTo.LostMouseCapture += new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_LostMouseCapture);
+
             //Add a new node to our tree and save a reference to the node for this element
             elementState = elementStateTree.Add(elementToAddMouseWheelSupportTo, parentElementWithMouseWheelSupport);
         }
@@ -89,7 +94,25 @@ namespace Ranet.AgOlap.Features
             browserListener.Moved -= this.HandleBrowserMouseWheelMoved;
             elementToAddMouseWheelSupportTo.GotFocus -= new RoutedEventHandler(ElementGotFocus);
             elementToAddMouseWheelSupportTo.LostFocus -= new RoutedEventHandler(ElementLostFocus);
-            elementToAddMouseWheelSupportTo.MouseMove -= new System.Windows.Input.MouseEventHandler(ElementMouseMove);                                    
+            elementToAddMouseWheelSupportTo.MouseMove -= new System.Windows.Input.MouseEventHandler(ElementMouseMove);
+            elementToAddMouseWheelSupportTo.MouseEnter -= new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_MouseEnter);
+            elementToAddMouseWheelSupportTo.MouseLeave -= new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_MouseLeave);
+            elementToAddMouseWheelSupportTo.LostMouseCapture -= new System.Windows.Input.MouseEventHandler(elementToAddMouseWheelSupportTo_LostMouseCapture);
+        }
+
+        void elementToAddMouseWheelSupportTo_LostMouseCapture(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            elementState.IsMouseOver = false;
+        }
+
+        void elementToAddMouseWheelSupportTo_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            elementState.IsMouseOver = true;
+        }
+
+        void elementToAddMouseWheelSupportTo_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            elementState.IsMouseOver = false;
         }
 
         private void HandleBrowserMouseWheelMoved(object sender, MouseWheelEventArgs e)
@@ -175,6 +198,7 @@ namespace Ranet.AgOlap.Features
                 if (delta != 0 && this.Moved != null)
                 {
                     MouseWheelEventArgs wheelArgs = new MouseWheelEventArgs(delta);
+                    wheelArgs.IsHorizontal = args.ShiftKey;
                     this.Moved(this, wheelArgs);
 
                     if (wheelArgs.BrowserEventHandled)
@@ -201,7 +225,11 @@ namespace Ranet.AgOlap.Features
                 if (parentElement == null)
                     nodes.Add(newNode);
                 else
-                    FindNodeContaining(parentElement).Children.Add(newNode);
+                {
+                    var e = FindNodeContaining(parentElement);
+                    if (e != null)
+                        e.Children.Add(newNode);
+                }
 
                 return newNode;
             }
@@ -273,7 +301,10 @@ namespace Ranet.AgOlap.Features
                 //assigned to this node, then we know that the mouse is no longer moving
                 //over this node and it cannot be the current the leaf the user is hovering over.
                 if (MousePosition != layoutRootMousePosition)
-                    return false;
+                {
+                    return IsMouseOver;
+                    //return false;
+                }
                 //But if the mouse position of this node and the layout root are the same,
                 //then we know the mouse is hovering over this node. The only question is
                 //whether or not the mouse is also hovering over any children of this node.
@@ -292,7 +323,8 @@ namespace Ranet.AgOlap.Features
                 //If the mouse position is the same as the layout root and 
                 //none of the children share the same mouse position then we've found the leaf
                 //the user is hovering over.
-                return true;
+                return IsMouseOver;
+                // return true;
             }
 
             public ElementNode FindNodeContaining(FrameworkElement element)
@@ -322,6 +354,7 @@ namespace Ranet.AgOlap.Features
     // Code ported by Pete blois from Javascript version at http://adomas.org/javascript-mouse-wheel/
     public class MouseWheelEventArgs : EventArgs
     {
+        public bool IsHorizontal = false;
         private double wheelDelta;
         private bool browserEventHandled = false;
 

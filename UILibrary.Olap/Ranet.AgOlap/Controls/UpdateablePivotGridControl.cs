@@ -99,6 +99,7 @@ namespace Ranet.AgOlap.Controls
         protected RanetToolBarButton PasteFromClipboardButton = null;
         protected RanetToggleButton RotateAxesButton = null;
         protected RanetToggleButton HideHintsButton = null;
+        protected RanetToggleButton ConditionsDesignerButton = null;
         protected ZoomingToolBarControl ZoomControl = null;
 
         public event RoutedEventHandler ExportToExcelClick;
@@ -263,6 +264,13 @@ namespace Ranet.AgOlap.Controls
             HideHintsButton.Content = UiHelper.CreateIcon(UriResources.Images.HideHint16);
             ToolTipService.SetToolTip(HideHintsButton, Localization.PivotGrid_HideHintsButton_ToolTip);
 
+            ConditionsDesignerButton = new RanetToggleButton();
+            ConditionsDesignerButton.ClickMode = ClickMode.Press;
+            ConditionsDesignerButton.Click += new RoutedEventHandler(ConditionsDesignerButton_Click);
+            ConditionsDesignerButton.Content = UiHelper.CreateIcon(UriResources.Images.CellConditionsDesigner16);
+            ConditionsDesignerButton.Visibility = Visibility.Collapsed;
+            ToolTipService.SetToolTip(ConditionsDesignerButton, Localization.PivotGrid_CellsConditionsDesignerButton_ToolTip);
+
             ZoomControl = new ZoomingToolBarControl();
             ToolTipService.SetToolTip(ZoomControl, Localization.PivotGrid_ZoomingControl_ToolTip);
             ZoomControl.ValueChanged += new EventHandler(ZoomControl_ValueChanged);
@@ -288,6 +296,7 @@ namespace Ranet.AgOlap.Controls
             ToolBar.AddItem(GoToFocusedCellButton);
             ToolBar.AddItem(RotateAxesButton);
             ToolBar.AddItem(HideHintsButton);
+            ToolBar.AddItem(ConditionsDesignerButton);
             ToolBar.AddItem(new RanetToolBarSplitter());
             ToolBar.AddItem(ExportToExcelButton);
             ToolBar.AddItem(ZoomControl);
@@ -339,6 +348,43 @@ namespace Ranet.AgOlap.Controls
             this.KeyDown += new KeyEventHandler(UpdateablePivotGridControl_KeyDown);
         
             OlapTransactionManager.AfterCommandComplete += new EventHandler<TransactionCommandResultEventArgs>(AnalysisTransactionManager_AfterCommandComplete);
+        }
+
+        ModalDialog m_ConditionsDesignerDialog = null;
+        CustomCellConditionsEditor m_CustomCellConditionsEditor = null;
+        void ConditionsDesignerButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_ConditionsDesignerDialog == null)
+            {
+                m_ConditionsDesignerDialog = new ModalDialog() { Width = 700, Height = 600, DialogStyle = ModalDialogStyles.OK };
+                m_ConditionsDesignerDialog.Caption = Localization.CellsConditionsDesignerDialog_Caption;
+                m_ConditionsDesignerDialog.DialogOk += new EventHandler<DialogResultArgs>(m_ConditionsDesignerDialog_DialogOk);
+            }
+
+            if (m_CustomCellConditionsEditor == null)
+            {
+                m_CustomCellConditionsEditor = new CustomCellConditionsEditor();
+                m_ConditionsDesignerDialog.Content = m_CustomCellConditionsEditor;
+            }
+
+            m_CustomCellConditionsEditor.Initialize(CustomCellsConditions != null ? CustomCellsConditions.ToList<CellConditionsDescriptor>() : new List<CellConditionsDescriptor>());
+
+            //Panel panel = GetRootPanel(this);
+            //if (panel != null && !panel.Children.Contains(m_ConditionsDesignerDialog.Dialog.PopUpControl))
+            //{
+            //    panel.Children.Add(m_ConditionsDesignerDialog.Dialog.PopUpControl);
+            //}
+            m_ConditionsDesignerDialog.Show();
+        }
+
+        void m_ConditionsDesignerDialog_DialogOk(object sender, DialogResultArgs e)
+        {
+            if(m_CustomCellConditionsEditor != null)
+            {
+                m_CustomCellConditionsEditor.EndEdit();
+                CustomCellsConditions = m_CustomCellConditionsEditor.CellsConditions;
+                PivotGrid.Refresh();
+            }
         }
 
         ~UpdateablePivotGridControl()
@@ -2369,6 +2415,20 @@ namespace Ranet.AgOlap.Controls
         {
             get { return PivotGrid.DrillThroughCells; }
             set { PivotGrid.DrillThroughCells = value; }
+        }
+
+        bool m_UseCellConditionsDesigner = false;
+        /// <summary>
+        /// Определяет необходимость использования дизайнера стилей для ячеек
+        /// </summary>
+        public bool UseCellConditionsDesigner
+        {
+            get { return m_UseCellConditionsDesigner; }
+            set
+            {
+                m_UseCellConditionsDesigner = value;
+                ConditionsDesignerButton.Visibility = value == true ? Visibility.Visible : Visibility.Collapsed;
+            }
         }
     }
 }

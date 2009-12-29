@@ -48,7 +48,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             }
             set
             {
-                m_ShowValue = value;
+                if (m_ShowValue != value)
+                {
+                    m_ShowValue = value;
+                }
                 RaisePropertyChanged();
             }
         }

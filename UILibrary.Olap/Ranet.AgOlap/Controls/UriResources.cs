@@ -86,6 +86,24 @@ namespace Ranet.AgOlap.Controls
             const string ROTATE_AXES_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/RotateAxes.png";
             const string ACTION_NODE_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/ActionNode.png";
             const string HIDE_HINT_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/CloseHint.png";
+            const string CELL_CONDITIONS_DESIGNER_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/CellConditionsDesigner.png";
+            const string CELL_STYLE_16 = "/Ranet.AgOlap;component/Controls/PivotGrid/Images/CellStyle.png";
+
+            public static BitmapImage CellStyle16
+            {
+                get
+                {
+                    return UriResources.GetImage(CELL_STYLE_16);
+                }
+            }
+
+            public static BitmapImage CellConditionsDesigner16
+            {
+                get
+                {
+                    return UriResources.GetImage(CELL_CONDITIONS_DESIGNER_16);
+                }
+            }
 
             public static BitmapImage HideHint16
             {
@@ -1189,6 +1207,15 @@ namespace Ranet.AgOlap.Controls
             const string REMOVE_ALL_CROSS_16 = "/Ranet.AgOlap;component/Controls/Images/RemoveAll.png";
 
             const string ERROR_SMALL_16 = "/Ranet.AgOlap;component/Controls/Images/ErrorSmall.png";
+            const string NEW_16 = "/Ranet.AgOlap;component/Controls/Images/New.png";
+
+            public static BitmapImage New16
+            {
+                get
+                {
+                    return UriResources.GetImage(NEW_16);
+                }
+            }
 
             public static BitmapImage ErrorSmall16
             {

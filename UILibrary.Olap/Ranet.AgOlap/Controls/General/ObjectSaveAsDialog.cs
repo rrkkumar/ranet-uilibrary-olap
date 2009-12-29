@@ -61,10 +61,6 @@ namespace Ranet.AgOlap.Controls.General
             }
         }
 
-        RanetToolBar m_ToolBar;
-        RanetToolBarButton m_DeleteButton;
-        RanetToolBarButton m_ClearButton;
-
         public ObjectSaveAsDialog(IStorageManager storageManager)
         {
             m_StorageManager = storageManager;
@@ -81,48 +77,27 @@ namespace Ranet.AgOlap.Controls.General
             Grid LayoutRoot = new Grid();
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
-            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            LayoutRoot.RowDefinitions.Add(new RowDefinition());
-
-            m_ToolBar = new RanetToolBar();
-            m_ToolBar.Margin = new Thickness(0, 0, 0, 4);
-            LayoutRoot.Children.Add(m_ToolBar);
-            Grid.SetColumnSpan(m_ToolBar, 2);
-
-            m_DeleteButton = new RanetToolBarButton();
-            m_DeleteButton.Content = UiHelper.CreateIcon(UriResources.Images.RemoveCross16);
-            m_DeleteButton.Click += new RoutedEventHandler(m_DeleteButton_Click);
-            m_DeleteButton.IsEnabled = false;
-            ToolTipService.SetToolTip(m_DeleteButton, Localization.DeleteCurrent_ToolTip);
-            m_ToolBar.AddItem(m_DeleteButton);
-
-            m_ClearButton = new RanetToolBarButton();
-            m_ClearButton.Content = UiHelper.CreateIcon(UriResources.Images.RemoveAllCross16);
-            m_ClearButton.Click += new RoutedEventHandler(m_ClearButton_Click);
-            m_ClearButton.IsEnabled = false;
-            ToolTipService.SetToolTip(m_ClearButton, Localization.DeleteAll_ToolTip);
-            m_ToolBar.AddItem(m_ClearButton);
 
             m_List = new ObjectDescriptionListControl();
             m_List.SelectionChanged += new EventHandler<SelectionChangedEventArgs<ObjectStorageFileDescription>>(m_List_SelectionChanged);
             m_List.ObjectSelected += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_ObjectSelected);
+            m_List.DeleteButtonClick += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_DeleteButtonClick);
+            m_List.DeleteAllButtonClick += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_DeleteAllButtonClick);
             LayoutRoot.Children.Add(m_List);
-            Grid.SetRow(m_List, 1);
 
             GridSplitter splitter_Vert = new GridSplitter();
             splitter_Vert.IsTabStop = false;
             LayoutRoot.Children.Add(splitter_Vert);
             Grid.SetColumn(splitter_Vert, 0);
-            Grid.SetRow(splitter_Vert, 1);
             splitter_Vert.Background = new SolidColorBrush(Colors.Transparent);
             splitter_Vert.HorizontalAlignment = HorizontalAlignment.Right;
             splitter_Vert.VerticalAlignment = VerticalAlignment.Stretch;
             splitter_Vert.Width = 3;
 
             m_Description = new ObjectDescriptionControl() { Margin = new Thickness(5, 0, 0, 0) };
+            m_Description.EndEdit += new EventHandler(m_Description_EndEdit);
             LayoutRoot.Children.Add(m_Description);
             Grid.SetColumn(m_Description, 1);
-            Grid.SetRow(m_Description, 1);
 
             m_Dlg.Content = LayoutRoot;
 
@@ -133,35 +108,32 @@ namespace Ranet.AgOlap.Controls.General
             }
         }
 
-        void m_ClearButton_Click(object sender, RoutedEventArgs e)
+        void m_Description_EndEdit(object sender, EventArgs e)
         {
-            if (MessageBox.Show(Localization.DeleteAll_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
-            {
-                m_List.Initialize(null);
-                m_List.IsWaiting = true;
-
-                StorageActionArgs args = new StorageActionArgs();
-                args.ActionType = StorageActionTypes.Clear;
-                args.ContentType = ContentType;
-                m_DeleteButton.IsEnabled = m_ClearButton.IsEnabled = false;
-                m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
-            }
+            OnDialogOk();  
         }
 
-        void m_DeleteButton_Click(object sender, RoutedEventArgs e)
+        void m_List_DeleteAllButtonClick(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
         {
-            if (MessageBox.Show(Localization.DeleteCurrent_Question, Localization.Warning, MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            m_List.Initialize(null);
+            m_List.IsWaiting = true;
+
+            StorageActionArgs args = new StorageActionArgs();
+            args.ActionType = StorageActionTypes.Clear;
+            args.ContentType = ContentType;
+            m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+        }
+
+        void m_List_DeleteButtonClick(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
+        {
+            var current = m_List.CurrentObject;
+            if (current != null)
             {
-                var current = m_List.CurrentObject;
-                if (current != null)
-                {
-                    StorageActionArgs args = new StorageActionArgs();
-                    args.ActionType = StorageActionTypes.Delete;
-                    args.ContentType = ContentType;
-                    args.FileDescription = m_List.CurrentObject;
-                    m_DeleteButton.IsEnabled = m_ClearButton.IsEnabled = false;
-                    m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
-                }
+                StorageActionArgs args = new StorageActionArgs();
+                args.ActionType = StorageActionTypes.Delete;
+                args.ContentType = ContentType;
+                args.FileDescription = m_List.CurrentObject;
+                m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
             }
         }
 
@@ -181,8 +153,6 @@ namespace Ranet.AgOlap.Controls.General
                 m_Description.Object = m_List.CurrentObject.Description;
             else
                 m_Description.Object = null;
-
-            m_DeleteButton.IsEnabled = m_Description.Object != null;
         }
 
         void m_List_ObjectSelected(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
@@ -223,7 +193,6 @@ namespace Ranet.AgOlap.Controls.General
                 {
                     List<ObjectStorageFileDescription> list = XmlSerializationUtility.XmlStr2Obj<List<ObjectStorageFileDescription>>(e.Result.Content);
                     m_List.Initialize(list, null);
-                    m_ClearButton.IsEnabled = list != null && list.Count > 0;
                     m_List.IsWaiting = false;
                     m_Description.Focus();
                 }
@@ -238,25 +207,29 @@ namespace Ranet.AgOlap.Controls.General
         public event EventHandler DialogOk;
         public event EventHandler DialogClosed;
         
+
         void Dlg_DialogOk(object sender, DialogResultArgs e)
+        {
+            e.Cancel = !OnDialogOk();
+        }
+
+        bool OnDialogOk()
         {
             if (m_Description.Object != null)
             {
                 if (String.IsNullOrEmpty(m_Description.Object.Name))
                 {
                     MessageBox.Show(Localization.ObjectSaveDialog_NameIsEmpty_Message, Localization.Warning, MessageBoxButton.OK);
-                    e.Cancel = true;
-                    return;
+                    return false;
                 }
                 else
                 {
                     if (m_List.Contains(m_Description.Object.Name))
                     {
                         // Выводим предупреждение о затирании объекта
-                        if(MessageBox.Show(Localization.ObjectSaveDialog_Replace_Message, Localization.Warning, MessageBoxButton.OKCancel) != MessageBoxResult.OK)
+                        if (MessageBox.Show(Localization.ObjectSaveDialog_Replace_Message, Localization.Warning, MessageBoxButton.OKCancel) != MessageBoxResult.OK)
                         {
-                            e.Cancel = true;
-                            return;
+                            return false;
                         }
                     }
                 }
@@ -269,6 +242,7 @@ namespace Ranet.AgOlap.Controls.General
 
                 m_Dlg.Close();
             }
+            return true;
         }
 
         StorageContentTypes m_ContentType = StorageContentTypes.None;
@@ -288,7 +262,6 @@ namespace Ranet.AgOlap.Controls.General
             StorageActionArgs args = new StorageActionArgs();
             args.ActionType = StorageActionTypes.GetList;
             args.ContentType = ContentType;
-            m_DeleteButton.IsEnabled = m_ClearButton.IsEnabled = false;
             m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
         }
     }

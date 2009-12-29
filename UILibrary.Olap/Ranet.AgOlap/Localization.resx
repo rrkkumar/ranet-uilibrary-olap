@@ -947,4 +947,25 @@ Please, recalculate data or cancel changes.</value>
   <data name="Warning" xml:space="preserve">
     <value>Warning</value>
   </data>
+  <data name="CellsConditionsDesignerDialog_Caption" xml:space="preserve">
+    <value>Cells styles designer</value>
+  </data>
+  <data name="PivotGrid_CellsConditionsDesignerButton_ToolTip" xml:space="preserve">
+    <value>Cells styles designer</value>
+  </data>
+  <data name="Toolbar_DeleteAllButton_ToolTip" xml:space="preserve">
+    <value>Delete all</value>
+  </data>
+  <data name="Toolbar_DeleteButton_ToolTip" xml:space="preserve">
+    <value>Delete current item</value>
+  </data>
+  <data name="Toolbar_NewButton_ToolTip" xml:space="preserve">
+    <value>Create new</value>
+  </data>
+  <data name="ConditionsDesigner_Appearance_Label" xml:space="preserve">
+    <value>Cell Appearance</value>
+  </data>
+  <data name="ConditionsDesigner_Condition_Label" xml:space="preserve">
+    <value>Cell Value Condition:</value>
+  </data>
 </root>

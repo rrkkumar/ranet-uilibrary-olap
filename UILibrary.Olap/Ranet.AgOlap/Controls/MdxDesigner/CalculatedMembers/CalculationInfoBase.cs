@@ -15,7 +15,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 {
     [XmlInclude(typeof(CalcMemberInfo))]
     [XmlInclude(typeof(CalculatedNamedSetInfo))]
-    public abstract class CalculationInfoBase
+    public class CalculationInfoBase
     {
         String m_Name = String.Empty;
         /// <summary>
@@ -29,7 +29,10 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
         #region IClonable Members
 
-        public abstract object Clone();
+        public virtual object Clone()
+        {
+            return this;
+        }
 
         #endregion
     }

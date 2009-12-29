@@ -45,6 +45,28 @@ namespace Ranet.AgOlap.Controls.General.Tree
         public CustomTree()
         {
             DefaultStyleKey = typeof(CustomTree);
+            this.MouseEnter += new MouseEventHandler(CustomTree_MouseEnter);
+        }
+
+        void CustomTree_MouseEnter(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            var scroller = GetScroller();
+            if (scroller != null)
+            {
+                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(scroller, this);
+            }
+        }
+
+        public ScrollViewer GetScroller()
+        {
+            return base.GetTemplateChild("ScrollViewer") as ScrollViewer;
         }
 
         public bool IsWaiting

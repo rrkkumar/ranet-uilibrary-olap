@@ -41,6 +41,8 @@ namespace Ranet.AgOlap.Features
     /// </summary>
     public class ScrollBarMouseWheelSupport
     {
+        public bool IsHorizontal { get; set; } 
+
         public bool ScrollAlways 
         {
             get {
@@ -90,6 +92,18 @@ namespace Ranet.AgOlap.Features
             // Ctrl+колесо - масштабирование в IE
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
                 return;
+            // Shift+колесо - скроллинг по горизонтали
+            if (IsHorizontal)
+            {
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) != ModifierKeys.Shift)
+                    return;
+            }
+            else
+            {
+                if ((Keyboard.Modifiers & ModifierKeys.Shift) == ModifierKeys.Shift)
+                    return;
+            }
+
             CustomMouseWheelSupport support = source as CustomMouseWheelSupport;
             if (support != null)
             {

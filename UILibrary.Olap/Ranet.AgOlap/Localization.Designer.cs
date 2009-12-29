@@ -268,6 +268,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cells styles designer.
+        /// </summary>
+        public static string CellsConditionsDesignerDialog_Caption {
+            get {
+                return ResourceManager.GetString("CellsConditionsDesignerDialog_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cell value:.
         /// </summary>
         public static string CellValue_Label {
@@ -327,6 +336,24 @@ namespace Ranet.AgOlap {
         public static string ComboBoxItem_None {
             get {
                 return ResourceManager.GetString("ComboBoxItem_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell Appearance.
+        /// </summary>
+        public static string ConditionsDesigner_Appearance_Label {
+            get {
+                return ResourceManager.GetString("ConditionsDesigner_Appearance_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell Value Condition:.
+        /// </summary>
+        public static string ConditionsDesigner_Condition_Label {
+            get {
+                return ResourceManager.GetString("ConditionsDesigner_Condition_Label", resourceCulture);
             }
         }
         
@@ -1618,6 +1645,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cells styles designer.
+        /// </summary>
+        public static string PivotGrid_CellsConditionsDesignerButton_ToolTip {
+            get {
+                return ResourceManager.GetString("PivotGrid_CellsConditionsDesignerButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to That command cannot be use on multiple selections..
         /// </summary>
         public static string PivotGrid_CellsCopyAreaError {
@@ -1994,6 +2030,33 @@ namespace Ranet.AgOlap {
         public static string ServerExplorerControl_Name {
             get {
                 return ResourceManager.GetString("ServerExplorerControl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete all.
+        /// </summary>
+        public static string Toolbar_DeleteAllButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Toolbar_DeleteAllButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete current item.
+        /// </summary>
+        public static string Toolbar_DeleteButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Toolbar_DeleteButton_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create new.
+        /// </summary>
+        public static string Toolbar_NewButton_ToolTip {
+            get {
+                return ResourceManager.GetString("Toolbar_NewButton_ToolTip", resourceCulture);
             }
         }
         

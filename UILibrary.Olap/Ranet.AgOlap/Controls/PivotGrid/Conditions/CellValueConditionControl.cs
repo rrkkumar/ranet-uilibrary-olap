@@ -29,25 +29,23 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
-using Ranet.Olap.Core.Metadata;
-using Ranet.AgOlap.Controls.MdxDesigner.Wrappers;
+using Ranet.AgOlap.Controls.MdxDesigner.Filters;
 
-namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
+namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 {
-    public class ValueFilterControl : FilterControlBase
+    public class CellValueConditionControl : UserControl
     {
-        MeasuresCombo comboMeasure;
-        ValueFilterTypeCombo comboFilterType;
+        CellConditionTypeCombo comboFilterType;
         NumericUpDown numCount_1;
         TextBlock lblAnd;
         NumericUpDown numCount_2;
 
-        public ValueFilterControl()
+        public CellValueConditionControl()
         {
             Grid LayoutRoot = new Grid();
 
-            LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) });
-            LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(2, GridUnitType.Star) });
+            LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+            LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
@@ -56,14 +54,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
             LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(24) });
             LayoutRoot.RowDefinitions.Add(new RowDefinition());
 
-            // Мера куба
-            comboMeasure = new MeasuresCombo() { Margin = new Thickness(0) };
-            LayoutRoot.Children.Add(comboMeasure);
-            Grid.SetColumn(comboMeasure, 0);
-            Grid.SetRow(comboMeasure, 1);
-
             // Тип фильтра
-            comboFilterType = new ValueFilterTypeCombo() { Margin = new Thickness(5, 0, 0, 0) };
+            comboFilterType = new CellConditionTypeCombo() { Margin = new Thickness(5, 0, 0, 0) };
             comboFilterType.SelectionChanged += new SelectionChangedEventHandler(comboFilterType_SelectionChanged);
             LayoutRoot.Children.Add(comboFilterType);
             Grid.SetRow(comboFilterType, 1);
@@ -104,8 +96,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
 
         void Refresh()
         {
-            if (comboFilterType.CurrentType == ValueFilterTypes.Between ||
-                comboFilterType.CurrentType == ValueFilterTypes.NotBetween)
+            if (comboFilterType.CurrentType == CellConditionType.Between ||
+                comboFilterType.CurrentType == CellConditionType.NotBetween)
             {
                 Grid.SetColumnSpan(numCount_1, 1);
                 lblAnd.Visibility = Visibility.Visible;
@@ -119,46 +111,29 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Filters
             }
         }
 
+        public event EventHandler EditEnd;
+
         void comboFilterType_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             Refresh();
-        }
 
-        Value_FilterWrapper m_Filter = new Value_FilterWrapper();
-        public Value_FilterWrapper Filter
-        {
-            get
+            EventHandler handler = EditEnd;
+            if (handler != null)
             {
-                m_Filter.FilterType = comboFilterType.CurrentType;
-                m_Filter.Num1 = Convert.ToInt32(numCount_1.Value);
-                m_Filter.Num2 = Convert.ToInt32(numCount_2.Value);
-                if (comboMeasure.CurrentMeasure != null)
-                    m_Filter.MeasureUniqueName = comboMeasure.CurrentMeasure.UniqueName;
-                else
-                    m_Filter.MeasureUniqueName = String.Empty;
-                return m_Filter;
+                handler(this, EventArgs.Empty);
             }
         }
 
-        public void Initialize(CubeDefInfo cubeInfo)
+        /// <summary>
+        /// Текущее условие
+        /// </summary>
+        public CellConditionType ConditionType
         {
-            comboMeasure.Initialize(cubeInfo);
-        }
-
-        public void Initialize(CubeDefInfo cubeInfo, Value_FilterWrapper wrapper)
-        {
-            comboMeasure.Initialize(cubeInfo);
-            Initialize(wrapper);
-        }
-
-        public void Initialize(Value_FilterWrapper wrapper)
-        {
-            if (wrapper != null)
+            get { return comboFilterType.CurrentType; }
+            set
             {
-                comboFilterType.SelectItem(wrapper.FilterType);
-                numCount_1.Value = wrapper.Num1;
-                numCount_2.Value = wrapper.Num2;
-                comboMeasure.SelectItem(wrapper.MeasureUniqueName);
+                comboFilterType.SelectItem(value);
+                Refresh();
             }
         }
     }

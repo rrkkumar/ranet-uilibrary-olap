@@ -123,8 +123,44 @@ namespace Ranet.AgOlap.Controls.MemberChoice.Info
 
                     if (String.IsNullOrEmpty(parentUniqueName))
                     {
-                        //Добавляем в коллекцию корневых элементов
+                        // В случае если например в мерархию загружены элементы уровня 1 и потом догружается элемент All, 
+                        // то получится что в коллекции корневых элементов находятся элементы уровней 0 и 1. Чтобы такого не произошло
+                        // после добавления просматриваем коллекцию корневых элементов и проверяем не является данный добавленный элемент родителем для кого-нибудь из уже имеющихся
+                        // Если дочерние обнаружены, то они удаляются из корневых и добавляются в дочерние к данному элементу.
+
+                        // Ищем среди корневых элементы дочерние для данного
+                        Dictionary<String, OlapMemberInfo> toDelete = new Dictionary<string, OlapMemberInfo>();
+                        foreach(var child in Children.Values)
+                        {
+                            String pun = String.Empty;
+                            if (child.Info != null)
+                            {
+                                PropertyData prop = child.Info.GetMemberProperty(MemberData.PARENT_UNIQUE_NAME_PROPERTY);
+                                if (prop != null && prop.Value != null)
+                                {
+                                    pun = prop.Value.ToString();
+                                }
+                            }
+                            if (!String.IsNullOrEmpty(pun) && pun == addedHierarchy.UniqueName)
+                            {
+                                toDelete.Add(child.UniqueName, child);
+                            }
+                        }
+
+                        // Удаляем из коллекции корневых дочерние элементы
+                        foreach (var del in toDelete)
+                        {
+                            Children.Remove(del.Key);
+                        }
+
+                        // Добавляем в коллекцию корневых элементов
                         AddChild(addedHierarchy);
+
+                        // Добавляем в дочерние те элементы, которые были до этого корневыми
+                        foreach (var del in toDelete)
+                        {
+                            addedHierarchy.AddChild(del.Value);
+                        }
 
                         foundParentHierarchy = false;
                         break;

@@ -17,5 +17,21 @@ namespace Ranet.AgOlap.Controls.List
         {
             DefaultStyleKey = typeof(RanetListBox);
         }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            var scroller = GetScroller();
+            if (scroller != null)
+            {
+                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(scroller, this);
+            }
+        }
+
+        public ScrollViewer GetScroller()
+        {
+            return base.GetTemplateChild("ScrollViewer") as ScrollViewer;
+        }
     }
 }

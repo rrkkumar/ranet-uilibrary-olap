@@ -1464,7 +1464,7 @@ namespace Ranet.AgOlap.Controls
                                     if (!String.IsNullOrEmpty(function))
                                     {
                                         String Top_Template = " Filter(Hierarchize({0}), ({1} " + function + " {2}))";
-                                        set = String.Format(Top_Template, set, filtered_Item.FilteredWrapper.CompositeFilter.Filter.TopFilter.MeasureUniqueName, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num1.ToString());
+                                        set = String.Format(Top_Template, set, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.MeasureUniqueName, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num1.ToString());
                                         result.Add(set);
                                     }
                                     else
@@ -1475,7 +1475,7 @@ namespace Ranet.AgOlap.Controls
                                             String Top_Template = " Filter(Hierarchize({0}), ({1} >= {2} AND {1} <= {3}))";
                                             if(filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.FilterType == ValueFilterTypes.NotBetween)
                                                 Top_Template = " Filter(Hierarchize({0}), ({1} < {2} OR {1} > {3}))";
-                                            set = String.Format(Top_Template, set, filtered_Item.FilteredWrapper.CompositeFilter.Filter.TopFilter.MeasureUniqueName, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num1.ToString(), filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num2.ToString());
+                                            set = String.Format(Top_Template, set, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.MeasureUniqueName, filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num1.ToString(), filtered_Item.FilteredWrapper.CompositeFilter.Filter.ValueFilter.Num2.ToString());
                                             result.Add(set);
                                         }
                                     }

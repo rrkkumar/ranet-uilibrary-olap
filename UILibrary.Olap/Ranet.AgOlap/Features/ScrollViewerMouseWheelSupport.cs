@@ -31,6 +31,7 @@ using System.Windows.Browser;
 using System.Windows.Controls;
 using System.Windows;
 using System.Reflection;
+using Ranet.AgOlap.Controls.General.Tree;
 
 namespace Ranet.AgOlap.Features
 {
@@ -86,6 +87,18 @@ namespace Ranet.AgOlap.Features
         /// </summary>
         /// <param name="scrollViewer">The scroll viewer.</param>
         /// <returns>The <see cref="ScrollViewer"/>.</returns>
+        public static ScrollViewer AddMouseWheelSupport(this ScrollViewer scrollViewer, FrameworkElement mouseMoveElement)
+        {
+            return AddMouseWheelSupport(scrollViewer, mouseMoveElement, DEFAULT_SCROLL_AMOUNT);
+        }
+
+        /// <summary>
+        /// Adds mouse wheel support to a <see cref="ScrollViewer"/>.
+        /// As long as the <see cref="ScrollViewer"/> has focus,
+        /// the mouse wheel can be used to scroll up and down.
+        /// </summary>
+        /// <param name="scrollViewer">The scroll viewer.</param>
+        /// <returns>The <see cref="ScrollViewer"/>.</returns>
         public static ScrollViewer AddMouseWheelSupport(this ScrollViewer scrollViewer)
         {
             return AddMouseWheelSupport(null, scrollViewer, DEFAULT_SCROLL_AMOUNT);
@@ -129,26 +142,51 @@ namespace Ranet.AgOlap.Features
         public static ScrollViewer AddMouseWheelSupport(this ScrollViewer parentScrollViewer, ScrollViewer childScrollViewer, double scrollAmount)
         {
             mouseWheelHelper = new MouseWheelSupport(childScrollViewer, parentScrollViewer);
+            return AddScrollViewerMouseWheelSupport(childScrollViewer, scrollAmount);
+        }
 
-            mouseWheelHelper.MouseWheelMoved += (source, eventArgs) =>
+        static ScrollViewer AddScrollViewerMouseWheelSupport(ScrollViewer scrollViewer, double scrollAmount)
+        {
+            if(mouseWheelHelper != null)
+            {
+                mouseWheelHelper.MouseWheelMoved += (source, eventArgs) =>
                 {
                     var delta = eventArgs.WheelDelta;
 
                     delta *= scrollAmount;
 
-                    var newOffset = childScrollViewer.VerticalOffset - delta;
+                    if (eventArgs.IsHorizontal)
+                    {
+                        var newOffset = scrollViewer.HorizontalOffset - delta;
 
-                    if (newOffset > childScrollViewer.ScrollableHeight)
-                        newOffset = childScrollViewer.ScrollableHeight;
-                    else if (newOffset < 0)
-                        newOffset = 0;
+                        if (newOffset > scrollViewer.ScrollableWidth)
+                            newOffset = scrollViewer.ScrollableWidth;
+                        else if (newOffset < 0)
+                            newOffset = 0;
 
-                    childScrollViewer.ScrollToVerticalOffset(newOffset);
+                        scrollViewer.ScrollToHorizontalOffset(newOffset);
+                    }
+                    else
+                    {
+                        var newOffset = scrollViewer.VerticalOffset - delta;
 
+                        if (newOffset > scrollViewer.ScrollableHeight)
+                            newOffset = scrollViewer.ScrollableHeight;
+                        else if (newOffset < 0)
+                            newOffset = 0;
+
+                        scrollViewer.ScrollToVerticalOffset(newOffset);
+                    }
                     eventArgs.BrowserEventHandled = true;
                 };
+            }
+            return scrollViewer;
+        }
 
-            return childScrollViewer;
+        public static ScrollViewer AddMouseWheelSupport(this ScrollViewer childScrollViewer, FrameworkElement mouseMoveElement, double scrollAmount)
+        {
+            mouseWheelHelper = new MouseWheelSupport(mouseMoveElement, null);
+            return AddScrollViewerMouseWheelSupport(childScrollViewer, scrollAmount);
         }
 
         public static bool RemoveMouseWheelSupport(ScrollViewer childScrollViewer)

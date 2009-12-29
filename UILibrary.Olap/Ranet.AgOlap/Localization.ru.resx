@@ -944,4 +944,25 @@
   <data name="DrillthroughDialog_Caption" xml:space="preserve">
     <value>Результат Drillthrough</value>
   </data>
+  <data name="CellsConditionsDesignerDialog_Caption" xml:space="preserve">
+    <value>Дизайнер стилей ячеек</value>
+  </data>
+  <data name="PivotGrid_CellsConditionsDesignerButton_ToolTip" xml:space="preserve">
+    <value>Дизайнер стилей ячеек</value>
+  </data>
+  <data name="Toolbar_DeleteAllButton_ToolTip" xml:space="preserve">
+    <value>Удалить все</value>
+  </data>
+  <data name="Toolbar_DeleteButton_ToolTip" xml:space="preserve">
+    <value>Удалить текущий элемент</value>
+  </data>
+  <data name="Toolbar_NewButton_ToolTip" xml:space="preserve">
+    <value>Создать новый</value>
+  </data>
+  <data name="ConditionsDesigner_Appearance_Label" xml:space="preserve">
+    <value>Внешний вид ячейки</value>
+  </data>
+  <data name="ConditionsDesigner_Condition_Label" xml:space="preserve">
+    <value>Условие для значения ячейки:</value>
+  </data>
 </root>

@@ -32,14 +32,17 @@ using System.Windows.Controls.Primitives;
 
 namespace Ranet.AgOlap.Controls.Buttons
 {
-    public class RanetToggleButton : ToggleButton
-    {
-        public RanetToggleButton()
-        {
-            DefaultStyleKey = typeof(RanetToggleButton);
-            this.Height = 22;
-            this.Width = 22;
-            this.Margin = new Thickness(2, 0, 0, 0);
-        }
-    }
+	public class RanetToggleButton : ToggleButton
+	{
+#warning ButtonId in SlicerCtrl: А кто его определять будет? Пушкин?
+		internal int ButtonId;
+
+		public RanetToggleButton()
+		{
+			DefaultStyleKey = typeof(RanetToggleButton);
+			this.Height = 22;
+			this.Width = 22;
+			this.Margin = new Thickness(2, 0, 0, 0);
+		}
+	}
 }

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Ranet.AgOlap.Controls.PivotGrid.Conditions.CustomCellConditionsEditor"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
+    xmlns:conditions="clr-namespace:Ranet.AgOlap.Controls.PivotGrid.Conditions"
+    xmlns:toolbar="clr-namespace:Ranet.AgOlap.Controls.ToolBar" 
+    xmlns:controls="clr-namespace:Ranet.AgOlap.Controls.General"
+    xmlns:swc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    >
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="2*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        
+        <conditions:ConditionsDescriptorListControl x:Name="DescriptorsList" Grid.Row="1" Margin="0,0,6,0"></conditions:ConditionsDescriptorListControl>
+        
+        <controls:RenetGridSplitter Grid.Row="0" IsTabStop="False" VerticalAlignment="Stretch" HorizontalAlignment="Right"></controls:RenetGridSplitter>
+
+        <swc:TabControl Grid.Column="1" Margin="1,0,0,0">
+            <swc:TabItem Header="Style Details" x:Name="StyleDetailsTab" Grid.Column="1">
+                <conditions:ConditionsDescriptorControl Margin="0" x:Name="DescriptorDetails"></conditions:ConditionsDescriptorControl>
+            </swc:TabItem>
+        </swc:TabControl>
+    </Grid>
+</UserControl>

@@ -84,7 +84,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Ranet.Olap.Core\Ranet.Olap.Core.csproj">
@@ -119,8 +118,8 @@
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>1688</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost/UITest.Web</IISUrl>
+          <DevelopmentServerVPath>/Ranet.UITest.Web</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Ranet.UITest.Web</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>http://local</CustomServerUrl>
