@@ -51,6 +51,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(Scroller);
         }
 
+        ~CellConditionControl()
+        {
+            Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.RemoveMouseWheelSupport(Scroller);
+        }
+
         CellCondition m_Condition = null;
         public CellCondition Condition
         {

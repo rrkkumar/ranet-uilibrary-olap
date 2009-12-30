@@ -19,13 +19,6 @@
     you can use this file under those license terms.
 */
 
-/******************************************************************************************
- * 
- * Adam J. Cooper - 2008-09-09
- * 
- * See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
- * 
- ******************************************************************************************/
 using System;
 using System.Windows.Browser;
 using System.Windows.Controls;
@@ -50,8 +43,6 @@ namespace Ranet.AgOlap.Features
     
     /// <summary>
     /// Utility class for adding mouse wheel scrolling to ScrollViewer controls
-    /// in Silverlight 2 Beta 2. See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
-    /// for more details.
     /// </summary>
     public static class ScrollViewerMouseWheelSupport
     {
@@ -189,22 +180,40 @@ namespace Ranet.AgOlap.Features
             return AddScrollViewerMouseWheelSupport(childScrollViewer, scrollAmount);
         }
 
-        public static bool RemoveMouseWheelSupport(ScrollViewer childScrollViewer)
+        //public static bool RemoveMouseWheelSupport(ScrollViewer childScrollViewer)
+        //{
+        //   if (mouseWheelHelper!= null)
+        //   {
+        //       try
+        //       {
+        //           mouseWheelHelper.RemoveWheelSupport(childScrollViewer);
+        //           mouseWheelHelper = null;
+        //           return true;
+        //       }
+        //       catch 
+        //       {
+        //           return false;
+        //       }               
+        //   }
+        //   return false;
+        //}
+
+        public static bool RemoveMouseWheelSupport(FrameworkElement mouseMoveElement)
         {
-           if (mouseWheelHelper!= null)
-           {
-               try
-               {
-                   mouseWheelHelper.RemoveWheelSupport(childScrollViewer);
-                   mouseWheelHelper = null;
-                   return true;
-               }
-               catch 
-               {
-                   return false;
-               }               
-           }
-           return false;
+            if (mouseWheelHelper != null)
+            {
+                try
+                {
+                    mouseWheelHelper.RemoveWheelSupport(mouseMoveElement);
+                    mouseWheelHelper = null;
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
+            return false;
         }
     }
 }

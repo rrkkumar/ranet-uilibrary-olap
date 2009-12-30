@@ -19,15 +19,6 @@
     you can use this file under those license terms.
 */
 
-/******************************************************************************************
- * 
- * Adam J. Cooper - 2008-09-09
- * 
- * See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
- * 
- * Special thanks to Peter Blois and Jeff Prosise whose work this is based on.
- * 
- ******************************************************************************************/
 using System;
 using System.Collections.Generic;
 using System.Windows;

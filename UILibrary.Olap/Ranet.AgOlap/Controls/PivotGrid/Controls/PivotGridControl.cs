@@ -1305,6 +1305,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
 
         #region Построение областей
+        /// <summary>
+        /// Область фильтров сводной таблицы (верхняя левая). Необходима для того чтобы и в ней работал скроллинг колесом мыши.
+        /// </summary>
+        Border m_FilterArea = null;
+        
         void BuildAreasLayout()
         {
             m_ColumnsArea_ColumnsCount = 0;
@@ -1397,6 +1402,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 // Число колонок в области строк и число строк в области колонок останутся неизменными при любых манипуляциях с данным представлением
                 m_RowsArea_ColumnsCount = ItemsLayoutRoot.ColumnDefinitions.Count;
                 m_ColumnsArea_RowsCount = ItemsLayoutRoot.RowDefinitions.Count;
+
+                if (m_FilterArea == null)
+                {
+                    m_FilterArea = new Border() { Background = new SolidColorBrush(Colors.White) };
+                }
+
+                if (m_RowsArea_ColumnsCount > 0 && m_ColumnsArea_RowsCount > 0 && !ItemsLayoutRoot.Children.Contains(m_FilterArea))
+                {
+                    ItemsLayoutRoot.Children.Add(m_FilterArea);
+                    Grid.SetColumnSpan(m_FilterArea, m_RowsArea_ColumnsCount);
+                    Grid.SetRowSpan(m_FilterArea, m_ColumnsArea_RowsCount);
+                }
             }
         }
 

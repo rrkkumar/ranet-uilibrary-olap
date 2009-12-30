@@ -48,25 +48,26 @@ namespace Ranet.AgOlap.Controls.General.Tree
             this.MouseEnter += new MouseEventHandler(CustomTree_MouseEnter);
         }
 
+        ~CustomTree()
+        {
+            Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.RemoveMouseWheelSupport(this);
+        }
+
         void CustomTree_MouseEnter(object sender, MouseEventArgs e)
         {
             
         }
 
+        ScrollViewer Scroller = null;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            var scroller = GetScroller();
-            if (scroller != null)
+            Scroller = base.GetTemplateChild("ScrollViewer") as ScrollViewer;
+            if (Scroller != null)
             {
-                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(scroller, this);
+                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(Scroller, this);
             }
-        }
-
-        public ScrollViewer GetScroller()
-        {
-            return base.GetTemplateChild("ScrollViewer") as ScrollViewer;
         }
 
         public bool IsWaiting

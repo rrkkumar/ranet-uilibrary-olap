@@ -18,20 +18,22 @@ namespace Ranet.AgOlap.Controls.List
             DefaultStyleKey = typeof(RanetListBox);
         }
 
+        ScrollViewer Scroller = null;
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
 
-            var scroller = GetScroller();
-            if (scroller != null)
+            Scroller = base.GetTemplateChild("ScrollViewer") as ScrollViewer;
+            if (Scroller != null)
             {
-                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(scroller, this);
+                Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.AddMouseWheelSupport(Scroller, this);
             }
         }
 
-        public ScrollViewer GetScroller()
+
+        ~RanetListBox()
         {
-            return base.GetTemplateChild("ScrollViewer") as ScrollViewer;
+            Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.RemoveMouseWheelSupport(this);
         }
     }
 }

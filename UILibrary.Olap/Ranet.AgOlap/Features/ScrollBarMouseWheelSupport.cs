@@ -35,9 +35,7 @@ namespace Ranet.AgOlap.Features
 {
    
     /// <summary>
-    /// Utility class for adding mouse wheel scrolling to ScrollViewer controls
-    /// in Silverlight 2 Beta 2. See http://adamjcooper.com/blog/post/Mouse-Wheel-Scrolling-in-Silverlight-2-Beta-2.aspx
-    /// for more details.
+    /// Utility class for adding mouse wheel scrolling to ScrollBar controls
     /// </summary>
     public class ScrollBarMouseWheelSupport
     {
