@@ -7,8 +7,8 @@
  {
  	public partial class Page : System.Windows.Controls.UserControl
  	{
- 		string WSDataUrl { get { return Config._Default.OlapWebServiceUrl; } }
- 		string ConnectionStringId { get { return Config._Default.ConnectionStringId; } }
+ 		string WSDataUrl { get { return Config.Default.Data.OlapWebServiceUrl; } }
+ 		string ConnectionStringId { get { return Config.ConnectionStringId; } }
  
  		public Page()
  		{
@@ -16,8 +16,7 @@
  			//Thread.CurrentThread.CurrentCulture = ci;
  			//Thread.CurrentThread.CurrentUICulture = ci;
 			this.InitializeComponent();
-			
-			this.DataContext=Config._Default;
+			this.BindData();			
 		}
  	}
  }

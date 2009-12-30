@@ -19,16 +19,38 @@
 */
 
 using System;
+using System.Reflection;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+
 
 namespace UILibrary.Olap.UITestApplication
 {
 	public partial class Page : System.Windows.Controls.UserControl
 	{
+		void BindData()
+		{
+			foreach (var pi in Config.Default.Data.GetType().GetProperties())
+			{
+				var myBinding = new Binding("Data."+pi.Name);
+				myBinding.Source = Config.Default;
+				myBinding.Mode = BindingMode.TwoWay;
+				myBinding.UpdateSourceTrigger = UpdateSourceTrigger.Default;
+				myBinding.BindsDirectlyToSource = true;
+				myBinding.NotifyOnValidationError=true;
+				var tb=this.FindName("tb"+pi.Name) as TextBox;
+				if (tb==null)
+					continue;
+				tb.SetBinding(TextBox.TextProperty, myBinding);
+			}
+
+			//GaugeSetValues();
+		}
 		void SetDefaultValues_Click(object sender, RoutedEventArgs e)
 		{
-			Config._Default.SetDefault();
+			Config.SetDefault();
 		}
 		void SaveCurrentValues_Click(object sender, RoutedEventArgs e)
 		{
@@ -37,7 +59,6 @@ namespace UILibrary.Olap.UITestApplication
 		private void LoadLastSavedValues_Click(object sender, RoutedEventArgs e)
 		{
 			Config.Load();
-			this.DataContext = Config._Default;
 		}
 		private void CheckConnection_Click(object sender, RoutedEventArgs e)
 		{
@@ -53,7 +74,7 @@ namespace UILibrary.Olap.UITestApplication
 					//initCubeChoiceButton_Click(null, null);
 					//initmdxDesignerButton_Click(null, null);
 					//initPivotGridButton_Click(null, null);
-					initServerExplorerButton_Click(null, null);
+					//initServerExplorerButton_Click(null, null);
 				}
 				catch (Exception E)
 				{

@@ -33,7 +33,7 @@ namespace UILibrary.Olap.UITestApplication
 				GaugeRound360Base.MinValue = double.Parse(tbMinValue.Text);
 				GaugeRound360Base.LowValue = double.Parse(tbLowValue.Text);
 				GaugeRound360Base.CurrentValue = double.Parse(tbCurrentValue.Text);
-				GaugeRound360Base.HightValue = double.Parse(tbHightValue.Text);
+				GaugeRound360Base.HighValue = double.Parse(tbHighValue.Text);
 				GaugeRound360Base.MaxValue = double.Parse(tbMaxValue.Text);
 				
 				GaugeRound360Base.Text = string.Format
@@ -41,7 +41,7 @@ namespace UILibrary.Olap.UITestApplication
 					, tbMinValue.Text
 					, tbLowValue.Text
 					, tbCurrentValue.Text
-					, tbHightValue.Text
+					, tbHighValue.Text
 					, tbMaxValue.Text
 					);
 				
@@ -50,7 +50,7 @@ namespace UILibrary.Olap.UITestApplication
 					, tbMinValue.Text
 					, tbLowValue.Text
 					, tbCurrentValue.Text
-					, tbHightValue.Text
+					, tbHighValue.Text
 					, tbMaxValue.Text
 					);
 			}

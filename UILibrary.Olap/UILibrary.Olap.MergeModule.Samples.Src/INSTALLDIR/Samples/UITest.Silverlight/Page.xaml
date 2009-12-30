@@ -37,14 +37,14 @@
 						<ColumnDefinition Width="200"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Text="Init Service Url:" />
-					<TextBox x:Name="tbInitializeWebServiceUrl" Grid.Row="0" Grid.Column="1"  Text="{Binding Path=InitializeWebServiceUrl}"/>
+					<TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Text="InitializeWebService Url:" />
+					<TextBox x:Name="tbInitializeWebServiceUrl" Grid.Row="0" Grid.Column="1"/>
 
-					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="Data Service Url:"/>
-					<TextBox x:Name="tbDataServiceUrl" Grid.Row="1" Grid.Column="1" Text="{Binding Path=OlapWebServiceUrl}"/>
+					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="OlapWebService Url:"/>
+					<TextBox x:Name="tbOlapWebServiceUrl" Grid.Row="1" Grid.Column="1"/>
 
-					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAP Connection String:" />
-					<TextBox x:Name="tbOLAPConnectionString" Grid.Column="1" Grid.Row="2" Text="{Binding Path=ConectionStringOLAP}"/>
+					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAP ConnectionString:" />
+					<TextBox x:Name="tbOLAPConnectionString" Grid.Column="1" Grid.Row="2"/>
 					
 					<Button
 					 Content="Set default values" 
@@ -213,31 +213,31 @@
 					</Grid.ColumnDefinitions>
 					<TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Text="MinValue-{0}:"/>
 					<TextBox x:Name="tbMinValue" Grid.Row="0" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"  Text="{Binding Path=MinValue}"
+						TextChanged="Gauge_Changed"
 					 />
 					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="LowValue-{1}:"/>
 					<TextBox x:Name="tbLowValue" Grid.Row="1" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed" Text="{Binding Path=LowValue}"
+						TextChanged="Gauge_Changed"
 					 />
 					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="CurrentValue-{2}:"/>
 					<TextBox x:Name="tbCurrentValue" Grid.Row="2" Grid.Column="1" AcceptsReturn="True"
-					  TextChanged="Gauge_Changed" Text="{Binding Path=CurrentValue}" 
+					  TextChanged="Gauge_Changed"
 					 />
-					<TextBlock Grid.Column="0" Grid.Row="3" Margin="0,0,0,0" Text="HightValue-{3}:"/>
-					<TextBox x:Name="tbHightValue" Grid.Row="3" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed" Text="{Binding Path=HighValue}"
+					<TextBlock Grid.Column="0" Grid.Row="3" Margin="0,0,0,0" Text="HighValue-{3}:"/>
+					<TextBox x:Name="tbHighValue" Grid.Row="3" Grid.Column="1" AcceptsReturn="True"
+						TextChanged="Gauge_Changed"
 					 />
 					<TextBlock Grid.Column="0" Grid.Row="4" Margin="0,0,0,0" Text="MaxValue-{4}:"/>
 					<TextBox x:Name="tbMaxValue" Grid.Row="4" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"  Text="{Binding Path=MaxValue}"
+						TextChanged="Gauge_Changed"
 					 />
 					<TextBlock Grid.Column="0" Grid.Row="5" Margin="0,0,0,0" Text="GaugeTextTemplate:"/>
 					<TextBox x:Name="tbGaugeTextTemplate" Grid.Row="5" Grid.Column="1" 
-						TextChanged="Gauge_Changed" Text="{Binding Path=GaugeTextTemplate}"
+						TextChanged="Gauge_Changed"
 					 />
 					<TextBlock Grid.Column="0" Grid.Row="6" Margin="0,0,0,0" Text="GaugeToolTipTemplate:"/>
 					<TextBox x:Name="tbGaugeToolTipTemplate" Grid.Row="6" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"  Text="{Binding Path=GaugeToolTipTemplate}"
+						TextChanged="Gauge_Changed"
 					 />
 					<gauge:Round360Base Grid.Row="7" Grid.Column="1" x:Name="GaugeRound360Base"
 					/>

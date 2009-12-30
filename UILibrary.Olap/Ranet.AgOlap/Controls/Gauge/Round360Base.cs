@@ -237,7 +237,7 @@ namespace Ranet.AgOlap.Controls.Gauge
         /// <summary>
         /// Верхнее значение
         /// </summary>
-        public double HightValue
+        public double HighValue
         {
             get {
                 return m_HeightValue;
