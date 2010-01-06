@@ -5,6 +5,8 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
     xmlns:swc="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
     xmlns:MdxFormatter="clr-namespace:Ranet.SampleApplications.MdxFormatter.SilverLight;assembly=Ranet.SampleApplications.MdxFormatter.SilverLight"
+    xmlns:Samples="clr-namespace:UILibrary.Olap.UITestApplication;assembly=UILibrary.Olap.UITestApplication"
+
     xmlns:kpi_controls="clr-namespace:Ranet.AgOlap.Controls;assembly=Ranet.AgOlap"
     xmlns:measure_controls="clr-namespace:Ranet.AgOlap.Controls;assembly=Ranet.AgOlap"
     xmlns:level_controls="clr-namespace:Ranet.AgOlap.Controls;assembly=Ranet.AgOlap"
@@ -19,11 +21,15 @@
     xmlns:ds_info="clr-namespace:Ranet.AgOlap.Controls.DataSourceInfo;assembly=Ranet.AgOlap"
 >
 
-	<Grid x:Name="LayoutRoot" Background="White">
-		<swc:TabControl SelectedIndex="0">
-			<swc:TabItem Header="Configuration">
+	<Grid x:Name="LayoutRoot">
+		<swc:TabControl SelectedIndex="0"  Background="{Binding ElementName=cbBackGroundColor, Path=SelectedItem.Tag}" >
+			<swc:TabItem Header="Configuration" >
 				<Grid>
 					<Grid.RowDefinitions>
+						<RowDefinition Height="27"></RowDefinition>
+						<RowDefinition Height="27"></RowDefinition>
+						<RowDefinition Height="27"></RowDefinition>
+						<RowDefinition Height="27"></RowDefinition>
 						<RowDefinition Height="27"></RowDefinition>
 						<RowDefinition Height="27"></RowDefinition>
 						<RowDefinition Height="27"></RowDefinition>
@@ -45,7 +51,7 @@
 
 					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAP ConnectionString:" />
 					<TextBox x:Name="tbOLAPConnectionString" Grid.Column="1" Grid.Row="2"/>
-					
+
 					<Button
 					 Content="Set default values" 
 					 x:Name="SetDefaultValues"
@@ -75,6 +81,10 @@
 					 Grid.Column="1"
 					 Click="CheckConnection_Click"
 					/>
+					<TextBlock Grid.Column="0" Grid.Row="8" Text="BackGroundColor:" />
+					<Samples:ComboBoxColors Name="cbBackGroundColor" SelectedIndex="7" Grid.Column="1" Grid.Row="8" />
+					<!-- TextBlock Grid.Column="0" Grid.Row="9" Text="ForeGroundColor:" />
+					<Samples:ComboBoxColors Name="cbForeGroundColor" SelectedIndex="1" Grid.Column="1" Grid.Row="9" /-->
 
 				</Grid>
 			</swc:TabItem>
@@ -195,52 +205,140 @@
 					 Grid.Row="2" />
 				</Grid>
 			</swc:TabItem>
-			<swc:TabItem Header="Gauge">
+			<swc:TabItem Header="RoundGauge">
 				<Grid>
 					<Grid.RowDefinitions>
-						<RowDefinition Height="27"></RowDefinition>
-						<RowDefinition Height="27"></RowDefinition>
-						<RowDefinition Height="27"></RowDefinition>
-						<RowDefinition Height="27"></RowDefinition>
-						<RowDefinition Height ="27"></RowDefinition>
-						<RowDefinition Height ="27"></RowDefinition>
-						<RowDefinition Height ="60"></RowDefinition>
 						<RowDefinition></RowDefinition>
 					</Grid.RowDefinitions>
 					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="150"/>
+						<ColumnDefinition Width="400"/>
 						<ColumnDefinition></ColumnDefinition>
 					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Text="MinValue-{0}:"/>
-					<TextBox x:Name="tbMinValue" Grid.Row="0" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="LowValue-{1}:"/>
-					<TextBox x:Name="tbLowValue" Grid.Row="1" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="CurrentValue-{2}:"/>
-					<TextBox x:Name="tbCurrentValue" Grid.Row="2" Grid.Column="1" AcceptsReturn="True"
-					  TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="3" Margin="0,0,0,0" Text="HighValue-{3}:"/>
-					<TextBox x:Name="tbHighValue" Grid.Row="3" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="4" Margin="0,0,0,0" Text="MaxValue-{4}:"/>
-					<TextBox x:Name="tbMaxValue" Grid.Row="4" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="5" Margin="0,0,0,0" Text="GaugeTextTemplate:"/>
-					<TextBox x:Name="tbGaugeTextTemplate" Grid.Row="5" Grid.Column="1" 
-						TextChanged="Gauge_Changed"
-					 />
-					<TextBlock Grid.Column="0" Grid.Row="6" Margin="0,0,0,0" Text="GaugeToolTipTemplate:"/>
-					<TextBox x:Name="tbGaugeToolTipTemplate" Grid.Row="6" Grid.Column="1" AcceptsReturn="True"
-						TextChanged="Gauge_Changed"
-					 />
-					<gauge:Round360Base Grid.Row="7" Grid.Column="1" x:Name="GaugeRound360Base"
-					/>
+					<Grid>
+						<Grid.RowDefinitions>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="60"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+							<RowDefinition Height="27"></RowDefinition>
+						</Grid.RowDefinitions>
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition Width="170"/>
+							<ColumnDefinition></ColumnDefinition>
+						</Grid.ColumnDefinitions>
+						<!-- CheckBox x:Name="cbGaugeAutoRefresh" Grid.Row="0" Grid.Column="1" Content="AutoRefresh"
+							IsChecked="{Binding ElementName=RoundGauge, Path=AutoRefresh, Mode=TwoWay}"
+						/-->
+						<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="Text:"/>
+						<TextBox x:Name="tbGaugeText" Grid.Row="1" Grid.Column="1" AcceptsReturn="False"
+							Text="Feel free to change."
+						 />
+						<TextBlock Grid.Column="0" Grid.Row="2" Text="ToolTipText:"/>
+						<TextBox x:Name="tbGaugeToolTipText" Grid.Row="2" Grid.Column="1" AcceptsReturn="True"
+							Text="This is tooltip text.&#xD;&#xA;You can dynamically change all values."
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="3" Text="CurrentValue:"/>
+						<TextBox x:Name="tbCurrentValue" Grid.Row="3" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=CurrentValue, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="4" Text="MinValue:"/>
+						<TextBox x:Name="tbMinValue" Grid.Row="4" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=MinValue, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="5" Text="LowValue:"/>
+						<TextBox x:Name="tbLowValue" Grid.Row="5" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=LowValue, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="6" Text="HighValue:"/>
+						<TextBox x:Name="tbHighValue" Grid.Row="6" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=HighValue, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="7" Text="MaxValue:"/>
+						<TextBox x:Name="tbMaxValue" Grid.Row="7" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=MaxValue, Mode=TwoWay}"
+						 />
+						<TextBlock Grid.Column="0" Grid.Row="8" Text="MeterMargin(%):"/>
+						<TextBox x:Name="tbMeterMargin" Grid.Row="8" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=MeterMargin, Mode=TwoWay}"
+						 />
+						<TextBlock Grid.Column="0" Grid.Row="9" Text="BadColor:" />
+						<Samples:ComboBoxColors Name="cbBadColor" SelectedIndex="11" Grid.Column="1" Grid.Row="9" />
+						<TextBlock Grid.Column="0" Grid.Row="10" Text="MiddleColor:" />
+						<Samples:ComboBoxColors Name="cbMiddleColor" SelectedIndex="14" Grid.Column="1" Grid.Row="10" />
+						<TextBlock Grid.Column="0" Grid.Row="11" Text="GoodColor:" />
+						<Samples:ComboBoxColors Name="cbGoodColor" SelectedIndex="6" Grid.Column="1" Grid.Row="11" />
+						<TextBlock Grid.Column="0" Grid.Row="12" Text="MeterBackGroundColor:" />
+						<Samples:ComboBoxColors Name="cbMeterBackGroundColor" SelectedIndex="2" Grid.Column="1" Grid.Row="12" />
+						<TextBlock Grid.Column="0" Grid.Row="13" Text="Background:" />
+						<Samples:ComboBoxColors Name="cbGaugeBackground" SelectedIndex="7" Grid.Column="1" Grid.Row="13" />
+						<TextBlock Grid.Column="0" Grid.Row="14" Text="Foreground:" />
+						<Samples:ComboBoxColors Name="cbGaugeForeground" SelectedIndex="0" Grid.Column="1" Grid.Row="14" />
+						<TextBlock Grid.Column="0" Grid.Row="15" Text="DivisionsFormatString:"/>
+						<TextBox x:Name="tbDivisionsFormatString"
+							Grid.Row="15" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=DivisionsFormatString, Mode=TwoWay}"
+						 />
+						<TextBlock Grid.Column="0"
+							Grid.Row="16" Text="CurrentValueFormatString:"/>
+						<TextBox x:Name="tbCurrentValueFormatString"
+							Grid.Row="16" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=CurrentValueFormatString, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0"
+							Grid.Row="17" Text="DivisionsCount:"/>
+						<TextBox x:Name="tbDivisionsCount"
+							Grid.Row="17" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=DivisionsCount, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0"
+							Grid.Row="18" Text="SubDivisionsCount:"/>
+						<TextBox x:Name="tbSubDivisionsCount"
+							Grid.Row="18" Grid.Column="1" AcceptsReturn="False"
+							Text="{Binding ElementName=RoundGauge, Path=SubDivisionsCount, Mode=TwoWay}"
+						/>
+						<TextBlock Grid.Column="0" Grid.Row="19" Text="TextColor:" />
+						<Samples:ComboBoxColors Name="cbGaugeTextColor" SelectedIndex="1" Grid.Column="1" Grid.Row="19" />
+					</Grid>
+					<gauge:RoundGauge Grid.Row="0" Grid.Column="1" x:Name="RoundGauge"
+					 Text="{Binding ElementName=tbGaugeText, Path=Text}"
+					 ToolTipService.ToolTip="{Binding ElementName=tbGaugeToolTipText, Path=Text}"
+					 LowColor="{Binding ElementName=cbBadColor, Path=SelectedItem.Tag.Color}"
+					 MiddleColor="{Binding ElementName=cbMiddleColor, Path=SelectedItem.Tag.Color}"
+					 HighColor="{Binding ElementName=cbGoodColor, Path=SelectedItem.Tag.Color}"
+					 BackgroundColor="{Binding ElementName=cbGaugeBackground, Path=SelectedItem.Tag.Color}"
+					 ForeColor="{Binding ElementName=cbGaugeForeground, Path=SelectedItem.Tag.Color}"
+					 TextColor="{Binding ElementName=cbGaugeTextColor, Path=SelectedItem.Tag.Color}"
+					 MeterBackgroundColor="{Binding ElementName=cbMeterBackGroundColor, Path=SelectedItem.Tag.Color}"
+					>
+					<!--
+						Background="{Binding ElementName=cbGaugeBackground, Path=SelectedItem.Tag}, Mode= "
+						<Panel.Background>
+							<Binding ElementName="cbGaugeBackground" Path="SelectedItem.Tag"/>
+						</Panel.Background>
+						<Panel.Background>
+							<Binding ElementName="cbGaugeBackground" Path="SelectedItem.Tag"/>
+						</Panel.Background>
+					-->
+					</gauge:RoundGauge>
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Mdx Formatter">

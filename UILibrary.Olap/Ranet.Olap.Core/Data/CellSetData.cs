@@ -160,24 +160,7 @@ namespace Ranet.Olap.Core.Data
                 var cellValueData = new CellValueData();
                 var prop = new PropertyData("CellOrdinal", CellOrdinal);
                 cellValueData.Properties.Add(prop);
-                object val = Values[CellOrdinal];
-                if (val != null)
-                //val = ((JsonNumber)val).ToDouble();
-                {
-                    if (val is JsonString)
-                    {
-                        val = val.ToString();
-                    }
-                    else if (val is JsonNumber)
-                    {
-                        var propvalStr = val.ToString();
-                        if (propvalStr.Contains('.'))
-                            val = ((JsonNumber)val).ToDouble();
-                        else
-                            val = ((JsonNumber)val).ToInt32();
-                    }
-                }
-
+                object val = ConvertFromJson(Values[CellOrdinal]);
                 cellValueData.Value = val;
                 prop = new PropertyData("VALUE", val);
                 cellValueData.Properties.Add(prop);
@@ -185,26 +168,10 @@ namespace Ranet.Olap.Core.Data
                 string FORMAT_STRING = null;
                 for (int k = 0; k < PropNames.Length; k++)
                 {
-                    object propval = props[k];
-                    if (propval != null)
-                    {
-                        if (propval is JsonString)
-                        {
-                            propval = propval.ToString();
-                        }
-                        else if (propval is JsonNumber)
-                        {
-                            var propvalStr = propval.ToString();
-                            if (propvalStr.Contains('.'))
-                                propval = ((JsonNumber)propval).ToDouble();
-                            else
-                                propval = ((JsonNumber)propval).ToInt32();
-                        }
-                    }
                     var propName = PropNames[k].ToString();
                     //if (propName == "FORMAT_STRING")
                     //    FORMAT_STRING = (string)propval;
-                    prop = new PropertyData(propName, propval);
+                    prop = new PropertyData(propName, ConvertFromJson(props[k]));
                     cellValueData.Properties.Add(prop);
                 }
 
@@ -317,34 +284,18 @@ namespace Ranet.Olap.Core.Data
 
                             for (int j = 0; j < PropertiesValues.Length; j++)
                             {
-                                member.Properties.Add(new PropertyData(PropertiesNames[j].ToString(), PropertiesValues[j]));
+                                member.Properties.Add(new PropertyData(PropertiesNames[j].ToString(), ConvertFromJson(PropertiesValues[j])));
                             }
                             for (int j = 0; j < MemberPropertiesValues.Length; j++)
                             {
-                                member.MemberProperties.Add(new PropertyData(MemberPropertiesNames[j].ToString(), MemberPropertiesValues[j]));
+                                member.MemberProperties.Add(new PropertyData(MemberPropertiesNames[j].ToString(), ConvertFromJson(MemberPropertiesValues[j])));
                             }
 
                             var member_equalsPropsValues = equalsMemberProps.GetArray(MemberPropertiesStyleId);
                             for (int k = 0; k < equalsMemberPropertiesNames.Length; k++)
                             {
-                                object propval = member_equalsPropsValues[k];
-                                if (propval != null)
-                                {
-                                    if (propval is JsonString)
-                                    {
-                                        propval = propval.ToString();
-                                    }
-                                    else if (propval is JsonNumber)
-                                    {
-                                        var propvalStr = propval.ToString();
-                                        if (propvalStr.Contains('.'))
-                                            propval = ((JsonNumber)propval).ToDouble();
-                                        else
-                                            propval = ((JsonNumber)propval).ToInt32();
-                                    }
-                                }
                                 var propName = equalsMemberPropertiesNames[k].ToString();
-                                member.MemberProperties.Add(new PropertyData(propName, propval));
+                                member.MemberProperties.Add(new PropertyData(propName, ConvertFromJson(member_equalsPropsValues[k])));
                             }
 
                             axis.Members.Add(axis.Members.Count, member);
@@ -387,6 +338,37 @@ namespace Ranet.Olap.Core.Data
                 }
             }
             return null;
+        }
+
+        static object ConvertFromJson(object val)
+        {
+            object propval = val;
+            if (propval != null)
+            {
+                if (propval is JsonString)
+                {
+                    propval = propval.ToString();
+                }
+                else if (propval is JsonNumber)
+                {
+                    var propvalStr = propval.ToString();
+                    if (propvalStr.Contains('.'))
+                        propval = ((JsonNumber)propval).ToDouble();
+                    else
+                    {
+                        propval = ((JsonNumber)propval).ToInt64();
+                        //try
+                        //{
+                        //    propval = ((JsonNumber)propval).ToInt32();
+                        //}
+                        //catch (System.OverflowException)
+                        //{
+                        //    propval = ((JsonNumber)propval).ToInt64();
+                        //}
+                    }
+                }
+            }
+            return propval;
         }
 
         public static CellSetData Deserialize(String str)

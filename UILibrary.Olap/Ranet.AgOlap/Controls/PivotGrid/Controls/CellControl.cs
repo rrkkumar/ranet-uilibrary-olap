@@ -337,16 +337,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 // Если ячейка редактируемая
                 if (Owner != null && Owner.CanEdit && Cell.IsUpdateable)
                 {
-                    if (RecalculatedChange != null || NotRecalculatedChange != null)
+                    if (NotRecalculatedChange != null)
                     {
-                        if (NotRecalculatedChange != null)
-                        {
-                            m_Border.Background = new SolidColorBrush(Color.FromArgb(75, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
-                        }
+                        // Непересчитанные ячейки выделяются фоном Colors.Cyan
+                        m_Border.Background = new SolidColorBrush(Color.FromArgb(75, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
                     }
                     else
                     {
-                        // SystemColors.Info
+                        // Редактируемые ячейки - SystemColors.Info
                         m_Border.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 225));
                     }
                 }

@@ -80,6 +80,9 @@ namespace Ranet.AgOlap.Controls
         RanetToolBarButton m_ExportLayout;
         RanetToolBarButton m_ImportLayout;
 
+        RanetToolBarSplitter m_RunAreaSplitter;
+        RanetToolBarSplitter m_StorageAreaSplitter;
+
         GridSplitter LayoutRoot_VertSplitter;
         Border Input_Border;
         GridSplitter Output_HorzSplitter;
@@ -136,7 +139,8 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(m_EditMDXQuery, Localization.MdxDesigner_EditQuery_ToolTip);
             m_ToolBar.AddItem(m_EditMDXQuery);
 
-            m_ToolBar.AddItem(new RanetToolBarSplitter());
+            m_RunAreaSplitter = new RanetToolBarSplitter();
+            m_ToolBar.AddItem(m_RunAreaSplitter);
 
             m_CalculatedMemberEditor = new RanetToolBarButton();
             m_CalculatedMemberEditor.Content = UiHelper.CreateIcon(UriResources.Images.CustomCalculations16);
@@ -157,7 +161,8 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(m_ExecuteQuery, Localization.MdxDesigner_ExecuteQuery);
             m_ToolBar.AddItem(m_ExecuteQuery);
 
-            m_ToolBar.AddItem(new RanetToolBarSplitter());
+            m_StorageAreaSplitter = new RanetToolBarSplitter();
+            m_ToolBar.AddItem(m_StorageAreaSplitter);
 
             m_ImportLayout = new RanetToolBarButton();
             m_ImportLayout.Content = UiHelper.CreateIcon(UriResources.Images.FileImport16);
@@ -354,6 +359,7 @@ namespace Ranet.AgOlap.Controls
             AllowDragDrop(m_FilterAreaContainer);
             AllowDragDrop(m_ColumnsAreaContainer);
             AllowDragDrop(m_RowsAreaContainer);
+            AllowDragDrop(m_DataAreaContainer);
 
             //Scroll.Content = LayoutRoot;
 
@@ -1017,7 +1023,8 @@ namespace Ranet.AgOlap.Controls
 
                     if (m_RowsAreaContainer.IsReadyToDrop ||
                         m_ColumnsAreaContainer.IsReadyToDrop ||
-                        m_FilterAreaContainer.IsReadyToDrop)
+                        m_FilterAreaContainer.IsReadyToDrop ||
+                        m_DataAreaContainer.IsReadyToDrop)
                     {
                         // Отписываемся от события на удаление. т.к. там мы только меняем стиль текста в узле дерева. А при перетаскивании у нас элемент останется задействованным.
                         container.ItemRemoved -= new EventHandler<AreaItemArgs>(AreaContainer_ItemRemoved);
@@ -1038,6 +1045,11 @@ namespace Ranet.AgOlap.Controls
                         {
                             m_FilterAreaContainer.AddItem(e.Item);
                         }
+
+                        if (m_DataAreaContainer.IsReadyToDrop)
+                        {
+                            m_DataAreaContainer.AddItem(e.Item);
+                        }
                     }
                 }
             }
@@ -1048,6 +1060,40 @@ namespace Ranet.AgOlap.Controls
                 m_FilterAreaContainer.IsReadyToDrop = false;
                 m_DataAreaContainer.IsReadyToDrop = false;
             }
+        }
+
+        bool CanDragToArea(PivotAreaContainer container, AreaItemControl item)
+        {
+            if (item != null && container != null)
+            {
+                if (container == m_DataAreaContainer)
+                {
+                    // В область данных можно таскать только меры, KPI и вычисляемые элементы
+                    if (item is Kpi_AreaItemControl ||
+                        item is Measure_AreaItemControl ||
+                        item is CalculatedMember_AreaItemControl)
+                        return true;
+                }
+
+                if (container == m_RowsAreaContainer || container == m_ColumnsAreaContainer)
+                { 
+                    // В область строк и колонок можно таскать: иерархии, уровни, Set(ы) и узел "Values"
+                    if (item is Hierarchy_AreaItemControl ||
+                        item is Level_AreaItemControl ||
+                        item is CalculateNamedSet_AreaItemControl ||
+                        item is Values_AreaItemControl)
+                        return true;
+                }
+
+                if (container == m_FilterAreaContainer)
+                {
+                    // В область фильтров можно таскать: иерархии, уровни
+                    if (item is Hierarchy_AreaItemControl ||
+                        item is Level_AreaItemControl)
+                        return true;
+                }
+            }
+            return false;
         }
 
         void area_DragDelta(object sender, DragAreaItemArgs<DragDeltaEventArgs> e)
@@ -1061,10 +1107,11 @@ namespace Ranet.AgOlap.Controls
 
             PivotAreaContainer container = sender as PivotAreaContainer;
 
-            if(container != m_RowsAreaContainer)
+            // Подсветка областей, куда разрешено таскание
+            if (container != m_RowsAreaContainer)
             {
                 Rect m_RowsArea_Bounds = AgControlBase.GetSLBounds(m_RowsAreaContainer);
-                if (m_RowsArea_Bounds.Contains(m_DragDelta))
+                if (m_RowsArea_Bounds.Contains(m_DragDelta) && CanDragToArea(m_RowsAreaContainer, e.Item))
                 {
                     m_RowsAreaContainer.IsReadyToDrop = true;
                 }
@@ -1073,18 +1120,27 @@ namespace Ranet.AgOlap.Controls
             if (container != m_ColumnsAreaContainer)
             {
                 Rect m_ColumnsArea_Bounds = AgControlBase.GetSLBounds(m_ColumnsAreaContainer);
-                if (m_ColumnsArea_Bounds.Contains(m_DragDelta))
+                if (m_ColumnsArea_Bounds.Contains(m_DragDelta) && CanDragToArea(m_ColumnsAreaContainer, e.Item))
                 {
                     m_ColumnsAreaContainer.IsReadyToDrop = true;
                 }
             }
 
-            if (container != m_FilterAreaContainer && !(e.Item is Values_AreaItemControl))
+            if (container != m_FilterAreaContainer)
             {
                 Rect m_FilterArea_Bounds = AgControlBase.GetSLBounds(m_FilterAreaContainer);
-                if (m_FilterArea_Bounds.Contains(m_DragDelta))
+                if (m_FilterArea_Bounds.Contains(m_DragDelta) && CanDragToArea(m_FilterAreaContainer, e.Item))
                 {
                     m_FilterAreaContainer.IsReadyToDrop = true;
+                }
+            }
+
+            if (container != m_DataAreaContainer)
+            {
+                Rect m_DataArea_Bounds = AgControlBase.GetSLBounds(m_DataAreaContainer);
+                if (m_DataArea_Bounds.Contains(m_DragDelta) && CanDragToArea(m_DataAreaContainer, e.Item))
+                {
+                    m_DataAreaContainer.IsReadyToDrop = true;
                 }
             }
 
@@ -2924,6 +2980,7 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_SubCube = value;
+                m_ServerExplorer.SubCube = value;
             }
         }
 
@@ -3277,12 +3334,112 @@ namespace Ranet.AgOlap.Controls
             get { return m_ServerExplorer.CanSelectCube; }
             set { m_ServerExplorer.CanSelectCube = value; }
         }
+        
         public string MdxQuery
         {
-					get
-					{
-						return m_MdxQuery.Text;
-					}
+            get
+            {
+                return m_MdxQuery.Text;
+            }
         }
+
+        #region Управление видимостью кнопок на тулбаре
+        public bool ShowMetadataArea_ButtonVisible
+        {
+            get { return m_ShowMetadataArea.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ShowMetadataArea.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool ShowMDXQuery_ButtonVisible
+        {
+            get { return m_ShowMDXQuery.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ShowMDXQuery.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool EditMDXQuery_ButtonVisible
+        {
+            get { return m_EditMDXQuery.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_EditMDXQuery.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool RunQueryAutomatic_ButtonVisible
+        {
+            get { return m_RunQueryAutomatic.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_RunQueryAutomatic.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool ExecuteQuery_ButtonVisible
+        {
+            get { return m_ExecuteQuery.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ExecuteQuery.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool CalculatedMemberEditor_ButtonVisible
+        {
+            get { return m_CalculatedMemberEditor.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_CalculatedMemberEditor.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool ExportLayout_ButtonVisible
+        {
+            get { return m_ExportLayout.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ExportLayout.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool ImportLayout_ButtonVisible
+        {
+            get { return m_ImportLayout.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ImportLayout.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+                UpdateToolBar();
+            }
+        }
+
+        public bool ToolBar_Visible
+        {
+            get { return m_ToolBar.Visibility == Visibility.Visible ? true : false; }
+            set
+            {
+                m_ToolBar.Visibility = value ? Visibility.Visible : Visibility.Collapsed;
+            }
+        }
+
+        void UpdateToolBar()
+        {
+            m_RunAreaSplitter.Visibility = (ShowMetadataArea_ButtonVisible || ShowMDXQuery_ButtonVisible || EditMDXQuery_ButtonVisible) ? Visibility.Visible : Visibility.Collapsed;
+            m_StorageAreaSplitter.Visibility = (CalculatedMemberEditor_ButtonVisible || RunQueryAutomatic_ButtonVisible || ExecuteQuery_ButtonVisible) ? Visibility.Visible : Visibility.Collapsed;
+
+            m_ToolBar.Visibility = (m_RunAreaSplitter.Visibility == Visibility.Visible || m_StorageAreaSplitter.Visibility == Visibility.Visible || ImportLayout_ButtonVisible || ExportLayout_ButtonVisible) ? Visibility.Visible : Visibility.Collapsed;
+        }
+        #endregion Управление видимостью кнопок на тулбаре
     }
 }

@@ -126,7 +126,24 @@
                     </layoutToolkit:AccordionItem>
                 
                 <layoutToolkit:AccordionItem Header="Image Settings" x:Name="ImageItem"  HorizontalContentAlignment="Stretch" Background="LightGray">
-                    
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                            <RowDefinition Height="Auto"></RowDefinition>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"></ColumnDefinition>
+                            <ColumnDefinition></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <!-- Сброка -->
+                        <TextBlock Grid.Row="0" x:Name="lblAssembly" Text="Assembly:" Margin="15,5,0,0"></TextBlock>
+                        <combo:XapItemComboBox Grid.Row="0" Grid.Column="1" x:Name="comboAssembly" Margin="10,5,0,0"></combo:XapItemComboBox>
+
+                        <!-- Картинка -->
+                        <TextBlock Grid.Row="1" x:Name="lblImage" Text="Image:" Margin="15,5,0,5"></TextBlock>
+                        <combo:ImagePicker Grid.Row="1" Grid.Column="1" x:Name="comboImage" Margin="10,5,0,5"></combo:ImagePicker>
+                    </Grid>
+
                 </layoutToolkit:AccordionItem>
                 
             </layoutToolkit:Accordion>

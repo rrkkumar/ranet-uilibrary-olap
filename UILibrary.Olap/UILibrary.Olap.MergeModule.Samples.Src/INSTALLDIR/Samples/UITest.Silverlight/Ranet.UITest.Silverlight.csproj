@@ -88,6 +88,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </ApplicationDefinition>
+    <Compile Include="ComboBoxColors.cs">
+      <SubType>
+      </SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Compile>
     <Page Include="Page.xaml">
       <Generator>MSBuild:MarkupCompilePass1</Generator>
       <SubType>Designer</SubType>

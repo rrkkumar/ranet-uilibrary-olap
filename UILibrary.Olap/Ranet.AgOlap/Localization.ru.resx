@@ -837,7 +837,7 @@
     <value>В списке содержатся именованные наборы с одинаковыми именами. Исправить данную ошибку автоматически?</value>
   </data>
   <data name="MdxDesigner_EditQuery_ToolTip" xml:space="preserve">
-    <value>Edit MDX query</value>
+    <value>Редактировать MDX запрос</value>
   </data>
   <data name="CalculationsListControl_CalculatedMembers_TreeNode" xml:space="preserve">
     <value>Элементы</value>

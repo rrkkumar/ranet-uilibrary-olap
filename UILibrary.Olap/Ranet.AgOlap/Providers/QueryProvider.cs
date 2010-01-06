@@ -27,6 +27,7 @@ using Ranet.Olap.Core.Data;
 using Ranet.Olap.Core.Metadata;
 using Ranet.Olap.Core.Providers;
 using Ranet.AgOlap.Controls;
+using Ranet.Olap.Core;
 
 namespace Ranet.AgOlap.Providers
 {

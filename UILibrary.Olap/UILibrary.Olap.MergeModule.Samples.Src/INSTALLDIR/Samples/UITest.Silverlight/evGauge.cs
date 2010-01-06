@@ -18,50 +18,12 @@
     you can use this file under those license terms.
 */
 
-using System;
-using System.Text;
-using System.Windows;
 
 namespace UILibrary.Olap.UITestApplication
 {
-	public partial class Page : System.Windows.Controls.UserControl
-	{
-		void GaugeSetValues()
-		{
-			try
-			{
-				GaugeRound360Base.MinValue = double.Parse(tbMinValue.Text);
-				GaugeRound360Base.LowValue = double.Parse(tbLowValue.Text);
-				GaugeRound360Base.CurrentValue = double.Parse(tbCurrentValue.Text);
-				GaugeRound360Base.HighValue = double.Parse(tbHighValue.Text);
-				GaugeRound360Base.MaxValue = double.Parse(tbMaxValue.Text);
-				
-				GaugeRound360Base.Text = string.Format
-					( tbGaugeTextTemplate.Text
-					, tbMinValue.Text
-					, tbLowValue.Text
-					, tbCurrentValue.Text
-					, tbHighValue.Text
-					, tbMaxValue.Text
-					);
-				
-				GaugeRound360Base.ToolTipText = string.Format
-					( tbGaugeToolTipTemplate.Text
-					, tbMinValue.Text
-					, tbLowValue.Text
-					, tbCurrentValue.Text
-					, tbHighValue.Text
-					, tbMaxValue.Text
-					);
-			}
-			catch (Exception E)
-			{
-				MessageBox.Show(E.ToString());
-			}
-		}
-		void Gauge_Changed(object sender, System.Windows.Controls.TextChangedEventArgs e)
-		{
-			GaugeSetValues();
-		}
+	public partial class Page
+	{	
+		// All gauge properties are simply binded to textboxes and other input controls directly in XAML.
+		// No code is needed now.
 	}
 }

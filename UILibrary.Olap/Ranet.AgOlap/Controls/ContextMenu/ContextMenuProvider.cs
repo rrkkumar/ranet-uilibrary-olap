@@ -118,11 +118,38 @@ namespace Ranet.AgOlap.Controls.ContextMenu
                 if (menu != null)
                 {
                     m_CurrentMenu = menu;
+                    menu.LayoutUpdated += menu_LayoutUpdated;
                     menu.SetLocation(e.Position);
                     menu.IsDropDownOpen = true;
                 }
                 break;
             }
+        }
+
+        static void menu_LayoutUpdated(object sender, EventArgs e)
+        {
+            m_CurrentMenu.LayoutUpdated -= menu_LayoutUpdated;
+            m_CurrentMenu.SetLocation(GetMenuPosition(m_CurrentMenu, m_CurrentMenu.GetLocation()));
+        }
+
+        static Point GetMenuPosition(FrameworkElement menu, Point point)
+        {
+            var deltaX = 0.0;
+            var deltaY = 0.0;
+            var right = point.X + menu.ActualWidth;
+            var bottom = point.Y + menu.ActualHeight;
+            var content = Application.Current.Host.Content;
+
+            if (right > content.ActualWidth)
+            {
+                deltaX = right - content.ActualWidth;
+            }
+            if (bottom > content.ActualHeight)
+            {
+                deltaY = bottom - content.ActualHeight;
+            }
+
+            return new Point(point.X - deltaX, point.Y - deltaY);
         }
 
         /// <summary>

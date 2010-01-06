@@ -41,13 +41,13 @@ namespace UILibrary.Olap.UITestApplication
 		public string UpdateScript { get; set; }
 		public string MdxDesignerLayout { get; set; }
 
-		public string MinValue { get; set; }
-		public string LowValue { get; set; }
-		public string CurrentValue { get; set; }
-		public string HighValue { get; set; }
-		public string MaxValue { get; set; }
-		public string GaugeTextTemplate { get; set; }
-		public string GaugeToolTipTemplate { get; set; }
+		//public string MinValue { get; set; }
+		//public string LowValue { get; set; }
+		//public string CurrentValue { get; set; }
+		//public string HighValue { get; set; }
+		//public string MaxValue { get; set; }
+		//public string GaugeText { get; set; }
+		//public string GaugeToolTipText { get; set; }
 
 		public Data()
 		{
@@ -70,14 +70,14 @@ namespace UILibrary.Olap.UITestApplication
 			UpdateScript = "";
 			MdxDesignerLayout = "";
 
-			MinValue = "10";
-			LowValue = "20";
-			CurrentValue = "82";
-			HighValue = "80";
-			MaxValue = "180";
-			GaugeTextTemplate = @"Text={2}/{4}. Feel free to change.";
-			GaugeToolTipTemplate = @"{0}/{1}/{2}/{3}/{4}.
-You can dynamically change values and tooltip text.";
+//      MinValue = "10";
+//      LowValue = "20";
+//      CurrentValue = "82";
+//      HighValue = "80";
+//      MaxValue = "180";
+//      GaugeText = @"Feel free to change Text.";
+//      GaugeToolTipText = @"Feel free to change.
+//You can dynamically change values and tooltip text.";
 		}
 	}
 	public class Config : INotifyPropertyChanged

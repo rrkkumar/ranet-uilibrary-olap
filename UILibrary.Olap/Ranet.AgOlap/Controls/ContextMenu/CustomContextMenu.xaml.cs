@@ -153,6 +153,11 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             PopupControl.HorizontalOffset = pos.X - 5;
         }
 
+        public Point GetLocation()
+        {
+            return new Point(PopupControl.HorizontalOffset, PopupControl.VerticalOffset);
+        }
+
         public void AddMenuItem(ContextMenuItem item)
         {
             if(item != null)

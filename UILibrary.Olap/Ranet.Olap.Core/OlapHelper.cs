@@ -25,7 +25,7 @@ using System.Text;
 
 namespace Ranet.Olap.Core
 {
-    class OlapHelper
+    public class OlapHelper
     {
         #region Методы для преобразования строк
         /// <summary>

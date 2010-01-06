@@ -39,6 +39,7 @@ using System.ComponentModel;
 using Ranet.AgOlap.Controls.General.ItemControls;
 using Ranet.Olap.Core.Providers;
 using Ranet.AgOlap.Controls.Data;
+using Ranet.Olap.Core;
 
 namespace Ranet.AgOlap.Controls.ValueDelivery
 {

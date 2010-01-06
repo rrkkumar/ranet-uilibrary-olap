@@ -173,6 +173,9 @@
     <Compile Include="..\Ranet.Olap.Core\ObjectStorageFileDescription.cs">
       <Link>ObjectStorageFileDescription.cs</Link>
     </Compile>
+    <Compile Include="..\Ranet.Olap.Core\OlapHelper.cs">
+      <Link>OlapHelper.cs</Link>
+    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Providers\CellInfo.cs">
       <Link>Providers\CellInfo.cs</Link>
     </Compile>

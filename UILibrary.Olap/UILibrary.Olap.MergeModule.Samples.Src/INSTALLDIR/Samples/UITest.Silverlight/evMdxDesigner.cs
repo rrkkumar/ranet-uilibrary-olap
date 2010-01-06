@@ -24,7 +24,7 @@ using System.Windows;
 
 namespace UILibrary.Olap.UITestApplication
 {
-	public partial class Page : System.Windows.Controls.UserControl
+	public partial class Page
 	{
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)
 		{

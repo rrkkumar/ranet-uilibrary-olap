@@ -28,7 +28,7 @@ using System.Windows.Data;
 
 namespace UILibrary.Olap.UITestApplication
 {
-	public partial class Page : System.Windows.Controls.UserControl
+	public partial class Page
 	{
 		void BindData()
 		{
@@ -45,8 +45,6 @@ namespace UILibrary.Olap.UITestApplication
 					continue;
 				tb.SetBinding(TextBox.TextProperty, myBinding);
 			}
-
-			//GaugeSetValues();
 		}
 		void SetDefaultValues_Click(object sender, RoutedEventArgs e)
 		{

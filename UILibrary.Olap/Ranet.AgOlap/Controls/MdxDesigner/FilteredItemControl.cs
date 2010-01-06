@@ -56,8 +56,6 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             LayoutRoot.Children.Add(m_FilterButton);
             Grid.SetColumn(m_FilterButton, 1);
 
-            UseDragDrop = true;
-
             Refresh();
         }
 

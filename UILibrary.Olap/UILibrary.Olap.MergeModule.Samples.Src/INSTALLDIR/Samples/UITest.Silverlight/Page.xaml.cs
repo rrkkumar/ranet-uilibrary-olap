@@ -1,7 +1,6 @@
 ﻿ using System;
  using System.Windows;
  using System.Globalization;
- using System.Threading;
  
  namespace UILibrary.Olap.UITestApplication
  {

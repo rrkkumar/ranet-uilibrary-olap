@@ -97,6 +97,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
+    <Reference Include="System.Xml.Linq, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Serialization, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <Private>False</Private>
@@ -115,11 +116,15 @@
     </Compile>
     <Compile Include="Controls\Combo\ComboBoxItemData.cs" />
     <Compile Include="Controls\Combo\RanetComboBox.cs" />
+    <Compile Include="Controls\Combo\XapItemComboBox.xaml.cs">
+      <DependentUpon>XapItemComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
     <Compile Include="Controls\Data\RanetDataGrid.cs" />
     <Compile Include="Controls\DateSlicerCtrl.cs" />
     <Compile Include="Controls\Forms\ModalDialog.cs" />
+    <Compile Include="Controls\Gauge\RoundGauge.cs" />
     <Compile Include="Controls\General\OlapTransactionManager.cs" />
     <Compile Include="Controls\General\ButtonMaximizeForm.cs" />
     <Compile Include="Controls\General\ButtonMinMaxForm.xaml.cs">
@@ -142,6 +147,9 @@
     <Compile Include="Controls\General\Tree\CalculatedNamedSetTreeNode.cs" />
     <Compile Include="Controls\General\Tree\MemberLiteTreeNode.cs" />
     <Compile Include="Controls\General\Tree\NamedSetTreeNode.cs" />
+    <Compile Include="Controls\Combo\ImagePicker.xaml.cs">
+      <DependentUpon>ImagePicker.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\List\RanetListBox.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationInfoBase.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationsListControl.cs" />
@@ -346,7 +354,6 @@
     <Compile Include="Controls\MdxDesigner\Wrappers\Measure_AreaItemWrapper.cs" />
     <Compile Include="Controls\MdxDesigner\Wrappers\Values_AreaItemWrapper.cs" />
     <Compile Include="Controls\MemberChoiceControl.cs" />
-    <Compile Include="Controls\OlapHelper.cs" />
     <Compile Include="Controls\PivotGrid\Layout\LayoutGridWrapper.cs" />
     <Compile Include="Controls\PivotGrid\Layout\LayoutCellWrapper.cs" />
     <Compile Include="Controls\PivotGrid\Layout\LayoutItem.cs" />
@@ -493,6 +500,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\Combo\XapItemComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\ContextMenu\ContextMenuItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -522,6 +533,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
     <Page Include="Controls\General\StyleContainer.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\Combo\ImagePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>

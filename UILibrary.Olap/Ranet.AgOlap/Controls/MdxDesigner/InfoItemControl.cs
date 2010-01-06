@@ -53,6 +53,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
             Wrapper = wrapper;
             Caption = wrapper.Caption;
+
+            UseDragDrop = true;
         }
     }
 }

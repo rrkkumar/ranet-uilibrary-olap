@@ -140,6 +140,17 @@ namespace Ranet.AgOlap.Controls
                 }
                 
                 m_CubeBrowser.CubeName = CurrentCubeName;
+                // Если контрол просмотра куба настроен на тот куб, которым изначально был инициализирован данный контрол
+                // то учитываем подкуб
+                if (m_CubeBrowser.CubeName == CubeName)
+                {
+                    m_CubeBrowser.SubCube = SubCube;
+                }
+                else
+                {
+                    m_CubeBrowser.SubCube = String.Empty;
+                }
+
                 // Используем кэш если возможно
                 if (m_MetadataCache.ContainsKey(m_CubeBrowser.CubeName) && m_MetadataCache[m_CubeBrowser.CubeName] != null)
                     m_CubeBrowser.Initialize(m_MetadataCache[m_CubeBrowser.CubeName]);
@@ -185,6 +196,22 @@ namespace Ranet.AgOlap.Controls
             set
             {
                 m_CubeName = value;
+            }
+        }
+
+        private String m_SubCube = String.Empty;
+        /// <summary>
+        /// Подкуб
+        /// </summary>
+        public String SubCube
+        {
+            get
+            {
+                return m_SubCube;
+            }
+            set
+            {
+                m_SubCube = value;
             }
         }
         #endregion Свойства для настройки на OLAP

@@ -31,6 +31,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.General;
+using System.Reflection;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 {
@@ -129,6 +130,21 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             comboEndColor.ColorsComboBox.SelectionChanged -= new SelectionChangedEventHandler(ColorsComboBox_SelectionChanged);
             comboEndColor.SelectItem(Condition != null ? Condition.Appearance.ProgressBarOptions.EndColor : Colors.Transparent);
             comboEndColor.ColorsComboBox.SelectionChanged += new SelectionChangedEventHandler(ColorsComboBox_SelectionChanged);
+
+            comboAssembly.ItemsComboBox.SelectionChanged -= new SelectionChangedEventHandler(AsseblyComboBox_SelectionChanged);
+            comboAssembly.Initialize();
+            comboAssembly.ItemsComboBox.SelectionChanged += new SelectionChangedEventHandler(AsseblyComboBox_SelectionChanged);
+
+        }
+
+        void AsseblyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Assembly asm = null;
+            if (comboAssembly.CurrentObject != null)
+            {
+                asm = comboAssembly.CurrentObject.Tag as Assembly;
+            }
+            comboImage.Initialize(asm);
         }
 
         void ColorsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
