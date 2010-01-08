@@ -280,12 +280,12 @@
 						<TextBox x:Name="tbMeterMargin" Grid.Row="8" Grid.Column="1" AcceptsReturn="False"
 							Text="{Binding ElementName=RoundGauge, Path=MeterMargin, Mode=TwoWay}"
 						 />
-						<TextBlock Grid.Column="0" Grid.Row="9" Text="BadColor:" />
-						<Samples:ComboBoxColors Name="cbBadColor" SelectedIndex="11" Grid.Column="1" Grid.Row="9" />
+						<TextBlock Grid.Column="0" Grid.Row="9" Text="LowColor:" />
+						<Samples:ComboBoxColors Name="cbLowColor" SelectedIndex="11" Grid.Column="1" Grid.Row="9" />
 						<TextBlock Grid.Column="0" Grid.Row="10" Text="MiddleColor:" />
 						<Samples:ComboBoxColors Name="cbMiddleColor" SelectedIndex="14" Grid.Column="1" Grid.Row="10" />
-						<TextBlock Grid.Column="0" Grid.Row="11" Text="GoodColor:" />
-						<Samples:ComboBoxColors Name="cbGoodColor" SelectedIndex="6" Grid.Column="1" Grid.Row="11" />
+						<TextBlock Grid.Column="0" Grid.Row="11" Text="HighColor:" />
+						<Samples:ComboBoxColors Name="cbHighColor" SelectedIndex="6" Grid.Column="1" Grid.Row="11" />
 						<TextBlock Grid.Column="0" Grid.Row="12" Text="MeterBackGroundColor:" />
 						<Samples:ComboBoxColors Name="cbMeterBackGroundColor" SelectedIndex="2" Grid.Column="1" Grid.Row="12" />
 						<TextBlock Grid.Column="0" Grid.Row="13" Text="Background:" />
@@ -321,9 +321,9 @@
 					<gauge:RoundGauge Grid.Row="0" Grid.Column="1" x:Name="RoundGauge"
 					 Text="{Binding ElementName=tbGaugeText, Path=Text}"
 					 ToolTipService.ToolTip="{Binding ElementName=tbGaugeToolTipText, Path=Text}"
-					 LowColor="{Binding ElementName=cbBadColor, Path=SelectedItem.Tag.Color}"
+					 LowColor="{Binding ElementName=cbLowColor, Path=SelectedItem.Tag.Color}"
 					 MiddleColor="{Binding ElementName=cbMiddleColor, Path=SelectedItem.Tag.Color}"
-					 HighColor="{Binding ElementName=cbGoodColor, Path=SelectedItem.Tag.Color}"
+					 HighColor="{Binding ElementName=cbHighColor, Path=SelectedItem.Tag.Color}"
 					 BackgroundColor="{Binding ElementName=cbGaugeBackground, Path=SelectedItem.Tag.Color}"
 					 ForeColor="{Binding ElementName=cbGaugeForeground, Path=SelectedItem.Tag.Color}"
 					 TextColor="{Binding ElementName=cbGaugeTextColor, Path=SelectedItem.Tag.Color}"
