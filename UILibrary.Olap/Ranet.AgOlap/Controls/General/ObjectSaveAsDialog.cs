@@ -257,12 +257,16 @@ namespace Ranet.AgOlap.Controls.General
             m_Dlg.Show();
 
             m_List.Initialize(null);
-            m_List.IsWaiting = true;
 
-            StorageActionArgs args = new StorageActionArgs();
-            args.ActionType = StorageActionTypes.GetList;
-            args.ContentType = ContentType;
-            m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            if (m_StorageManager != null)
+            {
+                m_List.IsWaiting = true;
+
+                StorageActionArgs args = new StorageActionArgs();
+                args.ActionType = StorageActionTypes.GetList;
+                args.ContentType = ContentType;
+                m_StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+            }
         }
     }
 }

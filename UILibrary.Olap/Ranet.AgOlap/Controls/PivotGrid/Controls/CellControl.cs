@@ -276,7 +276,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     m_CustomCellAppearance.ForeColor = cond.Appearance.ForeColor;
                                 }
 
-                                if (cond.Appearance.Options.UseAllOptions ||
+                                if (cond.Appearance.Options.IgnoreAllOptions ||
                                     !cond.Appearance.Options.ShowValue)
                                 {
                                     m_CustomCellAppearance.Options.ShowValue = false;
@@ -305,6 +305,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 {
                                     m_CustomCellAppearance.Options.UseImage = true;
                                     m_CustomCellAppearance.CustomImage = cond.Appearance.CustomImage;
+                                    m_CustomCellAppearance.CustomImageUri = cond.Appearance.CustomImageUri;
                                 }
 
                                 if (cond.Appearance.Options.UseAllOptions ||
@@ -502,7 +503,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             if (m_CustomCellAppearance != null)
             {
                 show_Value = m_CustomCellAppearance.Options.ShowValue;
-                show_Image = m_CustomCellAppearance.Options.UseImage && m_CustomCellAppearance.CustomImage != null;
+                show_Image = m_CustomCellAppearance.Options.UseImage && !String.IsNullOrEmpty(m_CustomCellAppearance.CustomImageUri);
                 show_ProgressBar = m_CustomCellAppearance.Options.UseProgressBar;
             }
             if (show_ProgressBar == true)
@@ -639,9 +640,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
 
             BitmapImage image = null;
-            if (m_CustomCellAppearance != null)
+            if (m_CustomCellAppearance != null && !String.IsNullOrEmpty(m_CustomCellAppearance.CustomImageUri))
             {
-                image = m_CustomCellAppearance.CustomImage;
+                try
+                {
+                    image = new BitmapImage(new Uri(m_CustomCellAppearance.CustomImageUri, UriKind.Relative));
+                }
+                catch { }
             }
 
             // Если ошибка при обновлении ячейки
@@ -657,6 +662,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 if (m_Image == null)
                 {
                     m_Image = new Image();
+                    m_Image.Margin = new Thickness(2, 0, 2, 0);
                     m_Image.Width = m_Image.Height = 16;
                     m_Image.Visibility = Visibility.Collapsed;
                     m_Image.Stretch = Stretch.Uniform;

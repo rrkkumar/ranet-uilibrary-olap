@@ -4,15 +4,7 @@
     xmlns:combo="clr-namespace:Ranet.AgOlap.Controls.Combo" 
     >
     <Grid x:Name="LayoutRoot" Background="White">
-        <Grid.Resources>
-            <DataTemplate x:Key="comboBoxItemTemplate">
-                <StackPanel Orientation="Horizontal">
-                    <Image Source="{Binding Image}" Width="16" Height="16"></Image>
-                    <TextBlock Margin="3,0,0,0" Text="{Binding Text}"></TextBlock>
-                </StackPanel>
-            </DataTemplate>
-        </Grid.Resources>
-        <combo:RanetComboBox x:Name="ImageComboBox" ItemTemplate="{StaticResource comboBoxItemTemplate}" Height="22">
+        <combo:RanetComboBox x:Name="ImageComboBox" Height="22">
         </combo:RanetComboBox>
     </Grid>
 </UserControl>

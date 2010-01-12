@@ -87,6 +87,10 @@
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evGauge.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evMdxDesigner.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evServerExplorer.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\ComboBoxColors.cs" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Content>
     <Compile Include="Shortcuts.wxs" />
   </ItemGroup>
   <ItemGroup>
@@ -111,6 +115,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.wsdl" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Global.asax" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\httptest.aspx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="INSTALLDIR\Samples\UITest.Web\App_Data\" />

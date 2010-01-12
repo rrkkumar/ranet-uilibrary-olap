@@ -38,6 +38,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
         public ConditionsDescriptorControl()
         {
             InitializeComponent();
+
+            lblMember.Text = Localization.MemberUniqueName_Label;
+            lblConditions.Text = Localization.Conditions_Label;
+
             MemberControl.KeyDown += new KeyEventHandler(MemberControl_KeyDown);
             ConditionsList.SelectionChanged += new EventHandler<Ranet.AgOlap.Controls.General.SelectionChangedEventArgs<CellCondition>>(ConditionsList_SelectionChanged);
             ConditionDetails.PropertyChanged += new EventHandler(ConditionDetails_PropertyChanged);

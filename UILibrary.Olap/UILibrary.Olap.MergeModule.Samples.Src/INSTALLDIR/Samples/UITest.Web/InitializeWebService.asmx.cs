@@ -46,6 +46,9 @@ namespace UILibrary.Olap.UITestApplication.Web
 		{
 			try
 			{
+				if (string.IsNullOrEmpty(connectionString))
+					connectionString = this.Application[connectionName] as string;
+					
 				using (var connection = new AdomdConnection(connectionString))
 				{
 					string s = "";

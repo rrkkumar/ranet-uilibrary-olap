@@ -177,8 +177,13 @@ namespace Ranet.AgOlap.Controls.General
         }
     }
 
-    public class SimpleTextBox : RichTextBox
-    {        
+    public class SimpleTextBox : TextBox
+    {
+        public SimpleTextBox()
+        {
+            DefaultStyleKey = typeof(SimpleTextBox);
+        }
+
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();

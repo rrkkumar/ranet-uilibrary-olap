@@ -49,7 +49,7 @@
 					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="OlapWebService Url:"/>
 					<TextBox x:Name="tbOlapWebServiceUrl" Grid.Row="1" Grid.Column="1"/>
 
-					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAP ConnectionString:" />
+					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAPConnectionString:" />
 					<TextBox x:Name="tbOLAPConnectionString" Grid.Column="1" Grid.Row="2"/>
 
 					<Button
@@ -130,13 +130,44 @@
 			</swc:TabItem>
 			<swc:TabItem Header="Pivot Grid">
 				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="20"/>
-						<RowDefinition />
-					</Grid.RowDefinitions>
-					<Button   Grid.Row="0" Content="Initialize PivotGrid" Height="22" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click"/>
-					<pivotgrid_controls:UpdateablePivotGridControl
-										Grid.Row="1" x:Name="pivotGridControl" />
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="150"/>
+						<ColumnDefinition Width="Auto"/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<Grid Grid.Column="0">
+						<Grid.RowDefinitions>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+						</Grid.RowDefinitions>
+						<Button   Grid.Row="0" Content="Initialize PivotGrid" Height="22" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click"/>
+						<CheckBox Grid.Row="1" Name="ckbColumnsIsInteractive" IsChecked="false" Content="ColumnsIsInteractive"/>
+						<CheckBox Grid.Row="2" Name="ckbUseColumnsAreaHint" IsChecked="false" Content="UseColumnsAreaHint"/>
+						<CheckBox Grid.Row="3" Name="ckbUseRowsAreaHint" IsChecked="false" Content="UseRowsAreaHint"/>
+						<CheckBox Grid.Row="4" Name="ckbUseCellsAreaHint" IsChecked="false" Content="UseCellsAreaHint"/>
+						<CheckBox Grid.Row="5" Name="ckbUseCellConditionsDesigner" IsChecked="false" Content="UseCellConditionsDesigner"/>
+						<CheckBox Grid.Row="6" Name="ckbIsUpdateable" IsChecked="false" Content="IsUpdateable" />
+						<ComboBox Grid.Row="7" Name="cbMemberVisualizationType" SelectedIndex="2">
+							<ComboBoxItem Content="Caption"/>
+							<ComboBoxItem Content="Key"/>
+							<ComboBoxItem Content="KeyAndCaption" />
+							<ComboBoxItem Content="UniqueName"/>
+						</ComboBox>
+					</Grid>
+					<basics:GridSplitter x:Name="grsplSplitter" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="Aqua" Width="5"/>
+					<pivotgrid_controls:UpdateablePivotGridControl Grid.Column="2" x:Name="pivotGridControl" />
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Choices">
@@ -329,7 +360,7 @@
 					 TextColor="{Binding ElementName=cbGaugeTextColor, Path=SelectedItem.Tag.Color}"
 					 MeterBackgroundColor="{Binding ElementName=cbMeterBackGroundColor, Path=SelectedItem.Tag.Color}"
 					>
-					<!--
+						<!--
 						Background="{Binding ElementName=cbGaugeBackground, Path=SelectedItem.Tag}, Mode= "
 						<Panel.Background>
 							<Binding ElementName="cbGaugeBackground" Path="SelectedItem.Tag"/>

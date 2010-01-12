@@ -112,5 +112,16 @@ namespace Ranet.AgOlap.Controls.General
             grid.ItemsSource = list;
         }
 
+        public List<PropertyItem> List
+        {
+            get {
+                var list = grid.ItemsSource as List<PropertyItem>;
+                if(list != null)
+                    return list; 
+                else
+                    return new List<PropertyItem>();
+            }
+        }
+
     }
 }

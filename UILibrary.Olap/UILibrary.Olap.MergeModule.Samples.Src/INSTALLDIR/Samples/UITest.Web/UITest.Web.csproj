@@ -74,12 +74,17 @@
   <ItemGroup>
     <Content Include="ClientBin\UITest.xap" />
     <Content Include="Default.htm" />
+    <Content Include="Global.asax" />
+    <Content Include="httptest.aspx" />
     <Content Include="InitializeWebService.asmx" />
     <Content Include="OlapWebService.asmx" />
     <Content Include="Silverlight.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
     <Compile Include="InitializeWebService.asmx.cs">
       <DependentUpon>InitializeWebService.asmx</DependentUpon>
       <SubType>Component</SubType>

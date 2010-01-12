@@ -340,7 +340,7 @@ namespace Ranet.Olap.Core.Data
             return null;
         }
 
-        static object ConvertFromJson(object val)
+        public static object ConvertFromJson(object val)
         {
             object propval = val;
             if (propval != null)
@@ -357,14 +357,6 @@ namespace Ranet.Olap.Core.Data
                     else
                     {
                         propval = ((JsonNumber)propval).ToInt64();
-                        //try
-                        //{
-                        //    propval = ((JsonNumber)propval).ToInt32();
-                        //}
-                        //catch (System.OverflowException)
-                        //{
-                        //    propval = ((JsonNumber)propval).ToInt64();
-                        //}
                     }
                 }
             }

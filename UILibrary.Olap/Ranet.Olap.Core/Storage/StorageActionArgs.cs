@@ -69,6 +69,7 @@ namespace Ranet.Olap.Core.Storage
     { 
         MdxDesignerLayout,
         ValueCopySettings,
+        CustomCellStyles,
         None
     }
 

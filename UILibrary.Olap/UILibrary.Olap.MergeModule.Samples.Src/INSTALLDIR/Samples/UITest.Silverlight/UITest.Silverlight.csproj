@@ -75,6 +75,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ComboBoxColors.cs" />
     <Compile Include="Config.cs" />
     <Compile Include="evConfig.cs" />
     <Compile Include="evGauge.cs" />

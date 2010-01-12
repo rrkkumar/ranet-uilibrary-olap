@@ -354,7 +354,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void CaptionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Raise_DrillDownMember(MemberActionType.DrillDown);
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
+                Raise_DrillDownMember(MemberActionType.DrillDown);
         }
 
         TextBlock m_EllipsisText = null;

@@ -31,7 +31,7 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers
 
         public override void Refresh()
         {
-            foreach (object obj in m_Tree.Items)
+            foreach (object obj in Tree.Items)
             {
                 RefreshItemNode(obj as TreeNode<CalculationInfoBase>);
             }

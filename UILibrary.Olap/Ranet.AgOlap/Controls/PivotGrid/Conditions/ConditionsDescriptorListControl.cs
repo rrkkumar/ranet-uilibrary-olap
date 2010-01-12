@@ -42,6 +42,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
         public ConditionsDescriptorListControl()
             : base()
         {
+            ToolBar.Visibility = Visibility.Collapsed;
         }
 
         public override TreeNode<CellConditionsDescriptor> BuildTreeNode(CellConditionsDescriptor item)
@@ -65,7 +66,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 
         public override void Refresh()
         {
-            foreach (object obj in m_Tree.Items)
+            foreach (object obj in Tree.Items)
             {
                 RefreshItemNode(obj as TreeNode<CellConditionsDescriptor>);
             }
@@ -77,6 +78,21 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             {
                 node.Text = node.Info.MemberUniqueName;
             }
+        }
+
+        public void AddNew()
+        {
+            OnAddButtonClick();
+        }
+
+        public void DeleteCurrent()
+        {
+            OnDeleteButtonClick();
+        }
+
+        public void DeleteAll()
+        {
+            OnDeleteAllButtonClick();
         }
     }
 }

@@ -965,4 +965,100 @@
   <data name="ConditionsDesigner_Condition_Label" xml:space="preserve">
     <value>Условие для значения ячейки:</value>
   </data>
+  <data name="ImageChoiceDialog_Caption" xml:space="preserve">
+    <value>Выбор изображения</value>
+  </data>
+  <data name="BackColor_Label" xml:space="preserve">
+    <value>Цвет фона:</value>
+  </data>
+  <data name="BorderColor_Label" xml:space="preserve">
+    <value>Цвет границы:</value>
+  </data>
+  <data name="CellConditionControl_AppearanceItem" xml:space="preserve">
+    <value>Опции</value>
+  </data>
+  <data name="CellConditionControl_CellAppearanceItem" xml:space="preserve">
+    <value>Вид ячейки</value>
+  </data>
+  <data name="CellConditionControl_ImageItem" xml:space="preserve">
+    <value>Настройки изображения</value>
+  </data>
+  <data name="CellConditionControl_ProgressBarItem" xml:space="preserve">
+    <value>Настройки индикатора выполнения</value>
+  </data>
+  <data name="ChangeCustomImage_Caption" xml:space="preserve">
+    <value>Изменить изображение</value>
+  </data>
+  <data name="Conditions_Label" xml:space="preserve">
+    <value>Условия:</value>
+  </data>
+  <data name="EndColor_Label" xml:space="preserve">
+    <value>Конечный цвет:</value>
+  </data>
+  <data name="ForeColor_Label" xml:space="preserve">
+    <value>Цвет шрифта:</value>
+  </data>
+  <data name="IgnoreAllOptions_Check" xml:space="preserve">
+    <value>Игнорировать все опции</value>
+  </data>
+  <data name="Image_Label" xml:space="preserve">
+    <value>Изображение:</value>
+  </data>
+  <data name="LoadSettings_ToolTip" xml:space="preserve">
+    <value>Загрузить настройки</value>
+  </data>
+  <data name="MaxValue_Label" xml:space="preserve">
+    <value>Максимум:</value>
+  </data>
+  <data name="MemberUniqueName_Label" xml:space="preserve">
+    <value>Уникальное имя элемента:</value>
+  </data>
+  <data name="MinValue_Label" xml:space="preserve">
+    <value>Минимум:</value>
+  </data>
+  <data name="SaveSettings_ToolTip" xml:space="preserve">
+    <value>Сохранить настройки</value>
+  </data>
+  <data name="ShowImage_Check" xml:space="preserve">
+    <value>Отображать изображение</value>
+  </data>
+  <data name="ShowProgressBar_Check" xml:space="preserve">
+    <value>Отображать индикатор выполнения</value>
+  </data>
+  <data name="ShowValue_Check" xml:space="preserve">
+    <value>Отображать значение</value>
+  </data>
+  <data name="StartColor_Label" xml:space="preserve">
+    <value>Начальный цвет:</value>
+  </data>
+  <data name="StyleDetails_Label" xml:space="preserve">
+    <value>Настройки стиля:</value>
+  </data>
+  <data name="Styles_Label" xml:space="preserve">
+    <value>Стили:</value>
+  </data>
+  <data name="UseAllOptions_Check" xml:space="preserve">
+    <value>Использовать все опции</value>
+  </data>
+  <data name="UseBackColor_Check" xml:space="preserve">
+    <value>Использовать цвет фона</value>
+  </data>
+  <data name="UseBorderColor_Check" xml:space="preserve">
+    <value>Использовать цвет границы</value>
+  </data>
+  <data name="UseForeColor_Check" xml:space="preserve">
+    <value>Использовать цвет шрифта</value>
+  </data>
+  <data name="ValueCondition_Label" xml:space="preserve">
+    <value>Условие для значения:</value>
+  </data>
+  <data name="Assembly_Label" xml:space="preserve">
+    <value>Сборка:</value>
+  </data>
+  <data name="ImagePreview_Label" xml:space="preserve">
+    <value>Просмотр изображения:</value>
+  </data>
+  <data name="Images_Label" xml:space="preserve">
+    <value>Изображения:</value>
+  </data>
 </root>

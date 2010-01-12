@@ -70,6 +70,33 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assembly:.
+        /// </summary>
+        public static string Assembly_Label {
+            get {
+                return ResourceManager.GetString("Assembly_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Back Color:.
+        /// </summary>
+        public static string BackColor_Label {
+            get {
+                return ResourceManager.GetString("BackColor_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Border Color:.
+        /// </summary>
+        public static string BorderColor_Label {
+            get {
+                return ResourceManager.GetString("BorderColor_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add Calculated Member.
         /// </summary>
         public static string CalcMemberEditor_AddMember {
@@ -259,6 +286,42 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Options.
+        /// </summary>
+        public static string CellConditionControl_AppearanceItem {
+            get {
+                return ResourceManager.GetString("CellConditionControl_AppearanceItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cell Appearance.
+        /// </summary>
+        public static string CellConditionControl_CellAppearanceItem {
+            get {
+                return ResourceManager.GetString("CellConditionControl_CellAppearanceItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Settings.
+        /// </summary>
+        public static string CellConditionControl_ImageItem {
+            get {
+                return ResourceManager.GetString("CellConditionControl_ImageItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ProgressBar Settings.
+        /// </summary>
+        public static string CellConditionControl_ProgressBarItem {
+            get {
+                return ResourceManager.GetString("CellConditionControl_ProgressBarItem", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cell Properties.
         /// </summary>
         public static string CellPropertiesDialog_Caption {
@@ -282,6 +345,15 @@ namespace Ranet.AgOlap {
         public static string CellValue_Label {
             get {
                 return ResourceManager.GetString("CellValue_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change image.
+        /// </summary>
+        public static string ChangeCustomImage_Caption {
+            get {
+                return ResourceManager.GetString("ChangeCustomImage_Caption", resourceCulture);
             }
         }
         
@@ -336,6 +408,15 @@ namespace Ranet.AgOlap {
         public static string ComboBoxItem_None {
             get {
                 return ResourceManager.GetString("ComboBoxItem_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Conditions:.
+        /// </summary>
+        public static string Conditions_Label {
+            get {
+                return ResourceManager.GetString("Conditions_Label", resourceCulture);
             }
         }
         
@@ -754,6 +835,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to End Color:.
+        /// </summary>
+        public static string EndColor_Label {
+            get {
+                return ResourceManager.GetString("EndColor_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string Error {
@@ -925,6 +1015,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fore Color:.
+        /// </summary>
+        public static string ForeColor_Label {
+            get {
+                return ResourceManager.GetString("ForeColor_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hierarchy choice control.
         /// </summary>
         public static string HierarchyChoiceControl_Name {
@@ -939,6 +1038,51 @@ namespace Ranet.AgOlap {
         public static string HierarchyUniqueName_PropertyDesc {
             get {
                 return ResourceManager.GetString("HierarchyUniqueName_PropertyDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ignore All Options.
+        /// </summary>
+        public static string IgnoreAllOptions_Check {
+            get {
+                return ResourceManager.GetString("IgnoreAllOptions_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image:.
+        /// </summary>
+        public static string Image_Label {
+            get {
+                return ResourceManager.GetString("Image_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image Choice.
+        /// </summary>
+        public static string ImageChoiceDialog_Caption {
+            get {
+                return ResourceManager.GetString("ImageChoiceDialog_Caption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Image preview:.
+        /// </summary>
+        public static string ImagePreview_Label {
+            get {
+                return ResourceManager.GetString("ImagePreview_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Images:.
+        /// </summary>
+        public static string Images_Label {
+            get {
+                return ResourceManager.GetString("Images_Label", resourceCulture);
             }
         }
         
@@ -1065,6 +1209,24 @@ namespace Ranet.AgOlap {
         public static string LoadingDialog_Name {
             get {
                 return ResourceManager.GetString("LoadingDialog_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Load Settings.
+        /// </summary>
+        public static string LoadSettings_ToolTip {
+            get {
+                return ResourceManager.GetString("LoadSettings_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Max Value:.
+        /// </summary>
+        public static string MaxValue_Label {
+            get {
+                return ResourceManager.GetString("MaxValue_Label", resourceCulture);
             }
         }
         
@@ -1492,6 +1654,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Member unique name:.
+        /// </summary>
+        public static string MemberUniqueName_Label {
+            get {
+                return ResourceManager.GetString("MemberUniqueName_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error.
         /// </summary>
         public static string MessageBox_Error {
@@ -1551,6 +1722,15 @@ namespace Ranet.AgOlap {
         public static string MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound {
             get {
                 return ResourceManager.GetString("MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Min Value:.
+        /// </summary>
+        public static string MinValue_Label {
+            get {
+                return ResourceManager.GetString("MinValue_Label", resourceCulture);
             }
         }
         
@@ -2016,6 +2196,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Save Settings.
+        /// </summary>
+        public static string SaveSettings_ToolTip {
+            get {
+                return ResourceManager.GetString("SaveSettings_ToolTip", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Control initialization error. Cube by default is not defined. Please initialize Cube name..
         /// </summary>
         public static string ServerExplorer_CubePropertyError {
@@ -2030,6 +2219,60 @@ namespace Ranet.AgOlap {
         public static string ServerExplorerControl_Name {
             get {
                 return ResourceManager.GetString("ServerExplorerControl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Image.
+        /// </summary>
+        public static string ShowImage_Check {
+            get {
+                return ResourceManager.GetString("ShowImage_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show ProgressBar.
+        /// </summary>
+        public static string ShowProgressBar_Check {
+            get {
+                return ResourceManager.GetString("ShowProgressBar_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Value.
+        /// </summary>
+        public static string ShowValue_Check {
+            get {
+                return ResourceManager.GetString("ShowValue_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start Color:.
+        /// </summary>
+        public static string StartColor_Label {
+            get {
+                return ResourceManager.GetString("StartColor_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Style Details:.
+        /// </summary>
+        public static string StyleDetails_Label {
+            get {
+                return ResourceManager.GetString("StyleDetails_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Styles:.
+        /// </summary>
+        public static string Styles_Label {
+            get {
+                return ResourceManager.GetString("Styles_Label", resourceCulture);
             }
         }
         
@@ -2156,6 +2399,51 @@ namespace Ranet.AgOlap {
         public static string UpdateScript_PropertyDesc {
             get {
                 return ResourceManager.GetString("UpdateScript_PropertyDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use All Options.
+        /// </summary>
+        public static string UseAllOptions_Check {
+            get {
+                return ResourceManager.GetString("UseAllOptions_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Back Color.
+        /// </summary>
+        public static string UseBackColor_Check {
+            get {
+                return ResourceManager.GetString("UseBackColor_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Border Color.
+        /// </summary>
+        public static string UseBorderColor_Check {
+            get {
+                return ResourceManager.GetString("UseBorderColor_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Use Fore Color.
+        /// </summary>
+        public static string UseForeColor_Check {
+            get {
+                return ResourceManager.GetString("UseForeColor_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Value Condition:.
+        /// </summary>
+        public static string ValueCondition_Label {
+            get {
+                return ResourceManager.GetString("ValueCondition_Label", resourceCulture);
             }
         }
         

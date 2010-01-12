@@ -34,7 +34,6 @@ namespace Ranet.AgOlap.Controls.Buttons
 {
 	public class RanetToggleButton : ToggleButton
 	{
-#warning ButtonId in SlicerCtrl: А кто его определять будет? Пушкин?
 		internal int ButtonId;
 
 		public RanetToggleButton()

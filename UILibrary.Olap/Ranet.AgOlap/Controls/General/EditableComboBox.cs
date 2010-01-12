@@ -15,9 +15,6 @@ namespace Ranet.AgOlap.Controls.General
 {
     public class EditableComboBox : UserControl
     {
-        const String NONE = "<NONE>";
-        const String CREATE_NEW = "<CREATE_NEW>";
-
         ComboBoxEx m_ComboBox;
         TextBox m_TextBox;
 
@@ -36,8 +33,8 @@ namespace Ranet.AgOlap.Controls.General
             m_TextBox.LostFocus += new RoutedEventHandler(m_TextBox_LostFocus);
 
             m_ComboBox.Clear();
-            m_ComboBox.Combo.Items.Add(new ItemControlBase(false) { Text = Localization.ComboBoxItem_None, Tag = NONE });
-            m_ComboBox.Combo.Items.Add(new ItemControlBase(false) { Text = Localization.ComboBoxItem_New, Tag = CREATE_NEW });
+            m_ComboBox.Combo.Items.Add(new NoneItemControl());
+            m_ComboBox.Combo.Items.Add(new CreateNewItemControl());
             m_ComboBox.Combo.SelectedIndex = 0;
 
             m_ComboBox.SelectionChanged += new SelectionChangedEventHandler(ComboBox_SelectionChanged);
@@ -129,7 +126,7 @@ namespace Ranet.AgOlap.Controls.General
 
         void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (CurrentItem != null && CurrentItem.Tag != null && CurrentItem.Tag.ToString() == CREATE_NEW)
+            if (CurrentItem is CreateNewItemControl)
             {
                 BeginEdit();
             }
@@ -183,8 +180,8 @@ namespace Ranet.AgOlap.Controls.General
         {
             m_List = list;
             m_ComboBox.Clear();
-            m_ComboBox.Combo.Items.Add(new ItemControlBase(false) { Text = Localization.ComboBoxItem_None, Tag = NONE });
-            m_ComboBox.Combo.Items.Add(new ItemControlBase(false) { Text = Localization.ComboBoxItem_New, Tag = CREATE_NEW });
+            m_ComboBox.Combo.Items.Add(new NoneItemControl());
+            m_ComboBox.Combo.Items.Add(new CreateNewItemControl());
 
             // Список уже добавленных
             IList<String> added = new List<String>();
@@ -206,7 +203,8 @@ namespace Ranet.AgOlap.Controls.General
             foreach (ItemControlBase item in m_ComboBox.Combo.Items)
             {
                 // Пропускаем спец.элементы
-                if (item.Tag != null && (item.Tag.ToString() == NONE || item.Tag.ToString() == CREATE_NEW))
+                if (item is CreateNewItemControl ||
+                    item is NoneItemControl)
                 {
                     // Спец. узлы
                 }

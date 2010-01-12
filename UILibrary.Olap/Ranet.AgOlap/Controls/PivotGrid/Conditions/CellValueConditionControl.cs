@@ -136,5 +136,30 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
                 Refresh();
             }
         }
+
+        /// <summary>
+        /// Значение 1
+        /// </summary>
+        public double Value1
+        {
+            get { return numCount_1.Value; }
+            set
+            {
+                numCount_1.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Значение 2
+        /// </summary>
+        public double Value2
+        {
+            get { return numCount_2.Value; }
+            set
+            {
+                numCount_2.Value = value;
+            }
+        }
+
     }
 }

@@ -40,6 +40,7 @@ namespace UILibrary.Olap.UITestApplication
 		public string MdxQuery { get; set; }
 		public string UpdateScript { get; set; }
 		public string MdxDesignerLayout { get; set; }
+		public int BackGroundColor { get; set; }
 
 		//public string MinValue { get; set; }
 		//public string LowValue { get; set; }
@@ -60,24 +61,33 @@ namespace UILibrary.Olap.UITestApplication
 		}
 		void SetDefault()
 		{
+			BackGroundColor = 12;
+			
 			OLAPConnectionString = @"Data Source=.\sql2008;Integrated Security=SSPI;Initial Catalog=Adventure Works DW";
+			// OLAPConnectionString = string.Empty;
 			InitializeWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"InitializeWebService.asmx").AbsoluteUri;
 			OlapWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
 
 			MdxQuery = @"select [Product].[Product Categories].[Category] on 0 ,[Date].[Calendar].[Calendar Year]  DIMENSION PROPERTIES PARENT_UNIQUE_NAME on 1 from [Adventure Works]
  where [Measures].[Sales Amount]";
 
+			MdxDesignerLayout = @"<?xml version='1.0' encoding='utf-8'?>
+<MdxLayoutWrapper xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  <Filters />
+  <Rows />
+  <Columns />
+  <Data>
+    <AreaItemWrapper xsi:type='Measure_AreaItemWrapper'>
+      <CustomProperties />
+      <Caption>Internet Sales Amount</Caption>
+      <UniqueName>[Measures].[Internet Sales Amount]</UniqueName>
+    </AreaItemWrapper>
+  </Data>
+  <CalculatedMembers />
+  <CalculatedNamedSets />
+</MdxLayoutWrapper>
+";
 			UpdateScript = "";
-			MdxDesignerLayout = "";
-
-//      MinValue = "10";
-//      LowValue = "20";
-//      CurrentValue = "82";
-//      HighValue = "80";
-//      MaxValue = "180";
-//      GaugeText = @"Feel free to change Text.";
-//      GaugeToolTipText = @"Feel free to change.
-//You can dynamically change values and tooltip text.";
 		}
 	}
 	public class Config : INotifyPropertyChanged
@@ -170,13 +180,7 @@ namespace UILibrary.Olap.UITestApplication
 				{
 					if (e.Error == null)
 					{
-						if (e.Result == "OK")
-						{
-							if (OnSuccess != null)
-								OnSuccess();
-
-						}
-						else if (e.Result == null)
+						if (e.Result == null)
 						{
 							MessageBox.Show("Data service has returned 'null'", "Error", MessageBoxButton.OK);
 							if (OnError != null)
@@ -185,9 +189,9 @@ namespace UILibrary.Olap.UITestApplication
 						}
 						else
 						{
-							MessageBox.Show(e.Result, "Error", MessageBoxButton.OK);
-							if (OnError != null)
-								OnError();
+							Default.Data.OLAPConnectionString=e.Result;
+							if (OnSuccess != null)
+								OnSuccess();
 						}
 					}
 					else
@@ -197,7 +201,7 @@ namespace UILibrary.Olap.UITestApplication
 							OnError();
 					}
 				};
-				wds.PerformOlapServiceActionAsync("CheckExist", "");
+				wds.PerformOlapServiceActionAsync("GetConnectionString", ConnectionStringId);
 			}
 			catch (Exception E)
 			{

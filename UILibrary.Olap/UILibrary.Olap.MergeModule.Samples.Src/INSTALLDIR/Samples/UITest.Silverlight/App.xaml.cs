@@ -38,6 +38,10 @@ namespace UILibrary.Olap.UITestApplication
 		private void Application_Startup(object sender, StartupEventArgs e)
 		{
 			this.RootVisual = new Page();
+			if (Application.Current.RootVisual is FrameworkElement)
+			{
+				Ranet.AgOlap.Features.ScrollViewerMouseWheelSupport.Initialize(Application.Current.RootVisual as FrameworkElement);
+			}
 		}
 
 		private void Application_Exit(object sender, EventArgs e)

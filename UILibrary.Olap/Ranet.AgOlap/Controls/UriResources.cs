@@ -44,8 +44,28 @@ namespace Ranet.AgOlap.Controls
                     m_Cashe = new Dictionary<string, BitmapImage>();
                 return m_Cashe;
             }
-        } 
+        }
 
+        public static string GetResourceString(string assemblyName, string resourcePath)
+        {
+            if (assemblyName == "Galaktika.BI.ImageLibrary")
+            {
+                string[] parts = resourcePath.Split('.');
+                string resultPath = string.Empty;
+                foreach (var s in parts)
+                {
+                    if (s.ToLower().Equals("image") || s.ToLower().Equals("indicators") || s.ToLower().Equals("x16"))
+                        resultPath += s + "/";
+                    else
+                        resultPath += s + ".";
+                }
+                return String.Format("/{0};component/{1}", assemblyName, resultPath.Remove(resultPath.Length - 1));
+            }
+            else
+            {
+                return String.Format("/{0};component/{1}", assemblyName, resourcePath);
+            }
+        }
 
         public static BitmapImage GetImage(string resName)
         {

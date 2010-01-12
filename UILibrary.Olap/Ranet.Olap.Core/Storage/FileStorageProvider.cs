@@ -268,6 +268,8 @@ namespace Ranet.Olap.Core.Storage
                     return "mdl";
                 case StorageContentTypes.ValueCopySettings:
                     return "vcs";
+                case StorageContentTypes.CustomCellStyles:
+                    return "ccs";
                 default:
                     return "xml";
             }

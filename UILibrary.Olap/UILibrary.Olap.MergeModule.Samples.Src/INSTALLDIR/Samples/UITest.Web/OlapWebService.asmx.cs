@@ -37,12 +37,16 @@ namespace UILibrary.Olap.UITestApplication.Web
 	public class OlapWebService : Ranet.Web.Olap.OlapWebServiceBase
 	{
 		[WebMethod]
-	  public override String PerformOlapServiceAction(String schemaType, String schema)
-	  {
-			if (schemaType=="CheckExist")
+		public override String PerformOlapServiceAction(String schemaType, String schema)
+		{
+			if (schemaType == "CheckExist")
 				return "OK";
 				
-			return base.PerformOlapServiceAction(schemaType, schema);
+			if (schemaType == "GetConnectionString")
+				return this.Application[schema] as string;
+
+			var result = base.PerformOlapServiceAction(schemaType, schema);
+			return result;
 		}
 	}
 }

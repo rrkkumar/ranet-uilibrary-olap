@@ -700,7 +700,7 @@ namespace Ranet.AgOlap.Providers
                 {
                     try
                     {
-                        childrenCount = (int)(prop.Value);
+                        childrenCount = Convert.ToInt64(prop.Value);
                     }
                     catch (Exception)
                     {

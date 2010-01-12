@@ -1,3 +1,7 @@
+January 12, 2010
+- Branched to Ranet.UILibrary.OLAP-1.2 (stabilization is started)
+- PivotGrid: Implemented custom cell condition designer (see UpdateablePivotGridControl.UseCellConditionsDesigner property).
+
 December 20, 2009
 - Core: JSon and ZIP using cuts down network traffic more than 10 times for large queries. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=4
 - Core: https/http switching is supported now. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=6

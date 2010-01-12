@@ -57,7 +57,7 @@ namespace Ranet.AgOlap.Controls
         }
     }
 
-    public class SlicerCtrl : AgControlBase, IChoiceControl
+    public class SlicerCtrl : AgControlBase
     {
         private Grid m_DataGrid;
         private BusyControl m_Waiting;
@@ -102,13 +102,8 @@ namespace Ranet.AgOlap.Controls
             IsBusy = false;
 
             this.Content = LayoutRoot;
-            //m_DataGrid = new DataGrid();
-            //m_DataGrid.MinColumnWidth = CellWidth;
-            //m_DataGrid.SelectionMode = DataGridSelectionMode.Extended;
-            //m_DataGrid.IsReadOnly = true;
-            //m_DataGrid.RowHeight = CellHeight;
-            this.SlicerHeight = 9;
-            this.SlicerWidth = 9;           
+            //this.SlicerHeight = 9;
+            //this.SlicerWidth = 9;           
             //this.m_DataGrid.MouseLeftButtonDown += new MouseButtonEventHandler(m_DataGrid_MouseLeftButtonDown);
             //this.m_DataGrid.MouseLeftButtonUp += new MouseButtonEventHandler(m_DataGrid_MouseLeftButtonUp);
             this.DirectionChanged += new EventHandler<ChangedDirectionEventArgs>(SlicerCtrl_DirectionChanged);
@@ -381,7 +376,7 @@ namespace Ranet.AgOlap.Controls
                 m_Panel.Orientation = Orientation.Vertical;
                 List<string> values = new List<string>();
                 var enumerator = m_LoadedMembers.GetEnumerator();
-                for (int i = 0; i < this.SlicerHeight; i++)
+                for (int i = 0; i < this.SlicerHeight + 1; i++)
                 {
                     if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                     {
@@ -389,7 +384,7 @@ namespace Ranet.AgOlap.Controls
                         button.ButtonId = i;
                         button.Checked += new RoutedEventHandler(button_Checked);
                         button.Unchecked += new RoutedEventHandler(button_Unchecked);
-                        button.Checked += new RoutedEventHandler(button_Checked);
+                        ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
                         button.Content = enumerator.Current.Value.Caption;
                         slicerChildren.Add(i, button);
                     }
@@ -406,7 +401,7 @@ namespace Ranet.AgOlap.Controls
                 m_Panel.Orientation = Orientation.Horizontal;   
                 List<string> values = new List<string>();
                 var enumerator = m_LoadedMembers.GetEnumerator();
-                for (int i = 0; i < this.SlicerWidth; i++)
+                for (int i = 0; i < this.SlicerWidth + 1; i++)
                 {                  
                     if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                     {
@@ -414,6 +409,7 @@ namespace Ranet.AgOlap.Controls
                         button.ButtonId = i;
                         button.Checked += new RoutedEventHandler(button_Checked);
                         button.Unchecked += new RoutedEventHandler(button_Unchecked);
+                        ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
                         button.Content = enumerator.Current.Value.Caption;
                         slicerChildren.Add(i, button);
                     }                                            
@@ -433,14 +429,14 @@ namespace Ranet.AgOlap.Controls
                 {
                     m_DataGrid.RowDefinitions.Add(new RowDefinition() {Height = GridLength.Auto } );                       
                 }
-                for (int j = 0; j < this.SlicerWidth; j++)
+                for (int j = 0; j < this.SlicerWidth + 1; j++)
                 {
                     m_DataGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = GridLength.Auto});                 
                 }
                 int count = 0;
                 for (int i = 0; i < this.SlicerHeight; i++)
                 {
-                    for (int j = 0; j < this.SlicerWidth; j++)
+                    for (int j = 0; j < this.SlicerWidth + 1; j++)
                     {
                         if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                         {
@@ -448,6 +444,7 @@ namespace Ranet.AgOlap.Controls
                             button.ButtonId = i;
                             button.Checked += new RoutedEventHandler(button_Checked);
                             button.Unchecked += new RoutedEventHandler(button_Unchecked);
+                            ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
                             button.Content = enumerator.Current.Value.Caption;
                             slicerChildren.Add(count,button);
                             count++;
@@ -466,6 +463,7 @@ namespace Ranet.AgOlap.Controls
             if (m_slicedButtons.Contains((sender as RanetToggleButton).ButtonId))
             {
                 this.m_slicedButtons.Remove((sender as RanetToggleButton).ButtonId);
+                this.ApplySelection();
             }
         }
 
@@ -474,6 +472,7 @@ namespace Ranet.AgOlap.Controls
             if (!m_slicedButtons.Contains((sender as RanetToggleButton).ButtonId))
             {
                 this.m_slicedButtons.Add((sender as RanetToggleButton).ButtonId);
+                this.ApplySelection();
             }
         }
 
@@ -512,22 +511,8 @@ namespace Ranet.AgOlap.Controls
             return result;
         }
 
-        #region IChoiceControl Members
-
-        /// <summary>
-        /// Событие генерируется после окончания выбора
-        /// </summary>
-        public event EventHandler ApplySelection;
-
-        /// <summary>
-        /// Генерирует событие "Выбор окончен"
-        /// </summary>
-        private void Raise_ApplySelection()
-        {
-            EventHandler handler = ApplySelection;
-            if (handler != null)
-                handler(this, EventArgs.Empty);
-        }
+        protected virtual void ApplySelection()
+        { }       
 
         bool m_IsReadyToSelection = false;
         public bool IsReadyToSelection
@@ -536,8 +521,6 @@ namespace Ranet.AgOlap.Controls
             {
                 return m_IsReadyToSelection;
             }
-        }
-
-        #endregion
+        }       
     }
 }

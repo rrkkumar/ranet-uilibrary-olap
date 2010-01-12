@@ -41,9 +41,11 @@ namespace UILibrary.Olap.UITestApplication
 				myBinding.BindsDirectlyToSource = true;
 				myBinding.NotifyOnValidationError=true;
 				var tb=this.FindName("tb"+pi.Name) as TextBox;
-				if (tb==null)
-					continue;
-				tb.SetBinding(TextBox.TextProperty, myBinding);
+				if (tb!=null)
+					tb.SetBinding(TextBox.TextProperty, myBinding);
+				var cb = this.FindName("cb" + pi.Name) as ComboBoxColors;
+				if (cb != null)
+					cb.SetBinding(ComboBoxColors.SelectedIndexProperty, myBinding);
 			}
 		}
 		void SetDefaultValues_Click(object sender, RoutedEventArgs e)
@@ -67,7 +69,8 @@ namespace UILibrary.Olap.UITestApplication
 			{
 				try
 				{
-					CheckedInfo.Text = "Connection has been succesfully checked.";
+					tbOLAPConnectionString.Text=Config.Default.Data.OLAPConnectionString;
+					CheckedInfo.Text = @"Connection has been succesfully checked. ConnectionString=" + tbOLAPConnectionString.Text;
 					//System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
 					//initCubeChoiceButton_Click(null, null);
 					//initmdxDesignerButton_Click(null, null);

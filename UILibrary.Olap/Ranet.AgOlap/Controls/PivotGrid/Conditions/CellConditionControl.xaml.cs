@@ -32,6 +32,9 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.General;
 using System.Reflection;
+using Ranet.AgOlap.Controls.Forms;
+using Ranet.AgOlap.Controls.Combo;
+using System.Windows.Media.Imaging;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 {
@@ -40,6 +43,29 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
         public CellConditionControl()
         {
             InitializeComponent();
+
+            lblCondition.Text = Localization.ValueCondition_Label;
+            AppearanceItem.Header = Localization.CellConditionControl_AppearanceItem;
+            CellAppearanceItem.Header = Localization.CellConditionControl_CellAppearanceItem;
+            ProgressBarItem.Header = Localization.CellConditionControl_ProgressBarItem;
+            ImageItem.Header = Localization.CellConditionControl_ImageItem;
+            lblShowValue.Text = Localization.ShowValue_Check;
+            lblShowImage.Text = Localization.ShowImage_Check;
+            lblShowProgressBar.Text = Localization.ShowProgressBar_Check;
+            lblUseBackColor.Text = Localization.UseBackColor_Check;
+            lblUseForeColor.Text = Localization.UseForeColor_Check;
+            lblUseBorderColor.Text = Localization.UseBorderColor_Check;
+            lblUseAllOptions.Text = Localization.UseAllOptions_Check;
+            lblIgnoreAllOptions.Text = Localization.IgnoreAllOptions_Check;
+            lblBackColor.Text = Localization.BackColor_Label;
+            lblForeColor.Text = Localization.ForeColor_Label;
+            lblBorderColor.Text = Localization.BorderColor_Label;
+            lblMinValue.Text = Localization.MinValue_Label;
+            lblMaxValue.Text = Localization.MaxValue_Label;
+            lblStartColor.Text = Localization.StartColor_Label;
+            lblEndColor.Text = Localization.EndColor_Label;
+            lblImage.Text = Localization.Image_Label;
+            btnChangeCustomImage.Content = Localization.ChangeCustomImage_Caption;
 
             // Стилизуем скроллеры
             StyleContainer styleContainer = new StyleContainer();
@@ -70,6 +96,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
 
             ConditionTypeCombo.EditEnd -= new EventHandler(ConditionTypeCombo_EditEnd);
             ConditionTypeCombo.ConditionType = Condition != null ? Condition.ConditionType : CellConditionType.None;
+            ConditionTypeCombo.Value1 = Condition != null ? Condition.Value1 : 0;
+            ConditionTypeCombo.Value2 = Condition != null ? Condition.Value2 : 0;
             ConditionTypeCombo.EditEnd += new EventHandler(ConditionTypeCombo_EditEnd);
 
             ShowValue.Checked -= new RoutedEventHandler(PropertyChecked);
@@ -77,6 +105,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             ShowValue.IsChecked = Condition != null ? Condition.Appearance.Options.ShowValue : false;
             ShowValue.Checked += new RoutedEventHandler(PropertyChecked);
             ShowValue.Unchecked += new RoutedEventHandler(PropertyChecked);
+
+            ShowImage.Checked -= new RoutedEventHandler(PropertyChecked);
+            ShowImage.Unchecked -= new RoutedEventHandler(PropertyChecked);
+            ShowImage.IsChecked = Condition != null ? Condition.Appearance.Options.UseImage : false;
+            ShowImage.Checked += new RoutedEventHandler(PropertyChecked);
+            ShowImage.Unchecked += new RoutedEventHandler(PropertyChecked);
 
             UseBackColor.Checked -= new RoutedEventHandler(PropertyChecked);
             UseBackColor.Unchecked -= new RoutedEventHandler(PropertyChecked);
@@ -131,20 +165,16 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             comboEndColor.SelectItem(Condition != null ? Condition.Appearance.ProgressBarOptions.EndColor : Colors.Transparent);
             comboEndColor.ColorsComboBox.SelectionChanged += new SelectionChangedEventHandler(ColorsComboBox_SelectionChanged);
 
-            comboAssembly.ItemsComboBox.SelectionChanged -= new SelectionChangedEventHandler(AsseblyComboBox_SelectionChanged);
-            comboAssembly.Initialize();
-            comboAssembly.ItemsComboBox.SelectionChanged += new SelectionChangedEventHandler(AsseblyComboBox_SelectionChanged);
-
+            try
+            {
+                imgCustomImage.Source = Condition != null ? new BitmapImage(new Uri(Condition.Appearance.CustomImageUri, UriKind.Relative)) : null;
+            }
+            catch { }
         }
 
-        void AsseblyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        void ImageComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Assembly asm = null;
-            if (comboAssembly.CurrentObject != null)
-            {
-                asm = comboAssembly.CurrentObject.Tag as Assembly;
-            }
-            comboImage.Initialize(asm);
+            RefreshObject();
         }
 
         void ColorsComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -169,8 +199,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             if (Condition != null)
             {
                 Condition.ConditionType = ConditionTypeCombo.ConditionType;
+                Condition.Value1 = ConditionTypeCombo.Value1;
+                Condition.Value2 = ConditionTypeCombo.Value2;
 
                 Condition.Appearance.Options.ShowValue = ShowValue.IsChecked.Value;
+                Condition.Appearance.Options.UseImage = ShowImage.IsChecked.Value;
                 Condition.Appearance.Options.UseBackColor = UseBackColor.IsChecked.Value;
                 Condition.Appearance.Options.UseForeColor = UseForeColor.IsChecked.Value;
                 Condition.Appearance.Options.UseBorderColor = UseBorderColor.IsChecked.Value;
@@ -222,6 +255,35 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             {
                 handler(this, EventArgs.Empty);
             }
+        }
+
+        ModalDialog m_ChangeCustomImageDialog;
+        ImageChoiceControl m_ImageChoice;
+        private void btnChangeCustomImage_Click(object sender, RoutedEventArgs e)
+        {
+            if (m_ChangeCustomImageDialog == null)
+            {
+                m_ChangeCustomImageDialog = new ModalDialog() { Width = 600, Height = 300, DialogStyle = ModalDialogStyles.OKCancel };
+                m_ChangeCustomImageDialog.Caption = Localization.ImageChoiceDialog_Caption;
+                m_ChangeCustomImageDialog.DialogOk += new EventHandler<DialogResultArgs>(m_ChangeCustomImageDialog_DialogOk);
+            }
+
+            if (m_ImageChoice == null)
+            {
+                m_ImageChoice = new ImageChoiceControl();
+                m_ChangeCustomImageDialog.Content = m_ImageChoice;
+            }
+
+            m_ImageChoice.Initialize();
+            m_ChangeCustomImageDialog.Show();
+        }
+
+        void m_ChangeCustomImageDialog_DialogOk(object sender, DialogResultArgs e)
+        {
+            imgCustomImage.Source = m_ImageChoice.CurrentObject != null ? m_ImageChoice.CurrentObject.Image : null;
+            
+            Condition.Appearance.CustomImage = imgCustomImage.Source as BitmapImage;
+            Condition.Appearance.CustomImageUri = m_ImageChoice.CurrentObject != null ? m_ImageChoice.CurrentObject.Uri : String.Empty;
         }
     }
 }

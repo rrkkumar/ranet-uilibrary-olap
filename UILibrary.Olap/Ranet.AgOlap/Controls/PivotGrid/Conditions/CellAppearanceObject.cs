@@ -213,6 +213,22 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Conditions
             }
         }
 
+        private String m_CustomImageUri = String.Empty;
+        /// <summary>
+        /// Путь для картинки
+        /// </summary>
+        public String CustomImageUri
+        {
+            get
+            {
+                return m_CustomImageUri;
+            }
+            set
+            {
+                m_CustomImageUri = value;
+            }
+        }
+
         #endregion Свойства
 
         /// <summary>

@@ -20,28 +20,35 @@
 */
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
-using System.Windows.Ink;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
+using System.Windows.Media.Imaging;
 
 namespace Ranet.AgOlap.Controls.Combo
 {
-    public class CheckedListBoxItem : ListBoxItem
+    public partial class ImageItemControl : UserControl
     {
-        public CheckedListBoxItem()
+        public ImageItemControl()
         {
-            DefaultStyleKey = typeof(CheckedListBoxItem);
+            InitializeComponent();
         }
 
-        public override void OnApplyTemplate()
+        public ImageItemControl(BitmapImage image, String text)
+            : this()
         {
-            base.OnApplyTemplate();
+            this.Image = image;
+            ImageCtrl.Source = image;
+            TextCtrl.Text = text;
         }
+
+        public readonly BitmapImage Image;
     }
 }

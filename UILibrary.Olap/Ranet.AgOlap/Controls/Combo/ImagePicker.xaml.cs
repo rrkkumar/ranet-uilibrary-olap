@@ -1,4 +1,25 @@
-﻿using System;
+﻿/*   
+    Copyright (C) 2009 Galaktika Corporation ZAO
+
+    This file is a part of Ranet.UILibrary.Olap
+ 
+    Ranet.UILibrary.Olap is a free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+      
+    You should have received a copy of the GNU General Public License
+    along with Ranet.UILibrary.Olap.  If not, see
+  	<http://www.gnu.org/licenses/> 
+  
+    If GPL v.3 is not suitable for your products or company,
+    Galaktika Corp provides Ranet.UILibrary.Olap under a flexible commercial license
+    designed to meet your specific usage and distribution requirements.
+    If you have already obtained a commercial license from Galaktika Corp,
+    you can use this file under those license terms.
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -18,32 +39,6 @@ using System.IO;
 
 namespace Ranet.AgOlap.Controls.Combo
 {
-    public class ImageItem
-    {
-        BitmapImage m_Image = null;
-        public BitmapImage Image
-        {
-            get { return m_Image; }
-            set
-            {
-                m_Image = null;
-            }
-        }
-
-        String m_Text = String.Empty;
-        public String Text
-        {
-            get { return m_Text; }
-            set { m_Text = value; }
-        }
-
-        public ImageItem(BitmapImage image, String text)
-        {
-            Image = image;
-            Text = text;
-        }
-    }
-
     public partial class ImagePicker : UserControl
     {
         public ImagePicker()
@@ -53,13 +48,12 @@ namespace Ranet.AgOlap.Controls.Combo
 
         public void Initialize()
         {
-            ImageComboBox.ItemsSource = new List<ImageItem>();
+            ImageComboBox.Items.Clear();
         }
 
         public void Initialize(Assembly assembly)
         {
-            List<ImageItem> list = new List<ImageItem>();
-
+            ImageComboBox.Items.Clear();
             try
             {
                 if (assembly != null)
@@ -88,10 +82,7 @@ namespace Ranet.AgOlap.Controls.Combo
                                             {
                                                 image.SetSource(stream);
                                             }
-                                            //string asm = assembly.ManifestModule.ToString();
-                                            //asm = asm.Replace(".dll", "");
-                                            //image.UriSource = new Uri("/" + asm + ";component/" + enumerator.Key.ToString(), UriKind.Relative);
-                                            list.Add(new ImageItem(image, enumerator.Key.ToString()));
+                                            ImageComboBox.Items.Add(new ImageItemControl(image, enumerator.Key.ToString()));
                                         }
                                     }
                                 }
@@ -103,9 +94,13 @@ namespace Ranet.AgOlap.Controls.Combo
             catch
             {
             }
-            finally 
+        }
+
+        public ImageItemControl CurrentObject
+        {
+            get
             {
-                ImageComboBox.ItemsSource = list;
+                return ImageComboBox.SelectedItem as ImageItemControl;
             }
         }
     }

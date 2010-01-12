@@ -8,6 +8,7 @@
     >
     <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"></RowDefinition>
             <RowDefinition></RowDefinition>
         </Grid.RowDefinitions>
 
@@ -16,14 +17,34 @@
             <ColumnDefinition Width="2*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         
-        <conditions:ConditionsDescriptorListControl x:Name="DescriptorsList" Grid.Row="1" Margin="0,0,6,0"></conditions:ConditionsDescriptorListControl>
+        <!-- Тулбар -->
+        <toolbar:RanetToolBar x:Name="ToolBar" Grid.ColumnSpan="2" Margin="0,0,0,3"></toolbar:RanetToolBar>
         
-        <controls:RenetGridSplitter Grid.Row="0" IsTabStop="False" VerticalAlignment="Stretch" HorizontalAlignment="Right"></controls:RenetGridSplitter>
+        <!-- Список стилей -->
+        <Grid Grid.Row="1">  
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            
+            <TextBlock Grid.Row="0" x:Name="lblStyles" Text="Styles:" Margin="0,0,0,3"></TextBlock>
+            <conditions:ConditionsDescriptorListControl x:Name="DescriptorsList" Grid.Row="1" Margin="0,0,6,0"></conditions:ConditionsDescriptorListControl>
+        </Grid>
+        
+        <!-- Разделитель -->
+        <controls:RenetGridSplitter Grid.Row="1" IsTabStop="False" VerticalAlignment="Stretch" HorizontalAlignment="Right"></controls:RenetGridSplitter>
 
-        <swc:TabControl Grid.Column="1" Margin="1,0,0,0">
-            <swc:TabItem Header="Style Details" x:Name="StyleDetailsTab" Grid.Column="1">
-                <conditions:ConditionsDescriptorControl Margin="0" x:Name="DescriptorDetails"></conditions:ConditionsDescriptorControl>
-            </swc:TabItem>
-        </swc:TabControl>
+        <!-- Описание стиля -->
+        <Grid Grid.Row="1" Grid.Column="1" Margin="1,0,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <TextBlock Grid.Row="0" x:Name="lblStyleDetails" Text="Style Details:" Margin="0,0,0,3"></TextBlock>
+            <Border Grid.Row="1" BorderBrush="DarkGray" Padding="3" BorderThickness="1">
+                <conditions:ConditionsDescriptorControl Grid.Row="1" x:Name="DescriptorDetails"></conditions:ConditionsDescriptorControl>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

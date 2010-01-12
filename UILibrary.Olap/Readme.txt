@@ -80,11 +80,3 @@ Ranet.UILibrary.OLAP video tutorial: http://www.youtube.com/watch?v=dDNa3D8RO4Y
 You can find more info about project owner at
 
     * http://galaktika.ru/en/
-    * http://galaktika.ru/en/solutions/galaktika-business-suite/galaktika-bi/
-    * http://galaktika.ru/en/solutions/galaktika-business-suite/galaktika-ranet/ 
-
-There is another Galaktika Open Source project :
-
-    * http://code.google.com/p/galaktika-spo/ 
-
-

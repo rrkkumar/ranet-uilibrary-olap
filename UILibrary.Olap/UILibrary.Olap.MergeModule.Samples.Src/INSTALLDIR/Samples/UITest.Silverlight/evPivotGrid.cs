@@ -32,12 +32,13 @@ namespace UILibrary.Olap.UITestApplication
 			pivotGridControl.Connection = ConnectionStringId;
 			pivotGridControl.Query = tbMdxQuery.Text;
 			pivotGridControl.UpdateScript = tbUpdateScript.Text;
-			pivotGridControl.IsUpdateable = true;
-			pivotGridControl.ColumnsIsInteractive = true;
-			pivotGridControl.UseColumnsAreaHint = true;
-			pivotGridControl.UseRowsAreaHint = true;
-			pivotGridControl.UseCellsAreaHint = true;
-			pivotGridControl.MemberVisualizationType = Ranet.Olap.Core.Data.MemberVisualizationTypes.KeyAndCaption;
+			pivotGridControl.IsUpdateable = ckbIsUpdateable.IsChecked.Value;
+			pivotGridControl.ColumnsIsInteractive = ckbColumnsIsInteractive.IsChecked.Value;
+			pivotGridControl.UseColumnsAreaHint = ckbUseColumnsAreaHint.IsChecked.Value;
+			pivotGridControl.UseRowsAreaHint = ckbUseRowsAreaHint.IsChecked.Value;
+			pivotGridControl.UseCellsAreaHint = ckbUseCellsAreaHint.IsChecked.Value;
+			pivotGridControl.UseCellConditionsDesigner = ckbUseCellConditionsDesigner.IsChecked.Value;
+			pivotGridControl.MemberVisualizationType = (Ranet.Olap.Core.Data.MemberVisualizationTypes)cbMemberVisualizationType.SelectedIndex;
 			pivotGridControl.Initialize();
 		}
 	}

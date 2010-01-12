@@ -968,4 +968,100 @@ Please, recalculate data or cancel changes.</value>
   <data name="ConditionsDesigner_Condition_Label" xml:space="preserve">
     <value>Cell Value Condition:</value>
   </data>
+  <data name="ImageChoiceDialog_Caption" xml:space="preserve">
+    <value>Image Choice</value>
+  </data>
+  <data name="BackColor_Label" xml:space="preserve">
+    <value>Back Color:</value>
+  </data>
+  <data name="BorderColor_Label" xml:space="preserve">
+    <value>Border Color:</value>
+  </data>
+  <data name="CellConditionControl_AppearanceItem" xml:space="preserve">
+    <value>Options</value>
+  </data>
+  <data name="CellConditionControl_CellAppearanceItem" xml:space="preserve">
+    <value>Cell Appearance</value>
+  </data>
+  <data name="CellConditionControl_ImageItem" xml:space="preserve">
+    <value>Image Settings</value>
+  </data>
+  <data name="CellConditionControl_ProgressBarItem" xml:space="preserve">
+    <value>ProgressBar Settings</value>
+  </data>
+  <data name="ChangeCustomImage_Caption" xml:space="preserve">
+    <value>Change image</value>
+  </data>
+  <data name="Conditions_Label" xml:space="preserve">
+    <value>Conditions:</value>
+  </data>
+  <data name="EndColor_Label" xml:space="preserve">
+    <value>End Color:</value>
+  </data>
+  <data name="ForeColor_Label" xml:space="preserve">
+    <value>Fore Color:</value>
+  </data>
+  <data name="IgnoreAllOptions_Check" xml:space="preserve">
+    <value>Ignore All Options</value>
+  </data>
+  <data name="Image_Label" xml:space="preserve">
+    <value>Image:</value>
+  </data>
+  <data name="LoadSettings_ToolTip" xml:space="preserve">
+    <value>Load Settings</value>
+  </data>
+  <data name="MaxValue_Label" xml:space="preserve">
+    <value>Max Value:</value>
+  </data>
+  <data name="MemberUniqueName_Label" xml:space="preserve">
+    <value>Member unique name:</value>
+  </data>
+  <data name="MinValue_Label" xml:space="preserve">
+    <value>Min Value:</value>
+  </data>
+  <data name="SaveSettings_ToolTip" xml:space="preserve">
+    <value>Save Settings</value>
+  </data>
+  <data name="ShowImage_Check" xml:space="preserve">
+    <value>Show Image</value>
+  </data>
+  <data name="ShowProgressBar_Check" xml:space="preserve">
+    <value>Show ProgressBar</value>
+  </data>
+  <data name="ShowValue_Check" xml:space="preserve">
+    <value>Show Value</value>
+  </data>
+  <data name="StartColor_Label" xml:space="preserve">
+    <value>Start Color:</value>
+  </data>
+  <data name="StyleDetails_Label" xml:space="preserve">
+    <value>Style Details:</value>
+  </data>
+  <data name="Styles_Label" xml:space="preserve">
+    <value>Styles:</value>
+  </data>
+  <data name="UseAllOptions_Check" xml:space="preserve">
+    <value>Use All Options</value>
+  </data>
+  <data name="UseBackColor_Check" xml:space="preserve">
+    <value>Use Back Color</value>
+  </data>
+  <data name="UseBorderColor_Check" xml:space="preserve">
+    <value>Use Border Color</value>
+  </data>
+  <data name="UseForeColor_Check" xml:space="preserve">
+    <value>Use Fore Color</value>
+  </data>
+  <data name="ValueCondition_Label" xml:space="preserve">
+    <value>Value Condition:</value>
+  </data>
+  <data name="Assembly_Label" xml:space="preserve">
+    <value>Assembly:</value>
+  </data>
+  <data name="ImagePreview_Label" xml:space="preserve">
+    <value>Image preview:</value>
+  </data>
+  <data name="Images_Label" xml:space="preserve">
+    <value>Images:</value>
+  </data>
 </root>

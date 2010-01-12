@@ -59,6 +59,7 @@ using Ranet.Olap.Core.Providers;
 using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.AgOlap.Providers;
 using Ranet.AgOlap.Controls.Data;
+using Ranet.Olap.Core.Storage;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -340,6 +341,9 @@ namespace Ranet.AgOlap.Controls
             m_OlapDataLoader = GetOlapDataLoader();
             m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
 
+            m_StorageManager = GetStorageManager();
+            m_StorageManager.InvokeCompleted += new EventHandler<DataLoaderEventArgs>(StorageManager_ActionCompleted);
+
             // Метод Initialize необходимо вызывать для RotVisual элемента
             // всего приложения. Перенес его в ClientApp.
             //ScrollViewerMouseWheelSupport.Initialize(this);
@@ -350,13 +354,48 @@ namespace Ranet.AgOlap.Controls
             OlapTransactionManager.AfterCommandComplete += new EventHandler<TransactionCommandResultEventArgs>(AnalysisTransactionManager_AfterCommandComplete);
         }
 
+        void StorageManager_ActionCompleted(object sender, DataLoaderEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                LogManager.LogError(this, e.Error.ToString());
+                return;
+            }
+
+            if (e.Result.ContentType == InvokeContentType.Error)
+            {
+                LogManager.LogError(this, e.Result.Content);
+                return;
+            }
+
+            StorageActionArgs args = e.UserState as StorageActionArgs;
+            if (args != null)
+            {
+                if (args.ActionType == StorageActionTypes.Load)
+                {
+                    List<String> list = XmlSerializationUtility.XmlStr2Obj<List<String>>(e.Result.Content);
+                    List<CellConditionsDescriptor> conditions = new List<CellConditionsDescriptor>();
+                    if (list != null)
+                    {
+                        foreach (var item in list)
+                        {
+                            CellConditionsDescriptor descr = CellConditionsDescriptor.Deserialize(item);
+                            if (descr != null)
+                                conditions.Add(descr);
+                        }
+                        m_CustomCellConditionsEditor.Initialize(conditions);
+                    }
+                }
+            }
+        }
+
         ModalDialog m_ConditionsDesignerDialog = null;
         CustomCellConditionsEditor m_CustomCellConditionsEditor = null;
         void ConditionsDesignerButton_Click(object sender, RoutedEventArgs e)
         {
             if (m_ConditionsDesignerDialog == null)
             {
-                m_ConditionsDesignerDialog = new ModalDialog() { Width = 700, Height = 600, DialogStyle = ModalDialogStyles.OK };
+                m_ConditionsDesignerDialog = new ModalDialog() { Width = 700, Height = 600, DialogStyle = ModalDialogStyles.OKCancel };
                 m_ConditionsDesignerDialog.Caption = Localization.CellsConditionsDesignerDialog_Caption;
                 m_ConditionsDesignerDialog.DialogOk += new EventHandler<DialogResultArgs>(m_ConditionsDesignerDialog_DialogOk);
             }
@@ -364,17 +403,55 @@ namespace Ranet.AgOlap.Controls
             if (m_CustomCellConditionsEditor == null)
             {
                 m_CustomCellConditionsEditor = new CustomCellConditionsEditor();
+                m_CustomCellConditionsEditor.StorageManager = StorageManager;
+                m_CustomCellConditionsEditor.LogManager = LogManager;
                 m_ConditionsDesignerDialog.Content = m_CustomCellConditionsEditor;
+                m_CustomCellConditionsEditor.SaveStyles += new EventHandler<CustomEventArgs<ObjectDescription>>(m_CustomCellConditionsEditor_SaveStyles);
+                m_CustomCellConditionsEditor.LoadStyles += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_CustomCellConditionsEditor_LoadStyles);
             }
 
             m_CustomCellConditionsEditor.Initialize(CustomCellsConditions != null ? CustomCellsConditions.ToList<CellConditionsDescriptor>() : new List<CellConditionsDescriptor>());
-
-            //Panel panel = GetRootPanel(this);
-            //if (panel != null && !panel.Children.Contains(m_ConditionsDesignerDialog.Dialog.PopUpControl))
-            //{
-            //    panel.Children.Add(m_ConditionsDesignerDialog.Dialog.PopUpControl);
-            //}
             m_ConditionsDesignerDialog.Show();
+        }
+
+        void m_CustomCellConditionsEditor_LoadStyles(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
+        {
+            if (e.Args != null)
+            {
+                StorageActionArgs args = new StorageActionArgs();
+                args.ActionType = StorageActionTypes.Load;
+                args.ContentType = StorageContentTypes.CustomCellStyles;
+                args.FileDescription = e.Args;
+                if (StorageManager != null)
+                {
+                    StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+                }
+            }
+        }
+
+        void m_CustomCellConditionsEditor_SaveStyles(object sender, CustomEventArgs<ObjectDescription> e)
+        {
+            ObjectDescription descr = e.Args;
+            if (descr != null)
+            {
+                StorageActionArgs args = new StorageActionArgs();
+                args.ActionType = StorageActionTypes.Save;
+                List<String> list = new List<string>();
+                foreach (var cond in m_CustomCellConditionsEditor.CellsConditions)
+                {
+                    list.Add(cond.Serialize());
+                }
+                args.Content = XmlSerializationUtility.Obj2XmlStr(list);
+                args.ContentType = StorageContentTypes.CustomCellStyles;
+                if (StorageManager != null)
+                {
+                    if (String.IsNullOrEmpty(descr.Caption))
+                        descr.Caption = descr.Name;
+                    args.FileDescription = new ObjectStorageFileDescription(descr);
+                    StorageManager.Invoke(XmlSerializationUtility.Obj2XmlStr(args, Common.Namespace), args);
+
+                }
+            }
         }
 
         void m_ConditionsDesignerDialog_DialogOk(object sender, DialogResultArgs e)
@@ -605,7 +682,7 @@ namespace Ranet.AgOlap.Controls
                     break;
                 case ControlActionType.ShowProperties:
                     ModalDialog dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
-                    PropertiesControl properties = new PropertiesControl();
+                    MemberPropertiesControl properties = new MemberPropertiesControl();
                     properties.Initialize(e.UserData);
                     dlg.Content = properties;
                     dlg.Caption = Localization.MemberPropertiesDialog_Caption;
@@ -681,7 +758,7 @@ namespace Ranet.AgOlap.Controls
             if (member != null)
             {
                 ModalDialog dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
-                PropertiesControl properties = new PropertiesControl();
+                MemberPropertiesControl properties = new MemberPropertiesControl();
                 properties.Initialize(member);
                 dlg.Content = properties;
                 dlg.Caption = Localization.CustomPropertiesDialog_Caption;
@@ -1609,6 +1686,20 @@ namespace Ranet.AgOlap.Controls
             {
                 return m_OlapDataLoader;
             }
+        }
+
+        IStorageManager m_StorageManager = null;
+        public IStorageManager StorageManager
+        {
+            get
+            {
+                return m_StorageManager;
+            }
+        }
+
+        protected virtual IStorageManager GetStorageManager()
+        {
+            return new StorageManager(URL);
         }
 
         void OlapDataLoader_DataLoaded(object sender, DataLoaderEventArgs e)

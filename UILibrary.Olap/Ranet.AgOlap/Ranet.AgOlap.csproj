@@ -74,6 +74,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Jayrock.AgJson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
     <Reference Include="Ranet.AgZipLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
       <HintPath>..\dll\Ranet.AgZipLib.dll</HintPath>
     </Reference>
@@ -115,6 +118,13 @@
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Combo\ComboBoxItemData.cs" />
+    <Compile Include="Controls\Combo\ImageChoiceControl.xaml.cs">
+      <DependentUpon>ImageChoiceControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Combo\ImageDescriptorListControl.cs" />
+    <Compile Include="Controls\Combo\ImageItemControl.xaml.cs">
+      <DependentUpon>ImageItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\Combo\RanetComboBox.cs" />
     <Compile Include="Controls\Combo\XapItemComboBox.xaml.cs">
       <DependentUpon>XapItemComboBox.xaml</DependentUpon>
@@ -125,6 +135,8 @@
     <Compile Include="Controls\DateSlicerCtrl.cs" />
     <Compile Include="Controls\Forms\ModalDialog.cs" />
     <Compile Include="Controls\Gauge\RoundGauge.cs" />
+    <Compile Include="Controls\General\ItemControls\CreateNewItemControl.cs" />
+    <Compile Include="Controls\General\ItemControls\NoneItemControl.cs" />
     <Compile Include="Controls\General\OlapTransactionManager.cs" />
     <Compile Include="Controls\General\ButtonMaximizeForm.cs" />
     <Compile Include="Controls\General\ButtonMinMaxForm.xaml.cs">
@@ -246,6 +258,7 @@
     <Compile Include="Controls\PivotGrid\Controls\ListMemberControl.xaml.cs">
       <DependentUpon>ListMemberControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\PivotGrid\Controls\MemberPropertiesControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\PivotGridControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\PivotGridItem.cs" />
     <Compile Include="Controls\PivotGrid\CustomGridSplitter.cs" />
@@ -497,6 +510,14 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\Combo\ColorPicker.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\Combo\ImageChoiceControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\Combo\ImageItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
