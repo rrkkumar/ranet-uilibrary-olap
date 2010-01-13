@@ -1,10 +1,9 @@
-Attention:
-	It is unstabilized release. It has no version (0.0).
-	We strongly do not recommend to install these libraries to GAC!
-
 Welcome to Ranet.UILibrary.OLAP project
 
-It is Open Source project which is hosted at
+Ranet.UILibrary.OLAP-1.2 is first stabilized release. 
+No new features will be implemented in 1.2, bug fixes only.
+
+Ranet.UILibrary is Open Source project which is hosted at
 http://code.google.com/p/ranet-uilibrary-olap/
 http://ranetuilibraryolap.codeplex.com/
 where you can find all source code.
@@ -24,7 +23,7 @@ On client:
 On server:
    * Microsoft Internet information server (IIS)
    * Microsoft SQL Server 2005/2008 with Analysis services
-   * .NET 3.5 
+   * .NET 3.5
                        
 On development computer:
    * .NET 3.5 (with MS Build) 
@@ -34,7 +33,7 @@ On development computer:
    * (optionally) WiX - for installer packages build (http://wix.sourceforge.net/)
    * (optionally) Microsoft Visual studio 2008 SP1 with Silverlight tools 3.0 installed
    * (optionally) SharpDevelop 3.1 (http://www.icsharpcode.net/OpenSource/SD/Download/)
-   * (optionally) Ranet.BuildTools-1.0  (TFS build integration)
+   * (optionally) Ranet.BuildTools-1.0  (TFS build and WiX integration)
 
 You need to build the sample application before run it.
 You can use Visual Studio development webserver or can deploy it to IIS.
@@ -79,3 +78,6 @@ Ranet.UILibrary.OLAP video tutorial: http://www.youtube.com/watch?v=dDNa3D8RO4Y
 You can find more info about project owner at
 
     * http://galaktika.ru/en/
+
+
+

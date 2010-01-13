@@ -497,15 +497,14 @@ namespace Ranet.AgOlap.Controls
             if (m_LoadedMembers!= null)
             {
                 var enumerator = m_LoadedMembers.GetEnumerator();
-                result = new Dictionary<string, MemberData>();              
-                int i = 1;
+                result = new Dictionary<string, MemberData>();
+                int i = 0;
                 do
                 {
-                    if (m_slicedButtons.Contains(i))
+                    if (slicerChildren.ContainsKey(i))
                     {
-                        result.Add(enumerator.Current.Key, enumerator.Current.Value);                        
+                        result.Add(enumerator.Current.Key, enumerator.Current.Value);
                     }
-                    i++;
                     enumerator.MoveNext();
                 } while (enumerator.Current.Value != null);
             }
@@ -513,8 +512,7 @@ namespace Ranet.AgOlap.Controls
         }
 
         protected virtual void ApplySelection()
-        {            
-        }       
+        { }       
 
         bool m_IsReadyToSelection = false;
         public bool IsReadyToSelection
