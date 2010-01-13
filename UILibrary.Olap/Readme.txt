@@ -1,5 +1,5 @@
 Attention:
-	It is unstabilized release.
+	It is unstabilized release. It has no version (0.0).
 	We strongly do not recommend to install these libraries to GAC!
 
 Welcome to Ranet.UILibrary.OLAP project
@@ -19,33 +19,32 @@ http://ranetuilibraryolap.codeplex.com/Thread/List.aspx
 To use libraries you need to have:
 
 On client:
-* Silverlight 3.0 compatible browser (i.e. Mozilla Firefox, Google Chrome, Microsoft Internet Explorer etc.)
+   * Silverlight 3.0 compatible browser (i.e. Mozilla Firefox, Google Chrome, Microsoft Internet Explorer etc.)
 
 On server:
-* Microsoft Internet information server (IIS)
-* Microsoft SQL Server 2005/2008 with Analysis services
-* .NET 3.5 
+   * Microsoft Internet information server (IIS)
+   * Microsoft SQL Server 2005/2008 with Analysis services
+   * .NET 3.5 
                        
 On development computer:
-* .NET 3.5 (with MS Build) 
-* Silverlight SDK 3.0 (more info at http://silverlight.net/getstarted/)
-* Silverlight Toolkit http://www.codeplex.com/Silverlight (we use October 2009 version)
-* Adomd client (Microsoft.AnalysisServices.AdomdClient.dll)
-* (optionally) WiX - for installer packages build (http://wix.sourceforge.net/)
-* (optionally) Microsoft Visual studio 2008 SP1 with Silverlight tools 3.0 installed
-* (optionally) SharpDevelop 3.1 (http://www.icsharpcode.net/OpenSource/SD/Download/)
-* (optionally) Ranet.BuildTools-1.0  (TFS build integration)
+   * .NET 3.5 (with MS Build) 
+   * Silverlight SDK 3.0 (more info at http://silverlight.net/getstarted/)
+   * Silverlight Toolkit October 2009 (http://silverlight.codeplex.com/Release/ProjectReleases.aspx?ReleaseId=30514) 
+   * Adomd client (Microsoft.AnalysisServices.AdomdClient.dll)
+   * (optionally) WiX - for installer packages build (http://wix.sourceforge.net/)
+   * (optionally) Microsoft Visual studio 2008 SP1 with Silverlight tools 3.0 installed
+   * (optionally) SharpDevelop 3.1 (http://www.icsharpcode.net/OpenSource/SD/Download/)
+   * (optionally) Ranet.BuildTools-1.0  (TFS build integration)
 
 You need to build the sample application before run it.
 You can use Visual Studio development webserver or can deploy it to IIS.
 Set "Startup project" to %InstallDir%\Samples\UITest.Web\UITest.Web.csproj.
 
-Please set correct ConnectionString and Web Services virtual paths on "Config" tab.
+Please set correct OLAPConnectionString and Web Services virtual paths on "Config" tab or in Web.ñonfig.
 
 The sample application supposes that you have installed Microsoft sample datawarehouse database 
 AdventureWorksDW, you can find it at http://msftdbprodsamples.codeplex.com/.
 Of course, you can use any other OLAP database.
-
 
 Ranet.UILibrary.OLAP provides user interface for building MDX queries, parsing and executing MDX queries, browsing result sets and even changing cube data. Ranet.UILibrary.OLAP works under Firefox, Chrome, IE, with SQL Server Analysis Services 2005/2008, uses .NET 3.5 and Silverlight 3.0.
 

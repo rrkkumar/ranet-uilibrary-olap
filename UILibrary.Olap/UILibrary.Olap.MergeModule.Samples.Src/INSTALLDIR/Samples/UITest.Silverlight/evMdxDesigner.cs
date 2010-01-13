@@ -29,7 +29,7 @@ namespace UILibrary.Olap.UITestApplication
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)
 		{
 			// NON required property
-			// by default URL= <BackToApplicationClientBin>\..\InitializeWebService.asmx
+			// by default URL= <BackToApplicationClientBin>\..\OlapWebService.asmx
 			// pivotMdxDesignerControl.URL = WSDataUrl;
 
 			pivotMdxDesignerControl.Connection = ConnectionStringId;

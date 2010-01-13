@@ -23,6 +23,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
+using Microsoft.AnalysisServices.AdomdClient;
 
 namespace UILibrary.Olap.UITestApplication.Web
 {
@@ -36,17 +37,52 @@ namespace UILibrary.Olap.UITestApplication.Web
 	// [System.Web.Script.Services.ScriptService]
 	public class OlapWebService : Ranet.Web.Olap.OlapWebServiceBase
 	{
-		[WebMethod]
-		public override String PerformOlapServiceAction(String schemaType, String schema)
+		string SetConnectionString(string schema)
 		{
-			if (schemaType == "CheckExist")
-				return "OK";
-				
-			if (schemaType == "GetConnectionString")
-				return this.Application[schema] as string;
+			var err = "Argument Schema must be ConnectionId=ConnectionString";
+			if (string.IsNullOrEmpty(schema))
+				throw new ArgumentException(err);
 
-			var result = base.PerformOlapServiceAction(schemaType, schema);
-			return result;
+			var ind = schema.IndexOf('=');
+			if (ind < 1)
+				throw new ArgumentException(err);
+
+			var connectionName = schema.Substring(0, ind);
+			var connectionString = schema.Substring(ind + 1);
+
+			if (string.IsNullOrEmpty(connectionName))
+				throw new ArgumentException(err);
+				
+			if (string.IsNullOrEmpty(connectionString))
+				connectionString = this.Application[connectionName] as string;
+
+			using (var connection = new AdomdConnection(connectionString))
+			{
+				string s = "";
+				connection.Open();
+				foreach (var c in connection.Cubes)
+				{
+					s += c.Name;
+				}
+			}
+			this.Application[connectionName] = connectionString;
+			return connectionString;
+		}
+		[WebMethod]
+		public override string PerformOlapServiceAction(String schemaType, string schema)
+		{
+			switch (schemaType)
+			{
+				case "CheckExist":
+					return "OK";
+				case "GetConnectionString":
+					return this.Application[schema] as string;
+				case "SetConnectionString":
+					return SetConnectionString(schema);
+				default:
+					var result = base.PerformOlapServiceAction(schemaType, schema);
+					return result;
+			}
 		}
 	}
 }

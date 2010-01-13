@@ -43,49 +43,45 @@
 						<ColumnDefinition Width="200"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<TextBlock Grid.Column="0" Grid.Row="0" Margin="0,0,0,0" Text="InitializeWebService Url:" />
-					<TextBox x:Name="tbInitializeWebServiceUrl" Grid.Row="0" Grid.Column="1"/>
-
+					<TextBlock Grid.Column="0" Grid.Row="0" Text="BackGroundColor:" />
+					<Samples:ComboBoxColors Name="cbBackGroundColor" SelectedIndex="7" Grid.Column="1" Grid.Row="0" />
 					<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="OlapWebService Url:"/>
-					<TextBox x:Name="tbOlapWebServiceUrl" Grid.Row="1" Grid.Column="1"/>
+					<TextBox x:Name="tbOlapWebServiceUrl" Grid.Row="1" Grid.Column="1" IsReadOnly="True" />
 
 					<TextBlock Grid.Column="0" Grid.Row="2" Margin="0,0,0,0" Text="OLAPConnectionString:" />
 					<TextBox x:Name="tbOLAPConnectionString" Grid.Column="1" Grid.Row="2"/>
-
-					<Button
-					 Content="Set default values" 
-					 x:Name="SetDefaultValues"
-					 Grid.Row="3"
-					 Grid.Column="1"
-					 Click="SetDefaultValues_Click" />
-					<Button
-					 Content="Load last saved values" 
-					 x:Name="LoadLastSavedValues"
-					 Grid.Row="4"
-					 Grid.Column="1"
-					 Click="LoadLastSavedValues_Click"
-					/>
-					<Button
-					 Content="Save current values" 
-					 x:Name="SaveCurrentValues"
-					 Grid.Row="5"
-					 Grid.Column="1"
-					 Click="SaveCurrentValues_Click"
-					/>
-					<TextBlock x:Name="CheckedInfo" Grid.Column="1" Grid.Row="6" Margin="0,0,0,0" Text="Connection IS NOT checked. Please click buttom 'CheckConnection'." />
-
-					<Button
-					 Content="CheckConnection" 
-					 x:Name="CheckConnection"
-					 Grid.Row="7"
-					 Grid.Column="1"
-					 Click="CheckConnection_Click"
-					/>
-					<TextBlock Grid.Column="0" Grid.Row="8" Text="BackGroundColor:" />
-					<Samples:ComboBoxColors Name="cbBackGroundColor" SelectedIndex="7" Grid.Column="1" Grid.Row="8" />
-					<!-- TextBlock Grid.Column="0" Grid.Row="9" Text="ForeGroundColor:" />
-					<Samples:ComboBoxColors Name="cbForeGroundColor" SelectedIndex="1" Grid.Column="1" Grid.Row="9" /-->
-
+					<TextBlock x:Name="CheckedInfo" Grid.Column="1" Grid.Row="3" Margin="0,0,0,0" Text="Connection IS NOT checked. Please click button 'CheckConnection'." />
+					<Grid Grid.Row="4" Grid.Column="1">
+						<Grid.ColumnDefinitions>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+							<ColumnDefinition/>
+						</Grid.ColumnDefinitions>
+						<Button
+							Content="CheckConnection" 
+							x:Name="CheckConnection"
+							Grid.Column="0"
+							Click="CheckConnection_Click"
+						/>
+						<Button
+							Content="Set default values" 
+							x:Name="SetDefaultValues"
+							Grid.Column="1"
+							Click="SetDefaultValues_Click" />
+						<Button
+							Content="Load last saved values" 
+							x:Name="LoadLastSavedValues"
+							Grid.Column="2"
+							Click="LoadLastSavedValues_Click"
+						/>
+						<Button
+							Content="Save current values" 
+							x:Name="SaveCurrentValues"
+							Grid.Column="3"
+							Click="SaveCurrentValues_Click"
+						/>
+					</Grid>
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Mdx Designer">
@@ -109,14 +105,7 @@
 						<Button Grid.Row="0" Grid.Column="2" Content="Import MDX Layout" x:Name="importMdxLayoutButton" Click="importMdxLayoutButton_Click"/>
 						<Button Grid.Row="0" Grid.Column="3" Content="Export MDX Query" x:Name="exportMDXQueryButton" Click="exportMDXQueryButton_Click"/>
 					</Grid>
-					<!-- basics:GridSplitter x:Name="grsplSplitter"
-						 Grid.Row="1"
-						 Background="Aqua"
-						 Height="5">
-					</basics:GridSplitter -->
-					<server_controls:PivotMdxDesignerControl
-					 Grid.Row="1" x:Name="pivotMdxDesignerControl"
-					 />
+					<server_controls:PivotMdxDesignerControl Grid.Row="1" x:Name="pivotMdxDesignerControl" />
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Mdx Designer Layout">
@@ -159,7 +148,8 @@
 						<CheckBox Grid.Row="4" Name="ckbUseCellsAreaHint" IsChecked="false" Content="UseCellsAreaHint"/>
 						<CheckBox Grid.Row="5" Name="ckbUseCellConditionsDesigner" IsChecked="false" Content="UseCellConditionsDesigner"/>
 						<CheckBox Grid.Row="6" Name="ckbIsUpdateable" IsChecked="false" Content="IsUpdateable" />
-						<ComboBox Grid.Row="7" Name="cbMemberVisualizationType" SelectedIndex="2">
+						<TextBlock Grid.Row="7" Text="MemberVisualizationType:" />
+						<ComboBox Grid.Row="8" Name="cbMemberVisualizationType" SelectedIndex="0">
 							<ComboBoxItem Content="Caption"/>
 							<ComboBoxItem Content="Key"/>
 							<ComboBoxItem Content="KeyAndCaption" />
@@ -276,9 +266,6 @@
 							<ColumnDefinition Width="170"/>
 							<ColumnDefinition></ColumnDefinition>
 						</Grid.ColumnDefinitions>
-						<!-- CheckBox x:Name="cbGaugeAutoRefresh" Grid.Row="0" Grid.Column="1" Content="AutoRefresh"
-							IsChecked="{Binding ElementName=RoundGauge, Path=AutoRefresh, Mode=TwoWay}"
-						/-->
 						<TextBlock Grid.Column="0" Grid.Row="1" Margin="0,0,0,0" Text="Text:"/>
 						<TextBox x:Name="tbGaugeText" Grid.Row="1" Grid.Column="1" AcceptsReturn="False"
 							Text="Feel free to change."
@@ -359,17 +346,7 @@
 					 ForeColor="{Binding ElementName=cbGaugeForeground, Path=SelectedItem.Tag.Color}"
 					 TextColor="{Binding ElementName=cbGaugeTextColor, Path=SelectedItem.Tag.Color}"
 					 MeterBackgroundColor="{Binding ElementName=cbMeterBackGroundColor, Path=SelectedItem.Tag.Color}"
-					>
-						<!--
-						Background="{Binding ElementName=cbGaugeBackground, Path=SelectedItem.Tag}, Mode= "
-						<Panel.Background>
-							<Binding ElementName="cbGaugeBackground" Path="SelectedItem.Tag"/>
-						</Panel.Background>
-						<Panel.Background>
-							<Binding ElementName="cbGaugeBackground" Path="SelectedItem.Tag"/>
-						</Panel.Background>
-					-->
-					</gauge:RoundGauge>
+					/>
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Mdx Formatter">

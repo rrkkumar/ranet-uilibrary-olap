@@ -28,13 +28,9 @@ using System.ServiceModel;
 
 namespace UILibrary.Olap.UITestApplication
 {
-	using Init;
-
 	public class Data
 	{
-		public string InitializeWebServiceUrl { get; set; }
 		public string OlapWebServiceUrl { get; set; }
-
 		public string OLAPConnectionString { get; set; }
 
 		public string MdxQuery { get; set; }
@@ -63,13 +59,15 @@ namespace UILibrary.Olap.UITestApplication
 		{
 			BackGroundColor = 12;
 			
-			OLAPConnectionString = @"Data Source=.\sql2008;Integrated Security=SSPI;Initial Catalog=Adventure Works DW";
+			OLAPConnectionString = @"Data Source=.\sql2008;Initial Catalog=Adventure Works DW";
 			// OLAPConnectionString = string.Empty;
-			InitializeWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"InitializeWebService.asmx").AbsoluteUri;
+			
 			OlapWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
 
-			MdxQuery = @"select [Product].[Product Categories].[Category] on 0 ,[Date].[Calendar].[Calendar Year]  DIMENSION PROPERTIES PARENT_UNIQUE_NAME on 1 from [Adventure Works]
- where [Measures].[Sales Amount]";
+			MdxQuery = @"select  [Product].[Product Categories].[Category]  DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 0 ,[Date].[Calendar].[Calendar Year]   DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 1 from [Adventure Works]
+ where [Measures].[Sales Amount]
+ CELL PROPERTIES BACK_COLOR, CELL_ORDINAL, FORE_COLOR, FONT_NAME, FONT_SIZE, FONT_FLAGS, FORMAT_STRING, VALUE, FORMATTED_VALUE, UPDATEABLE
+";
 
 			MdxDesignerLayout = @"<?xml version='1.0' encoding='utf-8'?>
 <MdxLayoutWrapper xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
@@ -87,7 +85,7 @@ namespace UILibrary.Olap.UITestApplication
   <CalculatedNamedSets />
 </MdxLayoutWrapper>
 ";
-			UpdateScript = "";
+			UpdateScript = "--You need to enable WriteBack ability for your cube first.";
 		}
 	}
 	public class Config : INotifyPropertyChanged
@@ -165,70 +163,31 @@ namespace UILibrary.Olap.UITestApplication
 			if (Default.PropertyChanged != null)
 				Default.PropertyChanged(Default, new PropertyChangedEventArgs("Data"));
 		}
-		public static void CheckDataService(Action OnSuccess, Action OnError)
-		{
-			try
-			{
-				string wdUrl = Default.Data.OlapWebServiceUrl;
-
-				var wds = Ranet.AgOlap.Services.ServiceManager.CreateService
-				<Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
-				, Ranet.AgOlap.OlapWebService.OlapWebServiceSoap
-				>(wdUrl);
-
-				wds.PerformOlapServiceActionCompleted += (object sender, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e) =>
-				{
-					if (e.Error == null)
-					{
-						if (e.Result == null)
-						{
-							MessageBox.Show("Data service has returned 'null'", "Error", MessageBoxButton.OK);
-							if (OnError != null)
-								OnError();
-
-						}
-						else
-						{
-							Default.Data.OLAPConnectionString=e.Result;
-							if (OnSuccess != null)
-								OnSuccess();
-						}
-					}
-					else
-					{
-						MessageBox.Show(e.Error.ToString(), "Error", MessageBoxButton.OK);
-						if (OnError != null)
-							OnError();
-					}
-				};
-				wds.PerformOlapServiceActionAsync("GetConnectionString", ConnectionStringId);
-			}
-			catch (Exception E)
-			{
-				MessageBox.Show(E.ToString(), "Error", MessageBoxButton.OK);
-				if (OnError != null)
-					OnError();
-			}
-		}
 		public static void Init(string connectionStringId, string connectionString, Action OnSuccess, Action OnError)
 		{
 			var service = Ranet.AgOlap.Services.ServiceManager.CreateService
-			 <InitializeWebServiceSoapClient
-			 , InitializeWebServiceSoap
-			 >(Default.Data.InitializeWebServiceUrl);
+			 <Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
+			 , Ranet.AgOlap.OlapWebService.OlapWebServiceSoap
+			 >(Default.Data.OlapWebServiceUrl);
 
-			service.InitConnectionStringCompleted += (object sender, Init.InitConnectionStringCompletedEventArgs e) =>
+			service.PerformOlapServiceActionCompleted += 
+			(	object sender
+			, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e
+			) =>
 			{
 				if (e.Error == null)
 				{
 					if (e.Result == null)
-						CheckDataService(OnSuccess, OnError);
-					else
 					{
-						MessageBox.Show(e.Result, "Error", MessageBoxButton.OK);
+						MessageBox.Show("Data service has returned 'null' as current ConnectionString", "Error", MessageBoxButton.OK);
 						if (OnError != null)
 							OnError();
-
+					}
+					else
+					{
+						Default.Data.OLAPConnectionString = e.Result;
+						if (OnSuccess != null)
+							OnSuccess();
 					}
 				}
 				else
@@ -238,7 +197,7 @@ namespace UILibrary.Olap.UITestApplication
 						OnError();
 				}
 			};
-			service.InitConnectionStringAsync(connectionStringId, connectionString);
+			service.PerformOlapServiceActionAsync("SetConnectionString", connectionStringId+"="+connectionString);
 		}
 	}
 }

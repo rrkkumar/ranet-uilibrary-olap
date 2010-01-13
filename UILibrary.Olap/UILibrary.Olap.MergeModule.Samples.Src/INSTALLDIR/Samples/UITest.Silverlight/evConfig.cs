@@ -70,7 +70,7 @@ namespace UILibrary.Olap.UITestApplication
 				try
 				{
 					tbOLAPConnectionString.Text=Config.Default.Data.OLAPConnectionString;
-					CheckedInfo.Text = @"Connection has been succesfully checked. ConnectionString=" + tbOLAPConnectionString.Text;
+					CheckedInfo.Text = @"Connection has been succesfully checked.";
 					//System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
 					//initCubeChoiceButton_Click(null, null);
 					//initmdxDesignerButton_Click(null, null);

@@ -59,7 +59,6 @@
     <Content Include="INSTALLDIR\Samples\MdxFormatter\MdxFormatter.csproj" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Properties\AppManifest.xml" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\UITest.Silverlight.csproj" />
-    <Content Include="INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\Silverlight.js" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\UITest.Web.csproj" />
@@ -72,9 +71,6 @@
       <DependentUpon>Page.xaml</DependentUpon>
     </Content>
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Properties\AssemblyInfo.cs" />
-    <Content Include="INSTALLDIR\Samples\UITest.Web\InitializeWebService.asmx.cs">
-      <DependentUpon>InitializeWebService.asmx</DependentUpon>
-    </Content>
     <Content Include="INSTALLDIR\Samples\UITest.Web\OlapWebService.asmx.cs">
       <DependentUpon>OlapWebService.asmx</DependentUpon>
     </Content>
@@ -82,7 +78,6 @@
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\Config.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evPivotGrid.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evChoices.cs" />
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evConfig.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evGauge.cs" />
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\evMdxDesigner.cs" />
@@ -106,15 +101,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\ServiceReferences.ClientConfig" />
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration.svcinfo" />
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\configuration91.svcinfo" />
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.disco" />
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\Reference.svcmap">
-    </Content>
     <Content Include="INSTALLDIR\Samples\UITest.Web\Default.htm" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="INSTALLDIR\Samples\UITest.Silverlight\SrvRef\Init\InitializeWebService.wsdl" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\Global.asax" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\httptest.aspx" />
   </ItemGroup>

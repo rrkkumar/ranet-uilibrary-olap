@@ -81,7 +81,6 @@
       <DependentUpon>Page.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SrvRef\Init\Reference.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -100,14 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\AppManifest.xml" />
-    <None Include="SrvRef\Init\InitializeWebService.wsdl" />
     <Content Include="ServiceReferences.ClientConfig" />
-    <Content Include="SrvRef\Init\configuration.svcinfo" />
-    <Content Include="SrvRef\Init\configuration91.svcinfo" />
-    <Content Include="SrvRef\Init\InitializeWebService.disco" />
-    <Content Include="SrvRef\Init\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\Ranet.AgOlap.Core\Ranet.AgOlap.Core.csproj">
