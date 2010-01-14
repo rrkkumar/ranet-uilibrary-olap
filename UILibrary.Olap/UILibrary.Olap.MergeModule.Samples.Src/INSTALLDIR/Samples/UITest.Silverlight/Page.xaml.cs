@@ -6,7 +6,7 @@
  {
  	public partial class Page : System.Windows.Controls.UserControl
  	{
- 		string WSDataUrl { get { return Config.Default.Data.OlapWebServiceUrl; } }
+ 		string WSDataUrl { get { return Config.OlapWebServiceUrl; } }
  		string ConnectionStringId { get { return Config.ConnectionStringId; } }
  
  		public Page()

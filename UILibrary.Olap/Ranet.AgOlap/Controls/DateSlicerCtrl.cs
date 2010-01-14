@@ -40,27 +40,14 @@ using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.AgOlap.Controls.Buttons;
 
 namespace Ranet.AgOlap.Controls
-{
-    public enum Direction
-    {
-        Horizontal,
-        Vertical,
-        Both
-    }
-    public class ChangedDirectionEventArgs : EventArgs
-    {
-        public readonly Direction Direction = Direction.Horizontal;
-
-        public ChangedDirectionEventArgs(Direction direction)
-        {
-            Direction = direction;
-        }
-    }
+{    
 
     public class SlicerCtrl : AgControlBase
     {
         private Grid m_DataGrid;
         private BusyControl m_Waiting;
+        private RanetHotButton m_Clear;
+        private Grid grdIsWaiting;
         private StackPanel m_Panel;
         private Dictionary<String, MemberData> m_LoadedMembers = new Dictionary<String, MemberData>();
         public const double CellWidth = 50;
@@ -70,6 +57,10 @@ namespace Ranet.AgOlap.Controls
         
         public SlicerCtrl()
         {
+            ScrollViewer viewer = new ScrollViewer();
+            viewer.BorderThickness = new Thickness(0);
+            viewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
+            viewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;                 
             Grid LayoutRoot = new Grid();
             m_DataGrid = new Grid();
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() {Width = GridLength.Auto});
@@ -79,11 +70,12 @@ namespace Ranet.AgOlap.Controls
             LayoutRoot.RowDefinitions.Add(new RowDefinition() {Height = GridLength.Auto});
             m_Panel = new StackPanel();
             m_Panel.Orientation = Orientation.Horizontal;
-            RanetHotButton m_Clear = new RanetHotButton();
+            m_Clear = new RanetHotButton();
             m_Clear.Width = 20;
             m_Clear.Height = 20;
             m_Clear.Content = "C";
             m_Clear.Click +=new RoutedEventHandler(m_Clear_Click);
+            m_Clear.Visibility = System.Windows.Visibility.Collapsed;
             LayoutRoot.Children.Add(m_Clear);
             Grid.SetRow(m_Clear,0);
             Grid.SetColumn(m_Clear,1);
@@ -94,19 +86,23 @@ namespace Ranet.AgOlap.Controls
             Grid.SetColumn(m_DataGrid, 0);
             Grid.SetRow(m_DataGrid, 2);
 
+            grdIsWaiting = new Grid() { Background = new SolidColorBrush(Color.FromArgb(125, 0xFF, 0xFF, 0xFF)) };
+            grdIsWaiting.Visibility = Visibility.Collapsed;
             m_Waiting = new BusyControl();
             m_Waiting.Text = Localization.Loading;
-            //LayoutRoot.Children.Add(m_Waiting);
-            //Grid.SetRow(m_Waiting, 1);
+            grdIsWaiting.Children.Add(m_Waiting);
+            LayoutRoot.Children.Add(grdIsWaiting);
+            Grid.SetColumnSpan(grdIsWaiting, LayoutRoot.ColumnDefinitions.Count > 0 ? LayoutRoot.ColumnDefinitions.Count : 1);
+            Grid.SetRowSpan(grdIsWaiting, LayoutRoot.RowDefinitions.Count > 0 ? LayoutRoot.RowDefinitions.Count : 1);
 
-            IsBusy = false;
-
-            this.Content = LayoutRoot;
-            //this.SlicerHeight = 9;
-            //this.SlicerWidth = 9;           
+            viewer.Content = LayoutRoot;
+            this.Content = viewer;
+            this.SlicerHeight = 10;
+            this.SlicerWidth = 10;           
             //this.m_DataGrid.MouseLeftButtonDown += new MouseButtonEventHandler(m_DataGrid_MouseLeftButtonDown);
             //this.m_DataGrid.MouseLeftButtonUp += new MouseButtonEventHandler(m_DataGrid_MouseLeftButtonUp);
             this.DirectionChanged += new EventHandler<ChangedDirectionEventArgs>(SlicerCtrl_DirectionChanged);
+            
             //this.m_Panel.MouseMove += new MouseEventHandler(m_Panel_MouseMove);
             //this.Content = m_DataGrid;
         }
@@ -130,9 +126,29 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        private bool Slicing
+        bool m_IsWaiting = false;
+        public bool IsWaiting
         {
-            get; set;
+            get { return m_IsWaiting; }
+            set
+            {
+                if (m_IsWaiting != value)
+                {
+                    if (value)
+                    {
+                        this.Cursor = Cursors.Wait;
+                        grdIsWaiting.Visibility = Visibility.Visible;
+                        this.m_Clear.Visibility = System.Windows.Visibility.Collapsed;
+                    }
+                    else
+                    {
+                        this.Cursor = Cursors.Arrow;
+                        grdIsWaiting.Visibility = Visibility.Collapsed;
+                        this.m_Clear.Visibility = System.Windows.Visibility.Visible;
+                    }                    
+                    m_IsWaiting = value;
+                }
+            }
         }
 
         protected bool NeedReload = true;        
@@ -200,36 +216,36 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        private string m_DayLevelUniqueName = String.Empty;
+        private string m_LevelUniqueName = String.Empty;
         /// <summary>
-        /// Уникальное имя уровня, хранящего дни
+        /// Уникальное имя уровня иерархии
         /// </summary>
-        public String DayLevelUniqueName
+        public String LevelUniqueName
         {
             get
             {
-                return m_DayLevelUniqueName;
+                return m_LevelUniqueName;
             }
             set
             {
-                m_DayLevelUniqueName = value;
+                m_LevelUniqueName = value;
                 NeedReload = true;
             }
-        }
+        }        
 
-        private string m_DateToUniqueNameTemplate = String.Empty;
+        private string m_FormatValue = String.Empty;
         /// <summary>
-        /// Шаблон для преобразования даты в уникальное имя
+        /// Строка форматирования для значения
         /// </summary>
-        public String DateToUniqueNameTemplate
+        public String FormatValue
         {
             get
             {
-                return m_DateToUniqueNameTemplate;
+                return m_FormatValue;
             }
             set
             {
-                m_DateToUniqueNameTemplate = value;
+                m_FormatValue = value;
                 NeedReload = true;
             }
         }
@@ -269,6 +285,7 @@ namespace Ranet.AgOlap.Controls
 
         void LoadMembers()
         {
+            this.IsWaiting = true;
             if (String.IsNullOrEmpty(Connection))
             {
                 // Сообщение в лог
@@ -279,14 +296,19 @@ namespace Ranet.AgOlap.Controls
                 return;
             }
 
-            if (!String.IsNullOrEmpty(DayLevelUniqueName))
+            if (String.IsNullOrEmpty(this.Query))
             {
-                String query = "Select {" + DayLevelUniqueName +
-                    ".Members} on 0, {} on 1 from " + OlapHelper.ConvertToQueryStyle(CubeName);
-
-                IsBusy = true;
-
-                MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                if (!String.IsNullOrEmpty(LevelUniqueName))
+                {
+                    String query = "Select {" + LevelUniqueName +
+                                   ".Members} on 0, {} on 1 from " + OlapHelper.ConvertToQueryStyle(CubeName);                   
+                    MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                    OlapDataLoader.LoadData(args, null);
+                }
+            }
+            else
+            {                
+                MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, Query);
                 OlapDataLoader.LoadData(args, null);
             }
         }
@@ -322,18 +344,19 @@ namespace Ranet.AgOlap.Controls
         #endregion Загрузчики
 
         void Loader_DataLoaded(object sender, DataLoaderEventArgs e)
-        {
-            IsBusy = false;
+        {            
 
             if (e.Error != null)
             {
                 LogManager.LogError(this, e.Error.ToString());
+                this.IsWaiting = false;
                 return;
             }
 
             if (e.Result.ContentType == InvokeContentType.Error)
             {
                 LogManager.LogError(this, e.Result.Content);
+                this.IsWaiting = false;
                 return;
             }
 
@@ -342,6 +365,7 @@ namespace Ranet.AgOlap.Controls
             OnDatesLoaded(cs_descr);
 
             UpdateGridCells();
+            this.IsWaiting = false;
         }
 
         
@@ -369,8 +393,9 @@ namespace Ranet.AgOlap.Controls
         void UpdateGridCells()
         {
             slicerChildren.Clear();
-            this.m_Panel.Children.Clear();
+            this.m_Panel.Children.Clear();            
             this.m_DataGrid.Children.Clear();
+            
             if (this.Direction == Controls.Direction.Vertical)
             {
                 m_Panel.Orientation = Orientation.Vertical;
@@ -382,6 +407,8 @@ namespace Ranet.AgOlap.Controls
                     {
                         RanetToggleButton button = new RanetToggleButton();
                         button.ButtonId = i;
+                        button.Height = double.NaN;
+                        button.Width = double.NaN;
                         button.Checked += new RoutedEventHandler(button_Checked);
                         button.Unchecked += new RoutedEventHandler(button_Unchecked);
                         ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
@@ -407,6 +434,8 @@ namespace Ranet.AgOlap.Controls
                     {
                         RanetToggleButton button = new RanetToggleButton();
                         button.ButtonId = i;
+                        button.Height = double.NaN;
+                        button.Width = double.NaN;                        
                         button.Checked += new RoutedEventHandler(button_Checked);
                         button.Unchecked += new RoutedEventHandler(button_Unchecked);
                         ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
@@ -442,6 +471,8 @@ namespace Ranet.AgOlap.Controls
                         {
                             RanetToggleButton button = new RanetToggleButton();
                             button.ButtonId = i;
+                            button.Height = double.NaN;
+                            button.Width = double.NaN;                        
                             button.Checked += new RoutedEventHandler(button_Checked);
                             button.Unchecked += new RoutedEventHandler(button_Unchecked);
                             ToolTipService.SetToolTip(button, enumerator.Current.Value.Caption);
@@ -514,7 +545,12 @@ namespace Ranet.AgOlap.Controls
 
         protected virtual void ApplySelection()
         {            
-        }       
+        } 
+      
+        protected virtual string GetFormattedValue()
+        {
+            return string.Empty;
+        }
 
         bool m_IsReadyToSelection = false;
         public bool IsReadyToSelection
@@ -524,5 +560,22 @@ namespace Ranet.AgOlap.Controls
                 return m_IsReadyToSelection;
             }
         }       
+    }
+
+    public enum Direction
+    {
+        Horizontal,
+        Vertical,
+        Both
+    }
+
+    public class ChangedDirectionEventArgs : EventArgs
+    {
+        public readonly Direction Direction = Direction.Horizontal;
+
+        public ChangedDirectionEventArgs(Direction direction)
+        {
+            Direction = direction;
+        }
     }
 }

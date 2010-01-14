@@ -32,6 +32,8 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		void BindData()
 		{
+			tbOlapWebServiceUrl.Text=Config.OlapWebServiceUrl;
+			
 			foreach (var pi in Config.Default.Data.GetType().GetProperties())
 			{
 				var myBinding = new Binding("Data."+pi.Name);
@@ -62,6 +64,7 @@ namespace UILibrary.Olap.UITestApplication
 		}
 		private void CheckConnection_Click(object sender, RoutedEventArgs e)
 		{
+			tbLastError.Text="";
 			CheckedInfo.Text = "Connection checking started...";
 			Config.Init
 			(ConnectionStringId, tbOLAPConnectionString.Text
@@ -70,7 +73,7 @@ namespace UILibrary.Olap.UITestApplication
 				try
 				{
 					tbOLAPConnectionString.Text=Config.Default.Data.OLAPConnectionString;
-					CheckedInfo.Text = @"Connection has been succesfully checked.";
+					CheckedInfo.Text = @"Connection has been succesfully set and checked.";
 					//System.Windows.Browser.HtmlPage.Window.SetProperty("status","Done!");
 					//initCubeChoiceButton_Click(null, null);
 					//initmdxDesignerButton_Click(null, null);
@@ -85,6 +88,7 @@ namespace UILibrary.Olap.UITestApplication
 			, () =>
 			{
 				CheckedInfo.Text = "There were errors while connection checking....";
+				tbLastError.Text = Config.LastError;
 			}
 			);
 		}

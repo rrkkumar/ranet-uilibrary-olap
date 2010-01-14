@@ -101,11 +101,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="INSTALLDIR\Samples\UITest.Silverlight\ServiceReferences.ClientConfig" />
-    <Content Include="INSTALLDIR\Samples\UITest.Web\Default.htm" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="INSTALLDIR\Samples\UITest.Web\Default.aspx" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\Global.asax" />
     <Content Include="INSTALLDIR\Samples\UITest.Web\httptest.aspx" />
+    <Content Include="INSTALLDIR\Samples\UITest.Web\SilverliteApplication.htm" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="INSTALLDIR\Samples\UITest.Web\App_Data\" />

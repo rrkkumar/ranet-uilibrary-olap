@@ -20,6 +20,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Services;
@@ -37,47 +38,56 @@ namespace UILibrary.Olap.UITestApplication.Web
 	// [System.Web.Script.Services.ScriptService]
 	public class OlapWebService : Ranet.Web.Olap.OlapWebServiceBase
 	{
-		string SetConnectionString(string schema)
+		string SetConnectionString(string argument)
 		{
-			var err = "Argument Schema must be ConnectionId=ConnectionString";
-			if (string.IsNullOrEmpty(schema))
-				throw new ArgumentException(err);
-
-			var ind = schema.IndexOf('=');
-			if (ind < 1)
-				throw new ArgumentException(err);
-
-			var connectionName = schema.Substring(0, ind);
-			var connectionString = schema.Substring(ind + 1);
-
-			if (string.IsNullOrEmpty(connectionName))
-				throw new ArgumentException(err);
-				
-			if (string.IsNullOrEmpty(connectionString))
-				connectionString = this.Application[connectionName] as string;
-
-			using (var connection = new AdomdConnection(connectionString))
+			try
 			{
-				string s = "";
-				connection.Open();
-				foreach (var c in connection.Cubes)
+				var err = "Argument Schema must be ConnectionId=ConnectionString";
+				if (string.IsNullOrEmpty(argument))
+					throw new ArgumentException(err);
+
+				var ind = argument.IndexOf('=');
+				if (ind < 1)
+					throw new ArgumentException(err);
+
+				var connectionName = argument.Substring(0, ind);
+				var connectionString = argument.Substring(ind + 1);
+
+				if (string.IsNullOrEmpty(connectionName))
+					throw new ArgumentException(err);
+
+				if (string.IsNullOrEmpty(connectionString))
+					connectionString = ConfigurationManager.ConnectionStrings[connectionName].ConnectionString;
+
+				using (var connection = new AdomdConnection(connectionString))
 				{
-					s += c.Name;
+					string s = "";
+					connection.Open();
+					foreach (var c in connection.Cubes)
+					{
+						s += c.Name;
+					}
 				}
+				this.Application[connectionName] = connectionString;
+				return connectionName+"="+connectionString;
 			}
-			this.Application[connectionName] = connectionString;
-			return connectionString;
+			catch (Exception E)
+			{
+				return E.ToString();
+			}
 		}
 		[WebMethod]
 		public override string PerformOlapServiceAction(String schemaType, string schema)
 		{
-			switch (schemaType)
+			if (string.IsNullOrEmpty(schemaType))
+				return "schemaType argument can be CheckExist,GetConnectionString,SetConnectionString and others but not empty.";
+			switch (schemaType.Trim().ToUpper())
 			{
-				case "CheckExist":
+				case "CHECKEXIST":
 					return "OK";
-				case "GetConnectionString":
+				case "GETCONNECTIONSTRING":
 					return this.Application[schema] as string;
-				case "SetConnectionString":
+				case "SETCONNECTIONSTRING":
 					return SetConnectionString(schema);
 				default:
 					var result = base.PerformOlapServiceAction(schemaType, schema);
