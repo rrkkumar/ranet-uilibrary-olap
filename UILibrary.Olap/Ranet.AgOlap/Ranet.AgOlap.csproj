@@ -75,8 +75,8 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Jayrock.AgJson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
+			<HintPath>..\dll\Jayrock.AgJson.dll</HintPath>
+		</Reference>
     <Reference Include="Ranet.AgZipLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
       <HintPath>..\dll\Ranet.AgZipLib.dll</HintPath>
     </Reference>

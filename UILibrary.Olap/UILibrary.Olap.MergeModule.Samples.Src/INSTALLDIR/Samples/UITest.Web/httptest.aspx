@@ -15,6 +15,19 @@ protected override void OnLoad (EventArgs args)
 {
  base.OnLoad (args);
  HttpContext.Current.Response.ContentType="text/plain";
+/*	  
+ msg=@"</p><p>Пробуем прочитать "+fn;
+ try
+ {
+  StreamReader sr=new StreamReader(fn);
+  msg+=@"</p><p>"+sr.ReadToEnd();
+  sr.Close();
+ }
+ catch(Exception E)
+ {
+  msg+=@"</p><p>Error: "+E.ToString();
+ }
+*/
 }
 </script>Call number: <%= ++RecC %>
 ServiceIdentity=<%= System.Security.Principal.WindowsIdentity.GetCurrent().Name %>

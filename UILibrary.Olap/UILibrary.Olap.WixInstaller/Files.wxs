@@ -4,10 +4,10 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id='C353' Guid='6f5d1397-6296-4890-af0e-f5b5e89e5664'>
+			<Component Id='C709' Guid='a0b48119-0e40-4913-8f8c-0ff0008febd3'>
 				<File
-					Id='I353'
-					Name='N353'
+					Id='I709'
+					Name='N709'
 					KeyPath='yes'
 					LongName='Readme.txt'
 					Source='..\Readme.txt'
@@ -18,10 +18,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR'>
-			<Component Id='C354' Guid='dd6f3e38-c371-4313-88bf-b713056aabd8'>
+			<Component Id='C710' Guid='915f9a72-be04-4a02-b1f2-40b90dc98263'>
 				<File
-					Id='I354'
-					Name='N354'
+					Id='I710'
+					Name='N710'
 					KeyPath='yes'
 					LongName='WhatsNew.txt'
 					Source='..\WhatsNew.txt'
@@ -32,8 +32,8 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C353'/>
-			<ComponentRef Id='C354'/>
+			<ComponentRef Id='C709'/>
+			<ComponentRef Id='C710'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

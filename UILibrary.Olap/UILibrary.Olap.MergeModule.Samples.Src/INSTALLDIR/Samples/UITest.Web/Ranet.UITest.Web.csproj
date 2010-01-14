@@ -68,7 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ClientBin\UITest.xap" />
-    <Content Include="Default.htm" />
+    <Content Include="SilverliteApplication.htm" />
+    <Content Include="Default.aspx" />
     <Content Include="Global.asax" />
     <Content Include="httptest.aspx" />
     <Content Include="OlapWebService.asmx" />
@@ -115,7 +116,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>false</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>1688</DevelopmentServerPort>
           <DevelopmentServerVPath>/Ranet.UITest.Web</DevelopmentServerVPath>

@@ -30,7 +30,6 @@ namespace UILibrary.Olap.UITestApplication
 {
 	public class Data
 	{
-		public string OlapWebServiceUrl { get; set; }
 		public string OLAPConnectionString { get; set; }
 
 		public string MdxQuery { get; set; }
@@ -58,11 +57,11 @@ namespace UILibrary.Olap.UITestApplication
 		void SetDefault()
 		{
 			BackGroundColor = 12;
-			
-			OLAPConnectionString = @"Data Source=.\sql2008;Initial Catalog=Adventure Works DW";
-			// OLAPConnectionString = string.Empty;
-			
-			OlapWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
+
+			// OLAPConnectionString = @"Data Source=.\sql2008;Initial Catalog=Adventure Works DW";
+			OLAPConnectionString = string.Empty;
+
+			//OlapWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
 
 			MdxQuery = @"select  [Product].[Product Categories].[Category]  DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 0 ,[Date].[Calendar].[Calendar Year]   DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 1 from [Adventure Works]
  where [Measures].[Sales Amount]
@@ -92,23 +91,27 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		public readonly static Config Default = new Config();
 		public readonly static string ConnectionStringId = "OLAPConnectionString";
-		
+		public static string OlapWebServiceUrl
+		{ get { return new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri; } }
+
+		public static string LastError = "";
+
 		public event PropertyChangedEventHandler PropertyChanged;
 		Data m_Data = null;
-		public Data Data 
+		public Data Data
 		{
 			get
 			{
-				if (m_Data==null)
-				 Load();
+				if (m_Data == null)
+					Load();
 				return m_Data;
 			}
 			set
 			{
-				m_Data=value;
+				m_Data = value;
 				Refresh();
 			}
-			
+
 		}
 		public static void Load()
 		{
@@ -130,10 +133,10 @@ namespace UILibrary.Olap.UITestApplication
 			}
 			catch (Exception E)
 			{
-				MessageBox.Show(E.ToString(), "Error", MessageBoxButton.OK);
+				LastError = E.ToString();
 			}
 		}
-		
+
 		public static void Save()
 		{
 			try
@@ -150,12 +153,12 @@ namespace UILibrary.Olap.UITestApplication
 			}
 			catch (Exception E)
 			{
-				MessageBox.Show(E.ToString(), "Error", MessageBoxButton.OK);
+				LastError = E.ToString();
 			}
 		}
 		public static void SetDefault()
 		{
-			Default.m_Data=new Data();
+			Default.m_Data = new Data();
 			Refresh();
 		}
 		public static void Refresh()
@@ -168,36 +171,48 @@ namespace UILibrary.Olap.UITestApplication
 			var service = Ranet.AgOlap.Services.ServiceManager.CreateService
 			 <Ranet.AgOlap.OlapWebService.OlapWebServiceSoapClient
 			 , Ranet.AgOlap.OlapWebService.OlapWebServiceSoap
-			 >(Default.Data.OlapWebServiceUrl);
+			 >(OlapWebServiceUrl);
 
-			service.PerformOlapServiceActionCompleted += 
-			(	object sender
+			service.PerformOlapServiceActionCompleted +=
+			(object sender
 			, Ranet.AgOlap.OlapWebService.PerformOlapServiceActionCompletedEventArgs e
 			) =>
 			{
 				if (e.Error == null)
 				{
-					if (e.Result == null)
+					if (string.IsNullOrEmpty(e.Result))
 					{
-						MessageBox.Show("Data service has returned 'null' as current ConnectionString", "Error", MessageBoxButton.OK);
+						LastError = "Data service has returned empty value.";
+						if (OnError != null)
+							OnError();
+					}
+					else if (!e.Result.StartsWith(connectionStringId + "="))
+					{
+						LastError = e.Result;
 						if (OnError != null)
 							OnError();
 					}
 					else
 					{
-						Default.Data.OLAPConnectionString = e.Result;
-						if (OnSuccess != null)
+						Default.Data.OLAPConnectionString = e.Result.Substring(connectionStringId.Length + 1);
+						if (string.IsNullOrEmpty(e.Result))
+						{
+							LastError = "Data service has returned empty connection string.";
+							if (OnError != null)
+								OnError();
+						}
+						else if (OnSuccess != null)
 							OnSuccess();
 					}
 				}
 				else
 				{
-					MessageBox.Show(e.Error.ToString(), "Error", MessageBoxButton.OK);
+					LastError = e.Error.ToString();
 					if (OnError != null)
 						OnError();
 				}
 			};
-			service.PerformOlapServiceActionAsync("SetConnectionString", connectionStringId+"="+connectionString);
+			service.PerformOlapServiceActionAsync("SetConnectionString", connectionStringId + "=" + connectionString);
 		}
 	}
 }
