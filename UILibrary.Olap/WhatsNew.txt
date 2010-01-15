@@ -1,3 +1,6 @@
+January 15, 2010
+- Published 1.2.6.0-6173 release
+
 January 12, 2010
 - Branched to Ranet.UILibrary.OLAP-1.2 (stabilization is started)
 - PivotGrid: Implemented custom cell condition designer (see UpdateablePivotGridControl.UseCellConditionsDesigner property).
