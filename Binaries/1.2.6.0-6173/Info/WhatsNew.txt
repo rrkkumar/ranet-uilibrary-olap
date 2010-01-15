@@ -1,5 +1,9 @@
 January 15, 2010
 - Published 1.2.6.0-6173 release
+- Improved Mouse Wheel Support. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=8&can=1
+- New implementation of Round gauge supports Silverlight binding
+- Sample application is refactored
+- Many other improvements, see code changes for more detail. http://code.google.com/p/ranet-uilibrary-olap/source/list?repo=v-1-2 
 
 January 12, 2010
 - Branched to Ranet.UILibrary.OLAP-1.2 (stabilization is started)

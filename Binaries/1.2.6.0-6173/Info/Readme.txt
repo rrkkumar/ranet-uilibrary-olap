@@ -39,7 +39,7 @@ You need to build the sample application before run it.
 You can use Visual Studio development webserver or can deploy it to IIS.
 Set "Startup project" to %InstallDir%\Samples\UITest.Web\UITest.Web.csproj.
 
-Please set correct OLAPConnectionString and Web Services virtual paths on "Config" tab or in Web.ñonfig.
+Please set correct OLAPConnectionString and Web Services virtual paths on "Config" tab or in Web.config.
 
 The sample application supposes that you have installed Microsoft sample datawarehouse database 
 AdventureWorksDW, you can find it at http://msftdbprodsamples.codeplex.com/.
