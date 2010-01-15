@@ -1,0 +1,394 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ranet.Olap.Core</name>
+    </assembly>
+    <members>
+        <member name="P:Ranet.Olap.Core.Cache2D`1.Columns_Size">
+            <summary>
+            Размер по горизонтали (не все колонки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Cache2D`1.Rows_Size">
+            <summary>
+            Размер по вертикали (не все строки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.Name">
+            <summary>
+            Название
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.Positions">
+            <summary>
+            Позиции на оси
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.MembersPropertiesNames">
+            <summary>
+            Названия свойств элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.CustomMembersPropertiesNames">
+            <summary>
+            Названия пользовательских свойств элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellData.Value">
+            <summary>
+            Значение ячейки
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellSetData.Axes">
+            <summary>
+            Оси
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellSetData.Cells">
+            <summary>
+            Ячейки
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.PositionData.Members">
+            <summary>
+            Элементы для данной позиции
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.ExportHelper">
+            <summary>
+            Предоставляет возможность экспорта сводной таблицы в формате Excel.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.ExportToExcel(Ranet.Olap.Core.Providers.PivotDataProvider)">
+            <summary>
+            Экспорт в Microsoft Excel.
+            </summary>
+            <param name="provider">Provider.</param>
+            <returns>Возращает строку с xml в формате "Spreadsheet".</returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteHeaders">
+            <summary>
+            Записывает заголовок Xml документа.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteDocumentProperties">
+            <summary>
+            Записывает свойства документа Excel.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteDefaultStyles">
+            <summary>
+            Добавляет стили по умолчанию для ячеек.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.SetColumnsWidth(System.Int32,System.Int32)">
+            <summary>
+            Задает ширину колонок для таблицы в Excel.
+            </summary>
+            <param name="rowColumnsCount">Количество колонок в области строк.</param>
+            <param name="colColumnsCount">Количество колонок в области колонок.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.SetWorksheetOptions">
+            <summary>
+            Задает параметры для страницы Excel.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteCell(System.String,System.String,System.String,System.Int32,System.Boolean)">
+            <summary>
+            Записывает ячейку.
+            </summary>
+            <param name="value">Значение ячейки.</param>
+            <param name="type">Тип значения в виде строки.</param>
+            <param name="styleId">ID стиля для ячейки.</param>
+            <param name="indexColumn">Индекс ячейки в строке.</param>
+            <param name="ticked">true, если нужно преде значением добавить ticked(').</param>
+            <returns>Возращает XmlElement с ячейкой (cell).</returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteFilters">
+            <summary>
+            Добавляет фильтры.
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteColumnsByPositions(System.Int32)">
+            <summary>
+            Записывает область колонок используя CellSetDataProvider по позициям (Positions).
+            </summary>
+            <param name="startColumn">Колонка с которой начинать запись ячеек.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteColumns(System.Int32)">
+            <summary>
+            Записывает область колонок.
+            </summary>
+            <param name="startColumn">Колонка, с которой начинать запись ячеек.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteColumnsAreaRow(System.Collections.Generic.List{Ranet.Olap.Core.Providers.PivotMemberItem},System.Int32,System.Int32)">
+            <summary>
+            Записывает строку из области колонок.
+            </summary>
+            <param name="members"></param>
+            <param name="startColumn">Начальная колонка.</param>
+            <param name="rowIndex">Номер записываемой строки.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteRowsByPositions(System.Int32)">
+            <summary>
+            Записывает область строк используя CellSetDataProvider по позициям (Positions).
+            </summary>
+            <param name="columnsCount">Количество колонок в области значений.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteRows(System.Int32)">
+            <summary>
+            Записывает область строк и значания построчно.
+            </summary>
+            <param name="columnsCount">Количество колонок в области значений.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteRowMembers(System.Collections.Generic.List{Ranet.Olap.Core.Providers.PivotMemberItem},System.Int32)">
+            <summary>
+            Записывает строку из области строк и строку из области значений.
+            </summary>
+            <param name="members"></param>
+            <param name="row">Номер строки.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.GetNumberFormat(System.String)">
+            <summary>
+            Получает Формат строки по DisplayValue
+            </summary>
+            <param name="displayValue"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.WriteDataRow(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Добавить строку со значениями.
+            </summary>
+            <param name="row">Номер строки.</param>
+            <param name="columnsCount">Количество колонок в области значений.</param>
+            <param name="startColumn">Начальная колонка, для области значений.</param>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.FindStyle(System.String,System.String,System.Boolean)">
+            <summary>
+            Ищет стиль по параметрам.
+            </summary>
+            <param name="color">Цвет.</param>
+            <param name="numberFormate">Формат строки.</param>
+            <param name="isProtect">true, если ячейка защищенная.</param>
+            <returns>Id стиля.</returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.ExportHelper.AddStyle(System.String,System.String,System.String,System.Boolean,System.Boolean,System.Drawing.Font)">
+            <summary>
+            Добовляет стиль.
+            </summary>
+            <param name="styleId">ID стиля.</param>
+            <param name="backcolor">Цвет фоня для ячейки.</param>
+            <param name="numberFormat">Формат строки.</param>
+            <param name="protect">true, если ячейка защищенная.</param>
+            <param name="borderPresence">Присутсвие рамки.</param>
+            <param name="font">Шрифт.</param>
+        </member>
+        <member name="T:Ranet.Olap.Core.Localization">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.MetadataResponseException_CubeNotFound">
+            <summary>
+              Looks up a localized string similar to Cube with name &apos;{0}&apos; not found. Connection: {1}..
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.MetadataResponseException_DimensionByUniqueName_InCube_NotFound">
+            <summary>
+              Looks up a localized string similar to Dimension with unique name &apos;{0}&apos; not found in cube &apos;{1}&apos;. Connection: {2}..
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.MetadataResponseException_HierarchyByUniqueName_InCube_NotFound">
+            <summary>
+              Looks up a localized string similar to Hierarchy with unique name &apos;{0}&apos; not found in cube &apos;{1}&apos;. Connection: {2}..
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.MetadataResponseException_HierarchyByUniqueName_InDimension_NotFound">
+            <summary>
+              Looks up a localized string similar to Hierarchy with unique name &apos;{0}&apos; not found in dimension &apos;{1}&apos;. Connection: {2}..
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Localization.MetadataResponseException_LevelByUniqueName_InHierarchy_NotFound">
+            <summary>
+              Looks up a localized string similar to Level with unique name &apos;{0}&apos; not found in hierarchy &apos;{1}&apos;. Connection: {2}..
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.Metadata.CubeDefInfo">
+            <summary>
+            Класс, прделоставляющий информацию о кубе
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.Metadata.HierarchyInfo">
+            <summary>
+            Класс, прделоставляющий информацию об иерархии
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет [] ели нужно
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие [])
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertSubCubeToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет () еcли нужно.
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertSubCubeToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие ())
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellInfo.GetTuple">
+            <summary>
+            Возвращает тапл для ячейки. Ключ: имя иерархии; Значение: элемент
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellInfo.GetShortTupleToStr">
+            <summary>
+            Возвращает в виде строки крайние координаты ячейки
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellInfo.Tuple">
+            <summary>
+            Тапл для ячейки. Ключ: имя иерархии; Значение: уникальное имя элемента
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellSetDataProvider.Columns_Size">
+            <summary>
+            Количество элементов на последней линии в колонках
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellSetDataProvider.Rows_Size">
+            <summary>
+            Количество элементов на последней линии в строках
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.CellSetDescriptionProvider.m_HierarchiesToLevelsCache">
+            <summary>
+            Внутренний кэш. Ключ - уник. имя уровня, значение - уник. имя иерархии
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellSetDescriptionProvider.CreateMemberDescription(Microsoft.AnalysisServices.AdomdClient.Member)">
+            <summary>
+            Формирует описание для элемента
+            </summary>
+            <param name="member"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellSetDescriptionProvider.GetMemberPropertyValue(Microsoft.AnalysisServices.AdomdClient.Member,System.String)">
+            <summary>
+            Возвращает значение свойства для элемента
+            </summary>
+            <param name="member"></param>
+            <param name="propName"></param>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellSetDescriptionProvider.Connection">
+            <summary>
+            Information on Connection
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.ClientServer.MdxQueryArgs.Connection">
+            <summary>
+            Соединение
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.ClientServer.MdxQueryArgs.SessionId">
+            <summary>
+            ID сессии для MS AS
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.MemberInfo.IsCalculated">
+            <summary>
+            Member is calculated
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.MemberActions.HistoryManager.CutRight">
+            <summary>
+            Удаляет все элементы истории, стоящие за текущим
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.MemberActions.HistoryManager.CurrentHistoryItem">
+            <summary>
+            Текущий элемент истории
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.MembersAreaInfo.m_DrillDepth">
+            <summary>
+            Область строк: Ключ - номер колонки; значение - максимальная глубина DrillDown
+            Область столбцов: Ключ - номер строки; значение - максимальная глубина DrillDown
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.OlapMetadataProvider.GetKPIs(System.String)">
+            <summary>
+            Возвращает список KPI
+            </summary>
+            <param name="cubeName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.OlapMetadataProvider.GetKPI(System.String,System.String)">
+            <summary>
+            Возвращает KPI
+            </summary>
+            <param name="cubeName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.OlapMetadataProvider.GetCubeMetadata(System.String,Ranet.Olap.Core.Metadata.MetadataQueryType)">
+            <summary>
+            Возвращает список кубов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.OlapMetadataProvider.GetCubes">
+            <summary>
+            Возвращает список кубов
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:Ranet.Olap.Core.XmlSerializationUtility">
+            <summary>
+            Helper класс для работы с XML
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.XmlSerializationUtility.Obj2XmlStr(System.Object)">
+            <summary>
+            Сериализует объект в строку XML
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.XmlSerializationUtility.Obj2XmlStr(System.Object,System.String)">
+            <summary>
+            Сериализует объект в строку XML
+            </summary>
+            <param name="obj"></param>
+            <param name="nameSpace"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

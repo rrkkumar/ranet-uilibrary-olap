@@ -1,0 +1,162 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ranet.AgOlap.Core</name>
+    </assembly>
+    <members>
+        <member name="P:Ranet.Olap.Core.Cache2D`1.Columns_Size">
+            <summary>
+            Размер по горизонтали (не все колонки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Cache2D`1.Rows_Size">
+            <summary>
+            Размер по вертикали (не все строки могут быть инициализированы!)
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.Name">
+            <summary>
+            Название
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.Positions">
+            <summary>
+            Позиции на оси
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.MembersPropertiesNames">
+            <summary>
+            Названия свойств элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.AxisData.CustomMembersPropertiesNames">
+            <summary>
+            Названия пользовательских свойств элементов
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellData.Value">
+            <summary>
+            Значение ячейки
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellSetData.Axes">
+            <summary>
+            Оси
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.CellSetData.Cells">
+            <summary>
+            Ячейки
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Data.PositionData.Members">
+            <summary>
+            Элементы для данной позиции
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.Metadata.CubeDefInfo">
+            <summary>
+            Класс, прделоставляющий информацию о кубе
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.Metadata.HierarchyInfo">
+            <summary>
+            Класс, прделоставляющий информацию об иерархии
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет [] ели нужно
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие [])
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertSubCubeToQueryStyle(System.String)">
+            <summary>
+            Преобразует строку в формат пригодный для запросов - обрамляет () еcли нужно.
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.OlapHelper.ConvertSubCubeToNormalStyle(System.String)">
+            <summary>
+            Преобразует строку из формата пригодный для запросов  в нормальный формат (например, убирает обрамляющие ())
+            </summary>
+            <param name="str"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellInfo.GetTuple">
+            <summary>
+            Возвращает тапл для ячейки. Ключ: имя иерархии; Значение: элемент
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Ranet.Olap.Core.Providers.CellInfo.GetShortTupleToStr">
+            <summary>
+            Возвращает в виде строки крайние координаты ячейки
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellInfo.Tuple">
+            <summary>
+            Тапл для ячейки. Ключ: имя иерархии; Значение: уникальное имя элемента
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellSetDataProvider.Columns_Size">
+            <summary>
+            Количество элементов на последней линии в колонках
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.CellSetDataProvider.Rows_Size">
+            <summary>
+            Количество элементов на последней линии в строках
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.ClientServer.MdxQueryArgs.Connection">
+            <summary>
+            Соединение
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.ClientServer.MdxQueryArgs.SessionId">
+            <summary>
+            ID сессии для MS AS
+            </summary>
+        </member>
+        <member name="P:Ranet.Olap.Core.Providers.MemberInfo.IsCalculated">
+            <summary>
+            Member is calculated
+            </summary>
+        </member>
+        <member name="F:Ranet.Olap.Core.Providers.MembersAreaInfo.m_DrillDepth">
+            <summary>
+            Область строк: Ключ - номер колонки; значение - максимальная глубина DrillDown
+            Область столбцов: Ключ - номер строки; значение - максимальная глубина DrillDown
+            </summary>
+        </member>
+        <member name="T:Ranet.Olap.Core.XmlSerializationUtility">
+            <summary>
+            Helper класс для работы с XML
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.XmlSerializationUtility.Obj2XmlStr(System.Object)">
+            <summary>
+            Сериализует объект в строку XML
+            </summary>
+        </member>
+        <member name="M:Ranet.Olap.Core.XmlSerializationUtility.Obj2XmlStr(System.Object,System.String)">
+            <summary>
+            Сериализует объект в строку XML
+            </summary>
+            <param name="obj"></param>
+            <param name="nameSpace"></param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
