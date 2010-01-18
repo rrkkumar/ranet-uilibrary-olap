@@ -520,6 +520,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove Sorting.
+        /// </summary>
+        public static string ContextMenu_ClearAxisSorting {
+            get {
+                return ResourceManager.GetString("ContextMenu_ClearAxisSorting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copy.
         /// </summary>
         public static string ContextMenu_Copy {
@@ -588,6 +597,24 @@ namespace Ranet.AgOlap {
         public static string ContextMenu_ShowMDX {
             get {
                 return ResourceManager.GetString("ContextMenu_ShowMDX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting by Measure.
+        /// </summary>
+        public static string ContextMenu_SortingByMeasure {
+            get {
+                return ResourceManager.GetString("ContextMenu_SortingByMeasure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting by Property.
+        /// </summary>
+        public static string ContextMenu_SortingByProperty {
+            get {
+                return ResourceManager.GetString("ContextMenu_SortingByProperty", resourceCulture);
             }
         }
         
@@ -2246,6 +2273,24 @@ namespace Ranet.AgOlap {
         public static string ShowValue_Check {
             get {
                 return ResourceManager.GetString("ShowValue_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure for sorting is not selected. Please select Measure in dropdown list..
+        /// </summary>
+        public static string SortingPropertiesDialog_MeasureNotSelected_Message {
+            get {
+                return ResourceManager.GetString("SortingPropertiesDialog_MeasureNotSelected_Message", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting Settings.
+        /// </summary>
+        public static string SortingSettingsDialog_Caption {
+            get {
+                return ResourceManager.GetString("SortingSettingsDialog_Caption", resourceCulture);
             }
         }
         

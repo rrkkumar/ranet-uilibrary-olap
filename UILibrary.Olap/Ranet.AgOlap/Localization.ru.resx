@@ -1061,4 +1061,19 @@
   <data name="Images_Label" xml:space="preserve">
     <value>Изображения:</value>
   </data>
+  <data name="SortingSettingsDialog_Caption" xml:space="preserve">
+    <value>Настройки сортировки</value>
+  </data>
+  <data name="ContextMenu_SortingByMeasure" xml:space="preserve">
+    <value>Сортировка по мере</value>
+  </data>
+  <data name="ContextMenu_SortingByProperty" xml:space="preserve">
+    <value>Сортировка по свойству</value>
+  </data>
+  <data name="ContextMenu_ClearAxisSorting" xml:space="preserve">
+    <value>Удалить сортировку</value>
+  </data>
+  <data name="SortingPropertiesDialog_MeasureNotSelected_Message" xml:space="preserve">
+    <value>Не выбрана мера для сортировки. Пожалуйста выберете меру из выпадающего списка.</value>
+  </data>
 </root>

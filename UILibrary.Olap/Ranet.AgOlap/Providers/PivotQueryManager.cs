@@ -200,6 +200,28 @@ namespace Ranet.AgOlap.Providers
             return result;
         }
 
+        void AddCurrentStateToHistory()
+        {
+            // Удаляем все элементы истории, стоящие за текущим
+            History.CutRight();
+            HistoryItem clone = null;
+            if (History.CurrentHistoryItem != null)
+            {
+                // Клонируем текущий элемент истории чтобы действие добавлялось уже в клон
+                clone = (HistoryItem)(History.CurrentHistoryItem.Clone());
+            }
+            else
+            {
+                // Добавляем пустой элемент истории
+                HistoryItem first = new HistoryItem();
+                History.AddHistoryItem(first);
+
+                clone = new HistoryItem();
+            }
+
+            History.AddHistoryItem(clone);
+        }
+
         public String PerformMemberAction(PerformMemberActionArgs args)
         {
             if (args != null)
@@ -210,24 +232,7 @@ namespace Ranet.AgOlap.Providers
                     case MemberActionType.Collapse:
                     case MemberActionType.DrillDown:
                     case MemberActionType.DrillUp:
-                        // Удаляем все элементы истории, стоящие за текущим
-                        History.CutRight();
-                        HistoryItem clone = null;
-                        if (History.CurrentHistoryItem != null)
-                        {
-                            // Клонируем текущий элемент истории чтобы действие добавлялось уже в клон
-                            clone = (HistoryItem)(History.CurrentHistoryItem.Clone());
-                        }
-                        else
-                        {
-                            // Добавляем пустой элемент истории
-                            HistoryItem first = new HistoryItem();
-                            History.AddHistoryItem(first);
-
-                            clone = new HistoryItem();
-                        }
-
-                        History.AddHistoryItem(clone);
+                        AddCurrentStateToHistory();
                         break;
                 }
 
@@ -619,6 +624,9 @@ namespace Ranet.AgOlap.Providers
         public bool HideEmptyColumns { get; set; }
         public bool RotateAxes { get; set; }
 
+        public SortDescriptor Axis0_MeasuresSort = null;
+        public SortDescriptor Axis1_MeasuresSort = null;
+
         public virtual String ExportToExcel()
         {
             return String.Empty;
@@ -823,13 +831,18 @@ namespace Ranet.AgOlap.Providers
                 axisExpression = new MdxNonEmptyExpression(axisExpression);
             }
             */
-            if (History.CurrentHistoryItem.ColumnsActionChain.Equals(actions) && HideEmptyColumns)
+            if (History.CurrentHistoryItem.ColumnsActionChain.Equals(actions))
             {
-                ax.NonEmpty = true;
+                axisExpression = SortExpression(axisExpression, Axis0_MeasuresSort);
+                if(HideEmptyColumns)
+                    ax.NonEmpty = true;
             }
-            if (History.CurrentHistoryItem.RowsActionChain.Equals(actions) && HideEmptyRows)
+
+            if (History.CurrentHistoryItem.RowsActionChain.Equals(actions))
             {
-                ax.NonEmpty = true;
+                axisExpression = SortExpression(axisExpression, Axis1_MeasuresSort);
+                if(HideEmptyRows)
+                    ax.NonEmpty = true;
             }
 
             return new MdxAxis(
@@ -841,6 +854,31 @@ namespace Ranet.AgOlap.Providers
             {
                 NonEmpty = ax.NonEmpty
             };
+        }
+
+        MdxExpression SortExpression(MdxExpression expr, SortDescriptor descr)
+        {
+            if (descr == null)
+                return expr;
+            if (!String.IsNullOrEmpty(descr.SortBy))
+            {
+                String orderType = String.Empty;
+                if (descr.Type == SortTypes.Ascending)
+                    orderType = "ASC";
+                if (descr.Type == SortTypes.Descending)
+                    orderType = "DESC";
+
+                if (!String.IsNullOrEmpty(orderType))
+                {
+                    expr = new MdxFunctionExpression("ORDER",
+                    new MdxExpression[] {
+                                expr,
+                                new MdxObjectReferenceExpression(descr.SortBy),
+                                new MdxConstantExpression(orderType) 
+                            });
+                }
+            }
+            return expr;
         }
 
         private MdxExpression GetWrappedExpression(MdxExpression expr, IList<DrillActionContainer> actions)

@@ -401,7 +401,8 @@ namespace Ranet.AgOlap.Controls
                 m_Panel.Orientation = Orientation.Vertical;
                 List<string> values = new List<string>();
                 var enumerator = m_LoadedMembers.GetEnumerator();
-                for (int i = 0; i < this.SlicerHeight + 1; i++)
+                enumerator.MoveNext();
+                for (int i = 0; i < this.SlicerHeight; i++)
                 {
                     if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                     {
@@ -415,8 +416,7 @@ namespace Ranet.AgOlap.Controls
                         button.Content = enumerator.Current.Value.Caption;
                         slicerChildren.Add(i, button);
                     }
-                    enumerator.MoveNext();
-                    
+                    enumerator.MoveNext();                    
                 }            
                 foreach (var child in slicerChildren)
                 {
@@ -428,7 +428,8 @@ namespace Ranet.AgOlap.Controls
                 m_Panel.Orientation = Orientation.Horizontal;   
                 List<string> values = new List<string>();
                 var enumerator = m_LoadedMembers.GetEnumerator();
-                for (int i = 0; i < this.SlicerWidth + 1; i++)
+                enumerator.MoveNext();
+                for (int i = 0; i < this.SlicerWidth; i++)
                 {                  
                     if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                     {
@@ -454,23 +455,24 @@ namespace Ranet.AgOlap.Controls
             {
                 //m_DataGrid = new Grid();
                 var enumerator = m_LoadedMembers.GetEnumerator();
+                enumerator.MoveNext();
                 for (int i = 0; i < this.SlicerHeight; i++)
                 {
                     m_DataGrid.RowDefinitions.Add(new RowDefinition() {Height = GridLength.Auto } );                       
                 }
-                for (int j = 0; j < this.SlicerWidth + 1; j++)
+                for (int j = 0; j < this.SlicerWidth; j++)
                 {
                     m_DataGrid.ColumnDefinitions.Add(new ColumnDefinition() {Width = GridLength.Auto});                 
                 }
                 int count = 0;
                 for (int i = 0; i < this.SlicerHeight; i++)
                 {
-                    for (int j = 0; j < this.SlicerWidth + 1; j++)
+                    for (int j = 0; j < this.SlicerWidth; j++)
                     {
                         if (enumerator.Current.Value != null && !String.IsNullOrEmpty(enumerator.Current.Value.Caption))
                         {
                             RanetToggleButton button = new RanetToggleButton();
-                            button.ButtonId = i;
+                            button.ButtonId = count;
                             button.Height = double.NaN;
                             button.Width = double.NaN;                        
                             button.Checked += new RoutedEventHandler(button_Checked);
@@ -529,7 +531,8 @@ namespace Ranet.AgOlap.Controls
             {
                 var enumerator = m_LoadedMembers.GetEnumerator();
                 result = new Dictionary<string, MemberData>();              
-                int i = 1;
+                int i = 0;
+                enumerator.MoveNext();
                 do
                 {
                     if (m_slicedButtons.Contains(i))
@@ -544,7 +547,8 @@ namespace Ranet.AgOlap.Controls
         }
 
         protected virtual void ApplySelection()
-        {            
+        {
+            var variable = this.GetSelectedElements();
         } 
       
         protected virtual string GetFormattedValue()

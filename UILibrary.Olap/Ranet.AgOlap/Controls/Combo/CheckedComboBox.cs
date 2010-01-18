@@ -30,6 +30,7 @@ using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using System.Collections.Generic;
+using Ranet.AgOlap.Controls.General.Tree;
 
 namespace Ranet.AgOlap.Controls.Combo
 {
@@ -118,6 +119,21 @@ namespace Ranet.AgOlap.Controls.Combo
                 }
             }
             return str;
+        }
+
+        public bool IsWaiting
+        {
+            set
+            {
+                Items.Clear();
+                ItemsSource = null;
+                if (value)
+                {
+                    Items.Add(new WaitTreeControl() { Text = Localization.Loading });
+                    SelectedIndex = 0;
+                }
+                IsEnabled = !value;
+            }
         }
 
         void item_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

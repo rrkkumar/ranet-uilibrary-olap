@@ -28,6 +28,28 @@ namespace Ranet.Olap.Core.Providers
 {
     public class CellInfo
     {
+        public int CellsArea_Axis0_Coord = -1;
+        public int CellsArea_Axis1_Coord = -1;
+
+        public int Axis0_Coord
+        {
+            get { 
+                if(CellDescr != null)
+                    return CellDescr.Axis0_Coord;
+                return -1;
+            }
+        }
+
+        public int Axis1_Coord
+        {
+            get
+            {
+                if (CellDescr != null)
+                    return CellDescr.Axis1_Coord;
+                return -1;
+            }
+        }
+
         public readonly CellData CellDescr = null;
         public readonly MemberInfo ColumnMember = null;
         public readonly MemberInfo RowMember = null;

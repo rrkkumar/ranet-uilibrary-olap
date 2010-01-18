@@ -26,6 +26,13 @@ using System.Collections;
 
 namespace Ranet.Olap.Core.Providers
 {
+    public enum SortTypes
+    { 
+        None,
+        Ascending,
+        Descending
+    }
+
     public class MemberInfoCollection : ICollection<MemberInfo>
     {
         //private Dictionary<string, MemberInfo> m_Members = new Dictionary<string, MemberInfo>();
@@ -126,6 +133,7 @@ namespace Ranet.Olap.Core.Providers
 
         public void Add(MemberInfo item)
         {
+            item.MemberOrder = m_Members.Count;
             item.Parent = this.m_Owner;
             //if (m_Members.ContainsKey(item.UniqueName))
             //{
@@ -195,5 +203,10 @@ namespace Ranet.Olap.Core.Providers
         }
 
         #endregion
+
+        public void Sort(SortTypes type)
+        {
+            m_Members.Sort(new MemberInfo.SortComparer(type));
+        }
     }
 }

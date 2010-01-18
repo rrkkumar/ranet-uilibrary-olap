@@ -1064,4 +1064,19 @@ Please, recalculate data or cancel changes.</value>
   <data name="Images_Label" xml:space="preserve">
     <value>Images:</value>
   </data>
+  <data name="ContextMenu_SortingByProperty" xml:space="preserve">
+    <value>Sorting by Property</value>
+  </data>
+  <data name="SortingSettingsDialog_Caption" xml:space="preserve">
+    <value>Sorting Settings</value>
+  </data>
+  <data name="ContextMenu_SortingByMeasure" xml:space="preserve">
+    <value>Sorting by Measure</value>
+  </data>
+  <data name="ContextMenu_ClearAxisSorting" xml:space="preserve">
+    <value>Remove Sorting</value>
+  </data>
+  <data name="SortingPropertiesDialog_MeasureNotSelected_Message" xml:space="preserve">
+    <value>Measure for sorting is not selected. Please select Measure in dropdown list.</value>
+  </data>
 </root>

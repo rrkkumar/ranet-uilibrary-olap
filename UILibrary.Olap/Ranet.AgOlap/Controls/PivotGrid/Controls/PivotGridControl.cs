@@ -587,13 +587,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        public event EventHandler<ControlActionEventArgs<MemberInfo>> Members_PerformControlAction;
-        void Raise_PerformControlAction(ControlActionType action, MemberInfo info)
+        public event EventHandler<ControlActionEventArgs<MemberControl>> Members_PerformControlAction;
+        void Raise_PerformControlAction(ControlActionType action, MemberControl info)
         {
-            EventHandler<ControlActionEventArgs<MemberInfo>> handler = Members_PerformControlAction;
+            EventHandler<ControlActionEventArgs<MemberControl>> handler = Members_PerformControlAction;
             if (handler != null)
             {
-                handler(this, new ControlActionEventArgs<MemberInfo>(action, info));
+                handler(this, new ControlActionEventArgs<MemberControl>(action, info));
             }
         }
 
@@ -1026,7 +1026,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         //    DateTime stop = DateTime.Now;
         //    System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
         //}
-
 
 
         public void Initialize(CellSetDataProvider provider)
@@ -1997,7 +1996,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_CellControls_Dict.Clear();
 
             CellChangesCache recalculatedCache = OlapTransactionManager.GetPendingChanges(Connection);
+            //int columnIndex = CellsArea_FirstVisible_Coordinate.Column;
             int columnIndex = CellsArea_FirstVisible_Coordinate.Column;
+
             int layout_column_indx = 0;
             int layout_row_indx = 0;
 
@@ -2012,8 +2013,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 hasColumnsArea = false;
             }
 
+            int Axis0Coord = -1;
             for(int column = 0; column < columnsCount; column++)
             {
+                if(hasColumnsArea && ColumnsArea_LovestMemberControls.Count > column)
+                {
+                    Axis0Coord = ColumnsArea_LovestMemberControls[column].Member.MemberIndexInAxis;
+                }
+
                 int rowIndex = CellsArea_FirstVisible_Coordinate.Row;
                 layout_row_indx = 0;
                 int rowsCount = RowsArea_LovestMemberControls.Count;
@@ -2028,12 +2035,22 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     hasRowsArea = false;
                 }
 
+                int Axis1Coord = -1;
                 for (int row = 0; row < rowsCount; row++)
                 {
-                    CellInfo cell_info = layout.PivotProvider.Provider.GetCellInfo(columnIndex, rowIndex);
+                    if (hasRowsArea && RowsArea_LovestMemberControls.Count > row)
+                    {
+                        Axis1Coord = RowsArea_LovestMemberControls[row].Member.MemberIndexInAxis;
+                    }
+
+                    CellInfo cell_info = layout.PivotProvider.Provider.GetCellInfo(Axis0Coord, Axis1Coord);
+                    //CellInfo cell_info = layout.PivotProvider.Provider.GetCellInfo(columnIndex, rowIndex);
 
                     if (cell_info != null)
                     {
+                        cell_info.CellsArea_Axis0_Coord = CellsArea_FirstVisible_Coordinate.Column + column;
+                        cell_info.CellsArea_Axis1_Coord = CellsArea_FirstVisible_Coordinate.Row + row;
+
                         CellControl cell_Control = m_CellControls_Cache[layout_column_indx, layout_row_indx];
 
                         if (cell_Control != null)
@@ -2142,10 +2159,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         CustomContextMenu GetCurrentContextMenu(Point p)
         {
             m_ContextMenu = null; 
-            
+            PivotGridItem grid_item = null;
+
             if (AgControlBase.GetSLBounds(ItemsLayoutRoot).Contains(p))
             {
-                PivotGridItem grid_item = PivotGridItem.GetPivotGridItem(p);
+                grid_item = PivotGridItem.GetPivotGridItem(p);
                 if (grid_item != null)
                 {
                     if (grid_item is RowMemberControl)
@@ -2223,8 +2241,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 //return args.ContextMenu;
             }
 
-            return m_ContextMenu;
+            var handler = InitializeContextMenu;
+            CustomContextMenuEventArgs args = new CustomContextMenuEventArgs(m_ContextMenu, grid_item);
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+
+            return args.Menu;
         }
+
+        public event EventHandler<CustomContextMenuEventArgs> InitializeContextMenu;
 
         CustomContextMenu m_Rows_ContextMenu = null;
         public CustomContextMenu Rows_ContextMenu
@@ -2322,6 +2349,23 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 {
                     item.Shortcut = Localization.PivotGrid_Columns_Drilldown_ShortCut;
                 }
+                contextMenu.AddMenuItem(item);
+                item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+                contextMenu.AddMenuSplitter();
+
+                item = new ContextMenuItem(Localization.ContextMenu_SortingByProperty);
+                item.Tag = ControlActionType.SortingByProperty;
+                contextMenu.AddMenuItem(item);
+                item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+                item = new ContextMenuItem(Localization.ContextMenu_SortingByMeasure);
+                item.Tag = ControlActionType.SortingByValue;
+                contextMenu.AddMenuItem(item);
+                item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+                item = new ContextMenuItem(Localization.ContextMenu_ClearAxisSorting);
+                item.Tag = ControlActionType.ClearAxisSorting;
                 contextMenu.AddMenuItem(item);
                 item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
@@ -2431,7 +2475,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     }
                     if (item.Tag is ControlActionType)
                     {
-                        Raise_PerformControlAction((ControlActionType)(item.Tag), member_Control.Member);
+                        Raise_PerformControlAction((ControlActionType)(item.Tag), member_Control);
                         return;
                     }
                 }
@@ -3026,14 +3070,16 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         break;
                 }
 
-                // Координаты ячейки в CellSet
+                // Координаты ячейки в сетке
                 int layout_row_index = -1;
                 int layout_column_index = -1;
 
                 if (currentCell != null && currentCell.CellDescr != null)
                 {
-                    layout_column_index = currentCell.CellDescr.Axis0_Coord;
-                    layout_row_index = currentCell.CellDescr.Axis1_Coord;
+                    //Axis0_Coord = currentCell.CellDescr.Axis0_Coord;
+                    //Axis1_Coord = currentCell.CellDescr.Axis1_Coord;
+                    layout_column_index = currentCell.CellsArea_Axis0_Coord;
+                    layout_row_index = currentCell.CellsArea_Axis1_Coord;
 
                     //if (m_CellControls_Dict.ContainsKey(currentCell))
                     //{
@@ -3255,7 +3301,21 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     {
                         if (isNavigation)
                         {
-                            CellInfo cell_Info = m_LayoutProvider.PivotProvider.Provider.GetCellInfo(layout_column_index, layout_row_index);
+                            // Координаты ячейки в сетке
+                            int Axis0_Coord = -1;
+                            int lovest_column_index = layout_column_index - CellsArea_FirstVisible_Coordinate.Column;
+                            if (lovest_column_index >= 0 && m_ColumnsArea_LovestMemberControls.Count > lovest_column_index)
+                            {
+                                Axis0_Coord = m_ColumnsArea_LovestMemberControls[lovest_column_index].Member.MemberIndexInAxis;
+                            }
+                            int Axis1_Coord = -1;
+                            int lovest_row_index = layout_row_index - CellsArea_FirstVisible_Coordinate.Row;
+                            if (lovest_row_index >= 0 && m_RowsArea_LovestMemberControls.Count > lovest_row_index)
+                            {
+                                Axis1_Coord = m_RowsArea_LovestMemberControls[lovest_row_index].Member.MemberIndexInAxis;
+                            }
+
+                            CellInfo cell_Info = m_LayoutProvider.PivotProvider.Provider.GetCellInfo(Axis0_Coord, Axis1_Coord);
                             //cell = m_CellControls_Cache[layout_column_index, layout_row_index];
 
                             // устанавливаем фокус на новую ячейку либо если нажат Shift меняем выбранную область 
@@ -3585,10 +3645,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             if (cell1 != null && cell2 != null)
             {
-                int beginColumnIndex = Math.Min(cell1.CellDescr.Axis0_Coord, cell2.CellDescr.Axis0_Coord);
-                int endColumnIndex = Math.Max(cell1.CellDescr.Axis0_Coord, cell2.CellDescr.Axis0_Coord);
-                int beginRowIndex = Math.Min(cell1.CellDescr.Axis1_Coord, cell2.CellDescr.Axis1_Coord);
-                int endRowIndex = Math.Max(cell1.CellDescr.Axis1_Coord, cell2.CellDescr.Axis1_Coord);
+                int beginColumnIndex = Math.Min(cell1.ColumnMember.Sorted_MemberIndexInAxis, cell2.ColumnMember.Sorted_MemberIndexInAxis);
+                int endColumnIndex = Math.Max(cell1.ColumnMember.Sorted_MemberIndexInAxis, cell2.ColumnMember.Sorted_MemberIndexInAxis);
+                int beginRowIndex = Math.Min(cell1.RowMember.Sorted_MemberIndexInAxis, cell2.RowMember.Sorted_MemberIndexInAxis);
+                int endRowIndex = Math.Max(cell1.RowMember.Sorted_MemberIndexInAxis, cell2.RowMember.Sorted_MemberIndexInAxis);
 
                 //beginRowIndex и endRowIndex могут быть равны -1 (когда только одна ось в запросе)
                 if (beginColumnIndex >= 0 &&
@@ -3600,15 +3660,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         for (int rowIndex = beginRowIndex; rowIndex <= endRowIndex; rowIndex++)
                         {
 
-                            CellInfo cell_Info = m_LayoutProvider.PivotProvider.Provider.GetCellInfo(columnIndex, rowIndex);
-                            if (cell_Info != null && m_CellControls_Dict.ContainsKey(cell_Info))
+                            CellInfo cell_Info = m_LayoutProvider.PivotProvider.Provider.GetCellInfo(m_LayoutProvider.PivotProvider.Provider.GetAxisCoord(0, columnIndex), 
+                                m_LayoutProvider.PivotProvider.Provider.GetAxisCoord(1, rowIndex));
+                            if (cell_Info != null)
                             {
-                                CellControl cell_Control = m_CellControls_Dict[cell_Info];
-                                if (cell_Control != null)
+                                if (m_CellControls_Dict.ContainsKey(cell_Info))
                                 {
-                                    cell_Control.IsSelected = true;
-                                    selectionArea.Add(cell_Info);
+                                    CellControl cell_Control = m_CellControls_Dict[cell_Info];
+                                    if (cell_Control != null)
+                                    {
+                                        cell_Control.IsSelected = true;
+                                    }
                                 }
+                                selectionArea.Add(cell_Info);
                             }
                         }
                     }
@@ -4060,6 +4124,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         {
             Column = column;
             Row = row;
+        }
+    }
+
+    public class CustomContextMenuEventArgs : EventArgs
+    {
+        public CustomContextMenu Menu = null;
+        public PivotGridItem GridItem = null;
+
+        public CustomContextMenuEventArgs(CustomContextMenu menu, PivotGridItem item)
+        {
+            Menu = menu;
+            GridItem = item;
         }
     }
 }

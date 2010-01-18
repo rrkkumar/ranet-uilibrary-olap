@@ -51,6 +51,176 @@ namespace Ranet.Olap.Core.Providers
         //    return null;
         //}
 
+        Dictionary<String, SortDescriptor> m_RowsSortInfo;
+        public Dictionary<String, SortDescriptor> RowsSortInfo
+        {
+            get
+            {
+                if (m_RowsSortInfo == null)
+                    m_RowsSortInfo = new Dictionary<string, SortDescriptor>();
+                 return m_RowsSortInfo;
+            }
+        }
+
+        Dictionary<String, SortDescriptor> m_ColumnsSortInfo;
+        public Dictionary<String, SortDescriptor> ColumnsSortInfo
+        {
+            get
+            {
+                if (m_ColumnsSortInfo == null)
+                    m_ColumnsSortInfo = new Dictionary<string, SortDescriptor>();
+                return m_ColumnsSortInfo;
+            }
+        }
+
+        public void RotateSortInfo()
+        {
+            var x = m_RowsSortInfo;
+            m_RowsSortInfo = m_ColumnsSortInfo;
+            m_ColumnsSortInfo = x;
+        }
+
+        public void ClearSort()
+        {
+            ClearSort(0);
+            ClearSort(1);
+        }
+
+        public void ClearSort(int axisNum)
+        {
+            if (axisNum == 0)
+            {
+                m_Columns = null;
+                m_Columns_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_Columns_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_ColumnsSortInfo = null;
+            }
+            if (axisNum == 1)
+            {
+                m_Rows = null;
+                m_Rows_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_Rows_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_RowsSortInfo = null;
+            }
+        }
+        
+        public void Sort(int axisNum, String hierarchyUniquqName, SortDescriptor sortDescr)
+        {
+            if (axisNum == 0 || axisNum == 1)
+            {
+                MemberInfoCollection members = axisNum == 0 ? Columns : Rows;
+                Dictionary<int, MemberInfo> sorted_LowestMembers = axisNum == 0 ? m_Columns_Sorted_LowestMembers : m_Rows_Sorted_LowestMembers;
+                Dictionary<String, SortDescriptor> sortInfo = axisNum == 0 ? ColumnsSortInfo : RowsSortInfo;
+
+                // Если описатель для сортировки null, то применяем сортировку None
+                if (sortDescr == null)
+                    sortDescr = new SortDescriptor();
+
+                // Коллекция подлежит сортировки если:
+                //  тип сортировки - None
+                //  либо точно задано свойство по которому идет сортировка
+                bool need_Sort = sortDescr.Type == SortTypes.None || (sortDescr.Type != SortTypes.None && !String.IsNullOrEmpty(sortDescr.SortBy));
+
+                if (need_Sort)
+                {
+                    Sort(members, hierarchyUniquqName, sortDescr.Type);
+                    // Формируем отсортированные индексы
+                    sorted_LowestMembers.Clear();
+                    BuildSortedIndexes(axisNum, members);
+                }
+
+                // Если сортировка None то после сортировки информацию о ней удаляем из списка
+                if (sortDescr.Type == SortTypes.None)
+                {
+                    sortInfo.Remove(hierarchyUniquqName);
+                }
+                else
+                {
+                    // Если сортировка выполнялась, то информацию о ней сохраняем
+                    if (need_Sort)
+                    {
+                        if (sortInfo.ContainsKey(hierarchyUniquqName))
+                            sortInfo[hierarchyUniquqName] = sortDescr;
+                        else
+                            sortInfo.Add(hierarchyUniquqName, sortDescr);
+                    }
+                }
+            }
+        }
+
+        void BuildSortedIndexes(int axisNum, MemberInfoCollection list)
+        {
+            foreach (var item in list)
+            {
+                if (item.Children.Count == 0)
+                {
+                    if (axisNum == 0)
+                    {
+                        int x = m_Columns_Sorted_LowestMembers.Count;
+                        m_Columns_Sorted_LowestMembers.Add(x, item);
+                        item.Sorted_MemberIndexInAxis = x;
+                    }
+                    if (axisNum == 1)
+                    {
+                        int x = m_Rows_Sorted_LowestMembers.Count;
+                        m_Rows_Sorted_LowestMembers.Add(x, item);
+                        item.Sorted_MemberIndexInAxis = x;
+                    }
+
+                    BuildSortedIndexes(axisNum, item.DrilledDownChildren);
+                }
+                else
+                {
+                    BuildSortedIndexes(axisNum, item.Children);
+                    BuildSortedIndexes(axisNum, item.DrilledDownChildren);
+                }
+            }
+        }
+
+        void Sort(MemberInfoCollection list, String hierarchyUniquqName, SortTypes type)
+        {
+            // Сортируем коллекцию, если она содержит элементы, принадолежащие данной иерархии. В протипном случае идем вглубь в дочерние.
+            if (list != null && list.Count > 0)
+            {
+                if (list[0].HierarchyUniqueName == hierarchyUniquqName)
+                {
+                    list.Sort(type);
+                    // Сортируем так же элементы вложенных DrilledDown - коллекций
+                    foreach (var member in list)
+                    {
+                        Sort(member.DrilledDownChildren, hierarchyUniquqName, type);
+                    }
+                }
+                else
+                {
+                    // Сортируем вглубь
+                    foreach (var member in list)
+                    {
+                        Sort(member.DrilledDownChildren, hierarchyUniquqName, type);
+                    }
+
+                    // Сортируем вглубь
+                    foreach (var member in list)
+                    {
+                        Sort(member.Children, hierarchyUniquqName, type);
+                    }
+                }
+            }
+        }
+
+        public int GetAxisCoord(int axisNum, int sorted_AxisCoord)
+        {
+            if (axisNum == 0 && m_Columns_Sorted_LowestMembers.ContainsKey(sorted_AxisCoord))
+            {
+                return m_Columns_Sorted_LowestMembers[sorted_AxisCoord].MemberIndexInAxis;
+            }
+            if (axisNum == 1 && m_Rows_Sorted_LowestMembers.ContainsKey(sorted_AxisCoord))
+            {
+                return m_Rows_Sorted_LowestMembers[sorted_AxisCoord].MemberIndexInAxis;
+            } 
+            return -1;
+        }
+
         Dictionary<CellData, CellInfo> m_CellInfos = new Dictionary<CellData, CellInfo>();
         public CellInfo GetCellInfo(int column_index, int row_index)
         {
@@ -169,7 +339,9 @@ namespace Ranet.Olap.Core.Providers
             }
         }
 
-        List<MemberInfo> m_Columns_LowestMembers = new List<MemberInfo>();
+        Dictionary<int, MemberInfo> m_Columns_LowestMembers = new Dictionary<int, MemberInfo>();
+        Dictionary<int, MemberInfo> m_Columns_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+
         /// <summary>
         /// Количество элементов на последней линии в колонках
         /// </summary>
@@ -179,7 +351,10 @@ namespace Ranet.Olap.Core.Providers
                 return m_Columns_LowestMembers.Count;
             }
         }
-        List<MemberInfo> m_Rows_LowestMembers = new List<MemberInfo>();
+
+        Dictionary<int, MemberInfo> m_Rows_LowestMembers = new Dictionary<int, MemberInfo>();
+        Dictionary<int, MemberInfo> m_Rows_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+
         /// <summary>
         /// Количество элементов на последней линии в строках
         /// </summary>
@@ -194,9 +369,15 @@ namespace Ranet.Olap.Core.Providers
         private MemberInfoCollection CreateFields(int axisNum)
         {
             if (axisNum == 0)
+            {
                 m_Columns_LowestMembers.Clear();
+                m_Columns_Sorted_LowestMembers.Clear();
+            }
             if (axisNum == 1)
+            {
                 m_Rows_LowestMembers.Clear();
+                m_Rows_Sorted_LowestMembers.Clear();
+            }
 
             MemberInfoCollection fields = new MemberInfoCollection(null);
             Dictionary<int, List<MemberInfo>> tmp = new Dictionary<int, List<MemberInfo>>();
@@ -225,14 +406,39 @@ namespace Ranet.Olap.Core.Providers
 
                         // Если PARENT_UNIQUE_NAME запрашивалось то берем его, иначе будем спрашивать у куба 
                         String parentUniqueName = GetMemberPropertyValue(member, "PARENT_UNIQUE_NAME");
-                        
+
+                        MemberInfo prevInLine = line.Count > 0 ? line[line.Count - 1] : null;
                         // Если родитель является DrilledDown, то данный элемент должен попасть в коллекцию DrilledDownChildren
                         MemberInfo parentInfo = null;
                         try
                         {
                             if (!String.IsNullOrEmpty(parentUniqueName))
                             {
-                                int posIndex = ReversePos(line, parentUniqueName);
+                                int posIndex = -1;
+                                // Ищем с конца родителя на данной линии.
+                                // posIndex = ReversePos(line, parentUniqueName);
+                                for (int ix = line.Count - 1; ix >= 0; ix--)
+                                {
+                                    MemberInfo mi = line[ix];
+                                    if (mi.UniqueName == parentUniqueName)
+                                    {
+                                        posIndex = ix;
+                                        break;
+                                    }
+                                    // Если пошли элементы, с более старших уровней, то поиск прекращаем
+                                    if (mi.LevelDepth < member.LevelDepth)
+                                    {
+                                        break;
+                                    }
+                                    // Если пошли элементы, с более младших уровней, то поиск прекращаем
+                                    if (mi.LevelDepth > member.LevelDepth)
+                                    {
+                                        if((mi.Parent == null) || (mi.Parent != null && mi.Parent.ParentUniqueName != parentUniqueName))
+                                            break;
+                                    }
+
+                                }
+
                                 if (posIndex > -1)
                                 {
                                     parentInfo = line[posIndex];
@@ -261,7 +467,6 @@ namespace Ranet.Olap.Core.Providers
                                 // Иначе он может попасть в коллекцию DrilledDown если у предыдущего элемента установлен флаг DrilledDown 
                                 if (position_Index > 0)
                                 {
-                                    MemberInfo prevInLine = line[line.Count - 1];
                                     if (prevInLine != null && prevInLine.UniqueName != member.UniqueName && prevInLine.DrilledDown)
                                     {
                                         // Для вычисляемых элементов свойство DrilledDown работает неправильно. И в этом случае считаем что для того чтобы элемент попал в коллекцию DrilledDown у него должна быть и глубина уровня больше чем у предыдущего
@@ -310,16 +515,23 @@ namespace Ranet.Olap.Core.Providers
                             if (i == (depth - 1))
                             {
                                 if (axisNum == 0)
-                                    m_Columns_LowestMembers.Add(field);
+                                {
+                                    m_Columns_LowestMembers.Add(position_Index, field);
+                                    m_Columns_Sorted_LowestMembers.Add(position_Index, field);
+                                }
                                 if (axisNum == 1)
-                                    m_Rows_LowestMembers.Add(field);
+                                {
+                                    m_Rows_LowestMembers.Add(position_Index, field);
+                                    m_Rows_Sorted_LowestMembers.Add(position_Index, field);
+                                }
+
+                                field.MemberIndexInAxis = field.Sorted_MemberIndexInAxis = position_Index;
                             }
                         }
                         else
                         {
                             line.Add(field);
                         }
-
 
                         if (field != null && !field.IsCalculated)
                         {
@@ -404,6 +616,7 @@ namespace Ranet.Olap.Core.Providers
             info.Unary_Operator = member.Unary_Operator;
 
             info.UniqueName = member.UniqueName;
+            info.ParentUniqueName = GetMemberPropertyValue(member, "PARENT_UNIQUE_NAME");
 
             // В коллекцию свойств добавляем Properties
             foreach (PropertyData pair in member.Properties)
@@ -562,6 +775,22 @@ namespace Ranet.Olap.Core.Providers
         */
 
         #endregion
+    }
+
+    /// <summary>
+    /// Класс описывает сортировку
+    /// </summary>
+    public class SortDescriptor
+    {
+        /// <summary>
+        /// Тип сортировки
+        /// </summary>
+        public SortTypes Type = SortTypes.None;
+
+        /// <summary>
+        /// По чем производится сортировка
+        /// </summary>
+        public String SortBy = string.Empty;
     }
 }
 

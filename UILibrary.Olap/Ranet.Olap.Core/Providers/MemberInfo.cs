@@ -38,6 +38,18 @@ namespace Ranet.Olap.Core.Providers
 
     public class MemberInfo : OlapInfoBase, IProperties
     {
+        /// <summary>
+        /// Номер элемента в коллекции MemberInfoCollection. Используется ТОЛЬКО для сортировки None
+        /// </summary>
+        public int MemberOrder = 0;
+
+        /// <summary>
+        /// Позиция элемента на оси в CellSet
+        /// </summary>
+        public int MemberIndexInAxis = -1;
+
+        public int Sorted_MemberIndexInAxis = -1;
+
         public const String KEY0_PROPERTY = "KEY0";
 
         private static MemberInfo m_Empty;
@@ -178,6 +190,8 @@ namespace Ranet.Olap.Core.Providers
             }
         }
 
+        public String ParentUniqueName = String.Empty;
+
         private bool m_ParentSameAsPrevious;
         public bool ParentSameAsPrevious
         {
@@ -309,6 +323,8 @@ namespace Ranet.Olap.Core.Providers
             {
                 case MemberVisualizationTypes.Caption:
                     res = Caption;
+                    // debug
+                    // Caption += " " + Sorted_MemberIndexInAxis.ToString(); 
                     break;
                 case MemberVisualizationTypes.Key:
                     // Для элементов уровня ALL вместо ключа 0 (который никак нельзя поменять) отображаем Caption
@@ -385,5 +401,47 @@ namespace Ranet.Olap.Core.Providers
         }
 
         #endregion
+
+        public class SortComparer : IComparer<MemberInfo>
+        {
+            SortTypes SortType = SortTypes.None;
+            public SortComparer(SortTypes sortType)
+            {
+                SortType = sortType;
+            }
+
+            #region IComparer<MemberInfo> Members
+
+            public int Compare(MemberInfo x, MemberInfo y)
+            {
+                switch (SortType)
+                {
+                    case SortTypes.None:
+                        if (x == null || y == null)
+                            return 0;
+                        return x.MemberOrder.CompareTo(y.MemberOrder);
+                    case SortTypes.Ascending:
+                        if (x == null && y == null)
+                            return 0;
+                        if (x == null)
+                            return -1;
+                        if (y == null)
+                            return 1;
+                        return x.Caption.CompareTo(y.Caption);
+                    case SortTypes.Descending:
+                        if (x == null && y == null)
+                            return 0;
+                        if (x == null)
+                            return 1;
+                        if (y == null)
+                            return -1;
+                        return x.Caption.CompareTo(y.Caption) * -1;
+                    default:
+                        return 0;
+                }
+            }
+
+            #endregion
+        }
     }
 }

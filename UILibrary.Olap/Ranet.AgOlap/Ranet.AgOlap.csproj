@@ -261,6 +261,9 @@
     <Compile Include="Controls\PivotGrid\Controls\MemberPropertiesControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\PivotGridControl.cs" />
     <Compile Include="Controls\PivotGrid\Controls\PivotGridItem.cs" />
+    <Compile Include="Controls\PivotGrid\Controls\SortPropertiesControl.xaml.cs">
+      <DependentUpon>SortPropertiesControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PivotGrid\CustomGridSplitter.cs" />
     <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceObject.cs" />
     <Compile Include="Controls\PivotGrid\Conditions\CellAppearanceOptions.cs" />
@@ -601,6 +604,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\PivotGrid\Controls\SortPropertiesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\ToolBar\RanetToolBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -765,6 +772,8 @@
     <Resource Include="Controls\Images\ErrorSmall.png" />
     <Resource Include="Controls\Images\New.png" />
     <Resource Include="Controls\PivotGrid\Images\CellStyle.png" />
+    <Resource Include="Controls\Images\SortAZ.png" />
+    <Resource Include="Controls\Images\SortZA.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>

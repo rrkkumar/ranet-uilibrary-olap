@@ -60,6 +60,7 @@ using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.AgOlap.Providers;
 using Ranet.AgOlap.Controls.Data;
 using Ranet.Olap.Core.Storage;
+using Ranet.AgOlap.Controls.ContextMenu;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -320,6 +321,7 @@ namespace Ranet.AgOlap.Controls
             PivotGrid.Cells_ContextMenuCreated += new EventHandler(CellsControl_ContextMenuCreated);
             PivotGrid.Columns_ContextMenuCreated += new EventHandler(ColumnsControl_ContextMenuCreated);
             PivotGrid.Rows_ContextMenuCreated += new EventHandler(RowsControl_ContextMenuCreated);
+            PivotGrid.InitializeContextMenu += new EventHandler<CustomContextMenuEventArgs>(PivotGrid_InitializeContextMenu);
 
             UpdateToolbarButtons(null);
             UpdateEditToolBarButtons();
@@ -336,7 +338,7 @@ namespace Ranet.AgOlap.Controls
             this.Content = LayoutRoot;
 
             PivotGrid.Cells_PerformControlAction += new EventHandler<ControlActionEventArgs<CellInfo>>(CellsControl_PerformControlAction);
-            PivotGrid.Members_PerformControlAction += new EventHandler<ControlActionEventArgs<MemberInfo>>(MembersArea_PerformControlAction);
+            PivotGrid.Members_PerformControlAction += new EventHandler<ControlActionEventArgs<MemberControl>>(MembersArea_PerformControlAction);
 
             m_OlapDataLoader = GetOlapDataLoader();
             m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(OlapDataLoader_DataLoaded);
@@ -352,6 +354,97 @@ namespace Ranet.AgOlap.Controls
             this.KeyDown += new KeyEventHandler(UpdateablePivotGridControl_KeyDown);
         
             OlapTransactionManager.AfterCommandComplete += new EventHandler<TransactionCommandResultEventArgs>(AnalysisTransactionManager_AfterCommandComplete);
+        }
+
+        SortDescriptor GetAxisPropertySort(MemberControl member)
+        {
+            if(member != null && member.Member != null && m_CellSetProvider != null)
+            {
+                Dictionary<String, SortDescriptor> sortInfo = null;
+                if (member is ColumnMemberControl)
+                {
+                    sortInfo = m_CellSetProvider.ColumnsSortInfo;
+                }
+                if (member is RowMemberControl)
+                {
+                    sortInfo = m_CellSetProvider.RowsSortInfo;
+                }
+                if(sortInfo != null && sortInfo.ContainsKey(member.Member.HierarchyUniqueName))
+                    return sortInfo[member.Member.HierarchyUniqueName];
+            }
+            return null;
+        }
+
+        void PivotGrid_InitializeContextMenu(object sender, CustomContextMenuEventArgs e)
+        {
+            if (e != null && e.GridItem != null && e.Menu != null)
+            {
+                MemberControl member_control = e.GridItem as MemberControl;
+                if (member_control != null)
+                {
+                    foreach (UIElement element in e.Menu.Items)
+                    {
+                        ContextMenuItem menu_item = element as ContextMenuItem;
+                        if (menu_item != null)
+                        {
+                            if (menu_item.Tag is ControlActionType)
+                            {
+                                if (menu_item.Tag is ControlActionType)
+                                {
+                                    // Иконка для пункта меню - Сортировка по свойству
+                                    if ((ControlActionType)menu_item.Tag == ControlActionType.SortingByProperty)
+                                    {
+                                        SortDescriptor sort = GetAxisPropertySort(member_control);
+                                        SortTypes type = sort != null ? sort.Type : SortTypes.None;
+                                        switch (type)
+                                        {
+                                            case SortTypes.Ascending:
+                                                menu_item.Icon = UriResources.Images.SortAZ16;
+                                                break;
+                                            case SortTypes.Descending:
+                                                menu_item.Icon = UriResources.Images.SortZA16;
+                                                break;
+                                            default:
+                                                menu_item.Icon = null;
+                                                break;
+                                        }
+                                    }
+                                }
+
+                                // Иконка для пункта меню - Сортировка по значению
+                                if ((ControlActionType)menu_item.Tag == ControlActionType.SortingByValue)
+                                {
+                                    SortDescriptor sort = GetAxisMeasureSort(member_control);
+                                    SortTypes type = sort != null ? sort.Type : SortTypes.None;
+                                    switch (type)
+                                    {
+                                        case SortTypes.Ascending:
+                                            menu_item.Icon = UriResources.Images.SortAZ16;
+                                            break;
+                                        case SortTypes.Descending:
+                                            menu_item.Icon = UriResources.Images.SortZA16;
+                                            break;
+                                        default:
+                                            menu_item.Icon = null;
+                                            break;
+                                    }
+                                }
+
+                                // Доступность пункта меню - Удалить сортировку
+                                if ((ControlActionType)menu_item.Tag == ControlActionType.ClearAxisSorting)
+                                {
+                                    SortDescriptor property_sort = GetAxisPropertySort(member_control);
+                                    SortDescriptor measure_sort = GetAxisMeasureSort(member_control);
+                                    SortTypes property_sort_type = property_sort != null ? property_sort.Type : SortTypes.None;
+                                    SortTypes measure_sort_type = measure_sort != null ? measure_sort.Type : SortTypes.None;
+                                    
+                                    menu_item.IsEnabled = property_sort_type != SortTypes.None || measure_sort_type != SortTypes.None;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
 
         void StorageManager_ActionCompleted(object sender, DataLoaderEventArgs e)
@@ -673,17 +766,22 @@ namespace Ranet.AgOlap.Controls
             RunServiceCommand(ServiceCommandType.ToEnd);
         }
 
-        void MembersArea_PerformControlAction(object sender, ControlActionEventArgs<MemberInfo> e)
+        ModalDialog m_SortDialog;
+        SortPropertiesControl m_SortSettingsControl;
+
+        void MembersArea_PerformControlAction(object sender, ControlActionEventArgs<MemberControl> e)
         {
+            ModalDialog dlg;
+            MemberInfo info = e.UserData != null ? e.UserData.Member : null;
             switch (e.Action)
             {
                 case ControlActionType.ShowMDX:
                     GetDataSourceInfo(null);
                     break;
                 case ControlActionType.ShowProperties:
-                    ModalDialog dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
+                    dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
                     MemberPropertiesControl properties = new MemberPropertiesControl();
-                    properties.Initialize(e.UserData);
+                    properties.Initialize(info);
                     dlg.Content = properties;
                     dlg.Caption = Localization.MemberPropertiesDialog_Caption;
                     Panel panel = GetRootPanel(this);
@@ -697,8 +795,212 @@ namespace Ranet.AgOlap.Controls
                     dlg.Show();
                     break;
                 case ControlActionType.ShowAttributes:
-                    ShowMemberAttributes(e.UserData);
+                    ShowMemberAttributes(info);
                     break;
+                case ControlActionType.SortingByProperty:
+                    ShowSortPropertiesDialog(PivotTableSortTypes.SortByProperty, e.UserData);
+                    break;
+                case ControlActionType.SortingByValue:
+                    ShowSortPropertiesDialog(PivotTableSortTypes.SortByValue, e.UserData);
+                    break;
+                case ControlActionType.ClearAxisSorting:
+                    if (m_CellSetProvider != null)
+                    {
+                        if (e.UserData is ColumnMemberControl)
+                        {
+                            if (PivotGrid.AxisIsRotated == false)
+                                m_CellSetProvider.ClearSort(0);
+                            else
+                                m_CellSetProvider.ClearSort(1);
+                        }
+                        if (e.UserData is RowMemberControl)
+                        {
+                            if (PivotGrid.AxisIsRotated == false)
+                                m_CellSetProvider.ClearSort(1);
+                            else
+                                m_CellSetProvider.ClearSort(0);
+                        }
+                    }
+                    bool refreshed = false;
+                    if (DataManager != null)
+                    {
+                        if (DataManager.Axis0_MeasuresSort != null || DataManager.Axis1_MeasuresSort != null)
+                        {
+                            SetAxisMeasureSort(e.UserData, null);
+                            refreshed = true;
+                            RunServiceCommand(ServiceCommandType.Refresh);
+                        }
+                    }
+
+                    if (!refreshed)
+                    {
+                        try
+                        {
+                            IsWaiting = true;
+                            PivotGrid.Initialize(m_CellSetProvider);
+                        }
+                        finally
+                        {
+                            IsWaiting = false;
+                        }
+                    }
+                    break;
+            }
+        }
+
+        void ShowSortPropertiesDialog(PivotTableSortTypes sortType, MemberControl member)
+        {
+            if(m_SortDialog == null)
+            {
+                m_SortDialog = new ModalDialog() { Width = 400, Height = 250, DialogStyle = ModalDialogStyles.OKCancel };
+                m_SortDialog.Caption = Localization.SortingSettingsDialog_Caption;
+                // На время убираем контекстное меню сводной таблицы
+                m_SortDialog.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
+                m_SortDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
+                Panel panel1 = GetRootPanel(this);
+                if (panel1 != null)
+                {
+                    panel1.Children.Add(m_SortDialog.Dialog.PopUpControl);
+                }
+            }
+            if (m_SortSettingsControl == null)
+            {
+                m_SortSettingsControl = new SortPropertiesControl();
+                m_SortSettingsControl.LoadMeasures += new EventHandler<CustomEventArgs<EventArgs>>(m_SortSettingsControl_LoadMeasures);
+                m_SortDialog.Content = m_SortSettingsControl;
+            }
+            m_SortSettingsControl.Tag = member;
+
+            SortDescriptor sort = null;
+            if (sortType == PivotTableSortTypes.SortByProperty)
+            {
+                if (m_CellSetProvider != null && 
+                    member != null && 
+                    member.Member != null)
+                {
+                    sort = GetAxisPropertySort(member);
+                }
+            }
+
+            if (sortType == PivotTableSortTypes.SortByValue && DataManager != null)
+            {
+                sort = GetAxisMeasureSort(member);
+            }
+
+            m_SortSettingsControl.Initialize(sortType, sort);
+            PivotGrid.UseContextMenu = false;
+            m_SortDialog.Show();
+        }
+
+        SortDescriptor GetAxisMeasureSort(MemberControl member)
+        {
+            if (member != null && DataManager != null)
+            {
+                if (member is ColumnMemberControl)
+                {
+                    return PivotGrid.AxisIsRotated == false ? DataManager.Axis0_MeasuresSort : DataManager.Axis1_MeasuresSort;
+                }
+                if (member is RowMemberControl)
+                {
+                    return PivotGrid.AxisIsRotated == false ? DataManager.Axis1_MeasuresSort : DataManager.Axis0_MeasuresSort;
+                }
+            }
+            return null;        
+        }
+
+        void SetAxisMeasureSort(MemberControl member, SortDescriptor sort)
+        {
+            if (member != null && DataManager != null)
+            {
+                if (member is ColumnMemberControl)
+                {
+                    if (PivotGrid.AxisIsRotated == false)
+                        DataManager.Axis0_MeasuresSort = sort;
+                    else
+                        DataManager.Axis1_MeasuresSort = sort;
+                }
+                if (member is RowMemberControl)
+                {
+                    if(PivotGrid.AxisIsRotated == false)
+                        DataManager.Axis1_MeasuresSort = sort;
+                    else
+                        DataManager.Axis0_MeasuresSort = sort;
+                }
+            }
+        }
+
+        void m_SortSettingsControl_LoadMeasures(object sender, CustomEventArgs<EventArgs> e)
+        {
+            if (m_CellSetProvider != null &&
+                m_CellSetProvider.CellSet_Description != null &&
+                !String.IsNullOrEmpty(m_CellSetProvider.CellSet_Description.CubeName))
+            {
+                LogManager.LogInformation(this, this.Name + String.Format(" - Loading cube '{0}' measures", m_CellSetProvider.CellSet_Description.CubeName));
+                MetadataQuery args = CommandHelper.CreateGetCubeMetadataArgs(Connection, m_CellSetProvider.CellSet_Description.CubeName, MetadataQueryType.GetMeasures);
+                OlapDataLoader.LoadData(args, m_SortSettingsControl);
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+        void SortProperties_DialogOk(object sender, DialogResultArgs e)
+        {
+            if (m_SortSettingsControl.SortType == PivotTableSortTypes.SortByValue &&
+                m_SortSettingsControl.SortDescriptor.Type != SortTypes.None &&
+                String.IsNullOrEmpty(m_SortSettingsControl.SortDescriptor.SortBy))
+            {
+                MessageBox.Show(Localization.SortingPropertiesDialog_MeasureNotSelected_Message, Localization.Warning, MessageBoxButton.OK);
+                e.Cancel = true;
+                return;
+            }
+                
+            MemberControl member = m_SortSettingsControl.Tag as MemberControl;
+            if (member != null && member.Member != null)
+            {
+                int axisNum = -1;
+                if (member is ColumnMemberControl)
+                    axisNum = 0;
+                if (member is RowMemberControl)
+                    axisNum = 1;
+
+                if (m_CellSetProvider != null && axisNum != -1)
+                {
+                    // Сортировка по свойству
+                    if (m_SortSettingsControl.SortType == PivotTableSortTypes.SortByProperty)
+                    {
+                        m_CellSetProvider.Sort(axisNum, member.Member.HierarchyUniqueName, m_SortSettingsControl.SortDescriptor);
+                        try
+                        {
+                            IsWaiting = true;
+                            PivotGrid.Initialize(m_CellSetProvider);
+                        }
+                        finally
+                        {
+                            IsWaiting = false;
+                        }
+                    }
+
+                    // Сортировка по значению
+                    if (m_SortSettingsControl.SortType == PivotTableSortTypes.SortByValue)
+                    {
+                        if (DataManager != null)
+                        {
+                            SortDescriptor descr = null;
+                            if(m_SortSettingsControl.SortDescriptor.Type != SortTypes.None &&
+                                   !String.IsNullOrEmpty(m_SortSettingsControl.SortDescriptor.SortBy))
+                                    descr = m_SortSettingsControl.SortDescriptor;
+                            if (GetAxisMeasureSort(member) != null || descr != null)
+                            {
+                                SetAxisMeasureSort(member, descr);
+
+                                // Сортируем новым запросом
+                                RunServiceCommand(ServiceCommandType.Refresh);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -1885,6 +2187,13 @@ namespace Ranet.AgOlap.Controls
                     }
                 }
 
+                SortPropertiesControl sortControl = e.UserState as SortPropertiesControl;
+                if (sortControl != null && sortControl == m_SortSettingsControl)
+                {
+                    List<MeasureInfo> list = XmlSerializationUtility.XmlStr2Obj<List<MeasureInfo>>(e.Result.Content);
+                    m_SortSettingsControl.InitializeMeasuresList(list);
+                }
+
                 //MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
                 //if (member_args != null)
                 if(e.UserState != null && e.UserState.ToString() == "CUSTOM_MEMBER_PROPERTIES")
@@ -2029,6 +2338,14 @@ namespace Ranet.AgOlap.Controls
         {
             try
             {
+                Dictionary<String, SortDescriptor> axis1_sortInfo = null;
+                Dictionary<String, SortDescriptor> axis0_sortInfo = null;
+                if (m_CellSetProvider != null)
+                {
+                    axis0_sortInfo = m_CellSetProvider.ColumnsSortInfo;
+                    axis1_sortInfo = m_CellSetProvider.RowsSortInfo;
+                }
+
                 ResetSettings();
 
                 IsWaiting = true;
@@ -2039,8 +2356,24 @@ namespace Ranet.AgOlap.Controls
                 if (cs_descr != null)
                 {
                     m_CellSetProvider = new CellSetDataProvider(cs_descr);
+                    if (axis0_sortInfo != null)
+                    {
+                        foreach (var hierarchyUniqueName in axis0_sortInfo.Keys)
+                        {
+                            m_CellSetProvider.Sort(0, hierarchyUniqueName, axis0_sortInfo[hierarchyUniqueName]);
+                        }
+                    }
+
+                    if (axis1_sortInfo != null)
+                    {
+                        foreach (var hierarchyUniqueName in axis1_sortInfo.Keys)
+                        {
+                            m_CellSetProvider.Sort(1, hierarchyUniqueName, axis1_sortInfo[hierarchyUniqueName]);
+                        }
+                    }
                     ImportSizeInfo();
                 }
+
                 PivotGrid.Initialize(m_CellSetProvider);
                 UpdateButtons();
 
@@ -2101,6 +2434,11 @@ namespace Ranet.AgOlap.Controls
                                 query_args.ActionType = OlapActionTypes.ExportToExcel;
                             }
 
+                            if (actionType == ServiceCommandType.RotateAxes || actionType == ServiceCommandType.NormalAxes)
+                            {
+                                if (m_CellSetProvider != null)
+                                    m_CellSetProvider.RotateSortInfo();
+                            }
                             ExecuteServiceCommand(query_args, actionType);
                         }
                         break;

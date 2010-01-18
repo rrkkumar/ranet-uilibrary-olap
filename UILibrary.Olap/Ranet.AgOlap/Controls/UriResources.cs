@@ -1229,6 +1229,25 @@ namespace Ranet.AgOlap.Controls
             const string ERROR_SMALL_16 = "/Ranet.AgOlap;component/Controls/Images/ErrorSmall.png";
             const string NEW_16 = "/Ranet.AgOlap;component/Controls/Images/New.png";
 
+            const string SORT_AZ_16 = "/Ranet.AgOlap;component/Controls/Images/SortAZ.png";
+            const string SORT_ZA_16 = "/Ranet.AgOlap;component/Controls/Images/SortZA.png";
+
+            public static BitmapImage SortZA16
+            {
+                get
+                {
+                    return UriResources.GetImage(SORT_ZA_16);
+                }
+            }
+
+            public static BitmapImage SortAZ16
+            {
+                get
+                {
+                    return UriResources.GetImage(SORT_AZ_16);
+                }
+            }
+
             public static BitmapImage New16
             {
                 get
