@@ -93,14 +93,22 @@ namespace Ranet.Olap.Core.Providers
                 m_Columns = null;
                 m_Columns_LowestMembers = new Dictionary<int, MemberInfo>();
                 m_Columns_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
-                m_ColumnsSortInfo = null;
+                // Чтобы сохранилась информация по какому свойству сортировали в последний раз
+                foreach (var sort in ColumnsSortInfo.Values)
+                {
+                    sort.Type = SortTypes.None;
+                }
             }
             if (axisNum == 1)
             {
                 m_Rows = null;
                 m_Rows_LowestMembers = new Dictionary<int, MemberInfo>();
                 m_Rows_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
-                m_RowsSortInfo = null;
+                // Чтобы сохранилась информация по какому свойству сортировали в последний раз
+                foreach (var sort in RowsSortInfo.Values)
+                {
+                    sort.Type = SortTypes.None;
+                }
             }
         }
         
@@ -123,27 +131,20 @@ namespace Ranet.Olap.Core.Providers
 
                 if (need_Sort)
                 {
-                    Sort(members, hierarchyUniquqName, sortDescr.Type);
+                    Sort(members, hierarchyUniquqName, sortDescr);
                     // Формируем отсортированные индексы
                     sorted_LowestMembers.Clear();
                     BuildSortedIndexes(axisNum, members);
                 }
 
-                // Если сортировка None то после сортировки информацию о ней удаляем из списка
-                if (sortDescr.Type == SortTypes.None)
-                {
-                    sortInfo.Remove(hierarchyUniquqName);
-                }
-                else
-                {
                     // Если сортировка выполнялась, то информацию о ней сохраняем
-                    if (need_Sort)
-                    {
-                        if (sortInfo.ContainsKey(hierarchyUniquqName))
-                            sortInfo[hierarchyUniquqName] = sortDescr;
-                        else
-                            sortInfo.Add(hierarchyUniquqName, sortDescr);
-                    }
+                    // Сохраняем даже сортировки None - чтобы потом при клике на элементе было понятно по чем его сортировали в прошлый раз
+                if (need_Sort)
+                {
+                    if (sortInfo.ContainsKey(hierarchyUniquqName))
+                        sortInfo[hierarchyUniquqName] = sortDescr;
+                    else
+                        sortInfo.Add(hierarchyUniquqName, sortDescr);
                 }
             }
         }
@@ -177,7 +178,7 @@ namespace Ranet.Olap.Core.Providers
             }
         }
 
-        void Sort(MemberInfoCollection list, String hierarchyUniquqName, SortTypes type)
+        void Sort(MemberInfoCollection list, String hierarchyUniquqName, SortDescriptor type)
         {
             // Сортируем коллекцию, если она содержит элементы, принадолежащие данной иерархии. В протипном случае идем вглубь в дочерние.
             if (list != null && list.Count > 0)

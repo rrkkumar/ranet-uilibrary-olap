@@ -18,7 +18,6 @@
         
             <TextBlock x:Name="lblSortType" Text="Sorting type:" Margin=" 0,0,0,5"></TextBlock>
             <Border BorderThickness="1" BorderBrush="DarkGray" Padding="5" Grid.Row="1">
-                <!--<combo:RanetComboBox x:Name="comboSortType"></combo:RanetComboBox>-->
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"></RowDefinition>
@@ -29,14 +28,14 @@
                         <ColumnDefinition Width="30"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
-                    <RadioButton Grid.Row="0" Margin="5,0,5,0" x:Name="rbNone" GroupName="G1" IsChecked="true"></RadioButton>
+                    <RadioButton Grid.Row="0" Margin="5,0,0,0" x:Name="rbNone" GroupName="G1" IsChecked="true" VerticalAlignment="Center"></RadioButton>
                     <TextBlock Grid.Row="0" Grid.Column="1" x:Name="lblNone" Text="None" Margin="0,0,0,0" VerticalAlignment="Center" MouseLeftButtonDown="lblNone_MouseLeftButtonDown"></TextBlock>
 
-                    <RadioButton Grid.Row="1" Margin="5,5,5,0" x:Name="rbAscending" GroupName="G1"></RadioButton>
-                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="lblAscending" Text="Ascending" Margin="0,0,0,0" VerticalAlignment="Center" MouseLeftButtonDown="lblAscending_MouseLeftButtonDown"></TextBlock>
+                    <RadioButton Grid.Row="1" Margin="5,5,0,0" x:Name="rbAscending" GroupName="G1" VerticalAlignment="Center"></RadioButton>
+                    <TextBlock Grid.Row="1" Grid.Column="1" x:Name="lblAscending" Text="Ascending" Margin="0,5,0,0" VerticalAlignment="Center" MouseLeftButtonDown="lblAscending_MouseLeftButtonDown"></TextBlock>
 
-                    <RadioButton Grid.Row="2" Margin="5,5,5,0" x:Name="rbDescending" GroupName="G1"></RadioButton>
-                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="lblDescending" Text="Descending" Margin="0,0,0,0" VerticalAlignment="Center" MouseLeftButtonDown="lblDescending_MouseLeftButtonDown"></TextBlock>
+                    <RadioButton Grid.Row="2" Margin="5,5,0,0" x:Name="rbDescending" GroupName="G1" VerticalAlignment="Center"></RadioButton>
+                    <TextBlock Grid.Row="2" Grid.Column="1" x:Name="lblDescending" Text="Descending" Margin="0,5,0,0" VerticalAlignment="Center" MouseLeftButtonDown="lblDescending_MouseLeftButtonDown"></TextBlock>
                 </Grid>
             </Border>
 

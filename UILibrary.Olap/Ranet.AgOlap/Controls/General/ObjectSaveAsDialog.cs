@@ -79,22 +79,22 @@ namespace Ranet.AgOlap.Controls.General
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
 
             m_List = new ObjectDescriptionListControl();
+            m_List.Margin = new Thickness(0, 0, 5, 0);
             m_List.SelectionChanged += new EventHandler<SelectionChangedEventArgs<ObjectStorageFileDescription>>(m_List_SelectionChanged);
             m_List.ObjectSelected += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_ObjectSelected);
             m_List.DeleteButtonClick += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_DeleteButtonClick);
             m_List.DeleteAllButtonClick += new EventHandler<CustomEventArgs<ObjectStorageFileDescription>>(m_List_DeleteAllButtonClick);
             LayoutRoot.Children.Add(m_List);
 
-            GridSplitter splitter_Vert = new GridSplitter();
+            RanetGridSplitter splitter_Vert = new RanetGridSplitter();
             splitter_Vert.IsTabStop = false;
             LayoutRoot.Children.Add(splitter_Vert);
             Grid.SetColumn(splitter_Vert, 0);
             splitter_Vert.Background = new SolidColorBrush(Colors.Transparent);
             splitter_Vert.HorizontalAlignment = HorizontalAlignment.Right;
             splitter_Vert.VerticalAlignment = VerticalAlignment.Stretch;
-            splitter_Vert.Width = 3;
 
-            m_Description = new ObjectDescriptionControl() { Margin = new Thickness(5, 0, 0, 0) };
+            m_Description = new ObjectDescriptionControl() { Margin = new Thickness(1, 0, 0, 0) };
             m_Description.EndEdit += new EventHandler(m_Description_EndEdit);
             LayoutRoot.Children.Add(m_Description);
             Grid.SetColumn(m_Description, 1);

@@ -204,9 +204,9 @@ namespace Ranet.Olap.Core.Providers
 
         #endregion
 
-        public void Sort(SortTypes type)
+        public void Sort(SortDescriptor sort)
         {
-            m_Members.Sort(new MemberInfo.SortComparer(type));
+            m_Members.Sort(new MemberInfo.SortComparer(sort));
         }
     }
 }

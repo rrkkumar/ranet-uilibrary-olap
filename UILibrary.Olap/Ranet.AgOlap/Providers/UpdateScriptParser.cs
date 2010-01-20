@@ -11,10 +11,10 @@ namespace Ranet.AgOlap.Providers
     {
         private const string UPDATE_COMMAND_TEMPLATE = @"UPDATE CUBE [{0}]
 SET "; //({1}) = {2}
-        public static List<string> GetUpdateScripts(
+        public static IEnumerable<string> GetUpdateScripts(
             string cubeName,
             string updeteScript,
-            List<UpdateEntry> entries)
+            IEnumerable<UpdateEntry> entries)
         {
             string commandText = string.Empty;
 
@@ -25,9 +25,10 @@ SET "; //({1}) = {2}
 
             List<string> commands = new List<string>();
 
-            for (int i = 0; i < entries.Count; i++)
+            var isFirstLexeme = true;
+
+            foreach (var entry in entries)
             {
-                UpdateEntry entry = entries[i];
                 StringBuilder sb = new StringBuilder();
                 foreach (var mi in entry.Tuple)
                 {
@@ -41,7 +42,7 @@ SET "; //({1}) = {2}
                 sb = null;
 
                 string lexeme = Environment.NewLine;
-                if (i > 0)
+                if (!isFirstLexeme)
                 {
                     if (string.IsNullOrEmpty(updeteScript))
                     {
@@ -61,7 +62,7 @@ SET "; //({1}) = {2}
                     lexeme += cmd;
                     commands.Add(lexeme);
                 }
-
+                isFirstLexeme = false;
             }
 
             if (string.IsNullOrEmpty(updeteScript))
@@ -72,7 +73,7 @@ SET "; //({1}) = {2}
             return commands;
         }
 
-        public static void ParseHierarchies(ref string script, Dictionary<String, String> dr, object newValue, object oldValue)
+        public static void ParseHierarchies(ref string script, IDictionary<String, String> dr, object newValue, object oldValue)
         {
             //Regex r = new Regex("\\$\\$([^\\$]+)\\$\\$", RegexOptions.None);
             Regex r = new Regex("<%([^%<>]+)%>", RegexOptions.None);

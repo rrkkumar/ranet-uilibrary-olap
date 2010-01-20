@@ -21,18 +21,18 @@
         <toolbar:RanetToolBar x:Name="ToolBar" Grid.ColumnSpan="2" Margin="0,0,0,3"></toolbar:RanetToolBar>
         
         <!-- Список стилей -->
-        <Grid Grid.Row="1">  
+        <Grid Grid.Row="1" Margin="0,0,5,0">  
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>
             </Grid.RowDefinitions>
             
             <TextBlock Grid.Row="0" x:Name="lblStyles" Text="Styles:" Margin="0,0,0,3"></TextBlock>
-            <conditions:ConditionsDescriptorListControl x:Name="DescriptorsList" Grid.Row="1" Margin="0,0,6,0"></conditions:ConditionsDescriptorListControl>
+            <conditions:ConditionsDescriptorListControl x:Name="DescriptorsList" Grid.Row="1"></conditions:ConditionsDescriptorListControl>
         </Grid>
         
         <!-- Разделитель -->
-        <controls:RenetGridSplitter Grid.Row="1" IsTabStop="False" VerticalAlignment="Stretch" HorizontalAlignment="Right"></controls:RenetGridSplitter>
+        <controls:RanetGridSplitter Grid.Row="1" IsTabStop="False" VerticalAlignment="Stretch" HorizontalAlignment="Right"></controls:RanetGridSplitter>
 
         <!-- Описание стиля -->
         <Grid Grid.Row="1" Grid.Column="1" Margin="1,0,0,0">

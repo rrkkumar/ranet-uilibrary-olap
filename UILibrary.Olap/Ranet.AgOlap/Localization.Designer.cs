@@ -1528,6 +1528,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Measure:.
+        /// </summary>
+        public static string Measure_Label {
+            get {
+                return ResourceManager.GetString("Measure_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Measure choice.
         /// </summary>
         public static string MeasureChoice_Caption {
@@ -2187,6 +2196,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property:.
+        /// </summary>
+        public static string Property_Label {
+            get {
+                return ResourceManager.GetString("Property_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Save As.
         /// </summary>
         public static string SaveAsDialog_Caption {
@@ -2273,6 +2291,51 @@ namespace Ranet.AgOlap {
         public static string ShowValue_Check {
             get {
                 return ResourceManager.GetString("ShowValue_Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ascending.
+        /// </summary>
+        public static string Sorting_Ascending_Label {
+            get {
+                return ResourceManager.GetString("Sorting_Ascending_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Descending.
+        /// </summary>
+        public static string Sorting_Descending_Label {
+            get {
+                return ResourceManager.GetString("Sorting_Descending_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string Sorting_None_Label {
+            get {
+                return ResourceManager.GetString("Sorting_None_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting by:.
+        /// </summary>
+        public static string SortingBy_Label {
+            get {
+                return ResourceManager.GetString("SortingBy_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sorting direction:.
+        /// </summary>
+        public static string SortingDirection_Label {
+            get {
+                return ResourceManager.GetString("SortingDirection_Label", resourceCulture);
             }
         }
         

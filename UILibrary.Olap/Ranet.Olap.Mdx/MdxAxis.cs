@@ -105,9 +105,48 @@ namespace Ranet.Olap.Mdx
 					(MdxExpression)this.Expression.Clone(),
 					this.Having != null ? (MdxExpression)this.Having.Clone() : null,
 					(IEnumerable<MdxExpression>)this.DimensionProperties.Clone())
+			{
+				NonEmpty = this.NonEmpty
+			};
+		}
+		internal MdxAxis GenerateCurrentAxis(AxisInfo AxesInfo)
+		{
+			var newExpression=this.Expression;
+			foreach (var Hierarchy in AxesInfo.Hierarchies)
+			{
+				if(Hierarchy.CollapsedCells.Count>0)
+				{
+					var SetCollapsed=new MdxSetExpression();
+					foreach(var Tuple in Hierarchy.CollapsedCells.Keys)
 					{
-						NonEmpty = this.NonEmpty
-					};
+						SetCollapsed.Expressions.Add(new MdxTupleExpression(Tuple));
+					}
+					newExpression = new MdxFunctionExpression
+					("DRILLUPMEMBER", new MdxExpression[2]
+						{ newExpression
+						,	SetCollapsed
+						}
+					);
+				}
+				if (Hierarchy.ExpandedCells.Count > 0)
+				{
+					var SetExpanded = new MdxSetExpression();
+					foreach (var Tuple in Hierarchy.ExpandedCells.Keys)
+					{
+						SetExpanded.Expressions.Add(new MdxTupleExpression(Tuple));
+					}
+					newExpression = new MdxFunctionExpression
+					("DRILLDOWNMEMBER", new MdxExpression[2]
+						{ newExpression
+						,	SetExpanded
+						}
+					);
+				}
+			}
+			if (newExpression==this.Expression)
+				return this;
+				
+			return new MdxAxis(this.Name,newExpression,this.Having,this.DimensionProperties);
 		}
 	}
 }

@@ -315,7 +315,7 @@ namespace Ranet.AgOlap.Controls
             LayoutRoot.Children.Add(m_PivotGrid);
             Grid.SetRow(m_PivotGrid, 1);
 
-            PivotGrid.DrillDownMember += new MemberActionEventHandler(PivotGrid_DrillDownMember);
+            PivotGrid.ExecuteMemberAction += new MemberActionEventHandler(PivotGrid_ExecuteMemberAction);
             PivotGrid.CellValueChanged += new CellValueChangedEventHandler(CellsControl_CellValueChanged);
             PivotGrid.UndoCellChanges += new EventHandler(CellsControl_UndoCellChanges);
             PivotGrid.Cells_ContextMenuCreated += new EventHandler(CellsControl_ContextMenuCreated);
@@ -358,21 +358,7 @@ namespace Ranet.AgOlap.Controls
 
         SortDescriptor GetAxisPropertySort(MemberControl member)
         {
-            if(member != null && member.Member != null && m_CellSetProvider != null)
-            {
-                Dictionary<String, SortDescriptor> sortInfo = null;
-                if (member is ColumnMemberControl)
-                {
-                    sortInfo = m_CellSetProvider.ColumnsSortInfo;
-                }
-                if (member is RowMemberControl)
-                {
-                    sortInfo = m_CellSetProvider.RowsSortInfo;
-                }
-                if(sortInfo != null && sortInfo.ContainsKey(member.Member.HierarchyUniqueName))
-                    return sortInfo[member.Member.HierarchyUniqueName];
-            }
-            return null;
+            return PivotGrid.GetAxisPropertySort(member);
         }
 
         void PivotGrid_InitializeContextMenu(object sender, CustomContextMenuEventArgs e)
@@ -680,7 +666,7 @@ namespace Ranet.AgOlap.Controls
             PivotGrid.GoToFocusedCell();
         }
 
-        void PivotGrid_DrillDownMember(object sender, MemberActionEventArgs args)
+        void PivotGrid_ExecuteMemberAction(object sender, MemberActionEventArgs args)
         {
             //NEW!!! Если в кэше есть изменения, то нужно спросить об их сохранении
             //if (UseChangesCashe && PivotGrid.LocalChanges.CellChanges.Count > 0)
@@ -692,6 +678,68 @@ namespace Ranet.AgOlap.Controls
             //    //dlg.Show();
             //    return;
             //}
+
+            // Определяем нужно ли выполнить экшен по умолчанию
+            if (args.Action == MemberActionType.Default)
+            {
+                switch (DefaultMemberAction)
+                { 
+                    case MemberClickBehaviorTypes.None:
+                        return;
+                    case MemberClickBehaviorTypes.DrillDown:
+                        args.Action = MemberActionType.DrillDown;
+                        break;
+                    case MemberClickBehaviorTypes.ExpandCollapse:
+                        if (args.Member != null)
+                        {
+                            args.Action = MemberActionType.Expand;
+                            if (args.Member.DrilledDown)
+                                args.Action = MemberActionType.Collapse;
+                            break;
+                        }
+                        return;
+                    case MemberClickBehaviorTypes.SortByProperty:
+                        if (args.Member != null && (args.Axis == 0 || args.Axis == 1))
+                        {
+                            SortDescriptor new_descr = new SortDescriptor();
+                            new_descr.SortBy = "Caption";
+                            new_descr.Type = SortTypes.Ascending;
+                            SortDescriptor descr = PivotGrid.GetAxisPropertySort(args.Axis, args.Member);
+                            if (descr != null)
+                            {
+                                if (!String.IsNullOrEmpty(descr.SortBy))
+                                {
+                                    new_descr.SortBy = descr.SortBy;
+                                }
+                                switch (descr.Type)
+                                {
+                                    case SortTypes.None:
+                                        new_descr.Type = SortTypes.Ascending;
+                                        break;
+                                    case SortTypes.Ascending:
+                                        new_descr.Type = SortTypes.Descending;
+                                        break;
+                                    case SortTypes.Descending:
+                                        new_descr.Type = SortTypes.None;
+                                        break;
+                                }
+                            }
+
+                            m_CellSetProvider.Sort(args.Axis, args.Member.HierarchyUniqueName, new_descr);
+
+                            try
+                            {
+                                IsWaiting = true;
+                                PivotGrid.Initialize(m_CellSetProvider);
+                            }
+                            finally
+                            {
+                                IsWaiting = false;
+                            }
+                        }
+                        return;
+                }
+            }
 
             if (args.Axis == 0 || args.Axis == 1)
             {
@@ -852,7 +900,7 @@ namespace Ranet.AgOlap.Controls
         {
             if(m_SortDialog == null)
             {
-                m_SortDialog = new ModalDialog() { Width = 400, Height = 250, DialogStyle = ModalDialogStyles.OKCancel };
+                m_SortDialog = new ModalDialog() { Width = 400, Height = 250, MinHeight = 215, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
                 m_SortDialog.Caption = Localization.SortingSettingsDialog_Caption;
                 // На время убираем контекстное меню сводной таблицы
                 m_SortDialog.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
@@ -1863,7 +1911,7 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
-        void RunUpdateCubeCommand(List<UpdateEntry> entries)
+        void RunUpdateCubeCommand(IEnumerable<UpdateEntry> entries)
         {
             if (String.IsNullOrEmpty(UpdateScript))
             {
@@ -1884,7 +1932,7 @@ namespace Ranet.AgOlap.Controls
             MdxQueryArgs args = new MdxQueryArgs();
             args.Connection = Connection;
             args.Type = QueryTypes.Update;
-            args.Queries = DataManager.BuildUpdateScripts(cubeName, entries);
+            args.Queries = new List<string>(DataManager.BuildUpdateScripts(cubeName, entries));
             LogManager.LogInformation(this, this.Name + " - Update cube started.");
             OlapDataLoader.LoadData(args, entries);
 
@@ -1934,19 +1982,25 @@ namespace Ranet.AgOlap.Controls
 
         protected virtual void PerformMemberAction(MemberActionEventArgs e)
         {
-            List<MemberInfo> full_tuple = new List<MemberInfo>();
-            e.Member.CollectAncestors(full_tuple, true);
-
-            PerformMemberActionArgs args = CommandHelper.CreatePerformMemberActionArgs(
-                e.Member, e.Axis, e.Action, full_tuple);
-
-            if (DataManager != null)
+            if (e.Action == MemberActionType.Collapse ||
+                e.Action == MemberActionType.Expand ||
+                e.Action == MemberActionType.DrillDown ||
+                e.Action == MemberActionType.DrillUp)
             {
-                String query = DataManager.PerformMemberAction(args);
-                if (!String.IsNullOrEmpty(query))
+                List<MemberInfo> full_tuple = new List<MemberInfo>();
+                e.Member.CollectAncestors(full_tuple, true);
+
+                PerformMemberActionArgs args = CommandHelper.CreatePerformMemberActionArgs(
+                    e.Member, e.Axis, e.Action, full_tuple);
+
+                if (DataManager != null)
                 {
-                    MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
-                    ExecuteMemberAction(query_args, args);
+                    String query = DataManager.PerformMemberAction(args);
+                    if (!String.IsNullOrEmpty(query))
+                    {
+                        MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
+                        ExecuteMemberAction(query_args, args);
+                    }
                 }
             }
         }
@@ -2859,7 +2913,18 @@ namespace Ranet.AgOlap.Controls
                 ConditionsDesignerButton.Visibility = value == true ? Visibility.Visible : Visibility.Collapsed;
             }
         }
+
+        public MemberClickBehaviorTypes DefaultMemberAction = MemberClickBehaviorTypes.DrillDown;
     }
+
+    public enum MemberClickBehaviorTypes
+    { 
+        None,
+        DrillDown,
+        ExpandCollapse,
+        SortByProperty
+    }
+
 }
 
 

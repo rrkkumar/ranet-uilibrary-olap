@@ -1079,4 +1079,25 @@ Please, recalculate data or cancel changes.</value>
   <data name="SortingPropertiesDialog_MeasureNotSelected_Message" xml:space="preserve">
     <value>Measure for sorting is not selected. Please select Measure in dropdown list.</value>
   </data>
+  <data name="Measure_Label" xml:space="preserve">
+    <value>Measure:</value>
+  </data>
+  <data name="Property_Label" xml:space="preserve">
+    <value>Property:</value>
+  </data>
+  <data name="SortingBy_Label" xml:space="preserve">
+    <value>Sorting by:</value>
+  </data>
+  <data name="SortingDirection_Label" xml:space="preserve">
+    <value>Sorting direction:</value>
+  </data>
+  <data name="Sorting_Ascending_Label" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="Sorting_Descending_Label" xml:space="preserve">
+    <value>Descending</value>
+  </data>
+  <data name="Sorting_None_Label" xml:space="preserve">
+    <value>None</value>
+  </data>
 </root>

@@ -43,17 +43,6 @@ namespace Ranet.AgOlap.Providers
         public string Query { get; private set; }
         public readonly String UpdateScript = String.Empty;
 
-        //ConnectionInfo m_Connection = null;
-        //public ConnectionInfo Connection
-        //{
-        //    get
-        //    {
-        //        if (m_Connection == null)
-        //            m_Connection = new ConnectionInfo();
-        //        return m_Connection;
-        //    }
-        //}
-
         public PivotQueryManager(String query, String updateScript)
         {
             //m_Connection = connection;
@@ -62,29 +51,6 @@ namespace Ranet.AgOlap.Providers
             m_History = new HistoryManager();
             m_History.AddHistoryItem(new HistoryItem());
         }
-
-        //protected virtual IQueryExecuter CreateQueryExecutor(ConnectionInfo connection)
-        //{
-        //    return null;
-        //}
-
-        //private IQueryExecuter m_QueryExecutor;
-        //protected IQueryExecuter Executor
-        //{
-        //    get
-        //    {
-        //        if (m_QueryExecutor == null)
-        //        {
-        //            m_QueryExecutor = this.CreateQueryExecutor(this.Connection);
-        //            //if (m_QueryExecutor == null)
-        //            //{
-        //            //    throw new Exception("Unable to create query executor.");
-        //            //}
-        //        }
-
-        //        return m_QueryExecutor;
-        //    }
-        //}
 
         public void ChangeQuery(String query)
         {
@@ -391,144 +357,114 @@ namespace Ranet.AgOlap.Providers
 
         void CollapseMember(PerformMemberActionArgs args)
         {
-            //using (WaitCursor wc = new WaitCursor())
+            IList<DrillActionContainer> actions = null;
+            if (!RotateAxes)
             {
-                IList<DrillActionContainer> actions = null;
-                if (!RotateAxes)
-                {
-                    actions = args.AxisIndex == 0 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
-                }
-                else
-                {
-                    actions = args.AxisIndex == 1 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
-                }
-                DrillActionContainer previous = null;
-                DrillActionContainer container = null;
+                actions = args.AxisIndex == 0 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
+            }
+            else
+            {
+                actions = args.AxisIndex == 1 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
+            }
+            DrillActionContainer previous = null;
+            DrillActionContainer container = null;
 
-                // Родители
-                if (args.Ascendants != null)
+            // Родители
+            if (args.Ascendants != null)
+            {
+                for (int i = args.Ascendants.Count - 1; i >= 0; i--)
                 {
-                    for (int i = args.Ascendants.Count - 1; i >= 0; i--)
+                    MemberInfo mi = args.Ascendants[i];
+
+                    container = History.CurrentHistoryItem.FindDrillActionContainer(actions, mi.UniqueName);
+                    if (container == null)
                     {
-                        MemberInfo mi = args.Ascendants[i];
-
-                        container = History.CurrentHistoryItem.FindDrillActionContainer(actions, mi.UniqueName);
-                        if (container == null)
-                        {
-                            container = new DrillActionContainer(mi.UniqueName, mi.HierarchyUniqueName);
-                            if (previous == null)
-                                actions.Add(container);
-                            else
-                                previous.Children.Add(container);
-                        }
-                        previous = container;
+                        container = new DrillActionContainer(mi.UniqueName, mi.HierarchyUniqueName);
+                        if (previous == null)
+                            actions.Add(container);
+                        else
+                            previous.Children.Add(container);
                     }
-                }
-
-                // Сам элемент
-                container = History.CurrentHistoryItem.FindDrillActionContainer(actions, args.Member.UniqueName);
-                if (container == null)
-                {
-                    container = new DrillActionContainer(args.Member.UniqueName, args.Member.HierarchyUniqueName);
-                    container.Action = new MdxCollapseAction(args.Member.UniqueName);
-                    if (previous == null)
-                        actions.Add(container);
-                    else
-                        previous.Children.Add(container);
-                }
-                else
-                {
-                    // Удалем все дочерние - тем самым как бы схлопываем элемент
-                    // Удаляем все вложенные экшены для данной иерархии
-                    IList<DrillActionContainer> actionsToHierarchy = History.CurrentHistoryItem.FindDrillActionContainersByHierarchy(container.Children, args.Member.HierarchyUniqueName);
-                    if (actionsToHierarchy != null)
-                    {
-                        // Все действия зануляем
-                        foreach (DrillActionContainer action in actionsToHierarchy)
-                        {
-                            action.Action = null;
-                        }
-                    }
-                    container.Action = new MdxCollapseAction(args.Member.UniqueName);
+                    previous = container;
                 }
             }
-        }
 
-        void DrillDownMember(PerformMemberActionArgs args)
-        {
-            //using (WaitCursor wc = new WaitCursor())
+            // Сам элемент
+            container = History.CurrentHistoryItem.FindDrillActionContainer(actions, args.Member.UniqueName);
+            if (container == null)
             {
-                IList<DrillActionContainer> actions = null;
-                if (!RotateAxes)
-                {
-                    actions = args.AxisIndex == 0 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
-                }
+                container = new DrillActionContainer(args.Member.UniqueName, args.Member.HierarchyUniqueName);
+                container.Action = new MdxCollapseAction(args.Member.UniqueName);
+                if (previous == null)
+                    actions.Add(container);
                 else
-                {
-                    actions = args.AxisIndex == 1 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
-                }
-                DrillActionContainer previous = null;
-                DrillActionContainer container = null;
-
-                /*// Действия над элементами из этой же иерархии
-                IList<DrillActionContainer> actionsToHierarchy = this.FindDrillActionContainersByHierarchy(actions, args.Member.HierarchyUniqueName);
+                    previous.Children.Add(container);
+            }
+            else
+            {
+                // Удалем все дочерние - тем самым как бы схлопываем элемент
+                // Удаляем все вложенные экшены для данной иерархии
+                IList<DrillActionContainer> actionsToHierarchy = History.CurrentHistoryItem.FindDrillActionContainersByHierarchy(container.Children, args.Member.HierarchyUniqueName);
                 if (actionsToHierarchy != null)
-                { 
+                {
                     // Все действия зануляем
                     foreach (DrillActionContainer action in actionsToHierarchy)
                     {
                         action.Action = null;
                     }
-                }*/
+                }
+                container.Action = new MdxCollapseAction(args.Member.UniqueName);
+            }
+        }
 
-                // Родители
-                if (args.Ascendants != null)
+        void DrillDownMember(PerformMemberActionArgs args)
+        {
+            IList<DrillActionContainer> actions = null;
+            if (!RotateAxes)
+            {
+                actions = args.AxisIndex == 0 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
+            }
+            else
+            {
+                actions = args.AxisIndex == 1 ? History.CurrentHistoryItem.ColumnsActionChain : History.CurrentHistoryItem.RowsActionChain;
+            }
+            DrillActionContainer previous = null;
+            DrillActionContainer container = null;
+
+            // Родители
+            if (args.Ascendants != null)
+            {
+                for (int i = args.Ascendants.Count - 1; i >= 0; i--)
                 {
-                    for (int i = args.Ascendants.Count - 1; i >= 0; i--)
+                    MemberInfo mi = args.Ascendants[i];
+                    container = History.CurrentHistoryItem.FindDrillActionContainer(actions, mi.UniqueName);
+                    if (container == null)
                     {
-                        MemberInfo mi = args.Ascendants[i];
-                        container = History.CurrentHistoryItem.FindDrillActionContainer(actions, mi.UniqueName);
-                        if (container == null)
-                        {
-                            container = new DrillActionContainer(mi.UniqueName, mi.HierarchyUniqueName);
-                            if (previous == null)
-                                actions.Add(container);
-                            else
-                                previous.Children.Add(container);
-                        }
-                        previous = container;
+                        container = new DrillActionContainer(mi.UniqueName, mi.HierarchyUniqueName);
+                        if (previous == null)
+                            actions.Add(container);
+                        else
+                            previous.Children.Add(container);
                     }
-                }
-
-                // Сам элемент
-                container = History.CurrentHistoryItem.FindDrillActionContainer(actions, args.Member.UniqueName);
-                if (container == null)
-                {
-                    container = new DrillActionContainer(args.Member.UniqueName, args.Member.HierarchyUniqueName);
-                    container.Action = new MdxDrillDownAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth);
-                    if (previous == null)
-                        actions.Add(container);
-                    else
-                        previous.Children.Add(container);
-                }
-                else
-                {
-                    container.Action = new MdxDrillDownAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth);
+                    previous = container;
                 }
             }
-            /*using (WaitCursor wc = new WaitCursor())
+
+            // Сам элемент
+            container = History.CurrentHistoryItem.FindDrillActionContainer(actions, args.Member.UniqueName);
+            if (container == null)
             {
-                IList<DrillActionContainer> actions = args.AxisIndex == 0 ? ColumnsActionChain : RowsActionChain;
-
-                actions.Clear();
-                
-                DrillActionContainer container = new DrillActionContainer(args.Member.UniqueName);
-                container.Action = new MdxDrillDownAction(args.Member.UniqueName);
-
-                actions.Add(container);
-
-                this.RefreshQuery();
-            }*/
+                container = new DrillActionContainer(args.Member.UniqueName, args.Member.HierarchyUniqueName);
+                container.Action = new MdxDrillDownAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth);
+                if (previous == null)
+                    actions.Add(container);
+                else
+                    previous.Children.Add(container);
+            }
+            else
+            {
+                container.Action = new MdxDrillDownAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth);
+            }
         }
 
         void DrillUpMember(PerformMemberActionArgs args)
@@ -605,19 +541,6 @@ namespace Ranet.AgOlap.Providers
                     container.Action = new MdxDrillUpAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth);
                 }
             }
-            /*using (WaitCursor wc = new WaitCursor())
-            {
-                IList<DrillActionContainer> actions = args.AxisIndex == 0 ? ColumnsActionChain : RowsActionChain;
-
-                actions.Clear();
-
-                DrillActionContainer container = new DrillActionContainer(args.Member.UniqueName);
-                container.Action = new MdxDrillUpAction(args.Member.UniqueName);
-
-                actions.Add(container);
-
-                this.RefreshQuery();
-            }*/
         }
 
         public bool HideEmptyRows { get; set; }
@@ -632,20 +555,13 @@ namespace Ranet.AgOlap.Providers
             return String.Empty;
         }
 
-        //public CellSetData RefreshQuery()
-        //{
-        //    return this.RefreshQuery(null);
-        //}
-
         public String RefreshQuery()
         {
             return this.RefreshQuery(null);
         }
 
-        //public CellSetData RefreshQuery(Func<MdxObject, MdxObject> objectConsumerPattern)
         public String RefreshQuery(Func<MdxObject, MdxObject> objectConsumerPattern)
         {
-            //CellSetData res = null;
             String res = String.Empty;
             if (!string.IsNullOrEmpty(Query))
             {
@@ -655,20 +571,9 @@ namespace Ranet.AgOlap.Providers
                     provider.GenerateMdxFromDom(this.CreateWrappedStatement(), sb, new MdxGeneratorOptions());
 
                     res = sb.ToString();
-                    //String new_Query = sb.ToString();
-                    //res = ExecuteQuery(new_Query);
-
-                    //if (!String.IsNullOrEmpty(res))
-                    //{
-                    //    Application[QUERY] = new_Query;
-                    //}
                 }
             }
-            else
-            {
-                // Пустой запрос
-                //res = new CellSetData();
-            }
+
             return res;
         }
 
@@ -920,7 +825,7 @@ namespace Ranet.AgOlap.Providers
             return expr;
         }
 
-        public List<String> BuildUpdateScripts(String cubeName, List<UpdateEntry> entries)
+        public virtual IEnumerable<String> BuildUpdateScripts(String cubeName, IEnumerable<UpdateEntry> entries)
         {
             var commands = UpdateScriptParser.GetUpdateScripts(cubeName, UpdateScript, entries);
             return commands;
@@ -970,6 +875,5 @@ namespace Ranet.AgOlap.Providers
             }
             return result;
         }
-
     }
 }

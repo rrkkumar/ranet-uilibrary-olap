@@ -98,8 +98,7 @@ namespace Ranet.Olap.Mdx
 				)
 			: this(null, axes, null, (MdxObjectReferenceExpression)null)
 		{
-		}
-		public MdxSelectStatement(
+		}public MdxSelectStatement(
 				IEnumerable<MdxWithClauseItem> with,
 				IEnumerable<MdxAxis> axes,
 				MdxWhereClause where)
@@ -254,7 +253,6 @@ namespace Ranet.Olap.Mdx
 				}
 			}
 		}
-
 		public override object Clone()
 		{
 			if (m_SubSelect != null)

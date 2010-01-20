@@ -51,6 +51,7 @@ namespace Ranet.Olap.Core.Providers.ClientServer
         public String SessionId = String.Empty;
 
         List<String> m_Queries;
+        // TODO: Use own collection or simplified interface.
         public List<String> Queries
         {
             get

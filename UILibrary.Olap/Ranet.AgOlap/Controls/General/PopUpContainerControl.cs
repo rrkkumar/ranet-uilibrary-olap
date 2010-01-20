@@ -31,6 +31,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.Buttons;
 using Ranet.AgOlap.Controls.Forms;
+using Ranet.AgOlap.Controls.General.Tree;
 
 namespace Ranet.AgOlap.Controls.General
 {
@@ -40,6 +41,8 @@ namespace Ranet.AgOlap.Controls.General
         public readonly TextBox SelectedItemTextBox = null;
         RanetButton m_SelectButton = null;
 
+        Storyboard resDoubleClickTimer;
+
         public PopUpContainerControl()
         {
             LayoutRoot = new Grid(){Background = new SolidColorBrush(Colors.White) };
@@ -47,7 +50,7 @@ namespace Ranet.AgOlap.Controls.General
             LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto});
 
 
-            SelectedItemTextBox = new SimpleTextBox(){ IsReadOnly = true, IsTabStop = false };
+            SelectedItemTextBox = new SingleLineTextBox() { IsReadOnly = true, IsTabStop = false };
             SelectedItemTextBox.VerticalAlignment = VerticalAlignment.Stretch;
             SelectedItemTextBox.Margin = new Thickness(0);
             SelectedItemTextBox.Padding = new Thickness(2, 0, 0, 0);
@@ -68,7 +71,35 @@ namespace Ranet.AgOlap.Controls.General
 
             this.Height = 20;
 
+            resDoubleClickTimer = new Storyboard();
+            resDoubleClickTimer.Duration = new Duration(new TimeSpan(0, 0, 0, 0, 250));
+            resDoubleClickTimer.Completed += new EventHandler(Storyboard_Completed);
+            LayoutRoot.Resources.Add("resDoubleClickTimer", resDoubleClickTimer);
+
+            this.MouseLeftButtonDown += new MouseButtonEventHandler(TreeItemControl_MouseLeftButtonDown);
+
             this.Content = LayoutRoot;
+        }
+        
+        int m_ClickCount = 0;
+        MouseButtonEventArgs m_LastArgs;
+
+        void TreeItemControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            m_ClickCount++;
+            m_LastArgs = e;
+            resDoubleClickTimer.Begin();
+        }
+
+        private void Storyboard_Completed(object sender, EventArgs e)
+        {
+            if (m_ClickCount > 1)
+            {
+                // По двойному клику отображаем контейнер
+                if (!IsDropDownOpen)
+                    IsDropDownOpen = true;
+            }
+            m_ClickCount = 0;
         }
 
         public new double Height

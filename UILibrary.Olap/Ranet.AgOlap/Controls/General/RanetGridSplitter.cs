@@ -11,11 +11,11 @@ using System.Windows.Shapes;
 
 namespace Ranet.AgOlap.Controls.General
 {
-    public class RenetGridSplitter : GridSplitter
+    public class RanetGridSplitter : GridSplitter
     {
-        public RenetGridSplitter()
+        public RanetGridSplitter()
         {
-            DefaultStyleKey = typeof(RenetGridSplitter);
+            DefaultStyleKey = typeof(RanetGridSplitter);
         }
     }
 }

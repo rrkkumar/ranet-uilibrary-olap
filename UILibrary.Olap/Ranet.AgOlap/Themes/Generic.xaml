@@ -30,14 +30,14 @@
         </Setter>
     </Style>
 
-    <Style TargetType="controls:RenetGridSplitter">
+    <Style TargetType="controls:RanetGridSplitter">
         <Setter Property="Background" Value="#FFFFFFFF"/>
         <Setter Property="IsTabStop" Value="true"/>
         <Setter Property="PreviewStyle" Value="{StaticResource GridSplitterPreviewStyle}"/>
         <Setter Property="HorizontalAlignment" Value="Right"/>
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="controls:RenetGridSplitter">
+                <ControlTemplate TargetType="controls:RanetGridSplitter">
                     <Grid x:Name="Root" IsHitTestVisible="{TemplateBinding IsEnabled}">
                         <vsm:VisualStateManager.VisualStateGroups>
                             <vsm:VisualStateGroup x:Name="CommonStates">

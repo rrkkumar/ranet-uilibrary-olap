@@ -106,6 +106,7 @@
     <Compile Include="Compiler\Parser\Antlr.Runtime\UnwantedTokenException.cs" />
     <Compile Include="Compiler\Parser\mdxLexer.cs" />
     <Compile Include="Compiler\Parser\mdxParser.cs" />
+    <Compile Include="MdxQueryContext.cs" />
     <Compile Include="IMdxFastClonable.cs" />
     <Compile Include="IMdxIdentifier.cs" />
     <Compile Include="MdxAssignmentStatement.cs" />

@@ -58,18 +58,18 @@ namespace Ranet.AgOlap.Controls
         public ServerExplorerCtrl()
         {
             m_CubeBrowser = new CubeBrowserCtrl();
-            m_CubeBrowser.Margin = new Thickness(0, 3, 0, 0);
 
-            Border border = new Border() { BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
-            Grid LayoutRoot = new Grid() { Margin = new Thickness(3) };
+            Grid LayoutRoot = new Grid();
             LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(22) });
+            LayoutRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
             LayoutRoot.RowDefinitions.Add(new RowDefinition());
 
-            var cubesComboHeader = new HeaderControl(UriResources.Images.Cube16, Localization.MdxDesigner_Cube) { Margin = new Thickness(0, 5, 0, 3) };
+            var cubesComboHeader = new HeaderControl(UriResources.Images.Cube16, Localization.MdxDesigner_Cube) { Margin = new Thickness(0, 0, 0, 3) };
 
             Cubes_ComboBox = new ComboBoxEx();
             Cubes_ComboBox.SelectionChanged += new SelectionChangedEventHandler(Cubes_ComboBox_SelectionChanged);
+            Cubes_ComboBox.Height = 22;
+            Cubes_ComboBox.Margin = new Thickness(0, 0, 0, 5);
 
             LayoutRoot.Children.Add(cubesComboHeader);
             LayoutRoot.Children.Add(Cubes_ComboBox);
@@ -77,8 +77,7 @@ namespace Ranet.AgOlap.Controls
             LayoutRoot.Children.Add(m_CubeBrowser);
             Grid.SetRow(m_CubeBrowser, 2);
 
-            border.Child = LayoutRoot;
-            base.Content = border;
+            base.Content = LayoutRoot;
 
             m_OlapDataLoader = GetOlapDataLoader();
 

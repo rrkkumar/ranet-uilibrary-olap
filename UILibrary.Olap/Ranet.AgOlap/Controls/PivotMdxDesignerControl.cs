@@ -87,6 +87,7 @@ namespace Ranet.AgOlap.Controls
         Border Input_Border;
         GridSplitter Output_HorzSplitter;
         Border Mdx_Border;
+        Border Pivot_Border;
         Grid Areas_LayoutRoot;
 
         ColumnDefinition m_Input_Column;
@@ -182,7 +183,7 @@ namespace Ranet.AgOlap.Controls
             Input_LayoutRoot.RowDefinitions.Add(new RowDefinition());
 
             Input_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
-            Input_Border.Margin = new Thickness(0, 0, 3, 0);
+            Input_Border.Margin = new Thickness(0, 0, 5, 0);
             Input_Border.Child = Input_LayoutRoot;
 
             Grid Ouput_LayoutRoot = new Grid();
@@ -198,10 +199,9 @@ namespace Ranet.AgOlap.Controls
             Grid.SetRow(Ouput_LayoutRoot, 1);
             Grid.SetColumn(Ouput_LayoutRoot, 1);
 
-            LayoutRoot_VertSplitter = new GridSplitter();
+            LayoutRoot_VertSplitter = new RanetGridSplitter();
             LayoutRoot_VertSplitter.VerticalAlignment = VerticalAlignment.Stretch;
             LayoutRoot_VertSplitter.HorizontalAlignment = HorizontalAlignment.Right;
-            LayoutRoot_VertSplitter.Width = 3;
             LayoutRoot_VertSplitter.IsTabStop = false;
             LayoutRoot_VertSplitter.Background = new SolidColorBrush(Colors.Transparent);
             LayoutRoot.Children.Add(LayoutRoot_VertSplitter);
@@ -209,27 +209,17 @@ namespace Ranet.AgOlap.Controls
             Grid.SetColumn(LayoutRoot_VertSplitter, 0);
 
             // Информация о кубе
-            Grid Cube_LayotRoot = new Grid();
-            Cube_LayotRoot.Margin = new Thickness(0, 3, 0, 0);
-            Cube_LayotRoot.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
-            Cube_LayotRoot.RowDefinitions.Add(new RowDefinition());
-            
-            // Заголовок
-            //HeaderControl cube_Header = new HeaderControl(UriResources.Images.Cube16, Localization.MdxDesigner_CubeMetadata) { Margin = new Thickness(0, 0, 0, 3) };
-            //Cube_LayotRoot.Children.Add(cube_Header);
-
             // Просмотрщик куба
             m_ServerExplorer = new ServerExplorerCtrl();
+            m_ServerExplorer.Margin = new Thickness(0, 0, 0, 5);   // Для RanetGridSplitter
             m_ServerExplorer.CubeBrowser.DragNodes = true;
             m_ServerExplorer.CubeBrowser.DragStarted += new EventHandler<DragNodeArgs<DragStartedEventArgs>>(m_CubeBrowser_DragStarted);
             m_ServerExplorer.CubeBrowser.DragDelta += new EventHandler<DragNodeArgs<DragDeltaEventArgs>>(m_CubeBrowser_DragDelta);
             m_ServerExplorer.CubeBrowser.DragCompleted += new EventHandler<DragNodeArgs<DragCompletedEventArgs>>(m_CubeBrowser_DragCompleted);
             m_ServerExplorer.CubeSelected += new EventHandler<CustomEventArgs<string>>(m_ServerExplorer_CubeSelected);
-            Cube_LayotRoot.Children.Add(m_ServerExplorer);
-            Grid.SetRow(m_ServerExplorer, 1);
 
-            Input_LayoutRoot.Children.Add(Cube_LayotRoot);
-            Grid.SetRow(Cube_LayotRoot, 0);
+            Input_LayoutRoot.Children.Add(m_ServerExplorer);
+            Grid.SetRow(m_ServerExplorer, 0);
 
             Areas_LayoutRoot = new Grid();
             Areas_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
@@ -239,7 +229,7 @@ namespace Ranet.AgOlap.Controls
 
             m_FilterAreaContainer = new PivotAreaContainer();
             m_FilterAreaContainer.ItemRemoved += new EventHandler<AreaItemArgs>(AreaContainer_ItemRemoved);
-            m_FilterAreaContainer.Margin = new Thickness(0, 5, 0, 0);
+            m_FilterAreaContainer.Margin = new Thickness(0, 3, 0, 0);
             m_FilterAreaContainer.Icon = UriResources.Images.FiltersArea16;
             m_FilterAreaContainer.Caption = Localization.MdxDesigner_FilterArea_Caption;
             m_FilterAreaContainer.BeforeShowContextMenu += new EventHandler<AreaItemArgs>(m_FilterAreaContainer_BeforeShowContextMenu);
@@ -261,7 +251,7 @@ namespace Ranet.AgOlap.Controls
 
             m_ColumnsAreaContainer = new PivotAreaContainer();
             m_ColumnsAreaContainer.ItemRemoved += new EventHandler<AreaItemArgs>(AreaContainer_ItemRemoved);
-            m_ColumnsAreaContainer.Margin = new Thickness(5, 5, 0, 0);
+            m_ColumnsAreaContainer.Margin = new Thickness(5, 3, 0, 0);
             m_ColumnsAreaContainer.Icon = UriResources.Images.ColumnsArea16;
             m_ColumnsAreaContainer.Caption = Localization.MdxDesigner_ColumnsArea_Caption;
             m_ColumnsAreaContainer.BeforeShowContextMenu += new EventHandler<AreaItemArgs>(m_ColumnsAreaContainer_BeforeShowContextMenu);
@@ -283,10 +273,9 @@ namespace Ranet.AgOlap.Controls
             Input_LayoutRoot.Children.Add(Areas_LayoutRoot);
             Grid.SetRow(Areas_LayoutRoot, 1);
 
-            GridSplitter Input_HorzSplitter = new GridSplitter();
+            GridSplitter Input_HorzSplitter = new RanetGridSplitter();
             Input_HorzSplitter.VerticalAlignment = VerticalAlignment.Bottom;
             Input_HorzSplitter.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Input_HorzSplitter.Height = 3;
             Input_HorzSplitter.IsTabStop = false;
             Input_HorzSplitter.Background = new SolidColorBrush(Colors.Transparent);
             Input_LayoutRoot.Children.Add(Input_HorzSplitter);
@@ -313,17 +302,16 @@ namespace Ranet.AgOlap.Controls
             Pivot_LayotRoot.Children.Add(m_PivotGrid);
             Grid.SetRow(m_PivotGrid, 1);
 
-            Border Pivot_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
-            Pivot_Border.Margin = new Thickness(0, 0, 0, 0);
+            Pivot_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
+            Pivot_Border.Margin = new Thickness(0, 1, 0, 0);
             Pivot_Border.Child = Pivot_LayotRoot;
 
             Ouput_LayoutRoot.Children.Add(Pivot_Border);
             Grid.SetRow(Pivot_Border, 1);
 
-            Output_HorzSplitter = new GridSplitter();
+            Output_HorzSplitter = new RanetGridSplitter();
             Output_HorzSplitter.VerticalAlignment = VerticalAlignment.Bottom;
             Output_HorzSplitter.HorizontalAlignment = HorizontalAlignment.Stretch;
-            Output_HorzSplitter.Height = 3;
             Output_HorzSplitter.IsTabStop = false;
             Output_HorzSplitter.Background = new SolidColorBrush(Colors.Transparent);
             Ouput_LayoutRoot.Children.Add(Output_HorzSplitter);
@@ -350,7 +338,7 @@ namespace Ranet.AgOlap.Controls
             Grid.SetRow(m_MdxQuery, 1);
 
             Mdx_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
-            Mdx_Border.Margin = new Thickness(0, 0, 0, 4);
+            Mdx_Border.Margin = new Thickness(0, 0, 0, 5);
             Mdx_Border.Child = Mdx_LayotRoot;
 
             Ouput_LayoutRoot.Children.Add(Mdx_Border);
@@ -960,6 +948,7 @@ namespace Ranet.AgOlap.Controls
             {
                 m_MDX_Row.Height = new GridLength(m_MDXRowHeight);
                 Mdx_Border.Visibility = Visibility.Visible;
+                Pivot_Border.Margin = new Thickness(0, 1, 0, 0);
                 Output_HorzSplitter.Visibility = Visibility.Visible;
             }
             else
@@ -967,6 +956,7 @@ namespace Ranet.AgOlap.Controls
                 m_MDXRowHeight = m_MDX_Row.ActualHeight;
                 m_MDX_Row.Height = new GridLength(0.0);
                 Mdx_Border.Visibility = Visibility.Collapsed;
+                Pivot_Border.Margin = new Thickness(0, 0, 0, 0);
                 Output_HorzSplitter.Visibility = Visibility.Collapsed;
             }
         }
@@ -1277,12 +1267,16 @@ namespace Ranet.AgOlap.Controls
                 select_count++;
             }
 
-            if(String.IsNullOrEmpty(inner_from))
+            if (String.IsNullOrEmpty(inner_from))
+            {
                 inner_from = FromSet;
+                inner_from += Environment.NewLine + where_Set;  // 102.94731
+            }
             else
             {
                 inner_from += FromSet;
-                for(int i = 0; i < select_count; i++)
+                inner_from += Environment.NewLine + where_Set; // 102.94731
+                for (int i = 0; i < select_count; i++)
                 {
                     inner_from += ")";
                 }

@@ -404,41 +404,53 @@ namespace Ranet.Olap.Core.Providers
 
         public class SortComparer : IComparer<MemberInfo>
         {
-            SortTypes SortType = SortTypes.None;
-            public SortComparer(SortTypes sortType)
+            SortDescriptor Sort;
+            public SortComparer(SortDescriptor sort)
             {
-                SortType = sortType;
+                Sort = sort;
             }
 
             #region IComparer<MemberInfo> Members
 
             public int Compare(MemberInfo x, MemberInfo y)
             {
-                switch (SortType)
+                if (Sort != null)
                 {
-                    case SortTypes.None:
-                        if (x == null || y == null)
+                    switch (Sort.Type)
+                    {
+                        case SortTypes.None:
+                            if (x == null || y == null)
+                                return 0;
+                            return x.MemberOrder.CompareTo(y.MemberOrder);
+                        case SortTypes.Ascending:
+                            if (x == null && y == null)
+                                return 0;
+                            if (x == null)
+                                return -1;
+                            if (y == null)
+                                return 1;
+                            if(Sort.SortBy == "Caption")
+                                return x.Caption.CompareTo(y.Caption);
+                            if (Sort.SortBy == "Key0")
+                                return x.Key0.CompareTo(y.Key0);
                             return 0;
-                        return x.MemberOrder.CompareTo(y.MemberOrder);
-                    case SortTypes.Ascending:
-                        if (x == null && y == null)
+                        case SortTypes.Descending:
+                            if (x == null && y == null)
+                                return 0;
+                            if (x == null)
+                                return 1;
+                            if (y == null)
+                                return -1;
+                            if (Sort.SortBy == "Caption")
+                                return x.Caption.CompareTo(y.Caption) * -1;
+                            if (Sort.SortBy == "Key0")
+                                return x.Key0.CompareTo(y.Key0) * -1;
                             return 0;
-                        if (x == null)
-                            return -1;
-                        if (y == null)
-                            return 1;
-                        return x.Caption.CompareTo(y.Caption);
-                    case SortTypes.Descending:
-                        if (x == null && y == null)
+                        default:
                             return 0;
-                        if (x == null)
-                            return 1;
-                        if (y == null)
-                            return -1;
-                        return x.Caption.CompareTo(y.Caption) * -1;
-                    default:
-                        return 0;
+                    }
                 }
+                return 0;
             }
 
             #endregion

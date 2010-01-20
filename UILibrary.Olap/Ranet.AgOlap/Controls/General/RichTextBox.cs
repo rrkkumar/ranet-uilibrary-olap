@@ -195,4 +195,24 @@ namespace Ranet.AgOlap.Controls.General
             }
         } 
     }
+
+    public class SingleLineTextBox : SimpleTextBox
+    {
+        public SingleLineTextBox()
+            : base()
+        {
+            
+        }
+
+        public override void OnApplyTemplate()
+        {
+            base.OnApplyTemplate();
+
+            var scrollViewer = base.GetTemplateChild("ContentElement") as ScrollViewer;
+            if (scrollViewer != null)
+            {
+                scrollViewer.Style = null;
+            }
+        } 
+    }
 }

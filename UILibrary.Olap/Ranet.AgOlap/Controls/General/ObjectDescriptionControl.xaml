@@ -35,10 +35,10 @@
         </Grid.RowDefinitions>
         
         <TextBlock Name="lblName" Text="Name:" Grid.Row="0"></TextBlock>
-        <General:SimpleTextBox Name ="txtName" Grid.Row="1"></General:SimpleTextBox>
+        <General:SingleLineTextBox Name ="txtName" Grid.Row="1"></General:SingleLineTextBox>
         <TextBlock Name="lblCaption" Text="Caption:" Grid.Row="2" Margin="0,5"></TextBlock>
-        <General:SimpleTextBox Name ="txtCaption" Grid.Row="3" ></General:SimpleTextBox>
+        <General:SingleLineTextBox Name ="txtCaption" Grid.Row="3" ></General:SingleLineTextBox>
         <TextBlock Name="lblDescription" Text="Description:" Grid.Row="4" Margin="0,5"></TextBlock>
-        <General:SimpleTextBox Name ="txtDescription" Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True"></General:SimpleTextBox>
+        <General:RichTextBox Name ="txtDescription" Grid.Row="5" TextWrapping="Wrap" AcceptsReturn="True"></General:RichTextBox>
     </Grid>
 </UserControl>

@@ -47,6 +47,7 @@ namespace Ranet.AgOlap.Controls
         private Grid m_DataGrid;
         private BusyControl m_Waiting;
         private RanetHotButton m_Clear;
+        private ScrollViewer viewer;
         private Grid grdIsWaiting;
         private StackPanel m_Panel;
         private Dictionary<String, MemberData> m_LoadedMembers = new Dictionary<String, MemberData>();
@@ -57,7 +58,7 @@ namespace Ranet.AgOlap.Controls
         
         public SlicerCtrl()
         {
-            ScrollViewer viewer = new ScrollViewer();
+            viewer = new ScrollViewer();
             viewer.BorderThickness = new Thickness(0);
             viewer.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             viewer.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;                 
@@ -293,6 +294,10 @@ namespace Ranet.AgOlap.Controls
                 if (String.IsNullOrEmpty(Connection))
                     builder.Append(Localization.Connection_PropertyDesc);
                 LogManager.LogError(this, String.Format(Localization.ControlSettingsNotInitialized_Message, builder.ToString()));
+                this.m_Clear.Visibility = System.Windows.Visibility.Collapsed;
+                this.viewer.Content = String.Format(Localization.ControlSettingsNotInitialized_Message,
+                                                    builder.ToString());
+                this.IsWaiting = false;
                 return;
             }
 
@@ -307,7 +312,7 @@ namespace Ranet.AgOlap.Controls
                 }
             }
             else
-            {                
+            {                     
                 MdxQueryArgs args = CommandHelper.CreateMdxQueryArgs(Connection, Query);
                 OlapDataLoader.LoadData(args, null);
             }
@@ -349,6 +354,8 @@ namespace Ranet.AgOlap.Controls
             if (e.Error != null)
             {
                 LogManager.LogError(this, e.Error.ToString());
+                this.m_Clear.Visibility = System.Windows.Visibility.Collapsed;
+                this.viewer.Content = e.Error.ToString();
                 this.IsWaiting = false;
                 return;
             }
@@ -356,16 +363,30 @@ namespace Ranet.AgOlap.Controls
             if (e.Result.ContentType == InvokeContentType.Error)
             {
                 LogManager.LogError(this, e.Result.Content);
+                this.m_Clear.Visibility = System.Windows.Visibility.Collapsed;
+                this.viewer.Content = e.Result.Content;
                 this.IsWaiting = false;
                 return;
             }
 
+            try
+            {
+                CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
+                OnDatesLoaded(cs_descr);
+                UpdateGridCells();
+                this.IsWaiting = false;
+            }
+            catch (Exception exc)
+            {
+                this.IsWaiting = false;
+                this.m_Clear.Visibility = System.Windows.Visibility.Collapsed;
+                LogManager.LogError(this, exc.Message);
+                throw new Exception(exc.Message);
+                //this.viewer.Content = exc.Message;
+                //throw exc;
+            }
             //CellSetData cs_descr = XmlSerializationUtility.XmlStr2Obj<CellSetData>(e.Result);
-            CellSetData cs_descr = CellSetData.Deserialize(e.Result.Content);
-            OnDatesLoaded(cs_descr);
-
-            UpdateGridCells();
-            this.IsWaiting = false;
+                        
         }
 
         

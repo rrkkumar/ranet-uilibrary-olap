@@ -234,7 +234,23 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_HorizontalMouseWhellSupport.AddMouseWheelSupport(m_HorizontalScroll);
 
             m_TooltipController = new TooltipController(this);
+
+            this.MouseLeave += new MouseEventHandler(PivotGridControl_MouseLeave);
+            this.MouseMove += new MouseEventHandler(PivotGridControl_MouseMove);
         }
+
+        void PivotGridControl_MouseMove(object sender, MouseEventArgs e)
+        {
+            CurrentMousePosition = e.GetPosition(null);
+        }
+
+        void PivotGridControl_MouseLeave(object sender, MouseEventArgs e)
+        {
+            CurrentMousePosition = new Point(-1, -1);
+        }
+
+        // Текущая позиция мыши
+        internal Point CurrentMousePosition = new Point(-1, -1);
 
         bool m_UseContextMenu = true;
         public bool UseContextMenu
@@ -567,10 +583,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         #endregion Свойства
 
         #region События         
-        public event MemberActionEventHandler DrillDownMember;
-        protected void Raise_DrillDownMember(MemberActionEventArgs args)
+        public event MemberActionEventHandler ExecuteMemberAction;
+        protected void Raise_ExecuteMemberAction(MemberActionEventArgs args)
         {
-            MemberActionEventHandler handler = this.DrillDownMember;
+            MemberActionEventHandler handler = this.ExecuteMemberAction;
             if (handler != null)
             {
                 handler(this, args);
@@ -911,56 +927,64 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void Refresh(RefreshType type)
         {
-            System.Diagnostics.Debug.WriteLine("\r\nPivotGrid refresh started");
-            if (FocusedCell != null && FocusedCell.IsEditing)
-                EndEdit();
-
-            DateTime start = DateTime.Now;
-
-            if (type == RefreshType.BuildEndRefresh)
+            try
             {
-                BuildAreasLayout();
-            }
-            
-            if(type != RefreshType.RefreshByRows)
-                BuildColumnsArea();
-            if (type != RefreshType.RefreshByColumns)
-                BuildRowsArea();
+                m_TooltipController.IsPaused = true;
 
-            BuildCellsArea();
-            BuildSplitters();
+                System.Diagnostics.Debug.WriteLine("\r\nPivotGrid refresh started");
+                if (FocusedCell != null && FocusedCell.IsEditing)
+                    EndEdit();
 
-            DateTime stop1 = DateTime.Now;
-            System.Diagnostics.Debug.WriteLine(" Building time: " + (stop1 - start).ToString());
+                DateTime start = DateTime.Now;
 
-            if (m_LayoutProvider != null)
-            {
+                if (type == RefreshType.BuildEndRefresh)
+                {
+                    BuildAreasLayout();
+                }
+
                 if (type != RefreshType.RefreshByRows)
-                {
-                    DateTime stop2_1 = DateTime.Now;
-                    InitializeColumnsArea(m_LayoutProvider);
-                    DateTime stop2_2 = DateTime.Now;
-                    System.Diagnostics.Debug.WriteLine(" InitializeColumnsArea time: " + (stop2_2 - stop2_1).ToString());
-                }
-
+                    BuildColumnsArea();
                 if (type != RefreshType.RefreshByColumns)
+                    BuildRowsArea();
+
+                BuildCellsArea();
+                BuildSplitters();
+
+                DateTime stop1 = DateTime.Now;
+                System.Diagnostics.Debug.WriteLine(" Building time: " + (stop1 - start).ToString());
+
+                if (m_LayoutProvider != null)
                 {
-                    DateTime stop3_1 = DateTime.Now;
-                    InitializeRowsArea(m_LayoutProvider);
-                    DateTime stop3_2 = DateTime.Now;
-                    System.Diagnostics.Debug.WriteLine(" InitializeRowsArea time: " + (stop3_2 - stop3_1).ToString());
+                    if (type != RefreshType.RefreshByRows)
+                    {
+                        DateTime stop2_1 = DateTime.Now;
+                        InitializeColumnsArea(m_LayoutProvider);
+                        DateTime stop2_2 = DateTime.Now;
+                        System.Diagnostics.Debug.WriteLine(" InitializeColumnsArea time: " + (stop2_2 - stop2_1).ToString());
+                    }
+
+                    if (type != RefreshType.RefreshByColumns)
+                    {
+                        DateTime stop3_1 = DateTime.Now;
+                        InitializeRowsArea(m_LayoutProvider);
+                        DateTime stop3_2 = DateTime.Now;
+                        System.Diagnostics.Debug.WriteLine(" InitializeRowsArea time: " + (stop3_2 - stop3_1).ToString());
+                    }
+
+                    DateTime stop4_1 = DateTime.Now;
+                    InitializeCellsArea(m_LayoutProvider);
+                    DateTime stop4_2 = DateTime.Now;
+                    System.Diagnostics.Debug.WriteLine(" InitializeCellsArea time: " + (stop4_2 - stop4_1).ToString());
+
+                    InitializeSplitters();
                 }
 
-                DateTime stop4_1 = DateTime.Now;
-                InitializeCellsArea(m_LayoutProvider);
-                DateTime stop4_2 = DateTime.Now;
-                System.Diagnostics.Debug.WriteLine(" InitializeCellsArea time: " + (stop4_2 - stop4_1).ToString());
-
-                InitializeSplitters();
+                DateTime stop = DateTime.Now;
+                System.Diagnostics.Debug.WriteLine("PivotGrid refreshing time: " + (stop - start).ToString());
             }
-
-            DateTime stop = DateTime.Now;
-            System.Diagnostics.Debug.WriteLine("PivotGrid refreshing time: " + (stop - start).ToString());
+            finally {
+                m_TooltipController.IsPaused = false;
+            }
         }
 
         //void RefreshByColumnsArea()
@@ -1701,8 +1725,44 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             DateTime start = DateTime.Now;
 
             #region Сплиттеры
-            // Добавляем спилиттеры для изменения ширины
-            for (int i = 0; i < ItemsLayoutRoot.ColumnDefinitions.Count; i++)
+            //// Добавляем сплиттеры для изменения ширины
+            //for (int i = 0; i < ItemsLayoutRoot.ColumnDefinitions.Count; i++)
+            //{
+            //    if (!m_Vertiacal_Splitters.ContainsKey(i))
+            //    {
+            //        m_Vertiacal_Splitters.Add(i, Add_VertSplitter(ItemsLayoutRoot, i, 0, ItemsLayoutRoot.RowDefinitions.Count));
+            //    }
+            //    else
+            //    {
+            //        GridSplitter splitter = m_Vertiacal_Splitters[i];
+            //        if (Grid.GetRowSpan(splitter) != ItemsLayoutRoot.RowDefinitions.Count)
+            //        {
+            //            Grid.SetRowSpan(splitter, ItemsLayoutRoot.RowDefinitions.Count);
+            //        }
+            //    }
+            //}
+
+            //// Добавляем сплиттеры для изменения высоты
+            //for (int i = 0; i < ItemsLayoutRoot.RowDefinitions.Count; i++)
+            //{
+            //    if (!m_Horizontal_Splitters.ContainsKey(i))
+            //    {
+            //        GridSplitter splitter = Add_HorzSplitter(ItemsLayoutRoot, 0, i, ItemsLayoutRoot.ColumnDefinitions.Count);
+            //        m_Horizontal_Splitters.Add(i, splitter);
+            //    }
+            //    else
+            //    {
+            //        GridSplitter splitter = m_Horizontal_Splitters[i];
+            //        if (Grid.GetColumnSpan(splitter) != ItemsLayoutRoot.ColumnDefinitions.Count)
+            //        {
+            //            Grid.SetColumnSpan(splitter, ItemsLayoutRoot.ColumnDefinitions.Count);
+            //        }
+            //    }
+            //}
+
+            
+            // Сплиттеры ширины на область строк
+            for (int i = PivotArea_BeginColumnIndex; i < RowsArea_ColumnsCount; i++)
             {
                 if (!m_Vertiacal_Splitters.ContainsKey(i))
                 {
@@ -1717,9 +1777,30 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     }
                 }
             }
+            // Сплиттеры ширины на область ячеек
+            int rowSpan = ItemsLayoutRoot.RowDefinitions.Count - CellsArea_BeginRowIndex;
+            if (rowSpan > 0)
+            {
+                // Добавляем сплиттеры для изменения ширины
+                for (int i = CellsArea_BeginColumnIndex; i < ItemsLayoutRoot.ColumnDefinitions.Count; i++)
+                {
+                    if (!m_Vertiacal_Splitters.ContainsKey(i))
+                    {
+                        m_Vertiacal_Splitters.Add(i, Add_VertSplitter(ItemsLayoutRoot, i, CellsArea_BeginRowIndex, rowSpan));
+                    }
+                    else
+                    {
+                        GridSplitter splitter = m_Vertiacal_Splitters[i];
+                        if (Grid.GetRowSpan(splitter) != rowSpan)
+                        {
+                            Grid.SetRowSpan(splitter, rowSpan);
+                        }
+                    }
+                }
+            }
 
-            // Добавляем спилиттеры для изменения высоты
-            for (int i = 0; i < ItemsLayoutRoot.RowDefinitions.Count; i++)
+            // Сплиттеры высоты на область колонок
+            for (int i = PivotArea_BeginRowIndex; i < ColumnsArea_RowsCount; i++)
             {
                 if (!m_Horizontal_Splitters.ContainsKey(i))
                 {
@@ -1735,7 +1816,28 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     }
                 }
             }
-
+            // Сплиттеры высоты на область ячеек
+            int columnSpan = ItemsLayoutRoot.ColumnDefinitions.Count - CellsArea_BeginColumnIndex;
+            if (columnSpan > 0)
+            {
+                // Добавляем сплиттеры для изменения высоты
+                for (int i = CellsArea_BeginRowIndex; i < ItemsLayoutRoot.RowDefinitions.Count; i++)
+                {
+                    if (!m_Horizontal_Splitters.ContainsKey(i))
+                    {
+                        GridSplitter splitter = Add_HorzSplitter(ItemsLayoutRoot, CellsArea_BeginColumnIndex, i, columnSpan);
+                        m_Horizontal_Splitters.Add(i, splitter);
+                    }
+                    else
+                    {
+                        GridSplitter splitter = m_Horizontal_Splitters[i];
+                        if (Grid.GetColumnSpan(splitter) != columnSpan)
+                        {
+                            Grid.SetColumnSpan(splitter, columnSpan);
+                        }
+                    }
+                }
+            }
             #endregion Сплиттеры
 
             DateTime stop = DateTime.Now;
@@ -1784,6 +1886,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         #region Инициализация областей
         List<MemberControl> m_ColumnsMembers = new List<MemberControl>();
+        Cache2D<GridSplitter> m_ColumnsArea_Splitters = new Cache2D<GridSplitter>();
 
         public void InitializeColumnsArea(PivotLayoutProvider layout)
         {
@@ -1792,6 +1895,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 ItemsLayoutRoot.Children.Remove(ctrl);
             }
             m_ColumnsMembers.Clear();
+
+            for (int c = 0; c < m_ColumnsArea_Splitters.Columns_Size; c++)
+                for (int r = 0; r < m_ColumnsArea_Splitters.Rows_Size; r++)
+                {
+                    var splitter = m_ColumnsArea_Splitters[c, r];
+                    if (splitter != null)
+                    {
+                        ItemsLayoutRoot.Children.Remove(splitter);
+                    }
+                }
+            m_ColumnsArea_Splitters = new Cache2D<GridSplitter>();
 
             ColumnsArea_LovestMemberControls.Clear();
             
@@ -1825,7 +1939,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     m_MemberControls_Dict.Add(member_item.PivotMember.Member, member_Control);
 
                                     // Подписываемся на Drill-операцию
-                                    member_Control.DrillDownMember += new MemberActionEventHandler(OnDrillDownMember);
+                                    member_Control.ExecuteMemberAction += new MemberActionEventHandler(OnExecuteMemberAction);
+                                    // Подписываемся на операцию по умолчанию
                                 }
 
                                 if (CellsArea_BeginRowIndex > 0 && row_indx == CellsArea_BeginRowIndex - 1)
@@ -1834,11 +1949,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     {
                                         ColumnsArea_LovestMemberControls.Add(member_Control);
 
-                                        if (m_Vertiacal_Splitters.ContainsKey(layout_column_indx))
-                                        {
-                                            m_Vertiacal_Splitters[layout_column_indx].Tag = member_Control;
-                                            //Canvas.SetZIndex(m_Vertiacal_Splitters[layout_column_indx], 10);
-                                        }
+                                        //if (m_Vertiacal_Splitters.ContainsKey(layout_column_indx))
+                                        //{
+                                        //    m_Vertiacal_Splitters[layout_column_indx].Tag = member_Control;
+                                        //    //Canvas.SetZIndex(m_Vertiacal_Splitters[layout_column_indx], 10);
+                                        //}
                                     }
                                 }
 
@@ -1867,6 +1982,30 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 {
                                     member_Control.ShowUpBorder(false);
                                 }
+
+                                // Если элемент размером на несколько строк, то сплиттер добавляем на последнюю строку
+                                int cells_area_index = column_indx + (member_item.ColumnSpan > 1 ? (member_item.ColumnSpan - 1) : 0);
+                                var splitter = Add_VertSplitter(ItemsLayoutRoot, ColumnsArea_BeginColumnIndex + cells_area_index, row_indx, 1);
+                                splitter.Margin = new Thickness(0, member_Control.Margin.Top, 0, 0);
+                                m_ColumnsArea_Splitters.Add(splitter, cells_area_index, row_indx);
+
+                                // Чтобы сплиттер для элемента не накладывался на DrillDown родителя
+                                if (column_indx > 0)
+                                {
+                                    // Верхнее смещение сплиттера должно быть как смещение следующего за сплиттером контрола
+                                    var prev_member_splitter = m_ColumnsArea_Splitters[column_indx - 1, row_indx];
+                                    if (prev_member_splitter != null)
+                                    {
+                                        prev_member_splitter.Margin = new Thickness(0, member_Control.Margin.Top, 0, 0);
+                                    }
+                                    else
+                                    {
+                                        // Если сплиттер на предыдущей строке разметки не найден, то добавим его
+                                        prev_member_splitter = Add_VertSplitter(ItemsLayoutRoot, ColumnsArea_BeginColumnIndex + column_indx - 1, row_indx, 1);
+                                        prev_member_splitter.Margin = new Thickness(0, member_Control.Margin.Top, 0, 0);
+                                        m_RowsArea_Splitters.Add(prev_member_splitter, column_indx - 1, row_indx);
+                                    }
+                                }
                             }
                         }
                     }
@@ -1876,6 +2015,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         List<MemberControl> m_RowsMembers = new List<MemberControl>();
         Dictionary<MemberInfo, MemberControl> m_MemberControls_Dict = new Dictionary<MemberInfo, MemberControl>();
+        Cache2D<GridSplitter> m_RowsArea_Splitters = new Cache2D<GridSplitter>();
 
         public void InitializeRowsArea(PivotLayoutProvider layout)
         {
@@ -1884,6 +2024,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 ItemsLayoutRoot.Children.Remove(ctrl);
             }
             m_RowsMembers.Clear();
+            
+            for(int c = 0; c < m_RowsArea_Splitters.Columns_Size; c++)
+                for(int r = 0; r < m_RowsArea_Splitters.Rows_Size; r++)
+                {
+                    var splitter = m_RowsArea_Splitters[c, r];
+                    if(splitter != null)
+                    {
+                        ItemsLayoutRoot.Children.Remove(splitter);
+                    }
+                }
+            m_RowsArea_Splitters = new Cache2D<GridSplitter>();
 
             RowsArea_LovestMemberControls.Clear();
 
@@ -1917,7 +2068,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     m_MemberControls_Dict.Add(member_item.PivotMember.Member, member_Control);
 
                                     // Подписываемся на Drill-операцию
-                                    member_Control.DrillDownMember += new MemberActionEventHandler(OnDrillDownMember);
+                                    member_Control.ExecuteMemberAction += new MemberActionEventHandler(OnExecuteMemberAction);
                                 }
 
                                 if (CellsArea_BeginColumnIndex > 0 && column_indx == CellsArea_BeginColumnIndex - 1)
@@ -1926,11 +2077,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     {
                                         RowsArea_LovestMemberControls.Add(member_Control);
 
-                                        if (m_Horizontal_Splitters.ContainsKey(layout_row_indx))
-                                        {
-                                            m_Horizontal_Splitters[layout_row_indx].Tag = member_Control;
-                                            //Canvas.SetZIndex(m_Horizontal_Splitters[layout_row_indx], 10);
-                                        }
+                                        //if (m_Horizontal_Splitters.ContainsKey(layout_row_indx))
+                                        //{
+                                        //    m_Horizontal_Splitters[layout_row_indx].Tag = member_Control;
+                                        //    //Canvas.SetZIndex(m_Horizontal_Splitters[layout_row_indx], 10);
+                                        //}
                                     }
                                 }
 
@@ -1967,6 +2118,30 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 else
                                 {
                                     member_Control.ShowLeftBorder(false);
+                                }
+
+                                // Если элемент размером на несколько строк, то сплиттер добавляем на последнюю строку
+                                int cells_area_index = row_indx + (member_item.RowSpan > 1 ? (member_item.RowSpan - 1) : 0);
+                                var splitter = Add_HorzSplitter(ItemsLayoutRoot, column_indx, RowsArea_BeginRowIndex + cells_area_index, 1);
+                                splitter.Margin = new Thickness(member_Control.Margin.Left, 0, 0, 0);
+                                m_RowsArea_Splitters.Add(splitter, column_indx, cells_area_index);
+
+                                // Чтобы сплиттер для элемента не накладывался на DrillDown родителя
+                                if (row_indx > 0)
+                                {
+                                    // Левое смещение сплиттера должно быть как смещение следующего за сплиттером контрола
+                                    var prev_member_splitter = m_RowsArea_Splitters[column_indx, row_indx - 1];
+                                    if (prev_member_splitter != null)
+                                    {
+                                        prev_member_splitter.Margin = new Thickness(member_Control.Margin.Left, 0, 0, 0);
+                                    }
+                                    else
+                                    {
+                                        // Если сплиттер на предыдущей строке разметки не найден, то добавим его
+                                        prev_member_splitter = Add_HorzSplitter(ItemsLayoutRoot, column_indx, RowsArea_BeginRowIndex + row_indx - 1, 1);
+                                        prev_member_splitter.Margin = new Thickness(member_Control.Margin.Left, 0, 0, 0);
+                                        m_RowsArea_Splitters.Add(prev_member_splitter, column_indx, row_indx - 1);
+                                    }
                                 }
                             }
                         }
@@ -2210,6 +2385,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         m_ContextMenu = Cells_ContextMenu;
 
                         CellControl cell_Control = grid_item as CellControl;
+                        if (cell_Control != null)
+                        { 
+                            // Устанавливаем фокус на данную ячеку если она не находится в списке выбранных
+                            if (!Selection.Contains(cell_Control.Cell))
+                                FocusedCellView = cell_Control.Cell;
+                        }
+
                         if (cell_Control != null && cell_Control.Cell != null && cell_Control.Cell.IsUpdateable)
                         {
                             if (m_DeliveryValueMenuItem != null)
@@ -2353,7 +2535,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
                 contextMenu.AddMenuSplitter();
+            }
 
+            // Пуекты для сортировки элементов
+            if ((areaType == AreaType.RowsArea) ||
+                (areaType == AreaType.ColumnsArea))
+            {
                 item = new ContextMenuItem(Localization.ContextMenu_SortingByProperty);
                 item.Tag = ControlActionType.SortingByProperty;
                 contextMenu.AddMenuItem(item);
@@ -2470,7 +2657,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 {
                     if (item.Tag is MemberActionType)
                     {
-                        member_Control.Raise_DrillDownMember((MemberActionType)(item.Tag));
+                        member_Control.Raise_ExecuteMemberAction((MemberActionType)(item.Tag));
                         return;
                     }
                     if (item.Tag is ControlActionType)
@@ -3003,7 +3190,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                             MemberInfo member = FocusedCellView.RowMember;
                             if (axisNum == 0)
                                 member = FocusedCellView.ColumnMember;
-                            Raise_DrillDownMember(new MemberActionEventArgs(axisNum, member, action));
+                            Raise_ExecuteMemberAction(new MemberActionEventArgs(axisNum, member, action));
                             e.Handled = true;
                             return;
                         }
@@ -3739,20 +3926,35 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             GridSplitter splitter = sender as GridSplitter;
             if (splitter != null)
             {
-                MemberControl member = splitter.Tag as MemberControl;
-                if (member != null)
+                int column = Grid.GetColumn(splitter);
+                if (column > -1)
                 {
-                    int column = Grid.GetColumn(splitter);
-                    m_MembersWidthes[member.Member.UniqueName] = ItemsLayoutRoot.ColumnDefinitions[column].ActualWidth;
-                }
-                else
-                {
-                    int column = Grid.GetColumn(splitter);
-                    if (column >= 0)
+                    if (column >= CellsArea_BeginColumnIndex)
+                    {
+                        int lovest_index = column - CellsArea_BeginColumnIndex;
+                        if (lovest_index >= 0 && m_ColumnsArea_LovestMemberControls.Count > lovest_index)
+                            m_MembersWidthes[m_ColumnsArea_LovestMemberControls[lovest_index].Member.UniqueName] = ItemsLayoutRoot.ColumnDefinitions[column].ActualWidth;
+                    }
+                    else
                     {
                         m_Rows_ColumnWidthes[column] = ItemsLayoutRoot.ColumnDefinitions[column].ActualWidth;
                     }
                 }
+
+                //MemberControl member = splitter.Tag as MemberControl;
+                //if (member != null)
+                //{
+                //    int column = Grid.GetColumn(splitter);
+                //    m_MembersWidthes[member.Member.UniqueName] = ItemsLayoutRoot.ColumnDefinitions[column].ActualWidth;
+                //}
+                //else
+                //{
+                //    int column = Grid.GetColumn(splitter);
+                //    if (column >= 0)
+                //    {
+                //        m_Rows_ColumnWidthes[column] = ItemsLayoutRoot.ColumnDefinitions[column].ActualWidth;
+                //    }
+                //}
                 Refresh(RefreshType.RefreshByColumns);
             }
         }
@@ -3788,25 +3990,40 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             GridSplitter splitter = sender as GridSplitter;
             if (splitter != null)
             {
-                MemberControl member = splitter.Tag as MemberControl;
-                if (member != null)
+                int row = Grid.GetRow(splitter);
+                if (row > -1)
                 {
-                    int row = Grid.GetRow(splitter);
-                    m_MembersHeightes[member.Member.UniqueName] = ItemsLayoutRoot.RowDefinitions[row].ActualHeight;
-                }
-                else 
-                {
-                    int row = Grid.GetRow(splitter);
-                    if (row >= 0)
+                    if (row >= CellsArea_BeginRowIndex)
+                    {
+                        int lovest_index = row - CellsArea_BeginRowIndex;
+                        if (lovest_index >= 0 && m_RowsArea_LovestMemberControls.Count > lovest_index)
+                            m_MembersHeightes[m_RowsArea_LovestMemberControls[lovest_index].Member.UniqueName] = ItemsLayoutRoot.RowDefinitions[row].ActualHeight;
+                    }
+                    else
                     {
                         m_Columns_RowsHeightes[row] = ItemsLayoutRoot.RowDefinitions[row].ActualHeight;
                     }
                 }
+
+                //MemberControl member = splitter.Tag as MemberControl;
+                //if (member != null)
+                //{
+                //    int row = Grid.GetRow(splitter);
+                //    m_MembersHeightes[member.Member.UniqueName] = ItemsLayoutRoot.RowDefinitions[row].ActualHeight;
+                //}
+                //else 
+                //{
+                //    int row = Grid.GetRow(splitter);
+                //    if (row >= 0)
+                //    {
+                //        m_Columns_RowsHeightes[row] = ItemsLayoutRoot.RowDefinitions[row].ActualHeight;
+                //    }
+                //}
                 Refresh(RefreshType.RefreshByRows);
             } 
         }
 
-        protected void OnDrillDownMember(object sender, MemberActionEventArgs args)
+        protected void OnExecuteMemberAction(object sender, MemberActionEventArgs args)
         {
             // Если ячейка с фокусом находилось не в строке или не в колонке, для которой производится данная операция,
             // то фокус устанавливаем на первую ВИДИМУЮ (чтобы сохранить скроллы) ячейку в данной колонке или строке
@@ -3860,7 +4077,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
             }
 
-            Raise_DrillDownMember(args);
+            Raise_ExecuteMemberAction(args);
         }
 
         #region Экспорт-импорт размеров
@@ -3977,6 +4194,43 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
         #endregion Экспорт-импорт размеров
 
+        internal SortDescriptor GetAxisPropertySort(int axis, MemberInfo info)
+        {
+            if (info != null && m_CellSetProvider != null)
+            {
+                Dictionary<String, SortDescriptor> sortInfo = null;
+                if (axis == 0)
+                {
+                    sortInfo = m_CellSetProvider.ColumnsSortInfo;
+                }
+                if (axis == 1)
+                {
+                    sortInfo = m_CellSetProvider.RowsSortInfo;
+                }
+                if (sortInfo != null && sortInfo.ContainsKey(info.HierarchyUniqueName))
+                    return sortInfo[info.HierarchyUniqueName];
+            }
+            return null;
+        }
+
+        internal SortDescriptor GetAxisPropertySort(MemberControl member)
+        {
+            if (member != null)
+            {
+                int axis = -1;
+                if (member is ColumnMemberControl)
+                {
+                    axis = 0;
+                }
+                if (member is RowMemberControl)
+                {
+                    axis = 1;
+                }
+                return GetAxisPropertySort(axis, member.Member);
+            }
+            return null;
+        }
+
         private class TooltipController
         {
             PivotGridControl PivotGrid = null;
@@ -4076,6 +4330,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
             }
 
+            public void Restart()
+            {
+                m_TooltipTimer.Stop();
+                m_TooltipTimer.Begin();
+                m_IsPaused = false;
+            }
+
             void pivotGrid_MouseEnter(object sender, MouseEventArgs e)
             {
                 if (!IsPaused)
@@ -4105,6 +4366,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     {
                         m_ToolTip.IsOpen = false;
                         m_TooltipTimer.Stop();
+                    }
+                    else 
+                    {
+                        m_TooltipTimer.Stop();
+                        m_TooltipTimer.Begin();
                     }
                 }
             }

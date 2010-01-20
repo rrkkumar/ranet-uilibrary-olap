@@ -26,7 +26,12 @@ namespace Ranet.Olap.Mdx
 	public sealed class MdxTupleExpression : MdxExpression
 	{
 		public readonly MdxObjectList<MdxExpression> Members = new MdxObjectList<MdxExpression>();
-		public MdxTupleExpression() { }
+		public MdxTupleExpression() { this.Members.ListChanged += onListChanged;  }
+		
+		public MdxTupleExpression(Tuple Tuple)
+		:this(Tuple.GenerateMembers(new List<MdxExpression>()))
+		{}
+		
 		public MdxTupleExpression(IEnumerable<MdxExpression> Members)
 		{
 			if (Members != null)

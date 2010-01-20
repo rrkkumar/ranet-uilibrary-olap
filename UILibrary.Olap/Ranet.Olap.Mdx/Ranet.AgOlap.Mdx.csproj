@@ -122,6 +122,7 @@
     <Compile Include="MdxObjectReferenceExpression.cs" />
     <Compile Include="MdxParameterExpression.cs" />
     <Compile Include="MdxPropertyExpression.cs" />
+    <Compile Include="MdxQueryContext.cs" />
     <Compile Include="MdxScopeStatement.cs" />
     <Compile Include="MdxScript.cs" />
     <Compile Include="MdxSelectStatement.cs" />

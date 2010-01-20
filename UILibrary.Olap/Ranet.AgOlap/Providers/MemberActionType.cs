@@ -27,6 +27,7 @@ namespace Ranet.AgOlap.Providers
         Expand,
         Collapse,
         DrillDown,
-        DrillUp
+        DrillUp,
+        Default
     }
 }

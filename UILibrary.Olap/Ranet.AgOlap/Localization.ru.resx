@@ -1076,4 +1076,25 @@
   <data name="SortingPropertiesDialog_MeasureNotSelected_Message" xml:space="preserve">
     <value>Не выбрана мера для сортировки. Пожалуйста выберете меру из выпадающего списка.</value>
   </data>
+  <data name="Measure_Label" xml:space="preserve">
+    <value>Мера:</value>
+  </data>
+  <data name="Property_Label" xml:space="preserve">
+    <value>Свойство:</value>
+  </data>
+  <data name="SortingBy_Label" xml:space="preserve">
+    <value>Сортировать по:</value>
+  </data>
+  <data name="SortingDirection_Label" xml:space="preserve">
+    <value>Направление сортировки:</value>
+  </data>
+  <data name="Sorting_Ascending_Label" xml:space="preserve">
+    <value>По возрастанию</value>
+  </data>
+  <data name="Sorting_Descending_Label" xml:space="preserve">
+    <value>По убыванию</value>
+  </data>
+  <data name="Sorting_None_Label" xml:space="preserve">
+    <value>Нет</value>
+  </data>
 </root>

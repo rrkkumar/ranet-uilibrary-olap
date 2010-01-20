@@ -28,7 +28,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         public SortPropertiesControl()
         {
             InitializeComponent();
+
+            lblSortType.Text = Localization.SortingDirection_Label;
+            lblNone.Text = Localization.Sorting_None_Label;
+            lblAscending.Text = Localization.Sorting_Ascending_Label;
+            lblDescending.Text = Localization.Sorting_Descending_Label;
+            lblSortBy.Text = Localization.SortingBy_Label;
+            lblProperty.Text = Localization.Property_Label;
+            lblMeasure.Text = Localization.Measure_Label;
+
             comboProperty.Items.Add(new MemberPropertyItemControl(new MemberPropertyInfo("Caption", "Caption")));
+            comboProperty.Items.Add(new MemberPropertyItemControl(new MemberPropertyInfo("Key0", "Key0")));
+
             comboProperty.SelectedIndex = 0;
 
             comboMeasure.Items.Add(new NoneItemControl());

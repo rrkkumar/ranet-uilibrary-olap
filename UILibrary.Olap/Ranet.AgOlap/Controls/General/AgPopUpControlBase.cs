@@ -80,6 +80,16 @@ namespace Ranet.AgOlap.Controls.General
             this.Content = LayoutRoot;
         }
 
+        public new double Height
+        {
+            get { return Height; }
+            set
+            {
+                base.Height = value;
+                PopUpContainer.Height = value;
+            }
+        }
+
         void AgPopUpControlBase_Loaded(object sender, RoutedEventArgs e)
         {
             PopUpContainer.ContentControl = PopUpLayoutRoot;

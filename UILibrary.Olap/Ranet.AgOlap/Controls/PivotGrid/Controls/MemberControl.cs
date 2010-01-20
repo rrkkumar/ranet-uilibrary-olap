@@ -57,7 +57,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         public readonly int Axis = 0;
         public readonly MemberInfo Member = null;
-        public readonly MemberActionType Action = MemberActionType.Expand;
+        public MemberActionType Action = MemberActionType.Expand;
     }
 
     public class MemberClickEventArgs : EventArgs
@@ -130,11 +130,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             //m_Border.Child = RootPanel;
             m_Border.Child = LayoutRoot;
 
+            this.MouseEnter += new MouseEventHandler(MemberControl_MouseEnter);
+            this.MouseLeave += new MouseEventHandler(MemberControl_MouseLeave);
+
             if (IsInteractive)
             {
-                CaptionText.MouseEnter += new MouseEventHandler(MemberControl_MouseEnter);
-                CaptionText.MouseLeave += new MouseEventHandler(MemberControl_MouseLeave);
-                CaptionText.MouseLeftButtonDown += new MouseButtonEventHandler(CaptionText_MouseLeftButtonDown);
+                this.MouseLeftButtonDown += new MouseButtonEventHandler(CaptionText_MouseLeftButtonDown);
 
                 PlusMinusButton expander = null;
              
@@ -291,7 +292,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_EllipsisText.Visibility = Visibility.Collapsed;
 
             this.SizeChanged += new SizeChangedEventHandler(MemberControl_SizeChanged);
-
+            this.Loaded += new RoutedEventHandler(MemberControl_Loaded);
             //if(UseHint)
             //{
             //    // Текст подсказки
@@ -316,19 +317,62 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             this.Content = m_Border;
         }
 
+        void MemberControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Определяем объект, который находится по текущим координатам
+            if (Owner != null && Owner.CurrentMousePosition.X != -1 && Owner.CurrentMousePosition.Y != -1)
+            {
+                if (AgControlBase.GetSLBounds(this).Contains(Owner.CurrentMousePosition))
+                {
+                    if (m_Border.Background != MouseOverBrush)
+                        m_Border.Background = MouseOverBrush;
+                }
+            }
+        }
+
         void MemberControl_MouseLeave(object sender, MouseEventArgs e)
         {
-            CaptionText.TextDecorations = null;
+            m_Border.Background = Owner.MembersBackground;
+            //if(m_Run1 != null)
+            //    m_Run1.TextDecorations = null;
+            //m_CaptionText.Effect = null;
             //if (m_EllipsisText != null)
             //{
             //    m_EllipsisText.TextDecorations = null;
             //}
         }
 
+        Brush m_MouseOverBrush;
+        Brush MouseOverBrush
+        {
+            get
+            {
+                if (m_MouseOverBrush == null)
+                {
+                    GradientStopCollection stops = new GradientStopCollection();
+                    GradientStop stop0 = new GradientStop();
+                    stop0.Color = Colors.White;
+                    GradientStop stop1 = new GradientStop();
+                    //stop1.Color = Color.FromArgb(0xFF, 0xEB, 0x91, 0x00);
+                    stop1.Color = Color.FromArgb(0x4B, 0xFF, 0xB4, 0x00);
+                    stop1.Offset = 1;
+                    stops.Add(stop0);
+                    stops.Add(stop1);
+                    m_MouseOverBrush = new LinearGradientBrush(stops, 90);
+                    //m_MouseOverBrush = new SolidColorBrush(Color.FromArgb(0x7D, 0xFF, 0xB4, 0x00));
+                }
+                return m_MouseOverBrush;
+            }
+        
+        }
+
         void MemberControl_MouseEnter(object sender, MouseEventArgs e)
         {
+            m_Border.Background = MouseOverBrush;
             // Текст отображаем подчеркнутым чтобы использовать как гиперссылку
-            CaptionText.TextDecorations = TextDecorations.Underline;
+            //if (m_Run1 != null)
+            //    m_Run1.TextDecorations = TextDecorations.Underline;
+            //m_CaptionText.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 3, Opacity = 0.5/*, Color = Color.FromArgb(0x7F, 0xFF, 0x97, 0x00)*/ };
             //if (m_EllipsisText != null)
             //{
             //    m_EllipsisText.TextDecorations = TextDecorations.Underline;
@@ -349,13 +393,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 expander.CheckedChanged += new EventHandler(expander_CheckedChanged);
             }
 
-            Raise_DrillDownMember(action);
+            Raise_ExecuteMemberAction(action);
         }
 
         void CaptionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
-                Raise_DrillDownMember(MemberActionType.DrillDown);
+            {
+                Raise_ExecuteMemberAction(MemberActionType.Default);
+            }
         }
 
         TextBlock m_EllipsisText = null;
@@ -426,6 +472,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
 
         TextBlock m_CaptionText = null;
+        Run m_Run0;
+        Run m_Run1;
         public TextBlock CaptionText
         {
             get
@@ -437,14 +485,50 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_CaptionText.TextAlignment = TextAlignment.Left;
                     m_CaptionText.VerticalAlignment = VerticalAlignment.Center;
                     m_CaptionText.HorizontalAlignment = HorizontalAlignment.Stretch;
+
+                    m_Run0 = new Run();
+                    m_Run0.FontWeight = FontWeights.Bold;
+                    m_Run1 = new Run();
+
+                    m_CaptionText.Inlines.Add(m_Run0);
+                    m_CaptionText.Inlines.Add(m_Run1);
                 }
 
+                // Определяем сортированы ли элементы данной иерархии по свойству
+                SortTypes sortType = SortTypes.None;
+                // Тип визуализации заголовка
                 MemberVisualizationTypes memberVisualizationType = MemberVisualizationTypes.Caption;
                 if (Owner != null)
                 {
                     memberVisualizationType = Owner.MemberVisualizationType;
+                    SortDescriptor sortDescr = Owner.GetAxisPropertySort(this);
+                    if(sortDescr != null)
+                        sortType = sortDescr.Type;
                 }
-                m_CaptionText.Text = Member.GetText(memberVisualizationType);
+
+                String text = Member.GetText(memberVisualizationType);
+                m_Run0.Text = String.Empty;
+                m_Run1.Text = String.Empty;
+                if (!String.IsNullOrEmpty(text))
+                {
+                    switch (sortType)
+                    {
+                        case SortTypes.None:
+                            m_Run0.Text = String.Empty;
+                            m_Run1.Text = text;
+                            break;
+                        case SortTypes.Ascending:
+                            m_Run0.Foreground = new SolidColorBrush(Colors.Blue);
+                            m_Run0.Text = text.Length > 0 ? text.Substring(0, 1) : String.Empty;
+                            m_Run1.Text = text.Length > 1 ? text.Substring(1, text.Length - 1) : String.Empty;
+                            break;
+                        case SortTypes.Descending:
+                            m_Run0.Foreground = new SolidColorBrush(Colors.Red);
+                            m_Run0.Text = text.Length > 0 ? text.Substring(0, 1) : String.Empty;
+                            m_Run1.Text = text.Length > 1 ? text.Substring(1, text.Length - 1) : String.Empty;
+                            break;
+                    }
+                }
 
                 double font_Scaled = Owner.DefaultFontSize * Scale;
                 m_CaptionText.FontSize = font_Scaled;
@@ -498,10 +582,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         //public ColumnDefinition Column = null;
         
         #region События
-        public event MemberActionEventHandler DrillDownMember;
-        public void Raise_DrillDownMember(MemberActionType action)
+        public event MemberActionEventHandler ExecuteMemberAction;
+        public void Raise_ExecuteMemberAction(MemberActionType action)
         {
-            MemberActionEventHandler handler = this.DrillDownMember;
+            MemberActionEventHandler handler = this.ExecuteMemberAction;
             if (handler != null)
             {
                 if(this is ColumnMemberControl)
