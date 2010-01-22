@@ -234,23 +234,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_HorizontalMouseWhellSupport.AddMouseWheelSupport(m_HorizontalScroll);
 
             m_TooltipController = new TooltipController(this);
-
-            this.MouseLeave += new MouseEventHandler(PivotGridControl_MouseLeave);
-            this.MouseMove += new MouseEventHandler(PivotGridControl_MouseMove);
         }
-
-        void PivotGridControl_MouseMove(object sender, MouseEventArgs e)
-        {
-            CurrentMousePosition = e.GetPosition(null);
-        }
-
-        void PivotGridControl_MouseLeave(object sender, MouseEventArgs e)
-        {
-            CurrentMousePosition = new Point(-1, -1);
-        }
-
-        // Текущая позиция мыши
-        internal Point CurrentMousePosition = new Point(-1, -1);
 
         bool m_UseContextMenu = true;
         public bool UseContextMenu
@@ -266,6 +250,26 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 else
                 {
                     ItemsLayoutRoot.DetachContextMenu();
+                }
+            }
+        }
+
+        internal bool UseToolTip
+        {
+            get {
+                return !m_TooltipController.IsPaused; 
+            }
+            set
+            {
+                if (value)
+                {
+                    if (m_TooltipController.IsPaused)
+                        m_TooltipController.IsPaused = false;
+                }
+                else
+                {
+                    if (!m_TooltipController.IsPaused)
+                        m_TooltipController.IsPaused = true;
                 }
             }
         }
@@ -1682,7 +1686,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     {
                         cell_control = new CellControl(this);
                         cell_control.MouseEnter += new MouseEventHandler(cell_control_MouseEnter);
-                        cell_control.MouseLeftButtonDown += new MouseButtonEventHandler(CellControl_MouseLeftButtonDown);
+                        cell_control.Click += new RoutedEventHandler(cell_control_Click);
                         cell_control.MouseDoubleClick += new EventHandler(CellControl_MouseDoubleClick);
                         cell_control.Cell = null;
                         m_CellControls_Cache.Add(cell_control, column_indx, row_indx);
@@ -1718,6 +1722,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             System.Diagnostics.Debug.WriteLine(" BuildCellsArea time: " + (stop - start).ToString());
 
             #endregion Настройка области ячеек
+        }
+
+        void cell_control_Click(object sender, RoutedEventArgs e)
+        {
+            this.Focus();
+            OnCellControlMouseDown(sender as CellControl);
         }
 
         void BuildSplitters()
@@ -1967,20 +1977,20 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
                                 if (member_item.PivotMember.IsFirstDrillDownChild || (column_indx == 0/* && member_item.IsExtension == false*/))
                                 {
-                                    member_Control.ShowLeftBorder(true);
+                                    member_Control.ShowLeftBorder = true;
                                 }
                                 else
                                 {
-                                    member_Control.ShowLeftBorder(false);
+                                    member_Control.ShowLeftBorder = false;
                                 }
 
                                 if (row_indx == 0 || member_item.PivotMember.PivotDrillDepth > 0)
                                 {
-                                    member_Control.ShowUpBorder(true);
+                                    member_Control.ShowUpBorder = true;
                                 }
                                 else
                                 {
-                                    member_Control.ShowUpBorder(false);
+                                    member_Control.ShowUpBorder = false;
                                 }
 
                                 // Если элемент размером на несколько строк, то сплиттер добавляем на последнюю строку
@@ -2098,7 +2108,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
                                 if ((member_item.PivotMember.IsFirstDrillDownChild && member_item.IsExtension == false) || (row_indx == 0/* && member_item.IsExtension == false*/))
                                 {
-                                    member_Control.ShowUpBorder(true);
+                                    member_Control.ShowUpBorder= true;
                                     //if (member_item.IsExtension)
                                     //{
                                     //    member_Control.Opacity = 0.3;
@@ -2106,18 +2116,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                 }
                                 else
                                 {
-                                    member_Control.ShowUpBorder(false);
+                                    member_Control.ShowUpBorder = false;
                                 }
 
                                 member_Control.RotateCaption(member_item.IsExtension);
 
                                 if (column_indx == 0 || member_item.PivotMember.PivotDrillDepth > 0)
                                 {
-                                    member_Control.ShowLeftBorder(true);
+                                    member_Control.ShowLeftBorder = true;
                                 }
                                 else
                                 {
-                                    member_Control.ShowLeftBorder(false);
+                                    member_Control.ShowLeftBorder = false;
                                 }
 
                                 // Если элемент размером на несколько строк, то сплиттер добавляем на последнюю строку
@@ -2638,7 +2648,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void contextMenu_Closed(object sender, EventArgs e)
         {
-            m_TooltipController.IsPaused = false;
+            m_TooltipController.IsPaused = !UseToolTip;
         }
 
         void contextMenu_Opened(object sender, EventArgs e)
@@ -2868,12 +2878,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         void CellControl_MouseDoubleClick(object sender, EventArgs e)
         {
             BeginEdit();
-        }
-
-        void CellControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            this.Focus();
-            OnCellControlMouseDown(sender as CellControl);
         }
 
         void OnCellControlMouseDown(CellControl cell)
@@ -4366,11 +4370,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     {
                         m_ToolTip.IsOpen = false;
                         m_TooltipTimer.Stop();
-                    }
-                    else 
-                    {
-                        m_TooltipTimer.Stop();
-                        m_TooltipTimer.Begin();
                     }
                 }
             }

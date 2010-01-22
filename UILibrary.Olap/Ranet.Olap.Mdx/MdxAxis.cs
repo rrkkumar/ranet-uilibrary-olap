@@ -109,25 +109,13 @@ namespace Ranet.Olap.Mdx
 				NonEmpty = this.NonEmpty
 			};
 		}
+		static readonly MdxConstantExpression RECURSIVE=new MdxConstantExpression("RECURSIVE");
+		static readonly MdxConstantExpression ONE = new MdxConstantExpression("1");
 		internal MdxAxis GenerateCurrentAxis(AxisInfo AxesInfo)
 		{
 			var newExpression=this.Expression;
 			foreach (var Hierarchy in AxesInfo.Hierarchies)
 			{
-				if(Hierarchy.CollapsedCells.Count>0)
-				{
-					var SetCollapsed=new MdxSetExpression();
-					foreach(var Tuple in Hierarchy.CollapsedCells.Keys)
-					{
-						SetCollapsed.Expressions.Add(new MdxTupleExpression(Tuple));
-					}
-					newExpression = new MdxFunctionExpression
-					("DRILLUPMEMBER", new MdxExpression[2]
-						{ newExpression
-						,	SetCollapsed
-						}
-					);
-				}
 				if (Hierarchy.ExpandedCells.Count > 0)
 				{
 					var SetExpanded = new MdxSetExpression();
@@ -135,12 +123,20 @@ namespace Ranet.Olap.Mdx
 					{
 						SetExpanded.Expressions.Add(new MdxTupleExpression(Tuple));
 					}
-					newExpression = new MdxFunctionExpression
-					("DRILLDOWNMEMBER", new MdxExpression[2]
-						{ newExpression
-						,	SetExpanded
-						}
+					newExpression =new MdxFunctionExpression
+					( "ORDER"
+					,new MdxFunctionExpression("DRILLDOWNMEMBER", newExpression,	SetExpanded, RECURSIVE)
+					, ONE
 					);
+				}
+				if (Hierarchy.CollapsedCells.Count > 0)
+				{
+					var SetCollapsed=new MdxSetExpression();
+					foreach(var Tuple in Hierarchy.CollapsedCells.Keys)
+					{
+						SetCollapsed.Expressions.Add(new MdxTupleExpression(Tuple));
+					}
+					newExpression = new MdxFunctionExpression("DRILLUPMEMBER", newExpression,	SetCollapsed);
 				}
 			}
 			if (newExpression==this.Expression)

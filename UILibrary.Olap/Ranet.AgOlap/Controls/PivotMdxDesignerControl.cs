@@ -49,6 +49,8 @@ using Ranet.AgOlap.Controls.Forms;
 using Ranet.Olap.Core.Storage;
 using Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers;
 using Ranet.AgOlap.Controls.MemberChoice.Info;
+using Ranet.AgOlap.Providers;
+using Ranet.Olap.Core.Data;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -1270,12 +1272,12 @@ namespace Ranet.AgOlap.Controls
             if (String.IsNullOrEmpty(inner_from))
             {
                 inner_from = FromSet;
-                inner_from += Environment.NewLine + where_Set;  // 102.94731
             }
             else
             {
                 inner_from += FromSet;
-                inner_from += Environment.NewLine + where_Set; // 102.94731
+                if (String.IsNullOrEmpty(SubCube))
+                    inner_from += Environment.NewLine + where_Set; // 102.94731
                 for (int i = 0; i < select_count; i++)
                 {
                     inner_from += ")";
@@ -1915,6 +1917,311 @@ namespace Ranet.AgOlap.Controls
             return null;
         }
 
+        void DropToArea(PivotAreaContainer container, CustomTreeNode node)
+        {
+            DropToArea(container, node, true);
+        }
+
+        void DropToArea(PivotAreaContainer container, CustomTreeNode node, bool raise_ItemsListChanged)
+        {
+            if (container != null && node != null)
+            {
+                Members_FilterWrapper custom_MemberFilter = null;
+
+                // Убиваем конкурентов :D
+
+                #region Узелы для элементов измерений
+                // Если таскается элемент, то в случае если в данной области есть узел для иерархии или уровня, то элемент добавляется в фильтр
+                var memberNode = node as MemberLiteTreeNode;
+                if (memberNode != null && memberNode.Info != null)
+                {
+                    // Убиваем конкурентов во всех областях кроме данной :D
+                    if (container == m_RowsAreaContainer)
+                    {
+                        m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
+                        m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
+                        m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
+                    }
+                    if (container == m_ColumnsAreaContainer)
+                    {
+                        m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
+                        m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
+                        m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
+                    }
+                    if (container == m_FilterAreaContainer)
+                    {
+                        m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
+                        m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
+                        m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
+                    }
+                    if (container == m_DataAreaContainer)
+                    {
+                        m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
+                        m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
+                        m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
+                    }
+
+                    // Находим конкурента в данной области
+                    var concurent = FindConcurent(container, node);
+                    var filtered_concurent = concurent as FilteredItemControl;
+                    if (filtered_concurent != null && filtered_concurent.FilteredWrapper != null &&
+                        (filtered_concurent is Hierarchy_AreaItemControl || // Если конкурентом является иерархиия то это нормально
+                        (filtered_concurent is Level_AreaItemControl && ((Level_AreaItemControl)filtered_concurent).Level != null && ((Level_AreaItemControl)filtered_concurent).Level.UniqueName == memberNode.Info.LevelName)) // Если конкурентом является уровень, то это должен быть тот же уровень что и у элемента
+                    )
+                    {
+                        bool isDublicate = false;
+                        // Ищем такой же элемент в фильтре
+                        foreach (var item in filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.SelectedInfo)
+                        {
+                            if (item.UniqueName == memberNode.Info.UniqueName && item.SelectState == SelectStates.Selected_Self)
+                                isDublicate = true;
+                        }
+                        if (!isDublicate)
+                        {
+                            // Добавляем сами руками в FilterSet. Он превильно сгенерируется только при закрытии диалога с фильтром
+                            if (String.IsNullOrEmpty(filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet))
+                            {
+                                filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet = "{" + memberNode.Info.UniqueName + "}";
+                            }
+                            else
+                            {
+                                String str = filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet.Trim();
+                                if (str.EndsWith("}"))
+                                {
+                                    str = str.Substring(0, str.Length - 1);
+                                }
+                                str += ", " + memberNode.Info.UniqueName + "}";
+                                filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet = str;
+                            }
+
+                            var member_settings = new MemberChoiceSettings(memberNode.Info, SelectStates.Selected_Self);
+                            filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.SelectedInfo.Add(member_settings);
+                        }
+                        filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.IsUsed = true;
+                        filtered_concurent.Refresh();
+                        if (m_FilterDialogs.ContainsKey(concurent))
+                        {
+                            ModalDialog dialog = m_FilterDialogs[concurent];
+                            if (dialog != null)
+                            {
+                                var filterControl = dialog.Content as FilterBuilderControl;
+                                if (filterControl != null)
+                                {
+                                    // Переинициализировать контрол выбора элементов измерения в фильтре при открытии
+                                    filterControl.MemberChoiceIsInitialized = false;
+                                }
+                            }
+                        }
+
+                        RefreshMdxQuery();
+                        return;
+                    }
+                    else
+                    {
+                        // Удаляем данного конкурента, т.к. он не поддерживает фильтр
+                        container.RemoveItem(concurent, false);
+                    }
+
+                    // Добавляем новый узел для иерархии
+                    // Ищем иерархию для данного элемента
+                    var hierarchyNode = m_ServerExplorer.CubeBrowser.FindHierarchyNode(memberNode.Info.HierarchyUniqueName);
+                    if (hierarchyNode != null)
+                    {
+                        custom_MemberFilter = new Members_FilterWrapper();
+                        var member_settings = new MemberChoiceSettings(memberNode.Info, SelectStates.Selected_Self);
+                        custom_MemberFilter.SelectedInfo.Add(member_settings);
+                        custom_MemberFilter.FilterSet = "{" + memberNode.Info.UniqueName + "}";
+                        node = hierarchyNode;
+                    }
+                }
+                else
+                {
+                    AreaItemControl concurent = FindConcurent(m_RowsAreaContainer, node);
+                    m_RowsAreaContainer.RemoveItem(concurent, false);
+
+                    concurent = FindConcurent(m_ColumnsAreaContainer, node);
+                    m_ColumnsAreaContainer.RemoveItem(concurent, false);
+
+                    concurent = FindConcurent(m_FilterAreaContainer, node);
+                    m_FilterAreaContainer.RemoveItem(concurent, false);
+
+                    concurent = FindConcurent(m_DataAreaContainer, node);
+                    m_DataAreaContainer.RemoveItem(concurent, false);
+                }
+                #endregion Узелы для элементов измерений
+
+
+                #region Узлы для вычисляемых элементов
+                CalculatedMemberTreeNode calcMemberNode = node as CalculatedMemberTreeNode;
+                if (calcMemberNode != null && calcMemberNode.Info != null)
+                {
+                    // Вычисляемые элементы могут кидаться только в область данных
+                    AreaItemControl ctrl = new CalculatedMember_AreaItemControl(new CalculatedMember_AreaItemWrapper(calcMemberNode.Info), calcMemberNode.Icon);
+                    ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                    ctrl.UserData = node;
+
+
+                    if (container == m_DataAreaContainer)
+                    {
+                        int count = m_DataAreaContainer.Items.Count;
+
+                        // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
+                        if (count == 1)
+                        {
+                            AreaItemControl value_ctrl = new Values_AreaItemControl();
+                            value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                            m_ColumnsAreaContainer.AddItem(value_ctrl, false);
+                        }
+
+                        m_DataAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                        calcMemberNode.UseBoldText = true;
+                    }
+                }
+                #endregion Узлы для вычисляемых элементов
+
+                #region Узлы для именованных наборов
+                CalculatedNamedSetTreeNode calculatedSetNode = node as CalculatedNamedSetTreeNode;
+                if (calculatedSetNode != null && calculatedSetNode.Info != null)
+                {
+                    // Set(ы) могут кидаться только в области строк и столбцов
+                    AreaItemControl ctrl = new CalculateNamedSet_AreaItemControl(new CalculatedNamedSet_AreaItemWrapper(calculatedSetNode.Info), calculatedSetNode.Icon);
+                    ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                    ctrl.UserData = node;
+
+                    if (container == m_RowsAreaContainer)
+                    {
+                        m_RowsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                        calculatedSetNode.UseBoldText = true;
+                    }
+
+                    if (container == m_ColumnsAreaContainer)
+                    {
+                        m_ColumnsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                        calculatedSetNode.UseBoldText = true;
+                    }
+                }
+
+                NamedSetTreeNode setNode = node as NamedSetTreeNode;
+                if (setNode != null)
+                {
+                    NamedSetInfo setInfo = setNode.Info as NamedSetInfo;
+                    if (setInfo != null)
+                    {
+                        // Set(ы) могут кидаться только в области строк и столбцов
+                        AreaItemControl ctrl = new NamedSet_AreaItemControl(new NamedSet_AreaItemWrapper(setInfo), setNode.Icon);
+                        ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                        ctrl.UserData = node;
+
+                        if (container == m_RowsAreaContainer)
+                        {
+                            m_RowsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                            setNode.UseBoldText = true;
+                        }
+
+                        if (container == m_ColumnsAreaContainer)
+                        {
+                            m_ColumnsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                            setNode.UseBoldText = true;
+                        }
+                    }
+                }
+                #endregion Узлы для именованных наборов
+
+                #region Узлы метаданных (InfoBaseTreeNode)
+                InfoBaseTreeNode info_node = node as InfoBaseTreeNode;
+                if (info_node != null)
+                {
+                    HierarchyInfo hierarchyInfo = info_node.Info as HierarchyInfo;
+                    LevelInfo levelInfo = info_node.Info as LevelInfo;
+                    MeasureInfo measureInfo = info_node.Info as MeasureInfo;
+                    KpiInfo kpiInfo = info_node.Info as KpiInfo;
+
+                    // Иерархии и уровни можно кидать только в области: строк, столбцов, фильтров
+                    if (hierarchyInfo != null || levelInfo != null)
+                    {
+                        FilteredItemControl ctrl = null;
+                        if (hierarchyInfo != null)
+                            ctrl = new Hierarchy_AreaItemControl(new Hierarchy_AreaItemWrapper(hierarchyInfo), info_node.Icon);
+                        if (levelInfo != null)
+                            ctrl = new Level_AreaItemControl(new Level_AreaItemWrapper(levelInfo), info_node.Icon);
+
+                        ctrl.ShowFilter += new EventHandler(FilteredItem_ShowFilter);
+                        ctrl.CancelFilter += new EventHandler(FilteredItem_CancelFilter);
+                        ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                        ctrl.UserData = node;
+                        if (custom_MemberFilter != null)
+                        {
+                            ctrl.FilteredWrapper.CompositeFilter.MembersFilter = custom_MemberFilter;
+                            ctrl.FilteredWrapper.CompositeFilter.MembersFilter.IsUsed = true;
+                            ctrl.Refresh();
+                        }
+
+                        if (container == m_RowsAreaContainer)
+                        {
+                            m_RowsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                            info_node.UseBoldText = true;
+                        }
+
+                        if (container == m_ColumnsAreaContainer)
+                        {
+                            m_ColumnsAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                            info_node.UseBoldText = true;
+                        }
+
+                        if (container == m_FilterAreaContainer)
+                        {
+                            m_FilterAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                            info_node.UseBoldText = true;
+                        }
+                    }
+
+                    // меры и Kpi могут кидаться только в область данных
+                    if (measureInfo != null ||
+                        kpiInfo != null)
+                    {
+                        AreaItemControl ctrl = null;
+                        if (measureInfo != null)
+                            ctrl = new Measure_AreaItemControl(new Measure_AreaItemWrapper(measureInfo), info_node.Icon);
+                        if (kpiInfo != null)
+                        {
+                            KpiControlType type = KpiControlType.Value;
+                            if (node is KpiStatusTreeNode)
+                                type = KpiControlType.Status;
+                            if (node is KpiTrendTreeNode)
+                                type = KpiControlType.Trend;
+                            if (node is KpiGoalTreeNode)
+                                type = KpiControlType.Goal;
+
+                            ctrl = new Kpi_AreaItemControl(new Kpi_AreaItemWrapper(kpiInfo, type), info_node.Icon);
+                        }
+
+                        if (ctrl != null)
+                        {
+                            ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                            ctrl.UserData = node;
+
+                            if (container == m_DataAreaContainer)
+                            {
+                                int count = m_DataAreaContainer.Items.Count;
+
+                                // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
+                                if (count == 1)
+                                {
+                                    AreaItemControl value_ctrl = new Values_AreaItemControl();
+                                    value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
+                                    m_ColumnsAreaContainer.AddItem(value_ctrl, false);
+                                }
+
+                                m_DataAreaContainer.AddItem(ctrl, raise_ItemsListChanged);
+                                info_node.UseBoldText = true;
+                            }
+                        }
+                    }
+                }
+                #endregion Узлы метаданных (InfoBaseTreeNode)
+            }
+        }
+
         void m_CubeBrowser_DragCompleted(object sender, DragNodeArgs<DragCompletedEventArgs> e)
         {
             try
@@ -1963,312 +2270,25 @@ namespace Ranet.AgOlap.Controls
                             }
                         }
 
-                        Members_FilterWrapper custom_MemberFilter = null;
-
-                        // Убиваем конкурентов :D
-                        if (m_RowsAreaContainer.IsReadyToDrop ||
-                            m_ColumnsAreaContainer.IsReadyToDrop ||
-                            m_FilterAreaContainer.IsReadyToDrop ||
-                            m_DataAreaContainer.IsReadyToDrop)
+                        PivotAreaContainer currentContainer = null;
+                        if (m_RowsAreaContainer.IsReadyToDrop)
                         {
-                            // Если таскается элемент, то в случае если в данной области есть узел для иерархии или уровня, то элемент добавляется в фильтр
-                            var memberNode = node as MemberLiteTreeNode;
-                            if (memberNode != null && memberNode.Info != null)
-                            {
-                                PivotAreaContainer currentContainer = null;
-                                // Убиваем конкурентов во всех областях кроме данной :D
-                                if (m_RowsAreaContainer.IsReadyToDrop)
-                                {
-                                    currentContainer = m_RowsAreaContainer;
-                                    m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
-                                    m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
-                                    m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
-                                }
-                                if (m_ColumnsAreaContainer.IsReadyToDrop)
-                                {
-                                    currentContainer = m_ColumnsAreaContainer;
-                                    m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
-                                    m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
-                                    m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
-                                }
-                                if (m_FilterAreaContainer.IsReadyToDrop)
-                                {
-                                    currentContainer = m_FilterAreaContainer;
-                                    m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
-                                    m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
-                                    m_DataAreaContainer.RemoveItem(FindConcurent(m_DataAreaContainer, node), false);
-                                }
-                                if (m_DataAreaContainer.IsReadyToDrop)
-                                {
-                                    currentContainer = m_DataAreaContainer;
-                                    m_ColumnsAreaContainer.RemoveItem(FindConcurent(m_ColumnsAreaContainer, node), false);
-                                    m_RowsAreaContainer.RemoveItem(FindConcurent(m_RowsAreaContainer, node), false);
-                                    m_FilterAreaContainer.RemoveItem(FindConcurent(m_FilterAreaContainer, node), false);
-                                }
-                                if (currentContainer != null)
-                                {
-                                    // Находим конкурента в данной области
-                                    var concurent = FindConcurent(currentContainer, node);
-                                    var filtered_concurent = concurent as FilteredItemControl;
-                                    if (filtered_concurent != null && filtered_concurent.FilteredWrapper != null &&
-                                        (filtered_concurent is Hierarchy_AreaItemControl  || // Если конкурентом является иерархиия то это нормально
-                                        (filtered_concurent is Level_AreaItemControl && ((Level_AreaItemControl)filtered_concurent).Level != null && ((Level_AreaItemControl)filtered_concurent).Level.UniqueName == memberNode.Info.LevelName)) // Если конкурентом является уровень, то это должен быть тот же уровень что и у элемента
-                                    )
-                                    {
-                                        bool isDublicate = false;
-                                        // Ищем такой же элемент в фильтре
-                                        foreach (var item in filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.SelectedInfo)
-                                        {
-                                            if (item.UniqueName == memberNode.Info.UniqueName && item.SelectState == SelectStates.Selected_Self)
-                                                isDublicate = true;
-                                        }
-                                        if (!isDublicate)
-                                        {
-                                            // Добавляем сами руками в FilterSet. Он превильно сгенерируется только при закрытии диалога с фильтром
-                                            if(String.IsNullOrEmpty(filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet))
-                                            {
-                                                filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet = "{" + memberNode.Info.UniqueName + "}";
-                                            }
-                                            else
-                                            {
-                                                String str = filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet.Trim();
-                                                if(str.EndsWith("}"))
-                                                {
-                                                    str = str.Substring(0, str.Length - 1);
-                                                }
-                                                str += ", " + memberNode.Info.UniqueName + "}";
-                                                filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.FilterSet = str;
-                                            }
-
-                                            var member_settings = new MemberChoiceSettings(memberNode.Info, SelectStates.Selected_Self);
-                                            filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.SelectedInfo.Add(member_settings);
-                                        }
-                                        filtered_concurent.FilteredWrapper.CompositeFilter.MembersFilter.IsUsed = true;
-                                        filtered_concurent.Refresh();
-                                        if (m_FilterDialogs.ContainsKey(concurent))
-                                        {
-                                            ModalDialog dialog = m_FilterDialogs[concurent];
-                                            if (dialog != null)
-                                            {
-                                                var filterControl = dialog.Content as FilterBuilderControl;
-                                                if (filterControl != null)
-                                                {
-                                                    // Переинициализировать контрол выбора элементов измерения в фильтре при открытии
-                                                    filterControl.MemberChoiceIsInitialized = false;
-                                                }
-                                            }
-                                        }
-
-                                        RefreshMdxQuery();
-                                        return;
-                                    }
-                                    else
-                                    {
-                                        // Удаляем данного конкурента, т.к. он не поддерживает фильтр
-                                        currentContainer.RemoveItem(concurent, false);
-                                    }
-
-                                    // Добавляем новый узел для иерархии
-                                    // Ищем иерархию для данного элемента
-                                    var hierarchyNode = m_ServerExplorer.CubeBrowser.FindHierarchyNode(memberNode.Info.HierarchyUniqueName);
-                                    if (hierarchyNode != null)
-                                    {
-                                        custom_MemberFilter = new Members_FilterWrapper();
-                                        var member_settings = new MemberChoiceSettings(memberNode.Info, SelectStates.Selected_Self);
-                                        custom_MemberFilter.SelectedInfo.Add(member_settings);
-                                        custom_MemberFilter.FilterSet = "{" + memberNode.Info.UniqueName + "}";
-                                        node = hierarchyNode;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                AreaItemControl concurent = FindConcurent(m_RowsAreaContainer, node);
-                                m_RowsAreaContainer.RemoveItem(concurent, false);
-
-                                concurent = FindConcurent(m_ColumnsAreaContainer, node);
-                                m_ColumnsAreaContainer.RemoveItem(concurent, false);
-
-                                concurent = FindConcurent(m_FilterAreaContainer, node);
-                                m_FilterAreaContainer.RemoveItem(concurent, false);
-
-                                concurent = FindConcurent(m_DataAreaContainer, node);
-                                m_DataAreaContainer.RemoveItem(concurent, false);
-                            }
+                            currentContainer = m_RowsAreaContainer;
+                        }
+                        if (m_ColumnsAreaContainer.IsReadyToDrop)
+                        {
+                            currentContainer = m_ColumnsAreaContainer;
+                        }
+                        if (m_FilterAreaContainer.IsReadyToDrop)
+                        {
+                            currentContainer = m_FilterAreaContainer;
+                        }
+                        if (m_DataAreaContainer.IsReadyToDrop)
+                        {
+                            currentContainer = m_DataAreaContainer;
                         }
 
-                        #region Узлы для вычисляемых элементов
-                        CalculatedMemberTreeNode calcMemberNode = node as CalculatedMemberTreeNode;
-                        if (calcMemberNode != null && calcMemberNode.Info != null)
-                        {
-                            // Вычисляемые элементы могут кидаться только в область данных
-                            AreaItemControl ctrl = new CalculatedMember_AreaItemControl(new CalculatedMember_AreaItemWrapper(calcMemberNode.Info), calcMemberNode.Icon);
-                            ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                            ctrl.UserData = node;
-
-
-                            if (m_DataAreaContainer.IsReadyToDrop)
-                            {
-                                int count = m_DataAreaContainer.Items.Count;
-
-                                // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
-                                if (count == 1)
-                                {
-                                    AreaItemControl value_ctrl = new Values_AreaItemControl();
-                                    value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                    m_ColumnsAreaContainer.ItemsListChanged -= new EventHandler(AreaContainer_ItemsListChanged);
-                                    m_ColumnsAreaContainer.AddItem(value_ctrl);
-                                    m_ColumnsAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
-                                }
-
-                                m_DataAreaContainer.AddItem(ctrl);
-                                calcMemberNode.UseBoldText = true;
-                            }
-                        }
-                        #endregion Узлы для вычисляемых элементов
-
-                        #region Узлы для именованных наборов
-                        CalculatedNamedSetTreeNode calculatedSetNode = node as CalculatedNamedSetTreeNode;
-                        if (calculatedSetNode != null && calculatedSetNode.Info != null)
-                        {
-                            // Set(ы) могут кидаться только в области строк и столбцов
-                            AreaItemControl ctrl = new CalculateNamedSet_AreaItemControl(new CalculatedNamedSet_AreaItemWrapper(calculatedSetNode.Info), calculatedSetNode.Icon);
-                            ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                            ctrl.UserData = node;
-
-                            if (m_RowsAreaContainer.IsReadyToDrop)
-                            {
-                                m_RowsAreaContainer.AddItem(ctrl);
-                                calculatedSetNode.UseBoldText = true;
-                            }
-
-                            if (m_ColumnsAreaContainer.IsReadyToDrop)
-                            {
-                                m_ColumnsAreaContainer.AddItem(ctrl);
-                                calculatedSetNode.UseBoldText = true;
-                            }
-                        }
-
-                        NamedSetTreeNode setNode = node as NamedSetTreeNode;
-                        if (setNode != null)
-                        {
-                            NamedSetInfo setInfo = setNode.Info as NamedSetInfo;
-                            if (setInfo != null)
-                            {
-                                // Set(ы) могут кидаться только в области строк и столбцов
-                                AreaItemControl ctrl = new NamedSet_AreaItemControl(new NamedSet_AreaItemWrapper(setInfo), setNode.Icon);
-                                ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                ctrl.UserData = node;
-
-                                if (m_RowsAreaContainer.IsReadyToDrop)
-                                {
-                                    m_RowsAreaContainer.AddItem(ctrl);
-                                    setNode.UseBoldText = true;
-                                }
-
-                                if (m_ColumnsAreaContainer.IsReadyToDrop)
-                                {
-                                    m_ColumnsAreaContainer.AddItem(ctrl);
-                                    setNode.UseBoldText = true;
-                                }
-                            }
-                        }
-                        #endregion Узлы для именованных наборов
-
-                        #region Узлы метаданных (InfoBaseTreeNode)
-                        InfoBaseTreeNode info_node = node as InfoBaseTreeNode;
-                        if (info_node != null)
-                        {
-                            HierarchyInfo hierarchyInfo = info_node.Info as HierarchyInfo;
-                            LevelInfo levelInfo = info_node.Info as LevelInfo;
-                            MeasureInfo measureInfo = info_node.Info as MeasureInfo;
-                            KpiInfo kpiInfo = info_node.Info as KpiInfo;
-
-                            // Иерархии и уровни можно кидать только в области: строк, столбцов, фильтров
-                            if (hierarchyInfo != null || levelInfo != null)
-                            {
-                                FilteredItemControl ctrl = null;
-                                if (hierarchyInfo != null)
-                                    ctrl = new Hierarchy_AreaItemControl(new Hierarchy_AreaItemWrapper(hierarchyInfo), info_node.Icon);
-                                if (levelInfo != null)
-                                    ctrl = new Level_AreaItemControl(new Level_AreaItemWrapper(levelInfo), info_node.Icon);
-
-                                ctrl.ShowFilter += new EventHandler(FilteredItem_ShowFilter);
-                                ctrl.CancelFilter += new EventHandler(FilteredItem_CancelFilter);
-                                ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                ctrl.UserData = node;
-                                if(custom_MemberFilter != null)
-                                {
-                                    ctrl.FilteredWrapper.CompositeFilter.MembersFilter = custom_MemberFilter;
-                                    ctrl.FilteredWrapper.CompositeFilter.MembersFilter.IsUsed = true;
-                                    ctrl.Refresh();
-                                }
-
-                                if (m_RowsAreaContainer.IsReadyToDrop)
-                                {
-                                    m_RowsAreaContainer.AddItem(ctrl);
-                                    info_node.UseBoldText = true;
-                                }
-
-                                if (m_ColumnsAreaContainer.IsReadyToDrop)
-                                {
-                                    m_ColumnsAreaContainer.AddItem(ctrl);
-                                    info_node.UseBoldText = true;
-                                }
-
-                                if (m_FilterAreaContainer.IsReadyToDrop)
-                                {
-                                    m_FilterAreaContainer.AddItem(ctrl);
-                                    info_node.UseBoldText = true;
-                                }
-                            }
-
-                            // меры и Kpi могут кидаться только в область данных
-                            if (measureInfo != null ||
-                                kpiInfo != null)
-                            {
-                                AreaItemControl ctrl = null;
-                                if (measureInfo != null)
-                                    ctrl = new Measure_AreaItemControl(new Measure_AreaItemWrapper(measureInfo), info_node.Icon);
-                                if (kpiInfo != null)
-                                {
-                                    KpiControlType type = KpiControlType.Value;
-                                    if (node is KpiStatusTreeNode)
-                                        type = KpiControlType.Status;
-                                    if (node is KpiTrendTreeNode)
-                                        type = KpiControlType.Trend;
-                                    if (node is KpiGoalTreeNode)
-                                        type = KpiControlType.Goal;
-
-                                    ctrl = new Kpi_AreaItemControl(new Kpi_AreaItemWrapper(kpiInfo, type), info_node.Icon);
-                                }
-
-                                if (ctrl != null)
-                                {
-                                    ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                    ctrl.UserData = node;
-
-                                    if (m_DataAreaContainer.IsReadyToDrop)
-                                    {
-                                        int count = m_DataAreaContainer.Items.Count;
-
-                                        // В случае, если в области данных стало более одного объекта, то добавляем специальный узел Values в область колонок 
-                                        if (count == 1)
-                                        {
-                                            AreaItemControl value_ctrl = new Values_AreaItemControl();
-                                            value_ctrl.ContextMenuCreated += new EventHandler(ctrl_ContextMenuCreated);
-                                            m_ColumnsAreaContainer.ItemsListChanged -= new EventHandler(AreaContainer_ItemsListChanged);
-                                            m_ColumnsAreaContainer.AddItem(value_ctrl);
-                                            m_ColumnsAreaContainer.ItemsListChanged += new EventHandler(AreaContainer_ItemsListChanged);
-                                        }
-
-                                        m_DataAreaContainer.AddItem(ctrl);
-                                        info_node.UseBoldText = true;
-                                    }
-                                }
-                            }
-                        }
-                        #endregion Узлы метаданных (InfoBaseTreeNode)
+                        DropToArea(currentContainer, node as CustomTreeNode);
                     }
 
                 }
@@ -3039,11 +3059,57 @@ namespace Ranet.AgOlap.Controls
             if (m_ServerExplorer.LogManager != LogManager)
                 m_ServerExplorer.LogManager = LogManager;
 
-            m_ServerExplorer.Initialize();
 
             m_CalculatedItemsEditor = null;
-
             Clear();
+
+            m_ServerExplorer.CubeBrowser.Initialized += new EventHandler(CubeBrowser_Initialized);
+            m_ServerExplorer.Initialize();
+        }
+
+        void CubeBrowser_Initialized(object sender, EventArgs e)
+        {
+            m_ServerExplorer.CubeBrowser.Initialized -= new EventHandler(CubeBrowser_Initialized);
+
+            if (DefaultTuples != null)
+            {
+                foreach (var tuple in DefaultTuples)
+                {
+                    InitializeAreasByTuple(tuple);
+                }
+                RefreshMdxQuery();
+            }
+        }
+
+        void InitializeAreasByTuple(List<ShortMemberInfo> tuple)
+        {
+            if (tuple != null)
+            {
+                Clear();
+
+                foreach (var item in tuple)
+                {
+                    if (item.HierarchyUniqueName != "[Measures]")
+                    {
+                        // Добавляем новый узел для иерархии
+                        var hierarchyNode = m_ServerExplorer.CubeBrowser.FindHierarchyNode(item.HierarchyUniqueName);
+                        if (hierarchyNode != null)
+                        {
+                            MemberLiteTreeNode node = new MemberLiteTreeNode(new MemberData() { UniqueName = item.UniqueName, HierarchyUniqueName = item.HierarchyUniqueName });
+                            DropToArea(m_FilterAreaContainer, node, false);
+                        }
+                    }
+                    else
+                    {
+                        var measureNode = m_ServerExplorer.CubeBrowser.FindMeasureNode(item.UniqueName);
+                        // меры в область данных
+                        if (measureNode != null && measureNode.Info is MeasureInfo)
+                        {
+                            DropToArea(m_DataAreaContainer, measureNode, false);
+                        }
+                    }
+                }
+            }
         }
 
         protected virtual void InitializePivotGrid(String query)
@@ -3435,5 +3501,7 @@ namespace Ranet.AgOlap.Controls
             m_ToolBar.Visibility = (m_RunAreaSplitter.Visibility == Visibility.Visible || m_StorageAreaSplitter.Visibility == Visibility.Visible || ImportLayout_ButtonVisible || ExportLayout_ButtonVisible) ? Visibility.Visible : Visibility.Collapsed;
         }
         #endregion Управление видимостью кнопок на тулбаре
+
+        public List<List<ShortMemberInfo>> DefaultTuples;
     }
 }

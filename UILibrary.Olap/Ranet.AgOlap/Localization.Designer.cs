@@ -601,7 +601,7 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sorting by Measure.
+        ///   Looks up a localized string similar to Sorting Axis by Measure.
         /// </summary>
         public static string ContextMenu_SortingByMeasure {
             get {

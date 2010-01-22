@@ -1071,7 +1071,7 @@ Please, recalculate data or cancel changes.</value>
     <value>Sorting Settings</value>
   </data>
   <data name="ContextMenu_SortingByMeasure" xml:space="preserve">
-    <value>Sorting by Measure</value>
+    <value>Sorting Axis by Measure</value>
   </data>
   <data name="ContextMenu_ClearAxisSorting" xml:space="preserve">
     <value>Remove Sorting</value>

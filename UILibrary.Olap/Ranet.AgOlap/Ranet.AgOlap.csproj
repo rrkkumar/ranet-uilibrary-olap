@@ -75,7 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Jayrock.AgJson, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\dll\Jayrock.AgJson.dll</HintPath>
     </Reference>
     <Reference Include="Ranet.AgZipLib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6411e51d1da2afdf, processorArchitecture=MSIL">
       <HintPath>..\dll\Ranet.AgZipLib.dll</HintPath>
@@ -131,6 +131,7 @@
     </Compile>
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <Compile Include="Controls\UpdateablePivotGridControl.Anatoly.cs" />
     <Compile Include="Controls\Data\RanetDataGrid.cs" />
     <Compile Include="Controls\DateSlicerCtrl.cs" />
     <Compile Include="Controls\Forms\ModalDialog.cs" />
@@ -297,6 +298,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Providers\MemberActionType.cs" />
+    <Compile Include="Providers\ShortMemberInfo.cs" />
     <Compile Include="Providers\QueryProvider.cs" />
     <Compile Include="Providers\PerformMemberActionArgs.cs" />
     <Compile Include="Providers\PivotQueryManager.cs" />

@@ -108,7 +108,11 @@ namespace Ranet.Olap.Core.Data
                 }
             }
 
-            return null;
+            // Ячейка не найдена. Возможно это ячейка, которой не существует в кубе (null)
+            // При некоторых настройках безопасности в CellSet есть мемберы а коллекция Cells пустая.
+            var cell_empty = new CellData() { Axis0_Coord = col};
+            Cells.Add(cell_empty);
+            return cell_empty;
         }
 
         public CellData GetCellDescription(int col, int row)
@@ -130,6 +134,14 @@ namespace Ranet.Olap.Core.Data
                 }
             }
 
+            if (cell == null)
+            {
+                // Ячейка не найдена. Возможно это ячейка, которой не существует в кубе (null)
+                // При некоторых настройках безопасности в CellSet есть мемберы а коллекция Cells пустая.
+                cell = new CellData() { Axis0_Coord = col, Axis1_Coord = row };
+                m_Cells2D.Add(cell, col, row);
+                Cells.Add(cell);
+            }
             return cell;
         }
 
@@ -186,6 +198,7 @@ namespace Ranet.Olap.Core.Data
                 prop = new PropertyData("FORMATTED_VALUE", cellValueData.DisplayValue);
                 cellValueData.Properties.Add(prop);
                 cellData.Value = cellValueData;
+                
                 Cells.Add(cellData);
             }
         }

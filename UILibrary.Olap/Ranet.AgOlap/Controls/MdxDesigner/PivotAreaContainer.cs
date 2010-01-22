@@ -138,13 +138,18 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
         public void AddItem(AreaItemControl ctrl)
         {
+            AddItem(ctrl, true);
+        }
+
+        public void AddItem(AreaItemControl ctrl, bool raise_ItemsListChanged)
+        {
             if (ctrl != null)
             {
                 ctrl.Area = this;
                 ctrl.DragStarted += new DragStartedEventHandler(ctrl_DragStarted);
                 ctrl.DragDelta += new DragDeltaEventHandler(ctrl_DragDelta);
                 ctrl.DragCompleted += new DragCompletedEventHandler(ctrl_DragCompleted);
-                m_ItemsList.AddItem(ctrl);
+                m_ItemsList.AddItem(ctrl, raise_ItemsListChanged);
             }
         }
 

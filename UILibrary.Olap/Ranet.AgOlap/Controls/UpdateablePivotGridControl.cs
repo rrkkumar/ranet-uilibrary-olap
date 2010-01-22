@@ -64,7 +64,7 @@ using Ranet.AgOlap.Controls.ContextMenu;
 
 namespace Ranet.AgOlap.Controls
 {
-    public class UpdateablePivotGridControl : AgControlBase
+    public partial class UpdateablePivotGridControl : AgControlBase
     {
         const string MEMBER_ACTION = "MEMBER_ACTION";
         const string SERVICE_COMMAND = "SERVICE_COMMAND";
@@ -490,7 +490,7 @@ namespace Ranet.AgOlap.Controls
             }
 
             m_CustomCellConditionsEditor.Initialize(CustomCellsConditions != null ? CustomCellsConditions.ToList<CellConditionsDescriptor>() : new List<CellConditionsDescriptor>());
-            m_ConditionsDesignerDialog.Show();
+            ShowDialog(m_ConditionsDesignerDialog);
         }
 
         void m_CustomCellConditionsEditor_LoadStyles(object sender, CustomEventArgs<ObjectStorageFileDescription> e)
@@ -668,17 +668,6 @@ namespace Ranet.AgOlap.Controls
 
         void PivotGrid_ExecuteMemberAction(object sender, MemberActionEventArgs args)
         {
-            //NEW!!! Если в кэше есть изменения, то нужно спросить об их сохранении
-            //if (UseChangesCashe && PivotGrid.LocalChanges.CellChanges.Count > 0)
-            //{
-            //    MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-            //    //PopUpQuestionDialog dlg = SaveChangesDlg;
-            //    //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(ColumnsControl_SaveChanges_DialogClosed);
-            //    //dlg.Tag = args;
-            //    //dlg.Show();
-            //    return;
-            //}
-
             // Определяем нужно ли выполнить экшен по умолчанию
             if (args.Action == MemberActionType.Default)
             {
@@ -690,7 +679,7 @@ namespace Ranet.AgOlap.Controls
                         args.Action = MemberActionType.DrillDown;
                         break;
                     case MemberClickBehaviorTypes.ExpandCollapse:
-                        if (args.Member != null)
+                        if (args.Member != null && args.Member.ChildCount > 0 && !args.Member.IsCalculated)
                         {
                             args.Action = MemberActionType.Expand;
                             if (args.Member.DrilledDown)
@@ -824,7 +813,7 @@ namespace Ranet.AgOlap.Controls
             switch (e.Action)
             {
                 case ControlActionType.ShowMDX:
-                    GetDataSourceInfo(null);
+                    ShowDataSourceInfo(GetDataSourceInfo(null));
                     break;
                 case ControlActionType.ShowProperties:
                     dlg = new ModalDialog() { Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
@@ -837,10 +826,7 @@ namespace Ranet.AgOlap.Controls
                     {
                         panel.Children.Add(dlg.Dialog.PopUpControl);
                     }
-                    // На время убираем контекстное меню сводной таблицы
-                    dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                    PivotGrid.UseContextMenu = false;
-                    dlg.Show();
+                    ShowDialog(dlg);
                     break;
                 case ControlActionType.ShowAttributes:
                     ShowMemberAttributes(info);
@@ -902,8 +888,6 @@ namespace Ranet.AgOlap.Controls
             {
                 m_SortDialog = new ModalDialog() { Width = 400, Height = 250, MinHeight = 215, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
                 m_SortDialog.Caption = Localization.SortingSettingsDialog_Caption;
-                // На время убираем контекстное меню сводной таблицы
-                m_SortDialog.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
                 m_SortDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
                 Panel panel1 = GetRootPanel(this);
                 if (panel1 != null)
@@ -936,8 +920,7 @@ namespace Ranet.AgOlap.Controls
             }
 
             m_SortSettingsControl.Initialize(sortType, sort);
-            PivotGrid.UseContextMenu = false;
-            m_SortDialog.Show();
+            ShowDialog(m_SortDialog);
         }
 
         SortDescriptor GetAxisMeasureSort(MemberControl member)
@@ -1084,7 +1067,6 @@ namespace Ranet.AgOlap.Controls
                 {
                     m_DrillthroughDialog = new ModalDialog() { Width = 600, Height = 500, DialogStyle = ModalDialogStyles.OK };
                     m_DrillthroughDialog.Caption = Localization.DrillthroughDialog_Caption;
-                    m_DrillthroughDialog.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
                 }
                 //RanetDataGrid grid = new RanetDataGrid();
                 //grid.Initialize(tableWrapper);
@@ -1097,9 +1079,7 @@ namespace Ranet.AgOlap.Controls
                 {
                     panel.Children.Add(m_DrillthroughDialog.Dialog.PopUpControl);
                 }
-                // На время убираем контекстное меню сводной таблицы
-                PivotGrid.UseContextMenu = false;
-                m_DrillthroughDialog.Show();
+                ShowDialog(m_DrillthroughDialog);
             }
         }
 
@@ -1117,11 +1097,32 @@ namespace Ranet.AgOlap.Controls
                 {
                     panel.Children.Add(dlg.Dialog.PopUpControl);
                 }
-                // На время убираем контекстное меню сводной таблицы
-                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                PivotGrid.UseContextMenu = false;
-                dlg.Show();
+                ShowDialog(dlg);
             }
+        }
+
+        /// <summary>
+        /// Открывает диалог и обрабатывает блокировку подсказки для элементов сводной таблицы
+        /// </summary>
+        /// <param name="dlg"></param>
+        void ShowDialog(ModalDialog dlg)
+        {
+            if (dlg != null)
+            {
+                // На время убираем контекстное меню сводной таблицы
+                PivotGrid.UseContextMenu = false;
+                // На время убираем всплывающую подсказку
+                PivotGrid.UseToolTip = false;
+                dlg.Show();
+                dlg.DialogClosed -= new EventHandler<DialogResultArgs>(ModalDialog_DialogClosed);
+                dlg.DialogClosed += new EventHandler<DialogResultArgs>(ModalDialog_DialogClosed);
+            }
+        }
+
+        void ModalDialog_DialogClosed(object sender, DialogResultArgs e)
+        {
+            PivotGrid.UseToolTip = true;
+            PivotGrid.UseContextMenu = true;
         }
 
         void LoadMemberAttributes(MemberInfo member, List<LevelPropertyInfo> properties)
@@ -1166,7 +1167,7 @@ namespace Ranet.AgOlap.Controls
                         entry.NewValue = change.NewValue;
                     }
 
-                    GetDataSourceInfo(entry);
+                    ShowDataSourceInfo(GetDataSourceInfo(entry));
                     break;
                 case ControlActionType.ShowProperties:
                     ModalDialog dlg = new ModalDialog() {Width = 400, Height = 300, DialogStyle = ModalDialogStyles.OK };
@@ -1179,10 +1180,7 @@ namespace Ranet.AgOlap.Controls
                     {
                         panel.Children.Add(dlg.Dialog.PopUpControl);
                     }
-                    // На время убираем контекстное меню сводной таблицы
-                    dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                    PivotGrid.UseContextMenu = false;
-                    dlg.Show();
+                    ShowDialog(dlg);
                     break;
                 case ControlActionType.ValueDelivery:
                     ShowValueDeliveryDialog(e.UserData);
@@ -1523,11 +1521,7 @@ namespace Ranet.AgOlap.Controls
                 CopyControl.Initialize(slice, cell.Value);
                 dlg.Content = CopyControl;
 
-                // На время убираем контекстное меню сводной таблицы
-                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                PivotGrid.UseContextMenu = false;
-
-                dlg.Show();
+                ShowDialog(dlg);
             }
         }
 
@@ -1612,11 +1606,7 @@ namespace Ranet.AgOlap.Controls
                 DeliveryControl.Initialize(cell);
                 dlg.Content = DeliveryControl;
 
-                // На время убираем контекстное меню сводной таблицы
-                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                PivotGrid.UseContextMenu = false;
-
-                dlg.Show();
+                ShowDialog(dlg);
             }
         }
 
@@ -1705,17 +1695,8 @@ namespace Ranet.AgOlap.Controls
                 DSInfo.UpdateScriptVisibility = PivotGrid.CanEdit;
                 DSInfo.Initialize(args);
 
-                // На время убираем контекстное меню сводной таблицы
-                dlg.DialogClosed += new EventHandler<DialogResultArgs>(Dlg_DialogClosed);
-                PivotGrid.UseContextMenu = false;
-
-                dlg.Show();
+                ShowDialog(dlg);
             }
-        }
-
-        void Dlg_DialogClosed(object sender, DialogResultArgs e)
-        {
-            PivotGrid.UseContextMenu = true;
         }
 
         /// <summary>
@@ -1738,14 +1719,15 @@ namespace Ranet.AgOlap.Controls
         /// Получает информацию о источнике данных
         /// </summary>
         /// <param name="userData"></param>
-        void GetDataSourceInfo(UpdateEntry userData)
+        public virtual DataSourceInfoArgs GetDataSourceInfo(UpdateEntry userData)
         {
             if (DataManager != null)
             {
                 DataSourceInfoArgs info = DataManager.GetDataSourceInfo(userData);
                 info.ConnectionString = Connection;
-                ShowDataSourceInfo(info);
+                return info;
             }
+            return null;
         }
 
         void dlg_CloseDialog(DialogResult e)
@@ -1809,9 +1791,6 @@ namespace Ranet.AgOlap.Controls
             if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
             {
                 MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-                //PopUpQuestionDialog dlg = SaveChangesDlg;
-                //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(UseChangesCasheButton_SaveChanges_DialogClosed);
-                //dlg.Show();
                 return;
             }
 
@@ -1836,9 +1815,6 @@ namespace Ranet.AgOlap.Controls
             if (UseChangesCashe && PivotGrid.LocalChanges.Count > 0)
             {
                 MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-                //PopUpQuestionDialog dlg = SaveChangesDlg;
-                //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(EditButton_SaveChanges_DialogClosed);
-                //dlg.Show();
                 return;
             }
 
@@ -1996,6 +1972,7 @@ namespace Ranet.AgOlap.Controls
                 if (DataManager != null)
                 {
                     String query = DataManager.PerformMemberAction(args);
+                    // query=generateQuery(e);
                     if (!String.IsNullOrEmpty(query))
                     {
                         MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
@@ -2010,6 +1987,7 @@ namespace Ranet.AgOlap.Controls
             if (args != null && query_args != null)
             {
                 IsWaiting = true;
+
                 LogManager.LogInformation(this, this.Name + String.Format(" - {0} member {1}", args.Action.ToString(), args.Member != null ? args.Member.UniqueName : "<null>"));
                 OlapDataLoader.LoadData(query_args, args);
             }
@@ -2376,8 +2354,10 @@ namespace Ranet.AgOlap.Controls
                     IsWaiting = true;
                     LogManager.LogInformation(this, this.Name + " - Initialization started.");
                     MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, DataManager.RefreshQuery());
+										// qContext = new Ranet.Olap.Mdx.MdxQueryContext(Query);
                     OlapDataLoader.LoadData(query_args, args);
                 }
+                
             }
         }
 
@@ -2458,16 +2438,6 @@ namespace Ranet.AgOlap.Controls
 
         private void RunServiceCommand(ServiceCommandType actionType)
         {
-            //NEW!!! if (UseChangesCashe && PivotGrid.LocalChanges.CellChanges.Count > 0)
-            //{
-            //    MessageBox.Show(Localization.PivotGrid_SaveCachedChanges, Localization.MessageBox_Warning, MessageBoxButton.OK);
-            //    //PopUpQuestionDialog dlg = SaveChangesDlg;
-            //    //dlg.DialogClosed += new EventHandler<Ranet.AgOlap.Controls.Forms.DialogResultArgs>(RunService_SaveChanges_DialogClosed);
-            //    //dlg.Tag = actionType;
-            //    //dlg.Show();
-            //    return;
-            //}
-
             if (actionType == ServiceCommandType.Refresh)
                 ExportSizeInfo();
 

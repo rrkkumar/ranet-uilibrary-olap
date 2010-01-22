@@ -181,6 +181,11 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
         public void AddItem(AreaItemControl item)
         {
+            AddItem(item, true);
+        }
+
+        public void AddItem(AreaItemControl item, bool raise_ItemsListChanged)
+        {
             // Если ListBoxItem ранее был удален из списка (при перетаскивании например), то item.Tag содержит тот ListBoxItem, который удалялся. И попытка создать новый и присвоить в Content текущий item приведет к ошибке, т.к. Parent остался старый
             // В этом случае просто восстановим ListBoxItem из св-ва Tag
             ListBoxItem list_Item = null;
@@ -202,7 +207,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
             m_List.Items.Add(list_Item);
 
-            Raise_ItemsListChanged();
+            if(raise_ItemsListChanged)
+                Raise_ItemsListChanged();
         }
 
 

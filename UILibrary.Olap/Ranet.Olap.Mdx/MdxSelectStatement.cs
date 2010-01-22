@@ -98,7 +98,8 @@ namespace Ranet.Olap.Mdx
 				)
 			: this(null, axes, null, (MdxObjectReferenceExpression)null)
 		{
-		}public MdxSelectStatement(
+		}
+		public MdxSelectStatement(
 				IEnumerable<MdxWithClauseItem> with,
 				IEnumerable<MdxAxis> axes,
 				MdxWhereClause where)
@@ -275,6 +276,30 @@ namespace Ranet.Olap.Mdx
             res2.CellProperties.AddRange((IEnumerable<MdxExpression>)this.CellProperties.Clone());
 
             return res2;
+		}
+		internal MdxSelectStatement GenerateCurrentStatement(MdxQueryContext MdxQueryContext)
+		{
+			var newAxes=Axes;
+			
+			for(int i=0;i<Axes.Count;i++)
+			{
+				var axis = Axes[i];
+				var cntAxis=MdxQueryContext.Axes[i];
+				var newAxis = axis.GenerateCurrentAxis(cntAxis);
+				if (!object.ReferenceEquals(axis,newAxis))
+				
+				{
+					if (newAxes==Axes)
+						newAxes = (MdxObjectList<MdxAxis>)Axes.Clone();
+
+					newAxes[i] = newAxis;
+				}
+			}
+			if (newAxes==Axes)
+				return this;
+				
+			var result=new MdxSelectStatement(With,newAxes,Where,CubeSpecification);
+			return result;
 		}
 	}
 }

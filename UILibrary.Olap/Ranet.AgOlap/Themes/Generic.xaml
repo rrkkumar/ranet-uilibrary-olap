@@ -13,6 +13,7 @@
                      xmlns:System_Windows_Controls_Primitives_Data="clr-namespace:System.Windows.Controls.Primitives;assembly=System.Windows.Controls.Data"
                      xmlns:data="clr-namespace:Ranet.AgOlap.Controls.Data"
                      xmlns:swc_data="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Data" 
+                     xmlns:pivotgrid_controls="clr-namespace:Ranet.AgOlap.Controls.PivotGrid.Controls" 
 >
     <!-- GridSplitter -->
     <Style x:Key="GridSplitterPreviewStyle" TargetType="Control">
@@ -5065,4 +5066,201 @@
         </Setter>
     </Style>
     <!-- End of DataGrid -->
+
+    <!-- MemberControl -->
+    <Style TargetType="pivotgrid_controls:MemberControl">
+        <Setter Property="Background" Value="#FF1F3B53"/>
+        <Setter Property="Foreground" Value="#FF000000"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                    <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="pivotgrid_controls:MemberControl">
+                    <Grid >
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+                                    <Storyboard>
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Glow" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.3" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Background" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.30" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Background" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                                            <SplineColorKeyFrame KeyTime="00:00:00.3000000" Value="#CCFFB400"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" x:Name="LayoutBorder" CornerRadius="1,1,1,1">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#CC808080"/>
+                                    <GradientStop Color="#CC808080" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <Grid>
+                                <Border x:Name="border">
+                                    <Grid>
+                                        <!--<Grid.RowDefinitions>
+                                            <RowDefinition Height="0.507*"/>
+                                            <RowDefinition Height="0.493*"/>
+                                        </Grid.RowDefinitions>-->
+                                        <Border x:Name="Background" BorderThickness="1,1,1,1" CornerRadius="0.2,0.2,0.2,0.2" Opacity="0.7" Background="#CCC0C0C0" Grid.RowSpan="2">
+                                            <Border.BorderBrush>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FFFFFFFF"/>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0.375"/>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0.379"/>
+                                                    <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.BorderBrush>
+                                        </Border>
+                                        <Border Opacity="0" HorizontalAlignment="Stretch" x:Name="Glow" Width="Auto" Grid.RowSpan="2">
+                                            <Border.Background>
+                                                <RadialGradientBrush GradientOrigin="0.5,0.5">
+                                                    <RadialGradientBrush.RelativeTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="2.5" ScaleY="1.9"/>
+                                                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                            <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                                                            <TranslateTransform X="0.0" Y="0.5"/>
+                                                        </TransformGroup>
+                                                    </RadialGradientBrush.RelativeTransform>
+                                                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                                </RadialGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                        <Border HorizontalAlignment="Stretch" Margin="0,0,0,0" x:Name="Shine" Width="Auto">
+                                            <Border.Background>
+                                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0.0">
+                                                    <GradientStop Color="#99FFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#33FFFFFF" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Border>
+                                <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" d:LayoutOverrides="Width, Height" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,0,0" OpacityMask="{x:Null}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- End of MemberControl -->
+    
+    <!-- CellControl -->
+    <Style TargetType="pivotgrid_controls:CellControl">
+        <Setter Property="Background" Value="#FFFFFFFF"/>
+        <Setter Property="Foreground" Value="#FF000000"/>
+        <Setter Property="Padding" Value="3"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#FFA3AEB9" Offset="0"/>
+                    <GradientStop Color="#FF8399A9" Offset="0.375"/>
+                    <GradientStop Color="#FF718597" Offset="0.375"/>
+                    <GradientStop Color="#FF617584" Offset="1"/>
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="pivotgrid_controls:CellControl">
+                    <Grid >
+                        <vsm:VisualStateManager.VisualStateGroups>
+                            <vsm:VisualStateGroup x:Name="CommonStates">
+                                <vsm:VisualState x:Name="Normal"/>
+                                <vsm:VisualState x:Name="MouseOver">
+                                    <!--<Storyboard>
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Glow" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.3" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Background" Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.30" Value="1"/>
+                                        </DoubleAnimationUsingKeyFrames>
+                                        <ColorAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="Background" Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)">
+                                            <SplineColorKeyFrame KeyTime="00:00:00.3000000" Value="#CCFFB400"/>
+                                        </ColorAnimationUsingKeyFrames>
+                                    </Storyboard>-->
+                                </vsm:VisualState>
+                            </vsm:VisualStateGroup>
+                        </vsm:VisualStateManager.VisualStateGroups>
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" x:Name="LayoutBorder" CornerRadius="1,1,1,1" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}">
+                            <!--<Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="#CC808080"/>
+                                    <GradientStop Color="#CC808080" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>-->
+                            <Grid>
+                                <!--<Border x:Name="border">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="0.507*"/>
+                                            <RowDefinition Height="0.493*"/>
+                                        </Grid.RowDefinitions>
+                                        <Border x:Name="Background" BorderThickness="1,1,1,1" CornerRadius="0.2,0.2,0.2,0.2" Opacity="0.7" Background="#CCC0C0C0" Grid.RowSpan="2">
+                                            <Border.BorderBrush>
+                                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                    <GradientStop Color="#FFFFFFFF"/>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0.375"/>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0.379"/>
+                                                    <GradientStop Color="#FFE2E2E2" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.BorderBrush>
+                                        </Border>
+                                        <Border Opacity="0" HorizontalAlignment="Stretch" x:Name="Glow" Width="Auto" Grid.RowSpan="2">
+                                            <Border.Background>
+                                                <RadialGradientBrush GradientOrigin="0.5,0.5">
+                                                    <RadialGradientBrush.RelativeTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="2.5" ScaleY="1.9"/>
+                                                            <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                                            <RotateTransform CenterX="0.5" CenterY="0.5"/>
+                                                            <TranslateTransform X="0.0" Y="0.5"/>
+                                                        </TransformGroup>
+                                                    </RadialGradientBrush.RelativeTransform>
+                                                    <GradientStop Color="#CCFFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                                </RadialGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                        <Border HorizontalAlignment="Stretch" Margin="0,0,0,0" x:Name="Shine" Width="Auto">
+                                            <Border.Background>
+                                                <LinearGradientBrush EndPoint="0.5,0.9" StartPoint="0.5,0.0">
+                                                    <GradientStop Color="#99FFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#33FFFFFF" Offset="1"/>
+                                                </LinearGradientBrush>
+                                            </Border.Background>
+                                        </Border>
+                                    </Grid>
+                                </Border>-->
+                                <ContentPresenter x:Name="contentPresenter" Content="{TemplateBinding Content}" ContentTemplate="{TemplateBinding ContentTemplate}" d:LayoutOverrides="Width, Height" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" Margin="0,0,0,0" OpacityMask="{x:Null}"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- End of CellControl -->
+    
 </ResourceDictionary>

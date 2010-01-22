@@ -62,8 +62,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
     public class CellControl : PivotGridItem
     {
-        public const int CORNER_RADIUS = 2;
-
         CellInfo m_Cell = null;
         public CellInfo Cell
         {
@@ -83,22 +81,27 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         //public readonly int RowIndex = -1;
         //public readonly int ColumnIndex = -1;
 
-        Border m_Border = null;
-
-        protected readonly PivotGridControl Owner = null;
         Grid m_LayoutPanel;
         TextBlock m_Caption_Text;
 
-        public CellControl(PivotGridControl owner)
+        public override void OnApplyTemplate()
         {
-            if (owner == null)
-                throw new ArgumentNullException("owner");
-            Owner = owner;
+            base.OnApplyTemplate();
 
-            m_Border = new Border();
-            m_Border.CornerRadius = new CornerRadius(CORNER_RADIUS);
+            ApplySettings();
+        }
 
-            this.MouseLeftButtonDown += new MouseButtonEventHandler(CellControl_MouseLeftButtonDown);
+
+        public CellControl(PivotGridControl owner)
+            : base(owner)
+        {
+            DefaultStyleKey = typeof(CellControl);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Stretch;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Stretch;
+
+            this.Click += new RoutedEventHandler(CellControl_Click);
 
             m_LayoutPanel = new Grid();
             m_LayoutPanel.Margin = new Thickness(0);
@@ -109,7 +112,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             resDoubleClickTimer = new Storyboard();
             resDoubleClickTimer.Duration = new Duration(new TimeSpan(0, 0, 0, 0, 250));
             resDoubleClickTimer.Completed += new EventHandler(Storyboard_Completed);
-            m_Border.Resources.Add("resDoubleClickTimer", resDoubleClickTimer);
+            m_LayoutPanel.Resources.Add("resDoubleClickTimer", resDoubleClickTimer);
 
             // Текст
             m_Caption_Text = new TextBlock();
@@ -121,20 +124,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_LayoutPanel.Children.Add(m_Caption_Text);
             Grid.SetColumn(m_Caption_Text, 1);
 
-            m_Border.Child = m_LayoutPanel;
-            this.Content = m_Border;
+            this.Content = m_LayoutPanel;
 
         }
 
-        Image m_Image = null;
-        ProgressBar m_ProgressBar = null;
-
-        void CellControl_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        void CellControl_Click(object sender, RoutedEventArgs e)
         {
             m_ClickCount++;
             m_LastArgs = e;
             resDoubleClickTimer.Begin();
         }
+
+        Image m_Image = null;
+        ProgressBar m_ProgressBar = null;
 
         Storyboard resDoubleClickTimer;
         private void Storyboard_Completed(object sender, EventArgs e)
@@ -147,7 +149,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
 
         public event EventHandler MouseDoubleClick;
-        protected void OnMouseDoubleClick(MouseButtonEventArgs e)
+        protected void OnMouseDoubleClick(EventArgs e)
         {
             EventHandler handler = MouseDoubleClick;
             if (handler != null)
@@ -157,7 +159,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         }
 
         int m_ClickCount = 0;
-        MouseButtonEventArgs m_LastArgs;
+        RoutedEventArgs m_LastArgs;
 
         void ApplySettings()
         {
@@ -325,13 +327,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         {
             if (Cell == null)
             {
-                m_Border.Background = new SolidColorBrush(Colors.Transparent);
+                Background = new SolidColorBrush(Colors.Transparent);
                 return;
             }
 
             if (IsSelected && !IsFocused)
             {
-                m_Border.Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 225));
+                Background = new SolidColorBrush(Color.FromArgb(50, 0, 0, 225));
             }
             else
             {
@@ -341,12 +343,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     if (NotRecalculatedChange != null)
                     {
                         // Непересчитанные ячейки выделяются фоном Colors.Cyan
-                        m_Border.Background = new SolidColorBrush(Color.FromArgb(75, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
+                        Background = new SolidColorBrush(Color.FromArgb(75, Colors.Cyan.R, Colors.Cyan.G, Colors.Cyan.B));
                     }
                     else
                     {
                         // Редактируемые ячейки - SystemColors.Info
-                        m_Border.Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 225));
+                        Background = new SolidColorBrush(Color.FromArgb(255, 255, 255, 225));
                     }
                 }
                 else
@@ -354,7 +356,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     if (m_CustomCellAppearance != null && m_CustomCellAppearance.Options.UseBackColor)
                     {
                         // Фон из настроек условий для ячейки
-                        m_Border.Background = new SolidColorBrush(m_CustomCellAppearance.BackColor);
+                        Background = new SolidColorBrush(m_CustomCellAppearance.BackColor);
                     }
                     else
                     {
@@ -365,19 +367,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                             {
                                 // Фон из OLAP (свойства ячейки)
                                 Color color = ColorHelper.FromRgb(backColor);
-                                m_Border.Background = new SolidColorBrush(color);
+                                Background = new SolidColorBrush(color);
                             }
                             else
                             {
                                 // Фон по-умолчанию
                                 if (Owner != null)
                                 {
-                                    if(m_Border.Background != Owner.CellsBackground)
-                                        m_Border.Background = Owner.CellsBackground;
+                                    if(Background != Owner.CellsBackground)
+                                        Background = Owner.CellsBackground;
                                 }
                                 else
                                 {
-                                    m_Border.Background = new SolidColorBrush(Colors.White);
+                                    Background = new SolidColorBrush(Colors.White);
                                 }
                             }
                         }
@@ -398,28 +400,25 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         {
             if (Cell == null)
             {
-                m_Border.BorderBrush = new SolidColorBrush(Colors.Transparent);
+                BorderBrush = new SolidColorBrush(Colors.Transparent);
                 return;
             }
 
             if (IsFocused)
             {
-                Border border = m_Border;
-                border.BorderBrush = new SolidColorBrush(Colors.Black);
-                border.BorderThickness = new Thickness(1, 1, 1, 1);
+                BorderBrush = new SolidColorBrush(Colors.Black);
+                BorderThickness = new Thickness(1, 1, 1, 1);
                 // Чтобы не сместилось содержимое при появлении левой и верхней границы
                 m_LayoutPanel.Margin = new Thickness(-1, -1, 0, 0);
             }
             else
             {
-                Border border = m_Border;
-
                 if (m_CustomCellAppearance != null && m_CustomCellAppearance.Options.UseBorderColor)
                 {
                     // Цвет из настроек условий для ячейки
-                    border.BorderBrush = new SolidColorBrush(m_CustomCellAppearance.BorderColor);
+                    BorderBrush = new SolidColorBrush(m_CustomCellAppearance.BorderColor);
                     // Рамка полностью
-                    border.BorderThickness = new Thickness(1, 1, 1, 1);
+                    BorderThickness = new Thickness(1, 1, 1, 1);
                     // Чтобы не сместилось содержимое при появлении левой и верхней границы
                     m_LayoutPanel.Margin = new Thickness(-1, -1, 0, 0);
                 }
@@ -427,53 +426,27 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 {
                     if (Owner != null)
                     {
-                        if (border.BorderBrush != Owner.CellsBorder)
-                            border.BorderBrush = Owner.CellsBorder;
+                        if (BorderBrush != Owner.CellsBorder)
+                            BorderBrush = Owner.CellsBorder;
                     }
                     else
                     {
-                        border.BorderBrush = new SolidColorBrush(Colors.DarkGray);
+                        BorderBrush = new SolidColorBrush(Colors.DarkGray);
                     }
 
                     int left_Thicknes = ShowLeftBorder == true ? 1 : 0;
                     int up_Thicknes = ShowUpBorder == true ? 1 : 0;
 
-                    border.BorderThickness = new Thickness(left_Thicknes, up_Thicknes, 1, 1);
+                    BorderThickness = new Thickness(left_Thicknes, up_Thicknes, 1, 1);
                     m_LayoutPanel.Margin = new Thickness(left_Thicknes * -1, up_Thicknes * -1, 0, 0);
                 }
             }
         }
 
-        /// <summary>
-        /// Отображать левую границу ячейки (Когда ячейка в первой колонке, а области строк нет - 1 ось)
-        /// </summary>
-        public bool ShowLeftBorder = false;
-
-        /// <summary>
-        /// Отображать верхнюю границу ячейки (Когда ячейка в первой строке, а области колонок нет - select from [Adventure Works])
-        /// </summary>
-        public bool ShowUpBorder = false;
-
         public String Text
         {
             get {
                 return m_Caption_Text.Text;
-            }
-        }
-
-        double Scale
-        {
-            get
-            {
-                if (Owner == null)
-                {
-                    return 1;
-                }
-                else
-                {
-                    return Owner.Scale;
-                }
-
             }
         }
 
@@ -645,6 +618,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 try
                 {
                     image = new BitmapImage(new Uri(m_CustomCellAppearance.CustomImageUri, UriKind.Relative));
+                    image.ImageOpened += new EventHandler<RoutedEventArgs>(image_ImageOpened);
                 }
                 catch { }
             }
@@ -664,7 +638,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_Image = new Image();
                     m_Image.Margin = new Thickness(2, 0, 2, 0);
                     m_Image.Width = m_Image.Height = 16;
-                    m_Image.Visibility = Visibility.Collapsed;
                     m_Image.Stretch = Stretch.Uniform;
                     m_LayoutPanel.Children.Add(m_Image);
                     Grid.SetColumn(m_Image, 0);
@@ -694,6 +667,17 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 {
                     m_Image.Visibility = Visibility.Collapsed;
                 }
+            }
+        }
+
+        void image_ImageOpened(object sender, RoutedEventArgs e)
+        {
+            var image = sender as BitmapImage;
+            if (image != null && m_Image != null && m_Image.Visibility == Visibility.Visible)
+            {
+                image.ImageOpened -= new EventHandler<RoutedEventArgs>(image_ImageOpened);
+                m_Image.Width = image.PixelWidth * Scale;
+                m_Image.Height = image.PixelHeight * Scale;
             }
         }
 

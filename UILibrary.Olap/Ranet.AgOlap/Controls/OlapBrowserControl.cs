@@ -342,7 +342,15 @@ namespace Ranet.AgOlap.Controls
                 m_ComboMeasureGroup.Initialize(m_CubeInfo.MeasureGroups);
                 m_ComboMeasureGroup.SelectItem(MeasureGroupName);
             }
+
+            EventHandler handler = Initialized;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
+
+        public event EventHandler Initialized;
 
         public bool DragNodes = false;
 

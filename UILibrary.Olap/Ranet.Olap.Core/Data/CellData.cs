@@ -69,7 +69,7 @@ namespace Ranet.Olap.Core.Data
         {
             get {
                 object obj = null;
-                if (!Value.IsError)
+                if (Value != null && !Value.IsError)
                 {
                     try
                     {
@@ -101,7 +101,7 @@ namespace Ranet.Olap.Core.Data
             get
             {
                 object obj = null;
-                if (!Value.IsError)
+                if (Value != null && !Value.IsError)
                 {
                     try
                     {
@@ -132,7 +132,7 @@ namespace Ranet.Olap.Core.Data
             get
             {
                 String res = null;
-                if (!Value.IsError)
+                if (Value != null && !Value.IsError)
                 {
                     try
                     {

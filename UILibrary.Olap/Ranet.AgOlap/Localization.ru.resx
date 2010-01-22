@@ -1065,7 +1065,7 @@
     <value>Настройки сортировки</value>
   </data>
   <data name="ContextMenu_SortingByMeasure" xml:space="preserve">
-    <value>Сортировка по мере</value>
+    <value>Сортировка оси по мере</value>
   </data>
   <data name="ContextMenu_SortingByProperty" xml:space="preserve">
     <value>Сортировка по свойству</value>

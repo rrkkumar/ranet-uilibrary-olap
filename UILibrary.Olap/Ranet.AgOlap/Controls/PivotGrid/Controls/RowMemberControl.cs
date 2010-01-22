@@ -51,7 +51,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             if (drillDownDepth > 0)
             {
-                ShowLeftBorder(true);
+                ShowLeftBorder = true;
             }
         }
 

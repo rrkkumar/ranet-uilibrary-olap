@@ -82,17 +82,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
     public abstract class MemberControl : PivotGridItem
     {
-        public const int CORNER_RADIUS = 2;
-
-        Border m_Border = null;
-
         MemberInfo m_Member = null;
         public MemberInfo Member
         {
             get { return m_Member; }
         }
 
-        protected readonly PivotGridControl Owner = null;
         protected virtual bool IsInteractive
         {
             get { return true; }
@@ -109,39 +104,26 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         public readonly bool UseExpandingCommands = false;
 
         public MemberControl(PivotGridControl owner, MemberInfo info)
+            : base(owner)
         {
-            if (owner == null)
-                throw new ArgumentNullException("owner");
+            BorderThickness = new Thickness(0, 0, 1, 1);
+
+            DefaultStyleKey = typeof(MemberControl);
+            HorizontalAlignment = HorizontalAlignment.Stretch;
+            VerticalAlignment = VerticalAlignment.Stretch;
+            HorizontalContentAlignment = HorizontalAlignment.Stretch;
+            VerticalContentAlignment = VerticalAlignment.Top;
+
             if(info == null)
                 throw new ArgumentNullException("info");
             
             m_Member = info;
-            Owner = owner;
-
-            this.Margin = new Thickness(0, 0, 0, 0);
-
-            m_Border = new Border();
-            m_Border.BorderBrush = Owner.MembersBorder;
-            m_Border.BorderThickness = new Thickness(0, 0, 1, 1);
-            m_Border.CornerRadius = new CornerRadius(CORNER_RADIUS);
-            
-            m_Border.Background = Owner.MembersBackground;
-
-            //m_Border.Child = RootPanel;
-            m_Border.Child = LayoutRoot;
-
-            this.MouseEnter += new MouseEventHandler(MemberControl_MouseEnter);
-            this.MouseLeave += new MouseEventHandler(MemberControl_MouseLeave);
 
             if (IsInteractive)
             {
-                this.MouseLeftButtonDown += new MouseButtonEventHandler(CaptionText_MouseLeftButtonDown);
-
-                PlusMinusButton expander = null;
-             
                 if (Member.ChildCount > 0 && !Member.IsCalculated)
                 {
-                    expander = new PlusMinusButton();
+                    var expander = new PlusMinusButton();
                     if (Member.DrilledDown)
                         expander.IsExpanded = true;
                     expander.CheckedChanged += new EventHandler(expander_CheckedChanged);
@@ -156,7 +138,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     ctrl.Height = ctrl.Width = Math.Max(5, 9 * Scale);
                     LayoutRoot.Children.Add(ctrl);
                 }
-
             }
 
             // Название элемента
@@ -292,93 +273,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_EllipsisText.Visibility = Visibility.Collapsed;
 
             this.SizeChanged += new SizeChangedEventHandler(MemberControl_SizeChanged);
-            this.Loaded += new RoutedEventHandler(MemberControl_Loaded);
-            //if(UseHint)
-            //{
-            //    // Текст подсказки
-            //    IList<MemberInfo> anc = new List<MemberInfo>();
-            //    this.Member.CollectAncestors(anc);
-            //    StringBuilder sb = new StringBuilder();
-            //    foreach (MemberInfo mv in anc)
-            //    {
-            //        sb.AppendLine(mv.Caption + " : " + mv.UniqueName);
-            //    }
-            //    String tupleToStr = sb.ToString();
-            //    tupleToStr = tupleToStr.TrimEnd('\n');
-            //    tupleToStr = tupleToStr.TrimEnd('\r');
-
-            //    // Подсказка
-            //    m_ToolTip = new ToolTipControl();
-            //    m_ToolTip.Caption = CaptionText.Text;
-            //    m_ToolTip.Text = tupleToStr;
-            //    ToolTipService.SetToolTip(this, m_ToolTip);
-            //}
-
-            this.Content = m_Border;
+            this.Content = LayoutRoot;
+            this.Click += new RoutedEventHandler(MemberControl_Click);
         }
 
-        void MemberControl_Loaded(object sender, RoutedEventArgs e)
+        void MemberControl_Click(object sender, RoutedEventArgs e)
         {
-            // Определяем объект, который находится по текущим координатам
-            if (Owner != null && Owner.CurrentMousePosition.X != -1 && Owner.CurrentMousePosition.Y != -1)
+            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
             {
-                if (AgControlBase.GetSLBounds(this).Contains(Owner.CurrentMousePosition))
-                {
-                    if (m_Border.Background != MouseOverBrush)
-                        m_Border.Background = MouseOverBrush;
-                }
+                Raise_ExecuteMemberAction(MemberActionType.Default);
             }
         }
-
-        void MemberControl_MouseLeave(object sender, MouseEventArgs e)
-        {
-            m_Border.Background = Owner.MembersBackground;
-            //if(m_Run1 != null)
-            //    m_Run1.TextDecorations = null;
-            //m_CaptionText.Effect = null;
-            //if (m_EllipsisText != null)
-            //{
-            //    m_EllipsisText.TextDecorations = null;
-            //}
-        }
-
-        Brush m_MouseOverBrush;
-        Brush MouseOverBrush
-        {
-            get
-            {
-                if (m_MouseOverBrush == null)
-                {
-                    GradientStopCollection stops = new GradientStopCollection();
-                    GradientStop stop0 = new GradientStop();
-                    stop0.Color = Colors.White;
-                    GradientStop stop1 = new GradientStop();
-                    //stop1.Color = Color.FromArgb(0xFF, 0xEB, 0x91, 0x00);
-                    stop1.Color = Color.FromArgb(0x4B, 0xFF, 0xB4, 0x00);
-                    stop1.Offset = 1;
-                    stops.Add(stop0);
-                    stops.Add(stop1);
-                    m_MouseOverBrush = new LinearGradientBrush(stops, 90);
-                    //m_MouseOverBrush = new SolidColorBrush(Color.FromArgb(0x7D, 0xFF, 0xB4, 0x00));
-                }
-                return m_MouseOverBrush;
-            }
         
-        }
-
-        void MemberControl_MouseEnter(object sender, MouseEventArgs e)
-        {
-            m_Border.Background = MouseOverBrush;
-            // Текст отображаем подчеркнутым чтобы использовать как гиперссылку
-            //if (m_Run1 != null)
-            //    m_Run1.TextDecorations = TextDecorations.Underline;
-            //m_CaptionText.Effect = new System.Windows.Media.Effects.DropShadowEffect() { ShadowDepth = 3, Opacity = 0.5/*, Color = Color.FromArgb(0x7F, 0xFF, 0x97, 0x00)*/ };
-            //if (m_EllipsisText != null)
-            //{
-            //    m_EllipsisText.TextDecorations = TextDecorations.Underline;
-            //}
-        }
-
         void expander_CheckedChanged(object sender, EventArgs e)
         {
             MemberActionType action = MemberActionType.Expand;
@@ -394,14 +300,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
 
             Raise_ExecuteMemberAction(action);
-        }
-
-        void CaptionText_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if ((Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.None)
-            {
-                Raise_ExecuteMemberAction(MemberActionType.Default);
-            }
         }
 
         TextBlock m_EllipsisText = null;
@@ -420,15 +318,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        //ToolTipControl m_ToolTip;
-
         public void RotateCaption(bool rotate)
         {
             if (rotate)
-                //m_RootPanel.Visibility = Visibility.Collapsed;
                 LayoutRoot.Visibility = Visibility.Collapsed;
             else
-                //m_RootPanel.Visibility = Visibility.Visible;
                 LayoutRoot.Visibility = Visibility.Visible;
             //RootPanel.RenderTransform = new RotateTransform() { Angle = -90  /*CenterY = -20*/ };
             //RootPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
@@ -439,36 +333,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             //m_CaptionText.RenderTransform = new RotateTransform() { Angle = -90  /*CenterY = -20*/ };
             //RootPanel.Children.Add(m_CaptionText);
 
-        }
-
-        public void ShowUpBorder(bool showBorder)
-        {
-            if (showBorder)
-                m_Border.BorderThickness = new Thickness(m_Border.BorderThickness.Left, 1, m_Border.BorderThickness.Right, m_Border.BorderThickness.Bottom);
-            else
-                m_Border.BorderThickness = new Thickness(m_Border.BorderThickness.Left, 0, m_Border.BorderThickness.Right, m_Border.BorderThickness.Bottom);
-        }
-
-        public void ShowLeftBorder(bool showBorder)
-        {
-            if (showBorder)
-                m_Border.BorderThickness = new Thickness(1, m_Border.BorderThickness.Top, m_Border.BorderThickness.Right, m_Border.BorderThickness.Bottom);
-            else
-                m_Border.BorderThickness = new Thickness(0, m_Border.BorderThickness.Top, m_Border.BorderThickness.Right, m_Border.BorderThickness.Bottom);
-        }
-
-        protected double Scale
-        {
-            get {
-                if (Owner == null)
-                {
-                    return 1;
-                }
-                else {
-                    return Owner.Scale;
-                }
-
-            }
         }
 
         TextBlock m_CaptionText = null;

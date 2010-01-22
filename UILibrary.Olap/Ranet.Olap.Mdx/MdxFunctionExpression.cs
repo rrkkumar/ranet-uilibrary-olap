@@ -33,6 +33,10 @@ namespace Ranet.Olap.Mdx
 			this.Name = name;
 			Arguments.ListChanged += _ClearChildTokens;
 		}
+		public MdxFunctionExpression(string name, params MdxExpression[] args)
+		:this(name,(IEnumerable<MdxExpression>)args)
+		{
+		}
 
 		public MdxFunctionExpression(string name, IEnumerable<MdxExpression> args)
 			: this(name)
