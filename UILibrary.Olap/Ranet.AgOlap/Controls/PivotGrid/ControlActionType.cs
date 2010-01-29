@@ -47,6 +47,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid
         DrillThrough,
         SortingByProperty,
         SortingByValue,
-        ClearAxisSorting
+        ClearAxisSorting,
+        AutoWidth
     }
 }

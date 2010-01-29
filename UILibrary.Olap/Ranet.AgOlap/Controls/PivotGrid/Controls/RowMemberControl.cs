@@ -39,7 +39,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         public RowMemberControl(PivotGridControl owner, MemberInfo info, int drillDownDepth) 
             : base(owner, info)
         {
-            Margin = new Thickness(drillDownDepth * owner.DRILLDOWN_SPACE_WIDTH * Scale, 0, 0, 0);
+            if (owner.RowsViewMode == ViewModeTypes.Tree)
+                Margin = new Thickness(drillDownDepth * owner.DRILLDOWN_SPACE_WIDTH * Scale, 0, 0, 0);
 
 //            Border border = LayoutRoot;
 //            border.BorderThickness = new Thickness(0, 0, 1 + MembersAreaContol.SPLITTER_SIZE, 1 + MembersAreaContol.SPLITTER_SIZE);

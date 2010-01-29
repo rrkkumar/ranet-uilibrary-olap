@@ -1100,4 +1100,31 @@ Please, recalculate data or cancel changes.</value>
   <data name="Sorting_None_Label" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="ContextMenu_AutoWidthColumns" xml:space="preserve">
+    <value>Auto Width</value>
+  </data>
+  <data name="CubeNotFound_Message" xml:space="preserve">
+    <value>Cube with name '{0}' not found.</value>
+  </data>
+  <data name="MeasureGroupNotFound_Message" xml:space="preserve">
+    <value>Measure Group with name '{0}' not found in Cube '{1}'.</value>
+  </data>
+  <data name="KPIViewer_ColumnGoal" xml:space="preserve">
+    <value>KPI goal</value>
+  </data>
+  <data name="KPIViewer_ColumnName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="KPIViewer_ColumnStatus" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="KPIViewer_ColumnTrend" xml:space="preserve">
+    <value>Trend</value>
+  </data>
+  <data name="KPIViewer_ColumnValue" xml:space="preserve">
+    <value>KPI value</value>
+  </data>
+  <data name="KPIViewer_ColumnVariance" xml:space="preserve">
+    <value>Variance</value>
+  </data>
 </root>

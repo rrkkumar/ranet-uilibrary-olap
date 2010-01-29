@@ -1603,5 +1603,10 @@ namespace Ranet.AgOlap.Controls
                 handler(this, args);
             }
         }
+
+        public bool SelectMeasureGroup(String measureGroupName)
+        {
+            return m_ComboMeasureGroup.SelectItem(measureGroupName);
+        }
     }
 }

@@ -134,6 +134,7 @@
     <Compile Include="Providers\InvisibleMemberInfo.cs" />
     <Compile Include="Providers\IPivotTableDataProvider.cs" />
     <Compile Include="Providers\IProperties.cs" />
+    <Compile Include="Providers\KpiView.cs" />
     <Compile Include="Providers\MemberActions\DrillActionContainer.cs" />
     <Compile Include="Providers\MemberActions\HistoryItem.cs" />
     <Compile Include="Providers\MemberActions\HistoryManager.cs" />

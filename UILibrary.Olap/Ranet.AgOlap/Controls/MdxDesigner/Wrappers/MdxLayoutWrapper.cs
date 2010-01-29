@@ -36,6 +36,26 @@ namespace Ranet.AgOlap.Controls.MdxDesigner.Wrappers
 {
     public class MdxLayoutWrapper
     {
+        String m_CubeName = String.Empty;
+        /// <summary>
+        /// Имя куба
+        /// </summary>
+        public String CubeName
+        {
+            get { return m_CubeName; }
+            set { m_CubeName = value; }
+        }
+
+        String m_SubCube = String.Empty;
+        /// <summary>
+        /// Выражение для под-куба
+        /// </summary>
+        public String SubCube
+        {
+            get { return this.m_SubCube; }
+            set {m_SubCube = value; }
+        }
+
         List<AreaItemWrapper> m_Filters;
         public List<AreaItemWrapper> Filters
         {

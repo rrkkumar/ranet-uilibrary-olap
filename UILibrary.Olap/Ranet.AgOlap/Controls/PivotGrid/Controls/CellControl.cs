@@ -618,7 +618,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 try
                 {
                     image = new BitmapImage(new Uri(m_CustomCellAppearance.CustomImageUri, UriKind.Relative));
-                    image.ImageOpened += new EventHandler<RoutedEventArgs>(image_ImageOpened);
                 }
                 catch { }
             }
@@ -647,8 +646,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 m_Image.Source = image;
                 if (image != null)
                 {
-                    m_Image.Width = image.PixelWidth * Scale;
-                    m_Image.Height = image.PixelHeight * Scale;
+                    if (image.PixelWidth == 0 || image.PixelHeight == 0)
+                    {
+                        image.ImageOpened += new EventHandler<RoutedEventArgs>(image_ImageOpened);
+                    }
+                    else
+                    {
+                        m_Image.Width = image.PixelWidth * Scale;
+                        m_Image.Height = image.PixelHeight * Scale;
+                    }
                 }
                 if (show_Value)
                 {

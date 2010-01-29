@@ -16,7 +16,7 @@
     designed to meet your specific usage and distribution requirements.
     If you have already obtained a commercial license from Galaktika Corp,
     you can use this file under those license terms.
-*/
+* /
 
 using System;
 using System.Collections.Generic;
@@ -27,7 +27,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
 {
     public class HistoryManager
     {
-        private IList<HistoryItem> m_History = new List<HistoryItem>();
+        private IList<HistoryItemMDXQuery> m_History = new List<HistoryItemMDXQuery>();
 
         public void ClearHistory()
         {
@@ -54,7 +54,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
             }
         }
 
-        public void AddHistoryItem(HistoryItem item)
+        public void AddHistoryItem(HistoryItemMDXQuery item)
         {
             if (item != null)
             {
@@ -84,33 +84,12 @@ namespace Ranet.Olap.Core.Providers.MemberActions
             }
         }
 
-        /*public bool TestToFirst(HistoryItem item)
-        {
-            if (item == null)
-                return false;
 
-            if (m_History.Count > 0 && m_History.IndexOf(item) == 0)
-                return true;
-            else
-                return false;
-        }
-
-        public bool TestToLast(HistoryItem item)
-        {
-            if (item == null)
-                return false;
-
-            if (m_History.Count > 0 && m_History.IndexOf(item) == (m_History.Count - 1))
-                return true;
-            else
-                return false;
-        }*/
-
-        HistoryItem m_CurrentHistoryItem;
+        HistoryItemMDXQuery m_CurrentHistoryItem;
         /// <summary>
         /// Текущий элемент истории
         /// </summary>
-        public HistoryItem CurrentHistoryItem
+        public HistoryItemMDXQuery CurrentHistoryItem
         {
             get
             {
@@ -160,3 +139,4 @@ namespace Ranet.Olap.Core.Providers.MemberActions
 
     }
 }
+// */

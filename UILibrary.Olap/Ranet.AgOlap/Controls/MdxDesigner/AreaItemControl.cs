@@ -35,6 +35,7 @@ using Ranet.AgOlap.Controls.General;
 using System.Windows.Media.Imaging;
 using Ranet.AgOlap.Controls.ContextMenu;
 using System.Windows.Browser;
+using Ranet.AgOlap.Controls.PivotGrid.Controls;
 
 namespace Ranet.AgOlap.Controls.MdxDesigner
 {
@@ -148,6 +149,9 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             Caption = caption;
         }
 
+        TooltipController TooltipManager;
+        protected readonly ToolTipControl ToolTip = new ToolTipControl();
+
         public AreaItemControl()
         {
             LayoutRoot = new Grid();
@@ -192,8 +196,33 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
 
             this.Content = border;
 
-            this.MouseLeave += new MouseEventHandler(OnMouseLeave);
-            this.MouseEnter += new MouseEventHandler(OnMouseEnter);
+            LayoutRoot.AttachContextMenu(p => GetCurrentContextMenu(p));
+
+            TooltipManager = new TooltipController(this);
+            TooltipManager.BeforeOpen += new EventHandler<CustomEventArgs<Point>>(TooltipManager_BeforeOpen);
+            TooltipManager.ToolTipContent = ToolTip;
+        }
+
+        void TooltipManager_BeforeOpen(object sender, CustomEventArgs<Point> e)
+        {
+            // Проверяем чтобы в тултипе было хоть что-нибудь задано
+            var tooltip = TooltipManager.ToolTipContent as ToolTipControl;
+            if (tooltip != null)
+            {
+                if (!String.IsNullOrEmpty(tooltip.Text) ||
+                !String.IsNullOrEmpty(tooltip.Caption))
+                    return;
+            }
+            e.Cancel = true;
+        }
+
+        CustomContextMenu GetCurrentContextMenu(Point p)
+        {
+            if (AgControlBase.GetSLBounds(this).Contains(p))
+            {
+                return ContextMenu;
+            }
+            return null;
         }
 
         public Rect SLBounds
@@ -223,27 +252,6 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
         public object UserData;
 
         #region Контекстное меню
-        void OnMouseEnter(object sender, MouseEventArgs e)
-        {
-            HtmlPage.Document.AttachEvent("oncontextmenu", new EventHandler<HtmlEventArgs>(ContentMenu_EventHandler));
-        }
-
-        void OnMouseLeave(object sender, MouseEventArgs e)
-        {
-            HtmlPage.Document.DetachEvent("oncontextmenu", new EventHandler<HtmlEventArgs>(ContentMenu_EventHandler));
-        }
-
-        void ContentMenu_EventHandler(object sender, HtmlEventArgs e)
-        {
-            e.PreventDefault();
-            e.StopPropagation();
-            Point point = new Point(e.OffsetX, e.OffsetY);
-            if (SLBounds.Contains(point))
-            {
-                Raise_ShowContextMenu(new PositionArgs(point));
-            }
-        }
-
         CustomContextMenu m_ContextMenu = null;
         public CustomContextMenu ContextMenu
         {
@@ -283,7 +291,24 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             contextMenu.AddMenuItem(item);
             item.ItemClick += new EventHandler(Remove_ItemClick);
 
+            // Используем открытие и закрытие меню для работы с тултипом
+            contextMenu.PopupControl.Closed -= new EventHandler(PopupControl_Closed);
+            contextMenu.PopupControl.Closed += new EventHandler(PopupControl_Closed);
+            contextMenu.PopupControl.Opened -= new EventHandler(PopupControl_Opened);
+            contextMenu.PopupControl.Opened += new EventHandler(PopupControl_Opened);
             return contextMenu;
+        }
+
+        void PopupControl_Opened(object sender, EventArgs e)
+        {
+            // Прячем тултип
+            TooltipManager.IsPaused = true;
+        }
+
+        void PopupControl_Closed(object sender, EventArgs e)
+        {
+            // Возвращаем тултип
+            TooltipManager.IsPaused = false;
         }
 
         void MoveUp_ItemClick(object sender, EventArgs e)

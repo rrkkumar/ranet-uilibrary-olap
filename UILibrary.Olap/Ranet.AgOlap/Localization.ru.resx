@@ -1097,4 +1097,31 @@
   <data name="Sorting_None_Label" xml:space="preserve">
     <value>Нет</value>
   </data>
+  <data name="ContextMenu_AutoWidthColumns" xml:space="preserve">
+    <value>Автоподбор ширины</value>
+  </data>
+  <data name="CubeNotFound_Message" xml:space="preserve">
+    <value>Не удалось найти куб  '{0}'.</value>
+  </data>
+  <data name="MeasureGroupNotFound_Message" xml:space="preserve">
+    <value>Не удалось найти группу мер '{0}' в кубе {1}.</value>
+  </data>
+  <data name="KPIViewer_ColumnGoal" xml:space="preserve">
+    <value>Цель</value>
+  </data>
+  <data name="KPIViewer_ColumnName" xml:space="preserve">
+    <value>Наименование</value>
+  </data>
+  <data name="KPIViewer_ColumnStatus" xml:space="preserve">
+    <value>Состояние</value>
+  </data>
+  <data name="KPIViewer_ColumnTrend" xml:space="preserve">
+    <value>Направление</value>
+  </data>
+  <data name="KPIViewer_ColumnValue" xml:space="preserve">
+    <value>Значение</value>
+  </data>
+  <data name="KPIViewer_ColumnVariance" xml:space="preserve">
+    <value>Изменение</value>
+  </data>
 </root>

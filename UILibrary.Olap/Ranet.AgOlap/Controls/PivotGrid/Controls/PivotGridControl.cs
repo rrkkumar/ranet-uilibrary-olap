@@ -233,7 +233,33 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_HorizontalMouseWhellSupport = new ScrollBarMouseWheelSupport() { IsHorizontal = true };
             m_HorizontalMouseWhellSupport.AddMouseWheelSupport(m_HorizontalScroll);
 
-            m_TooltipController = new TooltipController(this);
+            TooltipManager = new TooltipController(this);
+            TooltipManager.BeforeOpen += new EventHandler<CustomEventArgs<Point>>(TooltipManager_BeforeOpen);
+            TooltipManager.ToolTipContent = new ToolTipControl();
+        }
+
+        void TooltipManager_BeforeOpen(object sender, CustomEventArgs<Point> e)
+        {
+            var tooltip = TooltipManager.ToolTipContent as ToolTipControl;
+            if (tooltip != null)
+            {
+                // Определяем объект, который находится по текущим координатам
+                if (AgControlBase.GetSLBounds(this).Contains(e.Args))
+                {
+                    PivotGridItem item_Control = PivotGridItem.GetPivotGridItem(e.Args);
+                    if (item_Control != null)
+                    {
+                        if ((item_Control is RowMemberControl && Rows_UseHint) ||
+                            (item_Control is ColumnMemberControl && Columns_UseHint) ||
+                            (item_Control is CellControl && Cells_UseHint))
+                        {
+                            tooltip.Initialize(item_Control);
+                            return;
+                        }
+                    }
+                }
+            }
+            e.Cancel = true;
         }
 
         bool m_UseContextMenu = true;
@@ -254,26 +280,6 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        internal bool UseToolTip
-        {
-            get {
-                return !m_TooltipController.IsPaused; 
-            }
-            set
-            {
-                if (value)
-                {
-                    if (m_TooltipController.IsPaused)
-                        m_TooltipController.IsPaused = false;
-                }
-                else
-                {
-                    if (!m_TooltipController.IsPaused)
-                        m_TooltipController.IsPaused = true;
-                }
-            }
-        }
-
         bool m_DrillThroughCells = true;
         /// <summary>
         /// Использовать DrillThrough для ячеек
@@ -284,7 +290,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             set { m_DrillThroughCells = value; }
         }
 
-        TooltipController m_TooltipController = null;
+        internal readonly TooltipController TooltipManager = null;
         ScrollBarMouseWheelSupport m_VericalMouseWhellSupport;
         ScrollBarMouseWheelSupport m_HorizontalMouseWhellSupport;
 
@@ -835,7 +841,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 if (layout_column_index > -1 && layout_row_index > -1)
                 {
                     // Прячем подсказку чтобы не мешала при редактировании
-                    m_TooltipController.Hide();
+                    TooltipManager.Hide();
 
                     if (!ItemsLayoutRoot.Children.Contains(CellEditor.Editor))
                     {
@@ -915,7 +921,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         #endregion Редактирование ячейки
 
         CellSetDataProvider m_CellSetProvider;
-        PivotLayoutProvider m_LayoutProvider;
+        internal PivotLayoutProvider m_LayoutProvider;
         private enum RefreshType
         { 
             BuildEndRefresh,
@@ -933,7 +939,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         {
             try
             {
-                m_TooltipController.IsPaused = true;
+                TooltipManager.IsPaused = true;
 
                 System.Diagnostics.Debug.WriteLine("\r\nPivotGrid refresh started");
                 if (FocusedCell != null && FocusedCell.IsEditing)
@@ -987,7 +993,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 System.Diagnostics.Debug.WriteLine("PivotGrid refreshing time: " + (stop - start).ToString());
             }
             finally {
-                m_TooltipController.IsPaused = false;
+                TooltipManager.IsPaused = false;
             }
         }
 
@@ -1055,6 +1061,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         //    System.Diagnostics.Debug.WriteLine("PivotGrid initializing time: " + (stop - start).ToString());
         //}
 
+        PivotDataAnalizer m_AnalyticInfo = null;
 
         public void Initialize(CellSetDataProvider provider)
         {
@@ -1123,6 +1130,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             DateTime start = DateTime.Now;
             //System.Diagnostics.Debug.WriteLine("PivotGrid initializing start: " + start.TimeOfDay.ToString());
 
+            bool new_OlapData = m_CellSetProvider != provider;
             m_CellSetProvider = provider;
             m_LayoutProvider = null;
 
@@ -1130,6 +1138,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 PivotDataProvider pivotProvider = new PivotDataProvider(provider);
                 m_LayoutProvider = new PivotLayoutProvider(pivotProvider);
+            }
+
+            if (m_AnalyticInfo == null)
+                m_AnalyticInfo = new PivotDataAnalizer(this);
+            else
+            {
+                m_AnalyticInfo.ClearMembersAnalytic();
+                if (new_OlapData)
+                    m_AnalyticInfo.BuildCellsAnalytic();
             }
 
             Refresh(RefreshType.BuildEndRefresh);
@@ -1373,18 +1390,36 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     ColumnDefinition current_column = ItemsLayoutRoot.ColumnDefinitions[i + PivotArea_BeginColumnIndex];
                     int column_index_in_area = i;
                     Dictionary<int, int> drillDepth = layout.PivotProvider.RowsArea.DrillDepth;
-                    // Вычисляем максимальное заглубление по данной колонке
-                    if (drillDepth.ContainsKey(column_index_in_area))
+
+                    if (AutoWidthColumns && m_AnalyticInfo != null)
                     {
                         // Расширяем колонку с учетом заглубления в ней
-                        double width = (DEFAULT_WIDTH + DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area]) * Scale;
-                        current_column.Width = new GridLength(Math.Max(current_column.Width.Value, width));
-                        current_column.MinWidth = Math.Round((DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area] + MIN_WIDTH) * Scale);
+                        double width = (DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area] + m_AnalyticInfo.GetEstimatedColumnSizeForRowsArea(column_index_in_area) + 10 + 10 * Scale) * Scale;    // 10-для красоты, 10* - на плюсики
+                        if (drillDepth.ContainsKey(column_index_in_area))
+                            current_column.Width = new GridLength(Math.Round(Math.Max(current_column.Width.Value, width)));
+                        else
+                            current_column.Width = new GridLength(Math.Round(DEFAULT_WIDTH * Scale));
+
+                        if (drillDepth.ContainsKey(column_index_in_area))
+                            current_column.MinWidth = Math.Round((DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area] + MIN_WIDTH) * Scale);
+                        else
+                            current_column.MinWidth = Math.Round(MIN_WIDTH * Scale);
                     }
                     else
                     {
-                        current_column.Width = new GridLength(Math.Round(DEFAULT_WIDTH * Scale));
-                        current_column.MinWidth = Math.Round(MIN_WIDTH * Scale);
+                        // Вычисляем максимальное заглубление по данной колонке
+                        if (drillDepth.ContainsKey(column_index_in_area))
+                        {
+                            // Расширяем колонку с учетом заглубления в ней
+                            double width = (DEFAULT_WIDTH + DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area]) * Scale;
+                            current_column.Width = new GridLength(Math.Max(current_column.Width.Value, width));
+                            current_column.MinWidth = Math.Round((DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area] + MIN_WIDTH) * Scale);
+                        }
+                        else
+                        {
+                            current_column.Width = new GridLength(Math.Round(DEFAULT_WIDTH * Scale));
+                            current_column.MinWidth = Math.Round(MIN_WIDTH * Scale);
+                        }
                     }
                 }
                 #endregion Область строк
@@ -1427,6 +1462,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 // Число колонок в области строк и число строк в области колонок останутся неизменными при любых манипуляциях с данным представлением
                 m_RowsArea_ColumnsCount = ItemsLayoutRoot.ColumnDefinitions.Count;
                 m_ColumnsArea_RowsCount = ItemsLayoutRoot.RowDefinitions.Count;
+
+                UpdateLayout();
             }
         }
 
@@ -2013,7 +2050,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                         // Если сплиттер на предыдущей строке разметки не найден, то добавим его
                                         prev_member_splitter = Add_VertSplitter(ItemsLayoutRoot, ColumnsArea_BeginColumnIndex + column_indx - 1, row_indx, 1);
                                         prev_member_splitter.Margin = new Thickness(0, member_Control.Margin.Top, 0, 0);
-                                        m_RowsArea_Splitters.Add(prev_member_splitter, column_indx - 1, row_indx);
+                                        m_ColumnsArea_Splitters.Add(prev_member_splitter, column_indx - 1, row_indx);
                                     }
                                 }
                             }
@@ -2193,7 +2230,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             if (columnsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
                 layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
             {
-                columnsCount = layout.PivotProvider.Provider.CellSet_Description.Cells.Count;
+                // Если колонок в CellSet нет, а ячейки есть, то в сводной таблице будет 1 колонка (без шапки)
+                columnsCount = 1;
                 columnIndex = -1;
                 hasColumnsArea = false;
             }
@@ -2215,6 +2253,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 if (rowsCount == 0 && layout.PivotProvider.Provider.CellSet_Description != null &&
                     layout.PivotProvider.Provider.CellSet_Description.Cells.Count > 0)
                 {
+                    // Если строк в CellSet нет, а ячейки есть, то в сводной таблице будет 1 строка (без шапки)
                     rowsCount = 1;
                     rowIndex = -1;
                     hasRowsArea = false;
@@ -2349,7 +2388,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             if (AgControlBase.GetSLBounds(ItemsLayoutRoot).Contains(p))
             {
                 grid_item = PivotGridItem.GetPivotGridItem(p);
-                if (grid_item != null)
+                MemberControl member_control = grid_item as MemberControl;
+                if (member_control != null)
                 {
                     if (grid_item is RowMemberControl)
                     {
@@ -2360,8 +2400,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         m_ContextMenu = Columns_ContextMenu;
                     }
 
-                    MemberControl member_control = grid_item as MemberControl;
-                    if (member_control != null && m_ContextMenu != null)
+                    if (m_ContextMenu != null)
                     {
                         // Делаем доступными пункты меню только если это необходимо
                         foreach (UIElement element in m_ContextMenu.Items)
@@ -2389,48 +2428,56 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                             }
                         }
                     }
-
-                    if (grid_item is CellControl)
-                    {
-                        m_ContextMenu = Cells_ContextMenu;
-
-                        CellControl cell_Control = grid_item as CellControl;
-                        if (cell_Control != null)
-                        { 
-                            // Устанавливаем фокус на данную ячеку если она не находится в списке выбранных
-                            if (!Selection.Contains(cell_Control.Cell))
-                                FocusedCellView = cell_Control.Cell;
-                        }
-
-                        if (cell_Control != null && cell_Control.Cell != null && cell_Control.Cell.IsUpdateable)
-                        {
-                            if (m_DeliveryValueMenuItem != null)
-                                m_DeliveryValueMenuItem.IsEnabled = true;
-                            if (m_CopyValueMenuItem != null)
-                                m_CopyValueMenuItem.IsEnabled = true;
-                        }
-                        else
-                        {
-                            if (m_DeliveryValueMenuItem != null)
-                                m_DeliveryValueMenuItem.IsEnabled = false;
-                            if (m_CopyValueMenuItem != null)
-                                m_CopyValueMenuItem.IsEnabled = false;
-                        }
-
-                        m_DrillThroughMenuItem.IsEnabled = !(cell_Control.Cell != null && cell_Control.Cell.IsCalculated);
-                        m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
-                    }
-
-                    if (m_ContextMenu != null)
-                    {
-                        m_ContextMenu.Tag = grid_item;
-                    }
                 }
 
-                //var args = new MemberClickEventArgs(this.Member, p);
-                //Raise_ShowContextMenu(args);
+                if (grid_item is CellControl || grid_item == null)
+                {
+                    m_ContextMenu = Cells_ContextMenu;
 
-                //return args.ContextMenu;
+                    CellControl cell_Control = grid_item as CellControl;
+                    if (cell_Control != null)
+                    {
+                        // Устанавливаем фокус на данную ячеку если она не находится в списке выбранных
+                        if (!Selection.Contains(cell_Control.Cell))
+                            FocusedCellView = cell_Control.Cell;
+                    }
+
+                    // Если меню вызвано за пределами области ячеек, то будет относиться к ячейке с фокусом
+                    CellInfo info = cell_Control != null ? cell_Control.Cell : FocusedCellView;
+
+                    if (m_DeliveryValueMenuItem != null)
+                        m_DeliveryValueMenuItem.IsEnabled = info != null && info.IsUpdateable;
+                    if (m_CopyValueMenuItem != null)
+                        m_CopyValueMenuItem.IsEnabled = info != null && info.IsUpdateable;
+
+                    if (m_PasteSelectedCellsMenuItem != null)
+                        m_PasteSelectedCellsMenuItem.IsEnabled = EditMode & CanEdit;
+                    IList<CellInfo> cells = Selection;
+                    if (m_CopySelectedCellsMenuItem != null)
+                        m_CopySelectedCellsMenuItem.IsEnabled = cells != null && cells.Count > 0;
+                    if (m_DrillThroughMenuItem != null)
+                        m_DrillThroughMenuItem.IsEnabled = info != null && !info.IsCalculated && cells != null && cells.Count == 1;
+                }
+
+                if (m_ContextMenu != null)
+                {
+                    m_ContextMenu.Tag = grid_item;
+                }
+
+                if (m_ContextMenu != null)
+                {
+                    foreach (UIElement element in m_ContextMenu.Items)
+                    {
+                        CheckedContectMenuItem menu_item = element as CheckedContectMenuItem;
+                        if (menu_item != null && menu_item.Tag is ControlActionType)
+                        {
+                            if ((ControlActionType)(menu_item.Tag) == ControlActionType.AutoWidth)
+                            {
+                                menu_item.IsChecked = AutoWidthColumns;
+                            }
+                        }
+                    }
+                }
             }
 
             var handler = InitializeContextMenu;
@@ -2622,6 +2669,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     m_DrillThroughMenuItem.Visibility = Visibility.Collapsed;
             }
 
+            item = new CheckedContectMenuItem(Localization.ContextMenu_AutoWidthColumns);
+            item.Tag = ControlActionType.AutoWidth;
+            (item as CheckedContectMenuItem).IsChecked = AutoWidthColumns;
+            contextMenu.AddMenuItem(item);
+            item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
             item = new ContextMenuItem(Localization.ContextMenu_ShowMDX);
             item.Tag = ControlActionType.ShowMDX;
             item.Icon = UriResources.Images.Mdx16;
@@ -2648,12 +2701,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void contextMenu_Closed(object sender, EventArgs e)
         {
-            m_TooltipController.IsPaused = !UseToolTip;
+            TooltipManager.IsPaused = false;
         }
 
         void contextMenu_Opened(object sender, EventArgs e)
         {
-            m_TooltipController.IsPaused = true;
+            TooltipManager.IsPaused = true;
         }
 
         void ContextMenu_ItemClick(object sender, EventArgs e)
@@ -2661,6 +2714,11 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             ContextMenuItem item = sender as ContextMenuItem;
             if (item != null && item.Tag != null)
             {
+                if ((ControlActionType)(item.Tag) == ControlActionType.AutoWidth)
+                {
+                    AutoWidthColumns = !AutoWidthColumns;
+                }
+
                 // Если меню для элемента
                 MemberControl member_Control = ContextMenu.Tag as MemberControl;
                 if (member_Control != null)
@@ -2678,12 +2736,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 }
 
                 // Если меню для ячейки
-                CellControl cell_Control = ContextMenu.Tag as CellControl;
-                if (cell_Control != null)
+                if (ContextMenu == m_Cells_ContextMenu)
                 {
+                    CellControl cell_Control = ContextMenu.Tag as CellControl;
                     if (item.Tag is ControlActionType)
                     {
-                        Raise_PerformControlAction((ControlActionType)(item.Tag), cell_Control.Cell);
+                        // Если меню вызвано за пределами области ячеек, то будет относиться к ячейке с фокусом
+                        CellInfo info = cell_Control != null ? cell_Control.Cell : FocusedCellView;
+                        Raise_PerformControlAction((ControlActionType)(item.Tag), info);
                     }
                 }
             }
@@ -3484,7 +3544,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     // Если навигация, то прячем подсказку
                     if (isNavigation)
                     {
-                        m_TooltipController.Hide();
+                        TooltipManager.Hide();
                     }
 
                     if ((layout_column_index >= 0 || (layout_column_index == -1 && m_LayoutProvider.PivotProvider.ColumnsArea.ColumnsCount == 0)) &&    // Учитываем запросы когда ось 0 пустая, а ячейка есть
@@ -3582,6 +3642,23 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     }
                     else
                     {
+                        if (AutoWidthColumns && m_CellSetProvider != null)
+                        {
+                            if (m_AnalyticInfo != null &&
+                               member_item != null && member_item.PivotMember != null && member_item.PivotMember.Member != null)
+                            {
+                                MinMaxDescriptor<CellInfo> minmax = m_AnalyticInfo.Cells_DisplayValueLength_MinMax[member_item.PivotMember.Member];
+                                double cell_width = DEFAULT_WIDTH;
+                                double member_width = Math.Round(DEFAULT_WIDTH * Scale);
+                                if (m_AnalyticInfo != null)
+                                    member_width = m_AnalyticInfo.GetEstimatedColumnSizeForColumnsArea(memberIndex) + 10 + 10 * Scale;    // 10-для красоты, 10* - на плюсики
+                                if (minmax != null && minmax.Max != null)
+                                {
+                                    cell_width = StringExtensions.Measure(minmax.Max.DisplayValue, DefaultFontSize * Scale, null).Width + 10 + 5 * Scale; // 10-для красоты, 5* - отступ текста слева
+                                }
+                                return Math.Round(Math.Max(cell_width, member_width));
+                            }
+                        }
                         return Math.Round(DEFAULT_WIDTH * Scale);
                     }
                 }
@@ -4186,15 +4263,20 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             Scale = OldScale;
         }
 
-        public void RestoreDefaultSize()
+        public void ClearCustomSize()
         {
-            m_Scale = 1;
             m_Columns_RowsHeightes.Clear();
             m_Rows_ColumnWidthes.Clear();
             m_MembersHeightes.Clear();
             m_MembersWidthes.Clear();
 
             Refresh(RefreshType.BuildEndRefresh);
+        }
+
+        public void RestoreDefaultSize()
+        {
+            m_Scale = 1;
+            ClearCustomSize();
         }
         #endregion Экспорт-импорт размеров
 
@@ -4235,143 +4317,38 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             return null;
         }
 
-        private class TooltipController
+        bool m_AutoWidthColumns = false;
+        public bool AutoWidthColumns
         {
-            PivotGridControl PivotGrid = null;
-            Storyboard m_TooltipTimer = null;
-            Storyboard m_AutoHideTimer = null;
-            ToolTip m_ToolTip = null;
-            ToolTipControl m_ToolTipContent = null;
-
-            public TooltipController(PivotGridControl pivotGrid)
-            {
-                if (pivotGrid == null)
-                    throw new ArgumentNullException("pivotGrid");
-                PivotGrid = pivotGrid;
-
-                pivotGrid.MouseEnter += new MouseEventHandler(pivotGrid_MouseEnter);
-                pivotGrid.MouseLeave += new MouseEventHandler(pivotGrid_MouseLeave);
-                pivotGrid.MouseMove += new MouseEventHandler(pivotGrid_MouseMove);
-
-                m_AutoHideTimer = new Storyboard();
-                m_AutoHideTimer.Duration = new Duration(new TimeSpan(0, 0, 0, 5, 0));
-                m_AutoHideTimer.Completed += new EventHandler(m_AutoHideTimer_Completed);
-                //LayoutRoot.Resources.Add("m_Refresh_Timer", m_Refresh_Timer);
-
-                m_TooltipTimer = new Storyboard();
-                m_TooltipTimer.Duration = new Duration(new TimeSpan(0, 0, 0, 1, 0));
-                m_TooltipTimer.Completed += new EventHandler(m_TooltipTimer_Completed);
-
-                m_ToolTipContent = new ToolTipControl();
-
-                m_ToolTip = new ToolTip();
-                m_ToolTip.Content = m_ToolTipContent;
-                m_ToolTip.Padding = new Thickness(0);
-                m_ToolTip.Opened += new RoutedEventHandler(m_ToolTip_Opened);
-                m_ToolTip.Closed += new RoutedEventHandler(m_ToolTip_Closed);
-
-                //m_ToolTip.VerticalOffset = 10;
-                //m_ToolTip.HorizontalOffset = 10;
-            }
-
-            #region Таймер автозакрытия
-            void m_ToolTip_Closed(object sender, RoutedEventArgs e)
-            {
-                m_AutoHideTimer.Stop();
-            }
-
-            void m_AutoHideTimer_Completed(object sender, EventArgs e)
-            {
-                m_ToolTip.IsOpen = false;
-            }
-
-            void m_ToolTip_Opened(object sender, RoutedEventArgs e)
-            {
-                m_AutoHideTimer.Begin();
-            }
-            #endregion Таймер автозакрытия
-
-            void m_TooltipTimer_Completed(object sender, EventArgs e)
-            {
-                // Определяем объект, который находится по текущим координатам
-                if (AgControlBase.GetSLBounds(PivotGrid).Contains(m_CurrentPosition))
+            get { return m_AutoWidthColumns; }
+            set {
+                m_AutoWidthColumns = value;
+                if (value)
                 {
-                    PivotGridItem item_Control = PivotGridItem.GetPivotGridItem(m_CurrentPosition);
-                    if (item_Control != null)
-                    {
-                        if ((item_Control is RowMemberControl && PivotGrid.Rows_UseHint) ||
-                            (item_Control is ColumnMemberControl && PivotGrid.Columns_UseHint) ||
-                            (item_Control is CellControl && PivotGrid.Cells_UseHint))
-                        {
-                            m_ToolTipContent.Initialize(item_Control);
-                            m_ToolTip.IsOpen = true;
-                            return;
-                        }
-                    }
-                }
-
-                m_ToolTip.IsOpen = false;
-            }
-
-            Point m_CurrentPosition = new Point(0, 0);
-
-            void pivotGrid_MouseMove(object sender, MouseEventArgs e)
-            {
-                if (!IsPaused)
-                {
-                    m_ToolTip.IsOpen = false;
-                    m_CurrentPosition = e.GetPosition(null);
-                    m_TooltipTimer.Stop();
-                    m_TooltipTimer.Begin();
+                    ClearCustomSize();
                 }
             }
+        }
 
-            void pivotGrid_MouseLeave(object sender, MouseEventArgs e)
-            {
-                if (!IsPaused)
-                {
-                    m_TooltipTimer.Stop();
-                }
+        ViewModeTypes m_ColumnsViewMode = ViewModeTypes.Tree;
+        public ViewModeTypes ColumnsViewMode
+        {
+            get { return m_ColumnsViewMode; }
+            set { 
+                m_ColumnsViewMode = value;
+                if (m_AnalyticInfo != null)
+                    m_AnalyticInfo.ClearMembersAnalytic();
             }
+        }
 
-            public void Restart()
-            {
-                m_TooltipTimer.Stop();
-                m_TooltipTimer.Begin();
-                m_IsPaused = false;
-            }
-
-            void pivotGrid_MouseEnter(object sender, MouseEventArgs e)
-            {
-                if (!IsPaused)
-                {
-                    m_TooltipTimer.Stop();
-                    m_TooltipTimer.Begin();
-                }
-            }
-
-            public void Hide()
-            {
-                if (!IsPaused)
-                {
-                    m_ToolTip.IsOpen = false;
-                    m_TooltipTimer.Stop();
-                }
-            }
-
-            bool m_IsPaused = false;
-            public bool IsPaused
-            {
-                get { return m_IsPaused; }
-                set
-                {
-                    m_IsPaused = value;
-                    if (value)
-                    {
-                        m_ToolTip.IsOpen = false;
-                        m_TooltipTimer.Stop();
-                    }
-                }
+        ViewModeTypes m_RowsViewMode = ViewModeTypes.Tree;
+        public ViewModeTypes RowsViewMode
+        {
+            get { return m_RowsViewMode; }
+            set { 
+                m_RowsViewMode = value;
+                if (m_AnalyticInfo != null)
+                    m_AnalyticInfo.ClearMembersAnalytic();
             }
         }
     }

@@ -215,6 +215,9 @@ namespace Ranet.AgOlap.Controls
         }
         #endregion Свойства для настройки на OLAP
 
+        /// <summary>
+        /// Имя текущего куба
+        /// </summary>
         public String CurrentCubeName
         {
             get
@@ -261,6 +264,25 @@ namespace Ranet.AgOlap.Controls
                 // Если выбрать куб нельзя, то нет смысла запрашивать список кубов
                 InitCubesList(new List<CubeDefInfo>() { new CubeDefInfo() { Name = CubeName, Caption = CubeName } });
             }
+        }
+
+        public bool SelectCube(String cubeName)
+        {
+            int i = 0;
+            foreach (CubeItemControl item in Cubes_ComboBox.Combo.Items)
+            {
+                if (item.Info.Name == cubeName)
+                {
+                    Cubes_ComboBox.Combo.SelectedIndex = i;
+                    return true;
+                }
+                i++;
+            }
+            if (Cubes_ComboBox.Combo.Items.Count > 0)
+                Cubes_ComboBox.Combo.SelectedIndex = 0;
+            else
+                Cubes_ComboBox.Combo.SelectedIndex = -1;
+            return false;
         }
 
         protected virtual IDataLoader GetOlapDataLoader()

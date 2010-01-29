@@ -16,7 +16,7 @@
     designed to meet your specific usage and distribution requirements.
     If you have already obtained a commercial license from Galaktika Corp,
     you can use this file under those license terms.
-*/
+* /
 
 using System;
 using System.Collections.Generic;
@@ -26,70 +26,71 @@ using Ranet.Olap.Mdx;
 
 namespace Ranet.Olap.Core.Providers.MemberActions
 {
-    public class HistoryItem : IMdxFastClonable
-    {
-        public List<DrillActionContainer> ColumnsActionChain = new List<DrillActionContainer>();
-        public List<DrillActionContainer> RowsActionChain = new List<DrillActionContainer>();
+	public class HistoryItemMDXQuery
+	{
+		public List<DrillActionContainer> ColumnsActionChain = new List<DrillActionContainer>();
+		public List<DrillActionContainer> RowsActionChain = new List<DrillActionContainer>();
 
-        public DrillActionContainer FindDrillActionContainer(IList<DrillActionContainer> actionChain, String memberId)
-        {
-            if (actionChain == null)
-                return null;
+		public DrillActionContainer FindDrillActionContainer(IList<DrillActionContainer> actionChain, String memberId)
+		{
+			if (actionChain == null)
+				return null;
 
-            foreach (DrillActionContainer container in actionChain)
-            {
-                if (container.MemberUniqueName == memberId)
-                    return container;
-                DrillActionContainer child = FindDrillActionContainer(container.Children, memberId);
-                if (child != null)
-                    return child;
-            }
-            return null;
-        }
+			foreach (DrillActionContainer container in actionChain)
+			{
+				if (container.MemberUniqueName == memberId)
+					return container;
+				DrillActionContainer child = FindDrillActionContainer(container.Children, memberId);
+				if (child != null)
+					return child;
+			}
+			return null;
+		}
 
-        public IList<DrillActionContainer> FindDrillActionContainersByHierarchy(IList<DrillActionContainer> actionChain, String hierarchyUniqueName)
-        {
-            IList<DrillActionContainer> list = new List<DrillActionContainer>();
-            if (actionChain == null)
-                return list;
+		public IList<DrillActionContainer> FindDrillActionContainersByHierarchy(IList<DrillActionContainer> actionChain, String hierarchyUniqueName)
+		{
+			IList<DrillActionContainer> list = new List<DrillActionContainer>();
+			if (actionChain == null)
+				return list;
 
-            foreach (DrillActionContainer container in actionChain)
-            {
-                if (container.HierarchyUniqueName == hierarchyUniqueName && !list.Contains(container))
-                    list.Add(container);
+			foreach (DrillActionContainer container in actionChain)
+			{
+				if (container.HierarchyUniqueName == hierarchyUniqueName && !list.Contains(container))
+					list.Add(container);
 
-                IList<DrillActionContainer> childList = FindDrillActionContainersByHierarchy(container.Children, hierarchyUniqueName);
-                if (childList != null)
-                {
-                    foreach (DrillActionContainer childContainer in childList)
-                    {
-                        if (!list.Contains(childContainer))
-                        {
-                            list.Add(childContainer);
-                        }
-                    }
-                }
-            }
-            return list;
-        }
+				IList<DrillActionContainer> childList = FindDrillActionContainersByHierarchy(container.Children, hierarchyUniqueName);
+				if (childList != null)
+				{
+					foreach (DrillActionContainer childContainer in childList)
+					{
+						if (!list.Contains(childContainer))
+						{
+							list.Add(childContainer);
+						}
+					}
+				}
+			}
+			return list;
+		}
 
-        #region ICloneable Members
+		#region ICloneable Members
 
-        public object Clone()
-        {
-            HistoryItem item = new HistoryItem();
-            foreach(DrillActionContainer cont in this.ColumnsActionChain)
-            {
-                item.ColumnsActionChain.Add((DrillActionContainer)cont.Clone());
-            }
-            foreach (DrillActionContainer cont in this.RowsActionChain)
-            {
-                item.RowsActionChain.Add((DrillActionContainer)cont.Clone());
-            } 
-            return item;
-        }
+		public object Clone()
+		{
+			HistoryItemMDXQuery item = new HistoryItemMDXQuery();
+			foreach (DrillActionContainer cont in this.ColumnsActionChain)
+			{
+				item.ColumnsActionChain.Add((DrillActionContainer)cont.Clone());
+			}
+			foreach (DrillActionContainer cont in this.RowsActionChain)
+			{
+				item.RowsActionChain.Add((DrillActionContainer)cont.Clone());
+			}
+			return item;
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 
 }
+// */

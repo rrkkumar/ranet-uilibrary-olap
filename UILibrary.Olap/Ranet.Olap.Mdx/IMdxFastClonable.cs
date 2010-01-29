@@ -20,8 +20,8 @@
 
 namespace Ranet.Olap.Mdx
 {
-	public interface IMdxFastClonable
-	{
-		object Clone();
-	}
+	//public interface IMdxFastClonable
+	//{
+	//  object Clone();
+	//}
 }

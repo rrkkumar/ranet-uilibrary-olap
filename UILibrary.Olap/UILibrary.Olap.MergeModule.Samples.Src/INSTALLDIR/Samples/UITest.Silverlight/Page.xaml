@@ -101,7 +101,7 @@
 						<Button Grid.Row="0" Grid.Column="2" Content="Import MDX Layout" x:Name="importMdxLayoutButton" Click="importMdxLayoutButton_Click"/>
 						<Button Grid.Row="0" Grid.Column="3" Content="Export MDX Query" x:Name="exportMDXQueryButton" Click="exportMDXQueryButton_Click"/>
 					</Grid>
-					<server_controls:PivotMdxDesignerControl Grid.Row="1" x:Name="pivotMdxDesignerControl" />
+					<Samples:MyDesigner Grid.Row="1" x:Name="pivotMdxDesignerControl" />
 				</Grid>
 			</swc:TabItem>
 			<swc:TabItem Header="Mdx Designer Layout">
@@ -120,8 +120,9 @@
 						<ColumnDefinition Width="Auto"/>
 						<ColumnDefinition/>
 					</Grid.ColumnDefinitions>
-					<Grid Grid.Column="0">
+					<Grid Grid.Column="0" >
 						<Grid.RowDefinitions>
+							<RowDefinition Height="60"/>
 							<RowDefinition Height="27"/>
 							<RowDefinition Height="27"/>
 							<RowDefinition Height="27"/>
@@ -136,20 +137,60 @@
 							<RowDefinition Height="27"/>
 							<RowDefinition Height="27"/>
 							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition Height="27"/>
+							<RowDefinition/>
 						</Grid.RowDefinitions>
-						<Button   Grid.Row="0" Content="Initialize PivotGrid" Height="22" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click"/>
-						<CheckBox Grid.Row="1" Name="ckbColumnsIsInteractive" IsChecked="false" Content="ColumnsIsInteractive"/>
-						<CheckBox Grid.Row="2" Name="ckbUseColumnsAreaHint" IsChecked="false" Content="UseColumnsAreaHint"/>
-						<CheckBox Grid.Row="3" Name="ckbUseRowsAreaHint" IsChecked="false" Content="UseRowsAreaHint"/>
-						<CheckBox Grid.Row="4" Name="ckbUseCellsAreaHint" IsChecked="false" Content="UseCellsAreaHint"/>
-						<CheckBox Grid.Row="5" Name="ckbUseCellConditionsDesigner" IsChecked="false" Content="UseCellConditionsDesigner"/>
-						<CheckBox Grid.Row="6" Name="ckbIsUpdateable" IsChecked="false" Content="IsUpdateable" />
-						<TextBlock Grid.Row="7" Text="MemberVisualizationType:" />
-						<ComboBox Grid.Row="8" Name="cbMemberVisualizationType" SelectedIndex="0">
+						<Button   Grid.Row="0" Content="Initialize PivotGrid&#xD;&#xA;(after any property changes)" Height="60" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+						<CheckBox Grid.Row="1" Name="ckbAutoWidthColumns" IsChecked="true" Content="AutoWidthColumns" />
+						<CheckBox Grid.Row="2" Name="ckbColumnsIsInteractive" IsChecked="false" Content="ColumnsIsInteractive"/>
+						<CheckBox Grid.Row="3" Name="ckbRowsIsInteractive" IsChecked="true" Content="RowsIsInteractive"/>
+						<CheckBox Grid.Row="4" Name="ckbUseColumnsAreaHint" IsChecked="true" Content="UseColumnsAreaHint"/>
+						<CheckBox Grid.Row="5" Name="ckbUseRowsAreaHint" IsChecked="true" Content="UseRowsAreaHint"/>
+						<CheckBox Grid.Row="6" Name="ckbUseCellsAreaHint" IsChecked="true" Content="UseCellsAreaHint"/>
+						<CheckBox Grid.Row="7" Name="ckbUseCellConditionsDesigner" IsChecked="false" Content="UseCellConditionsDesigner"/>
+						<CheckBox Grid.Row="8" Name="ckbIsUpdateable" IsChecked="false" Content="IsUpdateable" />
+						<TextBlock Grid.Row="9" Text="MemberVisualizationType:" />
+						<ComboBox Grid.Row="10" Name="cbMemberVisualizationType" SelectedIndex="0">
 							<ComboBoxItem Content="Caption"/>
 							<ComboBoxItem Content="Key"/>
 							<ComboBoxItem Content="KeyAndCaption" />
 							<ComboBoxItem Content="UniqueName"/>
+						</ComboBox>
+						<TextBlock Grid.Row="12" Text="MembersViewMode:" />
+						<ComboBox Grid.Row="13" Name="cbMembersViewMode" SelectedIndex="0">
+							<ComboBoxItem Content="Tree"/>
+							<ComboBoxItem Content="Grid"/>
+						</ComboBox>
+						<TextBlock Grid.Row="15" Text="DataReorganizationType:" />
+						<ComboBox Grid.Row="16" Name="cbDataReorganizationType" SelectedIndex="2">
+							<ComboBoxItem Content="None"/>
+							<ComboBoxItem Content="MergeNeighbors"/>
+							<ComboBoxItem Content="LinkToParent" />
+						</ComboBox>
+						<TextBlock Grid.Row="18" Text="DefaultMemberAction:" />
+						<ComboBox Grid.Row="19" Name="cbDefaultMemberAction" SelectedIndex="2">
+							<ComboBoxItem Content="None"/>
+							<ComboBoxItem Content="DrillDown"/>
+							<ComboBoxItem Content="ExpandCollapse" />
+							<ComboBoxItem Content="SortByProperty"/>
 						</ComboBox>
 					</Grid>
 					<basics:GridSplitter x:Name="grsplSplitter" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="Aqua" Width="5"/>

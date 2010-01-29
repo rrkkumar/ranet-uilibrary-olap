@@ -76,10 +76,8 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             str.TrimEnd('\r');
 
             // Подсказка
-            ToolTipControl m_ToolTip = new ToolTipControl();
-            m_ToolTip.Caption = wrapper.Caption;
-            m_ToolTip.Text = str;
-            ToolTipService.SetToolTip(this, m_ToolTip);
+            ToolTip.Caption = wrapper.Caption;
+            ToolTip.Text = str;
         }
 
         public Level_AreaItemWrapper Level

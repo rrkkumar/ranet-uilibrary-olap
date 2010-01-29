@@ -1232,6 +1232,25 @@ namespace Ranet.AgOlap.Controls
             const string SORT_AZ_16 = "/Ranet.AgOlap;component/Controls/Images/SortAZ.png";
             const string SORT_ZA_16 = "/Ranet.AgOlap;component/Controls/Images/SortZA.png";
 
+            const string CONTEXT_MENU_CHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemChecked.png";
+            const string CONTEXT_MENU_UNCHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemUnChecked.png";
+
+            public static BitmapImage ContexMenuUnChecked16
+            {
+                get
+                {
+                    return UriResources.GetImage(CONTEXT_MENU_UNCHECKED_16);
+                }
+            }
+
+            public static BitmapImage ContexMenuChecked16
+            {
+                get
+                {
+                    return UriResources.GetImage(CONTEXT_MENU_CHECKED_16);
+                }
+            }
+
             public static BitmapImage SortZA16
             {
                 get

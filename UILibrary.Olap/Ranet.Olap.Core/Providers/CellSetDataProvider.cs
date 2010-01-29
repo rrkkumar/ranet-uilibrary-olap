@@ -30,10 +30,24 @@ namespace Ranet.Olap.Core.Providers
 {
     public class CellSetDataProvider : IPivotGridDataProvider
     {
+
         public CellSetDataProvider(CellSetData cs_descr)
+            : this(cs_descr, DataReorganizationTypes.MergeNeighbors)
+        {
+        }
+
+        public CellSetDataProvider(CellSetData cs_descr, DataReorganizationTypes reorganizationType)
         {
             m_CellSet_Descr = cs_descr;
+            DataReorganizationType = reorganizationType;
+            m_Columns = CreateFields(0);
+            m_Rows = CreateFields(1);
         }
+
+        /// <summary>
+        /// Тип реорганизации многомерных данных
+        /// </summary>
+        public readonly DataReorganizationTypes DataReorganizationType = DataReorganizationTypes.MergeNeighbors;
 
         //public CellData GetCellDescription(int col, int row)
         //{
@@ -90,25 +104,26 @@ namespace Ranet.Olap.Core.Providers
         {
             if (axisNum == 0)
             {
-                m_Columns = null;
-                m_Columns_LowestMembers = new Dictionary<int, MemberInfo>();
-                m_Columns_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_Columns_LowestMembers.Clear();
+                m_Columns_Sorted_LowestMembers.Clear();
                 // Чтобы сохранилась информация по какому свойству сортировали в последний раз
                 foreach (var sort in ColumnsSortInfo.Values)
                 {
                     sort.Type = SortTypes.None;
                 }
+                m_Columns = CreateFields(0);
             }
+
             if (axisNum == 1)
             {
-                m_Rows = null;
-                m_Rows_LowestMembers = new Dictionary<int, MemberInfo>();
-                m_Rows_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+                m_Rows_LowestMembers.Clear();
+                m_Rows_Sorted_LowestMembers.Clear();
                 // Чтобы сохранилась информация по какому свойству сортировали в последний раз
                 foreach (var sort in RowsSortInfo.Values)
                 {
                     sort.Type = SortTypes.None;
                 }
+                m_Rows = CreateFields(1);
             }
         }
         
@@ -251,7 +266,7 @@ namespace Ranet.Olap.Core.Providers
                         if (row_index >= 0)
                         {
                             cell_Info = new CellInfo(cell_data,
-                               m_Columns_LowestMembers[column_index],
+                               column_index >= 0 ? m_Columns_LowestMembers[column_index] : MemberInfo.Empty,
                                m_Rows_LowestMembers[row_index], 
                                GetInvisibleCoords(column_index, row_index));
                         }
@@ -319,7 +334,7 @@ namespace Ranet.Olap.Core.Providers
             {
                 if (m_Columns == null)
                 {
-                    m_Columns = CreateFields(0);
+                    m_Columns = new MemberInfoCollection(null);
                 }
 
                 return m_Columns;
@@ -333,7 +348,7 @@ namespace Ranet.Olap.Core.Providers
             {
                 if (m_Rows == null)
                 {
-                    m_Rows = CreateFields(1);
+                    m_Rows = new MemberInfoCollection(null);
                 }
 
                 return m_Rows;
@@ -341,7 +356,16 @@ namespace Ranet.Olap.Core.Providers
         }
 
         Dictionary<int, MemberInfo> m_Columns_LowestMembers = new Dictionary<int, MemberInfo>();
+        public Dictionary<int, MemberInfo> Columns_LowestMembers
+        {
+            get { return m_Columns_LowestMembers; }
+        }
+
         Dictionary<int, MemberInfo> m_Columns_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+        public Dictionary<int, MemberInfo> Columns_Sorted_LowestMembers
+        {
+            get { return m_Columns_Sorted_LowestMembers; }
+        }
 
         /// <summary>
         /// Количество элементов на последней линии в колонках
@@ -354,7 +378,16 @@ namespace Ranet.Olap.Core.Providers
         }
 
         Dictionary<int, MemberInfo> m_Rows_LowestMembers = new Dictionary<int, MemberInfo>();
+        public Dictionary<int, MemberInfo> Rows_LowestMembers
+        {
+            get { return m_Rows_LowestMembers; }
+        }
+        
         Dictionary<int, MemberInfo> m_Rows_Sorted_LowestMembers = new Dictionary<int, MemberInfo>();
+        public Dictionary<int, MemberInfo> Rows_Sorted_LowestMembers
+        {
+            get { return m_Rows_Sorted_LowestMembers; }
+        }
 
         /// <summary>
         /// Количество элементов на последней линии в строках
@@ -381,169 +414,297 @@ namespace Ranet.Olap.Core.Providers
             }
 
             MemberInfoCollection fields = new MemberInfoCollection(null);
-            Dictionary<int, List<MemberInfo>> tmp = new Dictionary<int, List<MemberInfo>>();
 
+            DateTime start = DateTime.Now;
+            // Формируем иерархию элементов MemberInfo
             if (m_CellSet_Descr != null && m_CellSet_Descr.Axes.Count > axisNum)
             {
                 int position_Index = 0;
+                // Проход по позиция оси
                 foreach (PositionData pos in m_CellSet_Descr.Axes[axisNum].Positions)
                 {
-                    MemberInfoCollection container = fields;
+                    // Глубина оси (кол-во элементов  в позиции)
                     int depth = pos.Members.Count;
-                    for (int i = 0; i < pos.Members.Count; i++)
+
+                    // Предыдущий элемент в данной позиции
+                    MemberInfo prev_member_in_position = null;
+
+                    // Проход по элементам в каждой позици
+                    for (int i = 0; i < depth; i++)
                     {
-                        List<MemberInfo> line = null;
-                        if (tmp.ContainsKey(i))
-                        {
-                            line = tmp[i];
-                        }
-                        else
-                        {
-                            line = new List<MemberInfo>();
-                            tmp.Add(i, line);
-                        }
-                        
+                        if (i > 0 && prev_member_in_position == null)
+                            throw new Exception(String.Format("Ошибка построения иерархии элементов. Не найден описатель для элемента {0} в позиции {1}", i, position_Index));
+                        // Получаем элемент из хранилища, которое является общим для всей оси
                         MemberData member = m_CellSet_Descr.Axes[axisNum].Members[pos.Members[i].Id];
-
-                        // Если PARENT_UNIQUE_NAME запрашивалось то берем его, иначе будем спрашивать у куба 
-                        String parentUniqueName = GetMemberPropertyValue(member, "PARENT_UNIQUE_NAME");
-
-                        MemberInfo prevInLine = line.Count > 0 ? line[line.Count - 1] : null;
-                        // Если родитель является DrilledDown, то данный элемент должен попасть в коллекцию DrilledDownChildren
-                        MemberInfo parentInfo = null;
-                        try
+                        if (member == null)
                         {
+                            throw new Exception(String.Format("Ошибка построения иерархии элементов. На оси не найден элемент с Id: {0}", pos.Members[i].Id));
+                        }
+
+                        if (DataReorganizationType == DataReorganizationTypes.MergeNeighbors)
+                        {
+                            #region Правила
+                            // Правила постоения иерархии:
+                            //  1. Получаем для данного элемента PARENT_UNIQUE_NAME. 
+                            //  2. Определяем КОЛЛЕКЦИЮ, в которую должен попасть элемент:
+                            //      - Если это элемент нулевой линии, то ПО УМОЛЧАНИЮ он является кандидатом 
+                            //        на добавление в коллекцию корневых MemberInfo
+                            //      - Если это элемент не нулевой линии, то ПО УМОЛЧАНИЮ он явлется кандидатом 
+                            //        на добавление в коллекцию Children для MemberInfo предыдущего элемента данной позиции (prev_member_in_position)
+                            //  3. Берем последний элемент в КОЛЛЕКЦИИ. Проходим вглубь по его коллекции DrilledDownChildren и строим список из последних элементов каждой из них.
+                            //     Проходим по полученному списку от самого глубокого вверх. Если находим элемент, который является родителем для текущего (UNIQUE_NAME совпадает c PARENT_UNIQUE_NAME текущего),
+                            //     то КОЛЛЕКЦИЯ меняется на коллецию DrilledDownChildren родителя. 
+
+                            // Правила объединения:
+                            //  1. Объединению подлежат только следующие друг за другом одинаковые элементы. Но только в том случае, если коллекция DrilledDownChildren у предыдущего является пустой (в противном случае произойдет перемещение ячеек и может потеряться ORDER запроса)
+                            //            - В следующем запросе года не должны объединяться чтобы не потерять очередность ячеек, предусмотренную запросом
+                            //                     select [Measures].[Internet Sales Amount] DIMENSION PROPERTIES PARENT_UNIQUE_NAME , HIERARCHY_UNIQUE_NAME , CUSTOM_ROLLUP , UNARY_OPERATOR , KEY0 on 0,
+                            //                    {([Date].[Calendar].[Calendar Year].&[2001],  [Product].[Product Categories].[Category].[Bikes]),
+                            //                    ([Date].[Calendar].[Calendar Semester].&[2001]&[2], [Product].[Product Categories].[Subcategory].[Mountain Bikes]),
+                            //                    ([Date].[Calendar].[Calendar Year].&[2001], [Product].[Product Categories].[Category].[Clothing])}
+                            //                    DIMENSION PROPERTIES PARENT_UNIQUE_NAME , HIERARCHY_UNIQUE_NAME , CUSTOM_ROLLUP , UNARY_OPERATOR , KEY0 on 1
+                            //                    from [Adventure Works]
+                            //  2. Элементы последней линии (ближайшей к ячейкам) объединению не подлежат
+                            #endregion Правила
+
+                            #region Определение места элемента в иерархии
+                            // Уникальное имя родителя (Правила постоения иерархии - пункт 1)
+                            String parentUniqueName = GetMemberPropertyValue(member, "PARENT_UNIQUE_NAME");
+                            // КОЛЛЕКЦИЯ (Правила постоения иерархии - пункт 2)
+                            MemberInfoCollection container = i == 0 ? fields : prev_member_in_position.Children;
+                            // Ищем родителя (Правила постоения иерархии - пункт 3)
                             if (!String.IsNullOrEmpty(parentUniqueName))
                             {
-                                int posIndex = -1;
-                                // Ищем с конца родителя на данной линии.
-                                // posIndex = ReversePos(line, parentUniqueName);
-                                for (int ix = line.Count - 1; ix >= 0; ix--)
+                                if (container.Count > 0)
                                 {
-                                    MemberInfo mi = line[ix];
-                                    if (mi.UniqueName == parentUniqueName)
+                                    MemberInfo last = container[container.Count - 1];
+                                    // Теперь строим коллекцию из последних в каждой коллекции DrilledDownChildren вглубь по всей ветке
+                                    List<MemberInfo> dd_last_list = new List<MemberInfo>();
+                                    dd_last_list.Add(last);
+                                    while (last.DrilledDownChildren.Count > 0)
                                     {
-                                        posIndex = ix;
-                                        break;
+                                        dd_last_list.Add(last.DrilledDownChildren[last.DrilledDownChildren.Count - 1]);
+                                        last = last.DrilledDownChildren[last.DrilledDownChildren.Count - 1];
                                     }
-                                    // Если пошли элементы, с более старших уровней, то поиск прекращаем
-                                    if (mi.LevelDepth < member.LevelDepth)
+
+                                    for (int x = dd_last_list.Count; x > 0; x--)
                                     {
-                                        break;
-                                    }
-                                    // Если пошли элементы, с более младших уровней, то поиск прекращаем
-                                    if (mi.LevelDepth > member.LevelDepth)
-                                    {
-                                        if((mi.Parent == null) || (mi.Parent != null && mi.Parent.ParentUniqueName != parentUniqueName))
+                                        var info = dd_last_list[x - 1];
+                                        if (info.UniqueName == parentUniqueName)
+                                        {
+                                            container = info.DrilledDownChildren;
                                             break;
-                                    }
-
-                                }
-
-                                if (posIndex > -1)
-                                {
-                                    parentInfo = line[posIndex];
-                                }
-
-                                if (parentInfo != null && parentInfo.DrilledDown)
-                                {
-                                    // Если линия не нулевая. То объект должен попать в коллекцию DrilledDown только в том случае если и владелец данной коллекции и сам элемент, который мы проверяем пересекаются с одним и тем же элементом
-                                    // Ситуацию можно увидеть в запросе 
-                                    /*select [Measures].[Internet Sales Amount] on 0,
-                                    {([Date].[Calendar].[Calendar Year].&[2001],  [Product].[Product Categories].[Category].[Bikes]),
-                                    ([Date].[Calendar].[Calendar Semester].&[2001]&[2], [Product].[Product Categories].[Subcategory].[Mountain Bikes]),
-                                    ([Date].[Calendar].[Calendar Year].&[2001], [Product].[Product Categories].[Category].[Clothing])}
-                                     on 1
-                                    from [Adventure Works]*/
-                                    if (i == 0 ||
-                                        (i > 0 && tmp[i - 1][posIndex] != null && tmp[i - 1][position_Index] != null && tmp[i - 1][posIndex] == tmp[i - 1][position_Index]))
-                                    {
-                                        container = parentInfo.DrilledDownChildren;
+                                        }
                                     }
                                 }
+                            }
+                            #endregion
+
+                            #region Объединение элементов
+                            if (i != (depth - 1) && container.Count > 0 && container[container.Count - 1].UniqueName == member.UniqueName && container[container.Count - 1].DrilledDownChildren.Count == 0)
+                            {
+                                // Объединение элементов
+                                prev_member_in_position = container[container.Count - 1];
                             }
                             else
                             {
-                                // Если это нулевой элемент на линии, то он однозначно должен находиться в коллекции Children
-                                // Иначе он может попасть в коллекцию DrilledDown если у предыдущего элемента установлен флаг DrilledDown 
-                                if (position_Index > 0)
-                                {
-                                    if (prevInLine != null && prevInLine.UniqueName != member.UniqueName && prevInLine.DrilledDown)
-                                    {
-                                        // Для вычисляемых элементов свойство DrilledDown работает неправильно. И в этом случае считаем что для того чтобы элемент попал в коллекцию DrilledDown у него должна быть и глубина уровня больше чем у предыдущего
-                                        if (prevInLine.LevelDepth < member.LevelDepth)
-                                        {
-                                            // Если линия не нулевая. То объект должен попать в коллекцию DrilledDown только в том случае если и владелец данной коллекции и сам элемент, который мы проверяем пересекаются с одним и тем же элементом
-                                            // Ситуацию можно увидеть в запросе 
-                                            /*select [Measures].[Internet Sales Amount] on 0,
-                                            {([Date].[Calendar].[Calendar Year].&[2001],  [Product].[Product Categories].[Category].[Bikes]),
-                                            ([Date].[Calendar].[Calendar Semester].&[2001]&[2], [Product].[Product Categories].[Subcategory].[Mountain Bikes]),
-                                            ([Date].[Calendar].[Calendar Year].&[2001], [Product].[Product Categories].[Category].[Clothing])}
-                                             on 1
-                                            from [Adventure Works]*/
-                                            if (i == 0 ||
-                                                (i > 0 && tmp[i - 1][line.Count - 1] != null && tmp[i - 1][position_Index] != null && tmp[i - 1][line.Count - 1] == tmp[i - 1][position_Index]))
-                                            {
-                                                container = prevInLine.DrilledDownChildren;
-                                            }
-                                        }
-                                        else
-                                        {
-                                            // Пытаемся исправить то, что для вычисляемых элементов свойство DrilledDown работает неправильно.
-                                            prevInLine.DrilledDown = false;
-                                        }
-                                    }
-                                }
+                                // Создание нового элемента
+                                prev_member_in_position = CreateMemberInfo(member);
+                                container.Add(prev_member_in_position);
                             }
-                        }
-                        catch (System.NotSupportedException)
-                        { 
-                        }
 
-                        // Если элемент существует, то он должен быть последним
-                        // Если он окажется не последним, то это значит что эти элементы объединению не подлежат и нужно создавать новый элемент
-                        MemberInfo field = null;
-                        if (line.Count > 0)
-                            field = line[line.Count - 1];
-                        // Элементы последней линии объединению не подлежат
-                        if (field == null || field.UniqueName != member.UniqueName || i == (depth - 1) || (field.Parent != null && container.m_Owner != null && field.Parent != container.m_Owner))
-                        {
-                            field = CreateMemberInfo(member);
-                            line.Add(field);
-                            // Важно чтобы добавление в контейнер было после добавления в линию, т.к. в Add идет установка Parent
-                            container.Add(field);
-
-                            if (i == (depth - 1))
+                            // Если элементы одной линии повторяются друг за другом, то свойство DrilledDown у них верное только у последнего
+                            if (prev_member_in_position != null && !prev_member_in_position.IsCalculated)
                             {
-                                if (axisNum == 0)
-                                {
-                                    m_Columns_LowestMembers.Add(position_Index, field);
-                                    m_Columns_Sorted_LowestMembers.Add(position_Index, field);
-                                }
-                                if (axisNum == 1)
-                                {
-                                    m_Rows_LowestMembers.Add(position_Index, field);
-                                    m_Rows_Sorted_LowestMembers.Add(position_Index, field);
-                                }
-
-                                field.MemberIndexInAxis = field.Sorted_MemberIndexInAxis = position_Index;
+                                prev_member_in_position.DrilledDown = prev_member_in_position.DrilledDown | pos.Members[i].DrilledDown;
                             }
-                        }
-                        else
-                        {
-                            line.Add(field);
+
+                            #endregion
                         }
 
-                        if (field != null && !field.IsCalculated)
+                        if (DataReorganizationType == DataReorganizationTypes.None)
                         {
-                            field.DrilledDown = field.DrilledDown | pos.Members[i].DrilledDown;
+                            #region Правила
+                            // В данном режиме никакой реорганизации и объединения не производится
+                            #endregion
+
+                            #region Определение места элемента в иерархии
+                            // КОЛЛЕКЦИЯ 
+                            MemberInfoCollection container = i == 0 ? fields : prev_member_in_position.Children;
+                            #endregion
+
+                            #region Объединение элементов
+                            // Создание нового элемента
+                            prev_member_in_position = CreateMemberInfo(member);
+                            container.Add(prev_member_in_position);
+                            #endregion
                         }
 
-                        container = field.Children; 
+                        if (DataReorganizationType == DataReorganizationTypes.LinkToParent)
+                        {
+                            #region Правила
+                            // В данном режиме элементы выстраиваются в иерархию используя уникальное имя родителя. При этом в иерархию 
+                            // выстраивается вся ось.
+                            // Например было:
+                            //      2002    a
+                            //        Q1    b
+                            //       H1     c
+                            //      2002    d
+                            //       H2     e
+     
+                            // Перегруппируется в:
+                            //      2002    a
+                            //      2002    d
+                            //       H1     c
+                            //        Q1    b
+                            //       H2     e
+                            
+                            //  1. Собираем нервы в кулак.
+                            //  2. Определяем КОЛЛЕКЦИЮ, в которую должен попасть элемент:
+                            //      - Если это элемент нулевой линии, то ПО УМОЛЧАНИЮ он является кандидатом 
+                            //        на добавление в коллекцию корневых MemberInfo
+                            //      - Если это элемент не нулевой линии, то ПО УМОЛЧАНИЮ он явлется кандидатом 
+                            //        на добавление в коллекцию Children для MemberInfo предыдущего элемента данной позиции (prev_member_in_position)
+                            //  3. КОЛЛЕКЦИЮ выстраиваем в плоский список рекурсивно с учетом ТОЛЬКО DrilledDownChildren. 
+                            //      Создаем ТЕКУЩИЙ ОПИСАТЕЛЬ (MemberInfo) для данного элемнта
+                            //      Проходим с конца списка в начало:
+                            //      a) Если находим элемент, который является дочерним для ТЕКУЩЕГО ОПИСАТЕЛЯ, то удаляем его из коллекции, в которой он находился и вставлем его в 0 позицию в коллекцию DriDrilledDownChildren ТЕКУЩЕГО ОПИСАТЕЛЯ
+                            //          CONTINUE
+                            //      b) Если находим элемент с таким же уник. именем, то: 
+                            //          - если это последняя линия, то они объединению не подлежат. Коллекция DriDrilledDownChildren у двойника зануляется и ТЕКУЩИЙ ОПИСАТЕЛЬ добавляется следом за ним.
+                            //          - если это не последняя линия то объекты объединяются, т.е. двойнику переходит коллекция DriDrilledDownChildren текущего описателя и он будет считаться далее как ТЕКУЩИЙ ОПИСАТЕЛЬ
+                            //          CТОП ЦИКЛА
+                            //      c) Если находим элемент, который является родителем для данного, то добавляем ТЕКУЩИЙ ОПИСАТЕЛЬ в коллекцию DrilledDownChildren родителя. 
+                            //          СТОП ЦИКЛА
+                            //      d) Если ни 3b) ни 3c) не отработало, то ТЕКУЩИЙ ОПИСАТЕЛЬ добавляется в КОЛЛЕКЦИЮ с учетом номера уровня. Чтобы не получилось что перед ним есть элементы с большим по глубине номером уровня   
+                            //  
+                            #endregion
+
+                            #region Определение места элемента в иерархии
+                            // Выполняем пункт 1 :)
+
+                            // КОЛЛЕКЦИЯ (Правила постоения иерархии - пункт 2)
+                            MemberInfoCollection container = i == 0 ? fields : prev_member_in_position.Children;
+                            // Выстраиваем в плоский список рекурсивно с учетом ТОЛЬКО DrilledDownChildren
+                            List<MemberInfo> line = new List<MemberInfo>();
+                            foreach (var item in container)
+                            {
+                                line.Add(item);
+                                line.AddRange(item.CollectDrilledDownChildren());
+                            }
+                            // Создание нового элемента
+                            prev_member_in_position = CreateMemberInfo(member);
+
+                            // Последний из обследуемых элементов КОЛЛЕКЦИИ, чья глубина больше чем у данного
+                            MemberInfo reverse_last_leveldepth_member = null;
+                            bool isOk = false;
+                            for (int indx = line.Count - 1; indx >= 0; indx--)
+                            {
+                                var mi = line[indx];
+
+                                if(mi.Container == container && mi.LevelDepth > member.LevelDepth)
+                                    reverse_last_leveldepth_member = mi;
+
+                                // 3a
+                                if(mi.ParentUniqueName == member.UniqueName)
+                                {
+                                    // Нашли дочерний, цепляем его и тащим за собой
+                                    mi.Container.Remove(mi);
+                                    prev_member_in_position.DrilledDownChildren.Insert(0, mi);
+                                    continue;
+                                }
+
+                                // 3b
+                                if (mi.UniqueName == member.UniqueName)
+                                {
+                                    // Найден дубликат
+                                    if (i != (depth - 1))
+                                    {
+                                        // Не последняя линия
+                                        mi.DrilledDownChildren.Clear();
+                                        foreach(var x in prev_member_in_position.DrilledDownChildren)
+                                        {
+                                            mi.DrilledDownChildren.Add(x);
+                                        }
+                                        prev_member_in_position = mi;
+                                    }
+                                    else
+                                    { 
+                                        // Последняя линия
+                                        mi.DrilledDownChildren.Clear();
+                                        mi.IsDublicate = true;
+                                        // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                        mi.Container.Insert(mi.Container.IndexOf(mi) + 1, prev_member_in_position);
+                                    }
+                                    isOk = true;
+                                    break;
+                                }
+
+                                // 3c
+                                if (mi.UniqueName == prev_member_in_position.ParentUniqueName)
+                                {
+                                    // Нашли родителя, цепляемся к нему
+                                    // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                    mi.DrilledDownChildren.Add(prev_member_in_position);
+                                    isOk = true;
+                                    break;
+                                }
+                            }
+
+                            // 3d
+                            // Более глубокий элемент уровня не найден, значит добавляем хвост КОЛЛЕКЦИИ
+                            if(!isOk)
+                            {
+                                if (reverse_last_leveldepth_member != null && container.Contains(reverse_last_leveldepth_member))
+                                {
+                                    // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                    container.Insert(container.IndexOf(reverse_last_leveldepth_member), prev_member_in_position);
+                                }
+                                else
+                                {
+                                    // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                    container.Add(prev_member_in_position);
+                                }
+                            }
+
+                            #endregion
+                        }
+
+                        if (i == (depth - 1))
+                        {
+                            if (prev_member_in_position == null)
+                                throw new Exception("Ошибка. Не создан элемент последней линии.");
+                            if (axisNum == 0)
+                            {
+                                m_Columns_LowestMembers.Add(position_Index, prev_member_in_position);
+                                m_Columns_Sorted_LowestMembers.Add(position_Index, prev_member_in_position);
+                            }
+                            if (axisNum == 1)
+                            {
+                                m_Rows_LowestMembers.Add(position_Index, prev_member_in_position);
+                                m_Rows_Sorted_LowestMembers.Add(position_Index, prev_member_in_position);
+                            }
+
+                            prev_member_in_position.MemberIndexInAxis = prev_member_in_position.Sorted_MemberIndexInAxis = position_Index;
+                        }
+
                     }
                     position_Index++;
                 }
+
+
+                if (DataReorganizationType == DataReorganizationTypes.LinkToParent)
+                {
+                    // Операции по вставке объектов поперепутали MemberOrder для элементов. Исправляем это.
+                    // И заодно устанавливаем флаг DrilledDown в true только если у элемента не пустая коллекция DrilledDownChildren
+                    foreach (var x in fields)
+                    {
+                        x.RefreshMemberOrder();
+                        x.CrackDrilledDown();
+                    }
+                }
             }
+            DateTime stop = DateTime.Now;
 
             return fields;
         }
@@ -792,6 +953,46 @@ namespace Ranet.Olap.Core.Providers
         /// По чем производится сортировка
         /// </summary>
         public String SortBy = string.Empty;
+        
+        public SortDescriptor Clone()
+        {
+					var result=new SortDescriptor();
+					result.Type=this.Type;
+					result.SortBy = this.SortBy;
+					
+					return result;
+        }
+    }
+
+    public enum DataReorganizationTypes
+    {
+        /// <summary>
+        /// Данные никак не группируются
+        /// </summary>
+        None,
+        /// <summary>
+        /// Объединять соседние одинаковые элементы
+        /// </summary>
+        MergeNeighbors,
+        /// <summary>
+        /// Выстраивать в иерархию
+        /// </summary>
+        LinkToParent
+    }
+
+    public class MinMaxDescriptor<T>
+    {
+        public T Min = default(T);
+        public T Max = default(T);
+
+        public MinMaxDescriptor()
+        { }
+
+        public MinMaxDescriptor(T min, T max)
+        {
+            Min = min;
+            Max = max;
+        }
     }
 }
 

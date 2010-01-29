@@ -16,7 +16,7 @@
     designed to meet your specific usage and distribution requirements.
     If you have already obtained a commercial license from Galaktika Corp,
     you can use this file under those license terms.
-*/
+* /
 
 using System;
 using System.Collections.Generic;
@@ -26,7 +26,7 @@ using Ranet.Olap.Mdx;
 
 namespace Ranet.Olap.Core.Providers.MemberActions
 {
-    public class DrillActionContainer : IMdxFastClonable
+    public class DrillActionContainer // : IMdxFastClonable
     {
         //static int m_Id = 0;
         public DrillActionContainer(String memberUniqueName, String hierarchyUniqueName)
@@ -40,30 +40,13 @@ namespace Ranet.Olap.Core.Providers.MemberActions
         public readonly string MemberUniqueName;
         public readonly string HierarchyUniqueName;
 
-        public IMdxAction Action = null;
+        public MdxActionBase Action = null;
         public IList<DrillActionContainer> Children = new List<DrillActionContainer>();
         //internal readonly int Created;
 
 
         #region ICloneable Members
 
-        /*private DrillActionContainer CloneFrom(DrillActionContainer source)
-        {
-            DrillActionContainer dest = null;
-            if (source != null)
-            {
-                dest = new DrillActionContainer(source.MemberUniqueName, source.HierarchyUniqueName);
-                if (source.Action != null)
-                {
-                    dest.Action = (IMdxAction)source.Action.Clone();
-                }
-                foreach (DrillActionContainer child in source.Children)
-                {
-                    dest.Children.Add(this.CloneFrom(child));
-                }
-            }
-            return dest;
-        }*/
 
         public object Clone()
         {
@@ -72,7 +55,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
             dest = new DrillActionContainer(this.MemberUniqueName, this.HierarchyUniqueName);
             if (this.Action != null)
             {
-                dest.Action = (IMdxAction)this.Action.Clone();
+                dest.Action = this.Action.Clone();
             }
             foreach (DrillActionContainer child in this.Children)
             {
@@ -86,7 +69,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
     }
 
 
-    public interface IMdxAction : IMdxFastClonable
+    public interface IMdxAction  // : IMdxFastClonable
     {
         MdxObject Process(MdxObject mdx, MdxActionContext context);
     }
@@ -602,11 +585,8 @@ namespace Ranet.Olap.Core.Providers.MemberActions
 
         #endregion
 
-        #region IMdxFastClonable Members
 
-        public abstract object Clone();
-
-        #endregion
+        public abstract MdxActionBase Clone();
     }
 
     public class MdxExpandAction : MdxActionBase
@@ -639,7 +619,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
 
         #region ICloneable Members
 
-        public override object Clone()
+        public override MdxActionBase Clone()
         {
             return new MdxExpandAction(MemberUniqueName);
         }
@@ -677,7 +657,7 @@ namespace Ranet.Olap.Core.Providers.MemberActions
 
         #region ICloneable Members
 
-        public override object Clone()
+				public override MdxActionBase Clone()
         {
             return new MdxCollapseAction(MemberUniqueName);
         }
@@ -756,7 +736,7 @@ WHERE(
 [Подразделение].[Подразделения].[Все подразделения].UNKNOWNMEMBER,
 [Сценарий].[Сценарии].&[План]
 )
-            */
+            * /
             MdxExpression drillDownExpr = new MdxFunctionExpression(
                 "DRILLDOWNMEMBER",
                 new MdxExpression[] 
@@ -913,7 +893,7 @@ WHERE(
 
         #region ICloneable Members
 
-        public override object Clone()
+				public override MdxActionBase Clone()
         {
             return new MdxDrillDownAction(MemberUniqueName, HierarchyUniqueName, LevelDepth);
         }
@@ -953,7 +933,7 @@ IsSibling([Customer].[Customer Geography].CURRENTMEMBER,[Customer].[Customer Geo
 ) ON 0,
 HIERARCHIZE(HIERARCHIZE(head({[Product].[Product Categories].[Category].Members},10))) ON 1
 FROM [Adventure Works]
-             */
+             * /
             MdxExpression drillUpExpr = new MdxFunctionExpression(
                 "DRILLUPMEMBER",
                 new MdxExpression[] 
@@ -985,13 +965,11 @@ FROM [Adventure Works]
 
         #endregion
 
-        #region ICloneable Members
-
-        public override object Clone()
+				public override MdxActionBase Clone()
         {
             return new MdxDrillUpAction(MemberUniqueName, HierarchyUniqueName, LevelDepth);
         }
 
-        #endregion
     }
 }
+// */

@@ -31,7 +31,8 @@ namespace Ranet.AgOlap.Providers
         public int HistorySize = 0;
         public int CurrentHistoryIndex = -1;
 
-        public bool HideEmptyRows;
-        public bool HideEmptyColumns;
+				public bool HideEmptyRows = false;
+				public bool HideEmptyColumns = false;
+        public bool RotateAxes=false;
     }
 }

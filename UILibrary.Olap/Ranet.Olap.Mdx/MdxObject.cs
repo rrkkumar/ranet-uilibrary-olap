@@ -118,7 +118,7 @@ namespace Ranet.Olap.Mdx
 		}
 	}
 
-	public abstract class MdxObject : IMdxFastClonable
+	public abstract class MdxObject // : IMdxFastClonable
 	{
 		static public readonly MdxToken NewLine = new MdxToken();
 		static public readonly MdxToken IncShift = new MdxIncShift();
@@ -195,11 +195,7 @@ namespace Ranet.Olap.Mdx
 				return m_UserData;
 			}
 		}
-
-		#region IMdxFastClonable Members
-
 		public abstract object Clone();
 
-		#endregion
 	}
 }

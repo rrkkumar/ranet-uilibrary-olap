@@ -633,12 +633,10 @@ namespace Ranet.AgOlap.Controls
         {
             if (RotateAxesButton.IsChecked.Value)
             {
-                PivotGrid.AxisIsRotated = true;
                 RunServiceCommand(ServiceCommandType.RotateAxes);
             }
             else
             {
-                PivotGrid.AxisIsRotated = false;
                 RunServiceCommand(ServiceCommandType.NormalAxes);
             }
         }
@@ -774,6 +772,7 @@ namespace Ranet.AgOlap.Controls
         {
             ZoomControl.Value = 100;
             PivotGrid.RestoreDefaultSize();
+            ExportSizeInfo();
         }
 
         RanetToolBarSplitter m_NavigationButtons_Splitter = new RanetToolBarSplitter();
@@ -1112,7 +1111,7 @@ namespace Ranet.AgOlap.Controls
                 // На время убираем контекстное меню сводной таблицы
                 PivotGrid.UseContextMenu = false;
                 // На время убираем всплывающую подсказку
-                PivotGrid.UseToolTip = false;
+                PivotGrid.TooltipManager.IsPaused = true;
                 dlg.Show();
                 dlg.DialogClosed -= new EventHandler<DialogResultArgs>(ModalDialog_DialogClosed);
                 dlg.DialogClosed += new EventHandler<DialogResultArgs>(ModalDialog_DialogClosed);
@@ -1121,7 +1120,9 @@ namespace Ranet.AgOlap.Controls
 
         void ModalDialog_DialogClosed(object sender, DialogResultArgs e)
         {
-            PivotGrid.UseToolTip = true;
+            // Восстанавливаем работу подсказок
+            PivotGrid.TooltipManager.IsPaused = false;
+            // Восстанавливаем работу контекстного меню
             PivotGrid.UseContextMenu = true;
         }
 
@@ -1157,7 +1158,8 @@ namespace Ranet.AgOlap.Controls
                     UpdateEntry entry = new UpdateEntry(e.UserData);
                     try
                     {
-                        entry.OldValue = e.UserData.CellDescr.Value.Value.ToString();
+                        if(e.UserData != null)
+                            entry.OldValue = e.UserData.CellDescr.Value.Value.ToString();
                     }
                     catch { }
 
@@ -1337,15 +1339,7 @@ namespace Ranet.AgOlap.Controls
 
         void CopyCellsToClipboard(CellInfo current)
         {
-            // Если PivotGrid.Selection содержит 1 элемент, то это ячейка с фокусом. 
-            // Для копирования в данном случае используем текущую ячейку, на которой кликали правой кнопкой мыши (она может отличаться от ячейки с фокусом)
             IList<CellInfo> cells = PivotGrid.Selection;
-            if (current != null && cells.Count < 2)
-            {
-                cells.Clear();
-                cells.Add(current);
-            }
-            
             if (cells != null && cells.Count > 0)
             {
                 // Ячейки для опреации копирования должны быть в прямоугольной области. Причем область должна быть без пустот
@@ -1940,6 +1934,7 @@ namespace Ranet.AgOlap.Controls
             {
                 HideEmptyColumnsButton.IsChecked = info.HideEmptyColumns;
                 HideEmptyRowsButton.IsChecked = info.HideEmptyRows;
+								RotateAxesButton.IsChecked = info.RotateAxes;
 
                 if (info.HistorySize > 0)
                 {
@@ -2389,7 +2384,7 @@ namespace Ranet.AgOlap.Controls
                 m_CSDescr = cs_descr;
                 if (cs_descr != null)
                 {
-                    m_CellSetProvider = new CellSetDataProvider(cs_descr);
+                    m_CellSetProvider = new CellSetDataProvider(cs_descr, DataReorganizationType);
                     if (axis0_sortInfo != null)
                     {
                         foreach (var hierarchyUniqueName in axis0_sortInfo.Keys)
@@ -2449,6 +2444,11 @@ namespace Ranet.AgOlap.Controls
                         break;
                     default:
                         String query = DataManager.PerformServiceCommand(actionType);
+												PivotGrid.AxisIsRotated = DataManager.CurrentHistoryItem.RotateAxes;
+												if(RotateAxesButton.IsChecked!=PivotGrid.AxisIsRotated)
+												{
+													RotateAxesButton.IsChecked=PivotGrid.AxisIsRotated;
+												}
                         if (!String.IsNullOrEmpty(query))
                         {
                             MdxQueryArgs query_args = CommandHelper.CreateMdxQueryArgs(Connection, query);
@@ -2885,6 +2885,32 @@ namespace Ranet.AgOlap.Controls
         }
 
         public MemberClickBehaviorTypes DefaultMemberAction = MemberClickBehaviorTypes.DrillDown;
+
+        public bool AutoWidthColumns
+        {
+            get { return PivotGrid.AutoWidthColumns; }
+            set { PivotGrid.AutoWidthColumns = value; }
+        }
+
+        public ViewModeTypes MembersViewMode
+        {
+            get { 
+                return PivotGrid.ColumnsViewMode; 
+            }
+            set {
+                PivotGrid.ColumnsViewMode = value;
+                PivotGrid.RowsViewMode = value;
+            }
+        }
+
+        public DataReorganizationTypes DataReorganizationType = DataReorganizationTypes.MergeNeighbors;
+
+    }
+
+    public enum ViewModeTypes
+    {
+        Tree,
+        Grid
     }
 
     public enum MemberClickBehaviorTypes

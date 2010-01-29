@@ -58,8 +58,18 @@ namespace Ranet.AgOlap.Controls.MdxDesigner
             LayoutRoot.Children.Add(m_List);
 
             this.Content = LayoutRoot;
+
+            this.KeyDown += new KeyEventHandler(AreaItemsList_KeyDown);
         }
 
+        void AreaItemsList_KeyDown(object sender, KeyEventArgs e)
+        {
+            var item = m_List.SelectedItem as ListBoxItem;
+            if (item != null && item.Content is AreaItemControl)
+            {
+                RemoveItem(item.Content as AreaItemControl);
+            }
+        }
 
         public List<AreaItemControl> Items
         {

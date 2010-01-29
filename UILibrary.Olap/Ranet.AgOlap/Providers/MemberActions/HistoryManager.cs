@@ -25,138 +25,123 @@ using System.Text;
 
 namespace Ranet.AgOlap.Providers.MemberActions
 {
-    public class HistoryManager
-    {
-        private IList<HistoryItem> m_History = new List<HistoryItem>();
+	public interface IHistoryItem<HistoryItem> where HistoryItem : class, new()
+	{
+		HistoryItem Clone();
+	}
+	public class HistoryManager<HistoryItem> where HistoryItem : class, IHistoryItem<HistoryItem>, new()
+	{
+		List<HistoryItem> m_History = new List<HistoryItem>();
+		HistoryItem m_CurrentHistoryItem=new HistoryItem();
 
-        public void ClearHistory()
-        {
-            m_History.Clear();
-            m_CurrentHistoryItem = null;
-        }
+		public HistoryManager()
+		{
+		} 
+		public virtual void ClearHistory()
+		{
+		  m_History.Clear();
+		}
 
-        /// <summary>
-        /// Удаляет все элементы истории, стоящие за текущим
-        /// </summary>
-        /// <param name="item"></param>
-        public void CutRight()
-        {
-            if (CurrentHistoryItem != null)
-            {
-                int indx = m_History.IndexOf(CurrentHistoryItem);
-                if(indx > -1)
-                {
-                    while(m_History.Count > indx + 1)
-                    {
-                        m_History.RemoveAt(indx + 1);
-                    }
-                }
-            }
-        }
+		/// <summary>
+		/// Удаляет все элементы истории, стоящие за текущим
+		/// </summary>
+		/// <param name="item"></param>
+		public void CutRight()
+		{
+			int indx = m_History.IndexOf(CurrentHistoryItem)+1;
+			if (indx < 1)
+				return;
+				
+			while (m_History.Count > indx)
+			{
+				m_History.RemoveAt(m_History.Count - 1);
+			}
+		}
+		protected void AddHistoryItem(HistoryItem item)
+		{
+			if (item != null)
+			{
+				m_History.Add(item);
+				m_CurrentHistoryItem = item;
+			}
+		}
+		public int HistorySize
+		{
+			get
+			{
+				return m_History.Count;
+			}
+		}
+		public int CurrentHistoryItemIndex
+		{
+			get
+			{
+				if (CurrentHistoryItem != null)
+				{
+					int indx = m_History.IndexOf(CurrentHistoryItem);
+					if (indx >= 0)
+						return indx;
+				}
+				return -1;
+			}
+		}
+		/// <summary>
+		/// Текущий элемент истории
+		/// </summary>
+		protected internal HistoryItem CurrentHistoryItem
+		{
+			get
+			{
+				return m_CurrentHistoryItem;
+			}
+		}
 
-        public void AddHistoryItem(HistoryItem item)
-        {
-            if (item != null)
-            {
-                m_History.Add(item);
-                m_CurrentHistoryItem = item;
-            }
-        }
+		public void MoveBack()
+		{
+			if (m_History.Count > 0)
+			{
+				int indx = m_History.IndexOf(CurrentHistoryItem);
+				if (indx > 0)
+				{
+					m_CurrentHistoryItem = m_History[indx - 1];
+				}
+			}
+		}
 
-        public int Size
-        {
-            get {
-                return m_History.Count;
-            }
-        }
+		public void MoveNext()
+		{
+			if (m_History.Count > 0)
+			{
+				int indx = m_History.IndexOf(CurrentHistoryItem);
+				if (indx >= 0 && indx < m_History.Count - 1)
+				{
+					m_CurrentHistoryItem = m_History[indx + 1];
+				}
+			}
+		}
 
-        public int CurrentHistiryItemIndex
-        {
-            get
-            {
-                if (CurrentHistoryItem != null)
-                {
-                    int indx = m_History.IndexOf(CurrentHistoryItem);
-                    if (indx >= 0)
-                        return indx;
-                }
-                return -1;
-            }
-        }
+		public void ToBegin()
+		{
+			if (m_History.Count > 0)
+			{
+				m_CurrentHistoryItem = m_History[0];
+			}
+		}
 
-        /*public bool TestToFirst(HistoryItem item)
-        {
-            if (item == null)
-                return false;
-
-            if (m_History.Count > 0 && m_History.IndexOf(item) == 0)
-                return true;
-            else
-                return false;
-        }
-
-        public bool TestToLast(HistoryItem item)
-        {
-            if (item == null)
-                return false;
-
-            if (m_History.Count > 0 && m_History.IndexOf(item) == (m_History.Count - 1))
-                return true;
-            else
-                return false;
-        }*/
-
-        HistoryItem m_CurrentHistoryItem;
-        /// <summary>
-        /// Текущий элемент истории
-        /// </summary>
-        public HistoryItem CurrentHistoryItem
-        {
-            get
-            {
-                return m_CurrentHistoryItem;
-            }
-        }
-
-        public void MoveBack()
-        {
-            if (CurrentHistoryItem != null && m_History.Count > 0)
-            {
-                int indx = m_History.IndexOf(CurrentHistoryItem);
-                if (indx > 0)
-                {
-                    m_CurrentHistoryItem = m_History[indx - 1];
-                }
-            }
-        }
-
-        public void MoveNext()
-        {
-            if (CurrentHistoryItem != null && m_History.Count > 0)
-            {
-                int indx = m_History.IndexOf(CurrentHistoryItem);
-                if (indx >= 0 && indx < m_History.Count - 1)
-                {
-                    m_CurrentHistoryItem = m_History[indx + 1];
-                }
-            }
-        }
-
-        public void ToBegin()
-        {
-            if (m_History.Count > 0)
-            {
-                m_CurrentHistoryItem = m_History[0];
-            }
-        }
-
-        public void ToEnd()
-        {
-            if (m_History.Count > 0)
-            {
-                m_CurrentHistoryItem = m_History[m_History.Count - 1];
-            }
-        }
-
-    }
+		public void ToEnd()
+		{
+			if (m_History.Count > 0)
+			{
+				m_CurrentHistoryItem = m_History[m_History.Count - 1];
+			}
+		}
+		protected virtual void AddCurrentStateToHistory()
+		{
+			// Удаляем все элементы истории, стоящие за текущим
+			this.CutRight();
+			// Клонируем текущий элемент истории чтобы действие добавлялось уже в клон
+			HistoryItem clone = this.CurrentHistoryItem.Clone();
+			this.AddHistoryItem(clone);
+		}
+	}
 }

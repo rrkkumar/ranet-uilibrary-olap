@@ -39,6 +39,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Layout
 
         public MemberLayoutItem(PivotMemberItem pivotMember)
         {
+            if (pivotMember == null)
+                throw new ArgumentNullException("pivotMember");
             PivotMember = pivotMember;
         }
     }

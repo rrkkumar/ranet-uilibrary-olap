@@ -38,10 +38,12 @@ namespace Ranet.Olap.Core.Providers
 
     public class MemberInfo : OlapInfoBase, IProperties
     {
+        public MemberInfoCollection Container { get; internal set; }
+        
         /// <summary>
         /// Номер элемента в коллекции MemberInfoCollection. Используется ТОЛЬКО для сортировки None
         /// </summary>
-        public int MemberOrder = 0;
+        public int MemberOrder = -1;
 
         /// <summary>
         /// Позиция элемента на оси в CellSet
@@ -49,6 +51,11 @@ namespace Ranet.Olap.Core.Providers
         public int MemberIndexInAxis = -1;
 
         public int Sorted_MemberIndexInAxis = -1;
+
+        /// <summary>
+        /// Признак того, что данный элемент повторяется на оси. Для повторяшек кнопки плюс/минус будут недоступны
+        /// </summary>
+        public bool IsDublicate = false;
 
         public const String KEY0_PROPERTY = "KEY0";
 
@@ -454,6 +461,45 @@ namespace Ranet.Olap.Core.Providers
             }
 
             #endregion
+        }
+
+        public List<MemberInfo> CollectDrilledDownChildren()
+        {
+            List<MemberInfo> res = new List<MemberInfo>();
+            foreach (var item in DrilledDownChildren)
+            {
+                res.Add(item);
+                res.AddRange(item.CollectDrilledDownChildren());
+            }
+            return res;
+        }
+
+        public void RefreshMemberOrder()
+        {
+            if (Container != null)
+                MemberOrder = Container.IndexOf(this);
+
+            foreach (var item in DrilledDownChildren)
+            {
+                item.RefreshMemberOrder();
+            }
+            foreach (var item in Children)
+            {
+                item.RefreshMemberOrder();
+            }
+        }
+
+        public void CrackDrilledDown()
+        {
+            DrilledDown = DrilledDownChildren.Count > 0;
+            foreach (var item in DrilledDownChildren)
+            {
+                item.CrackDrilledDown();
+            }
+            foreach (var item in Children)
+            {
+                item.CrackDrilledDown();
+            }
         }
     }
 }

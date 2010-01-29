@@ -51,6 +51,7 @@ using Ranet.AgOlap.Controls.MdxDesigner.CalculatedMembers;
 using Ranet.AgOlap.Controls.MemberChoice.Info;
 using Ranet.AgOlap.Providers;
 using Ranet.Olap.Core.Data;
+using Ranet.Olap.Core.Providers;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -297,7 +298,10 @@ namespace Ranet.AgOlap.Controls
             // Сводная таблица
             m_PivotGrid = new UpdateablePivotGridControl();
             m_PivotGrid.Margin = new Thickness(0, 0, 0, 0);
-            m_PivotGrid.IsUpdateable = true;
+						m_PivotGrid.AutoWidthColumns = true;
+						m_PivotGrid.DataReorganizationType = DataReorganizationTypes.LinkToParent;
+						m_PivotGrid.DefaultMemberAction =  MemberClickBehaviorTypes.ExpandCollapse;
+						m_PivotGrid.IsUpdateable = true;
             m_PivotGrid.ColumnsIsInteractive = true;
             m_PivotGrid.RowsIsInteractive = true;
             m_PivotGrid.ShowToolBar = true;
@@ -305,7 +309,7 @@ namespace Ranet.AgOlap.Controls
             Grid.SetRow(m_PivotGrid, 1);
 
             Pivot_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
-            Pivot_Border.Margin = new Thickness(0, 1, 0, 0);
+            Pivot_Border.Margin = new Thickness(0, 0, 0, 0);
             Pivot_Border.Child = Pivot_LayotRoot;
 
             Ouput_LayoutRoot.Children.Add(Pivot_Border);
@@ -397,7 +401,6 @@ namespace Ranet.AgOlap.Controls
         {
             Clear();
             m_ServerExplorer.RefreshCubeMetadata();
-            RefreshMdxQuery();
         }
 
         public bool AutoExecuteQuery
@@ -3124,6 +3127,8 @@ namespace Ranet.AgOlap.Controls
             String res = String.Empty;
 
             MdxLayoutWrapper layout = new MdxLayoutWrapper();
+            layout.CubeName = m_ServerExplorer.CurrentCubeName;
+            layout.SubCube = SubCube;
             layout.Filters = GetItemWrappers(m_FilterAreaContainer);
             layout.Rows = GetItemWrappers(m_RowsAreaContainer);
             layout.Columns = GetItemWrappers(m_ColumnsAreaContainer);
@@ -3142,6 +3147,14 @@ namespace Ranet.AgOlap.Controls
                 if (layout != null)
                 {
                     Clear();
+
+                    bool cube_found = m_ServerExplorer.SelectCube(layout.CubeName);
+                    if (!String.IsNullOrEmpty(layout.CubeName) && !cube_found)
+                    {
+                        MessageBox.Show(String.Format(Localization.CubeNotFound_Message, layout.CubeName), Localization.Warning, MessageBoxButton.OK);
+                    }
+
+                    SubCube = layout.SubCube;
 
                     BuildFromItemWrappers(m_FilterAreaContainer, layout.Filters);
                     BuildFromItemWrappers(m_RowsAreaContainer, layout.Rows);
@@ -3503,5 +3516,12 @@ namespace Ranet.AgOlap.Controls
         #endregion Управление видимостью кнопок на тулбаре
 
         public List<List<ShortMemberInfo>> DefaultTuples;
+
+        public DataReorganizationTypes DataReorganizationType
+        {
+            get { return PivotGrid.DataReorganizationType; }
+            set { PivotGrid.DataReorganizationType = value; }
+        }
+
     }
 }

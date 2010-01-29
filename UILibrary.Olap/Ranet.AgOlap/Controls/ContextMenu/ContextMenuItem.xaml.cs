@@ -36,6 +36,7 @@ namespace Ranet.AgOlap.Controls.ContextMenu
     public partial class ContextMenuItem : UserControl
     {
         public event EventHandler ItemClick;
+
         public ContextMenuItem(String caption)
         {
             InitializeComponent();
@@ -144,7 +145,7 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             }
         }
 
-        private void btnContent_Click(object sender, RoutedEventArgs e)
+        protected virtual void btnContent_Click(object sender, RoutedEventArgs e)
         {
             EventHandler handler = ItemClick;
             if (handler != null)

@@ -520,6 +520,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto Width.
+        /// </summary>
+        public static string ContextMenu_AutoWidthColumns {
+            get {
+                return ResourceManager.GetString("ContextMenu_AutoWidthColumns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remove Sorting.
         /// </summary>
         public static string ContextMenu_ClearAxisSorting {
@@ -669,6 +678,15 @@ namespace Ranet.AgOlap {
         public static string CubeName_PropertyDesc {
             get {
                 return ResourceManager.GetString("CubeName_PropertyDesc", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cube with name &apos;{0}&apos; not found..
+        /// </summary>
+        public static string CubeNotFound_Message {
+            get {
+                return ResourceManager.GetString("CubeNotFound_Message", resourceCulture);
             }
         }
         
@@ -1132,6 +1150,60 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to KPI goal.
+        /// </summary>
+        public static string KPIViewer_ColumnGoal {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnGoal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string KPIViewer_ColumnName {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Status.
+        /// </summary>
+        public static string KPIViewer_ColumnStatus {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnStatus", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Trend.
+        /// </summary>
+        public static string KPIViewer_ColumnTrend {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnTrend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to KPI value.
+        /// </summary>
+        public static string KPIViewer_ColumnValue {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Variance.
+        /// </summary>
+        public static string KPIViewer_ColumnVariance {
+            get {
+                return ResourceManager.GetString("KPIViewer_ColumnVariance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Begin with.
         /// </summary>
         public static string LabelFilter_BeginWith {
@@ -1569,6 +1641,15 @@ namespace Ranet.AgOlap {
         public static string MeasureGroup_All {
             get {
                 return ResourceManager.GetString("MeasureGroup_All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Measure Group with name &apos;{0}&apos; not found in Cube &apos;{1}&apos;..
+        /// </summary>
+        public static string MeasureGroupNotFound_Message {
+            get {
+                return ResourceManager.GetString("MeasureGroupNotFound_Message", resourceCulture);
             }
         }
         

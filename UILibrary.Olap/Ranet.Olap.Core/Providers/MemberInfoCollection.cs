@@ -133,6 +133,7 @@ namespace Ranet.Olap.Core.Providers
 
         public void Add(MemberInfo item)
         {
+            item.Container = this;
             item.MemberOrder = m_Members.Count;
             item.Parent = this.m_Owner;
             //if (m_Members.ContainsKey(item.UniqueName))
@@ -207,6 +208,20 @@ namespace Ranet.Olap.Core.Providers
         public void Sort(SortDescriptor sort)
         {
             m_Members.Sort(new MemberInfo.SortComparer(sort));
+        }
+
+        public void Insert(int index, MemberInfo member)
+        {
+            // Zero-based
+            index = Math.Max(0, index);
+            // Если индекс слишком большой, то корректируем
+            index = Math.Min(m_Members.Count, index);
+            m_Members.Insert(index, member);
+        }
+
+        public int IndexOf(MemberInfo mi)
+        {
+            return m_Members.IndexOf(mi);
         }
     }
 }

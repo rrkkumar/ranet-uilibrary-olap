@@ -97,6 +97,7 @@
     <Reference Include="System.Windows.Controls.Input.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Layout.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Windows.Controls.Toolkit, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Data, Version=2.0.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="System.Windows.Browser" />
@@ -129,8 +130,14 @@
     <Compile Include="Controls\Combo\XapItemComboBox.xaml.cs">
       <DependentUpon>XapItemComboBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ContextMenu\CheckedContectMenuItem.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <Compile Include="Controls\General\TooltipController.cs" />
+    <Compile Include="Controls\PivotGrid\PivotDataAnalizer.cs" />
+    <Compile Include="Controls\General\DataGrid\IconDataGridColumn.cs" />
+    <Compile Include="Controls\General\DataGrid\KpiDataGrid.cs" />
+    <Compile Include="Controls\General\DataGrid\TreeViewColumn.cs" />
     <Compile Include="Controls\UpdateablePivotGridControl.Anatoly.cs" />
     <Compile Include="Controls\Data\RanetDataGrid.cs" />
     <Compile Include="Controls\DateSlicerCtrl.cs" />
@@ -163,6 +170,7 @@
     <Compile Include="Controls\Combo\ImagePicker.xaml.cs">
       <DependentUpon>ImagePicker.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\KPIViewer.cs" />
     <Compile Include="Controls\List\RanetListBox.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationInfoBase.cs" />
     <Compile Include="Controls\MdxDesigner\CalculatedMembers\CalculationsListControl.cs" />
@@ -286,8 +294,10 @@
     <Compile Include="Controls\PivotGrid\Editors\TextBoxCellEditor.cs" />
     <Compile Include="Controls\PivotGrid\MemberInfoWrapper.cs" />
     <Compile Include="Controls\TransactionStateButton.cs" />
+    <Compile Include="Features\StringExtensions.cs" />
     <Compile Include="Providers\DataSourceInfoArgs.cs" />
     <Compile Include="Providers\DataTableView.cs" />
+    <Compile Include="Providers\MemberActions\AxisInfo.cs" />
     <Compile Include="Providers\MemberActions\DrillActionContainer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -776,6 +786,80 @@
     <Resource Include="Controls\PivotGrid\Images\CellStyle.png" />
     <Resource Include="Controls\Images\SortAZ.png" />
     <Resource Include="Controls\Images\SortZA.png" />
+    <Resource Include="Controls\Images\ContextMenuItemChecked.png" />
+    <Resource Include="Controls\Images\ContextMenuItemUnChecked.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\ArrowColor_Down_01.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\ArrowColor_Right.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\ArrowColor_Up_02.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_black.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_blue.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_green.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_grey.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_red.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\cube_yellow.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Cylinder_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Cylinder_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Cylinder_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Cylinder_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Cylinder_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Cylinder_1.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Road signs_-1.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Road signs_0.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Road signs_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Ascending_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Gauge - Descending_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Shapes_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Shapes_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Shapes_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Shapes_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Shapes_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Shapes_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Thermometer_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Thermometer_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Thermometer_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Thermometer_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Thermometer_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Thermometer_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Traffic light_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Traffic light_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Traffic light_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Traffic light_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Traffic light_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Traffic light_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Variance arrow_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Variance arrow_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Variance arrow_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Variance arrow_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Status\Variance arrow_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Status\Variance arrow_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Standard arrow_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Ascending_1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_-1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_-1.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_0.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_0.png" />
+    <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.ico" />
+    <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>

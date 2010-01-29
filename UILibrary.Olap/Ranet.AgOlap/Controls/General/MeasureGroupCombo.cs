@@ -100,15 +100,16 @@ namespace Ranet.AgOlap.Controls.General
         }
 
 
-        public void SelectItem(String name)
+        public bool SelectItem(String name)
         {
             int i = 0;
-            foreach (MeasureGroupItemControl item in comboBox.Combo.Items)
+            foreach (object item in comboBox.Combo.Items)
             {
-                if (item.Info.Name == name)
+                var measure_item = item as MeasureGroupItemControl;
+                if(measure_item != null && measure_item.Info.Name == name)
                 {
                     comboBox.Combo.SelectedIndex = i;
-                    return;
+                    return true;
                 }
                 i++;
             }
@@ -116,6 +117,7 @@ namespace Ranet.AgOlap.Controls.General
                 comboBox.Combo.SelectedIndex = 0;
             else
                 comboBox.Combo.SelectedIndex = -1;
+            return false;
         }
 
         public bool IsWaiting

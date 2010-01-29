@@ -230,6 +230,9 @@
     <Compile Include="..\Ranet.Olap.Core\Providers\PivotMemberItem.cs">
       <Link>Providers\PivotMemberItem.cs</Link>
     </Compile>
+    <Compile Include="..\Ranet.Olap.Core\Providers\KpiView.cs">
+      <Link>Providers\KpiView.cs</Link>
+    </Compile>
     <Compile Include="..\Ranet.Olap.Core\Storage\StorageActionArgs.cs">
       <Link>Storage\StorageActionArgs.cs</Link>
     </Compile>

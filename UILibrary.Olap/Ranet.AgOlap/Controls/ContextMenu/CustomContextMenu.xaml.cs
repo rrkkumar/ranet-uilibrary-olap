@@ -122,6 +122,8 @@ namespace Ranet.AgOlap.Controls.ContextMenu
         //    IsDropDownOpen = false;
         //}
 
+        public event EventHandler BeforeOpen;
+
         public bool IsDropDownOpen
         {
             get
@@ -134,6 +136,11 @@ namespace Ranet.AgOlap.Controls.ContextMenu
                 {
                     if (Items.Count > 0)
                     {
+                        EventHandler handler = BeforeOpen;
+                        if (handler != null)
+                        {
+                            handler(this, EventArgs.Empty);
+                        }
                         PopupControl.IsOpen = value;
                     }
                 }

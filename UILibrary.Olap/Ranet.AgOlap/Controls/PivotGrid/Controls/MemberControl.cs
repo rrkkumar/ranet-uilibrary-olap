@@ -121,7 +121,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             if (IsInteractive)
             {
-                if (Member.ChildCount > 0 && !Member.IsCalculated)
+                if (Member.ChildCount > 0 && !Member.IsCalculated && !Member.IsDublicate)
                 {
                     var expander = new PlusMinusButton();
                     if (Member.DrilledDown)
@@ -306,7 +306,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void MemberControl_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            if (this.CaptionText.ActualWidth > this.CaptionText.DesiredSize.Width)
+            if (this.CaptionText.ActualWidth > (this.CaptionText.DesiredSize.Width + m_LayoutRoot.ColumnDefinitions[2].MaxWidth))
             {
                 m_EllipsisText.Visibility = Visibility.Visible;
                 m_LayoutRoot.ColumnDefinitions[2].MaxWidth = 12 * Scale;

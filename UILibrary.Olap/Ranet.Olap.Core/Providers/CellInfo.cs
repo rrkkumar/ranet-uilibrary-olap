@@ -254,6 +254,16 @@ namespace Ranet.Olap.Core.Providers
             }
         }
 
+        public String DisplayValue
+        {
+            get
+            {
+                if (CellDescr != null && CellDescr.Value != null && CellDescr.Value.DisplayValue != null)
+                    return CellDescr.Value.DisplayValue;
+                return String.Empty;
+            }
+        }
+
         public String ValueToString
         {
             get

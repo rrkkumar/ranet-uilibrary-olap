@@ -24,6 +24,14 @@ using System.Windows;
 
 namespace UILibrary.Olap.UITestApplication
 {
+	public class MyDesigner : Ranet.AgOlap.Controls.PivotMdxDesignerControl
+	{
+		public string GetCurrentMdxQuery()
+		{
+			return this.PivotGrid.DataManager.GetDataSourceInfo(null).MDXQuery;
+		}
+	}
+	
 	public partial class Page
 	{
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)
@@ -32,12 +40,12 @@ namespace UILibrary.Olap.UITestApplication
 			// by default URL= <BackToApplicationClientBin>\..\OlapWebService.asmx
 			// pivotMdxDesignerControl.URL = WSDataUrl;
 
-			pivotMdxDesignerControl.Connection = ConnectionStringId;
-			pivotMdxDesignerControl.CanSelectCube = true;
-			pivotMdxDesignerControl.AutoExecuteQuery = false;
+			this.pivotMdxDesignerControl.Connection = ConnectionStringId;
+			this.pivotMdxDesignerControl.CanSelectCube = true;
+			this.pivotMdxDesignerControl.AutoExecuteQuery = false;
 			this.pivotMdxDesignerControl.UpdateScript = tbUpdateScript.Text;
 
-			pivotMdxDesignerControl.Initialize();
+			this.pivotMdxDesignerControl.Initialize();
 		}
 		void exportMdxLayoutButton_Click(object sender, RoutedEventArgs e)
 		{
@@ -50,7 +58,7 @@ namespace UILibrary.Olap.UITestApplication
 		}
 		private void exportMDXQueryButton_Click(object sender, RoutedEventArgs e)
 		{
-			tbMdxQuery.Text = pivotMdxDesignerControl.MdxQuery;
+			tbMdxQuery.Text = pivotMdxDesignerControl.GetCurrentMdxQuery();
 			MessageBox.Show("Mdx query was exported. See Mdx Query tab.", "Information", MessageBoxButton.OK);
 		}
 	}
