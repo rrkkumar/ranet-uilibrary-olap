@@ -26,12 +26,17 @@ namespace UILibrary.Olap.UITestApplication
 {
 	public class MyDesigner : Ranet.AgOlap.Controls.PivotMdxDesignerControl
 	{
+		protected override void InitializePivotGrid(string query)
+		{
+			base.InitializePivotGrid(query);
+			//PivotGrid.DefaultMemberAction = Ranet.AgOlap.Controls.MemberClickBehaviorTypes.ExpandCollapse;
+		}
 		public string GetCurrentMdxQuery()
 		{
 			return this.PivotGrid.DataManager.GetDataSourceInfo(null).MDXQuery;
 		}
 	}
-	
+
 	public partial class Page
 	{
 		void initmdxDesignerButton_Click(object sender, RoutedEventArgs e)

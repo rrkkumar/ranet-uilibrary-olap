@@ -1124,4 +1124,16 @@
   <data name="KPIViewer_ColumnVariance" xml:space="preserve">
     <value>Изменение</value>
   </data>
+  <data name="ContextMenu_DataReorganizationType" xml:space="preserve">
+    <value>Режим группировки элементов</value>
+  </data>
+  <data name="ContextMenu_DataReorganizationType_HitchToParent" xml:space="preserve">
+    <value>Объединять в иерархию</value>
+  </data>
+  <data name="ContextMenu_DataReorganizationType_MergeNeighbors" xml:space="preserve">
+    <value>Объединять соседние</value>
+  </data>
+  <data name="ContextMenu_DataReorganizationType_None" xml:space="preserve">
+    <value>Нет</value>
+  </data>
 </root>

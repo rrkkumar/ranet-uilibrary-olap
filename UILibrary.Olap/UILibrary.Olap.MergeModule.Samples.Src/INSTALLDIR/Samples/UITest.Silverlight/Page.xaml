@@ -186,7 +186,7 @@
 							<ComboBoxItem Content="LinkToParent" />
 						</ComboBox>
 						<TextBlock Grid.Row="18" Text="DefaultMemberAction:" />
-						<ComboBox Grid.Row="19" Name="cbDefaultMemberAction" SelectedIndex="2">
+						<ComboBox Grid.Row="19" Name="cbDefaultMemberAction" SelectedIndex="1">
 							<ComboBoxItem Content="None"/>
 							<ComboBoxItem Content="DrillDown"/>
 							<ComboBoxItem Content="ExpandCollapse" />

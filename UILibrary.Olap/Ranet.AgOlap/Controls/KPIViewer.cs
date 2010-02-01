@@ -189,7 +189,7 @@ namespace Ranet.AgOlap.Controls
             this.Content = LayoutRoot;
         }
         
-        private void ShowMetadataArea(bool show)
+        public void ShowMetadataArea(bool show)
         {
             if (show)
             {

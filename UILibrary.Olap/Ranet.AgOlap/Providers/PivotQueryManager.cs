@@ -40,11 +40,31 @@ namespace Ranet.AgOlap.Providers
 
 	public class PivotQueryManager : HistoryManager<HistoryItem4MdxQuery>
 	{
-		public string Query { get; private set; }
+		string m_Query=string.Empty;
+		public string Query
+		{ get { return m_Query; } 
+			private set
+			{
+				ClearHistory();
+				using (MdxDomProvider provider = MdxDomProvider.CreateProvider())
+				{
+					m_OriginalStatement = provider.ParseMdx(value) as MdxSelectStatement;
+				}
+				if (m_OriginalStatement==null)
+					return;
+					
+				m_Query=value;
+				if (m_OriginalStatement.Axes.Count<1)
+					return;
+				CurrentHistoryItem.ColumnsActionChain.HideEmpty=m_OriginalStatement.Axes[0].NonEmpty;
+				if (m_OriginalStatement.Axes.Count < 2)
+					return;
+				CurrentHistoryItem.RowsActionChain.HideEmpty = m_OriginalStatement.Axes[1].NonEmpty;
+			} 
+		}
+		MdxSelectStatement m_OriginalStatement = null;
+		//		public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject { get; set; }
 		public readonly String UpdateScript = String.Empty;
-
-		private MdxSelectStatement m_OriginalStatement = null;
-		public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject { get; set; }
 
 		public SortDescriptor Axis0_MeasuresSort
 		{
@@ -67,25 +87,13 @@ namespace Ranet.AgOlap.Providers
 
 		public PivotQueryManager(String query, String updateScript)
 		{
-			//m_Connection = connection;
-			Query = query;
-			UpdateScript = updateScript;
-			AddHistoryItem(new HistoryItem4MdxQuery());
-			if (string.IsNullOrEmpty(Query))
-				return;
-
-			using (MdxDomProvider provider = MdxDomProvider.CreateProvider())
-			{
-				m_OriginalStatement = provider.ParseMdx(this.Query) as MdxSelectStatement;
-			}
+			this.UpdateScript = updateScript;
+			this.Query = query;
 		}
 
 		public void ChangeQuery(String query)
 		{
-			Query = query;
-			ClearHistory();
-
-			m_OriginalStatement = null;
+			this.Query = query;
 		}
 		public virtual DataSourceInfoArgs GetDataSourceInfo(UpdateEntry entry)
 		{
@@ -178,34 +186,31 @@ namespace Ranet.AgOlap.Providers
 			}
 			return result;
 		}
+		MemberAction CreateMemberAction(PerformMemberActionArgs args)
+		{
+			switch (args.Action)
+			{
+				case MemberActionType.Expand:
+					return new MemberActionExpand(args);
+				case MemberActionType.Collapse:
+					return new MemberActionCollapse(args);
+				case MemberActionType.DrillDown:
+					return new MemberActionDrillDown(args);
+				default:
+					return null;
+			}
+		
+		}
 		public String PerformMemberAction(PerformMemberActionArgs args)
 		{
 			if (args != null)
 			{
-				switch (args.Action)
+				var Action=CreateMemberAction(args);
+				if(Action!=null)
 				{
-					case MemberActionType.Expand:
-					case MemberActionType.Collapse:
-					case MemberActionType.DrillDown:
-					case MemberActionType.DrillUp:
-						AddCurrentStateToHistory();
-						break;
-				}
-
-				switch (args.Action)
-				{
-					case MemberActionType.Expand:
-						ExpandMember(args);
-						break;
-					case MemberActionType.Collapse:
-						CollapseMember(args);
-						break;
-					case MemberActionType.DrillDown:
-						DrillDownMember(args);
-						break;
-					case MemberActionType.DrillUp:
-						DrillUpMember(args);
-						break;
+					AddCurrentStateToHistory();
+					var container = getAxisActions(args);
+					container.Add(Action);
 				}
 			}
 			return RefreshQuery();
@@ -278,9 +283,9 @@ namespace Ranet.AgOlap.Providers
 			return RefreshQuery();
 		}
 
-		IList<MdxActionBase> getAxisActions(PerformMemberActionArgs args)
+		IList<MemberAction> getAxisActions(PerformMemberActionArgs args)
 		{
-			IList<MdxActionBase> actions = null;
+			IList<MemberAction> actions = null;
 			if (!this.CurrentHistoryItem.RotateAxes)
 			{
 				actions = args.AxisIndex == 0 ? this.CurrentHistoryItem.ColumnsActionChain.Actions : this.CurrentHistoryItem.RowsActionChain.Actions;
@@ -289,7 +294,7 @@ namespace Ranet.AgOlap.Providers
 			{
 				actions = args.AxisIndex == 1 ? this.CurrentHistoryItem.ColumnsActionChain.Actions : this.CurrentHistoryItem.RowsActionChain.Actions;
 			}
-		  return actions;
+			return actions;
 		}
 		static MdxTupleExpression GenTuple(PerformMemberActionArgs args)
 		{
@@ -307,26 +312,6 @@ namespace Ranet.AgOlap.Providers
 				}
 			}
 			return tuple;
-		}
-		private void ExpandMember(PerformMemberActionArgs args)
-		{
-			var container = getAxisActions(args);
-			container.Add(new MdxExpandAction2(args));
-		}
-		void CollapseMember(PerformMemberActionArgs args)
-		{
-			var container = getAxisActions(args);
-			container.Add(new MdxCollapseAction2(args));
-		}
-		void DrillDownMember(PerformMemberActionArgs args)
-		{
-			var container = getAxisActions(args);
-			container.Add(new MdxDrillDownAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth));
-		}
-		void DrillUpMember(PerformMemberActionArgs args)
-		{
-			var container = getAxisActions(args);
-			container.Add(new MdxDrillUpAction(args.Member.UniqueName, args.Member.HierarchyUniqueName, args.Member.LevelDepth));
 		}
 		public virtual String ExportToExcel()
 		{
@@ -368,21 +353,6 @@ namespace Ranet.AgOlap.Providers
 				}
 			}
 		}
-
-		//public virtual int ExecuteNonQuery(string query)
-		//{
-		//    if (Executor != null)
-		//        return Executor.ExecuteNonQuery(query);
-		//    return -1;
-		//}
-
-		//public virtual CellSetData ExecuteQuery(string query)
-		//{
-		//    if (Executor != null)
-		//        return Executor.ExecuteQuery(query);
-		//    return null;
-		//}
-
 		private MdxSelectStatement CreateWrappedStatement()
 		{
 			if (m_OriginalStatement == null)

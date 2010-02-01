@@ -33,6 +33,7 @@ using System.Windows.Shapes;
 using System.Windows.Controls.Primitives;
 using Ranet.AgOlap.Features;
 using System.Windows.Browser;
+using Ranet.AgOlap.Controls.General;
 
 namespace Ranet.AgOlap.Controls.ContextMenu
 {
@@ -49,14 +50,17 @@ namespace Ranet.AgOlap.Controls.ContextMenu
         public event EventHandler Closed;
         public event EventHandler Opened;
 
+        bool m_IsMouseOver = false;
         void CustomContextMenu_MouseLeave(object sender, MouseEventArgs e)
         {
             resTimer.Begin();
+            m_IsMouseOver = false;
         }
 
         void CustomContextMenu_MouseEnter(object sender, MouseEventArgs e)
         {
             resTimer.Stop();
+            m_IsMouseOver = true;
         }
 
         Popup m_PopupControl = null;
@@ -69,6 +73,10 @@ namespace Ranet.AgOlap.Controls.ContextMenu
                     m_PopupControl.Opened += new EventHandler(m_PopupControl_Opened);
                     m_PopupControl.Closed += new EventHandler(m_PopupControl_Closed);
                     m_PopupControl.Child = this;
+
+                    PopupControl.VerticalOffset = 0;
+                    PopupControl.HorizontalOffset = 0;
+
                     //this.LostFocus += new RoutedEventHandler(CustomContextMenu_LostFocus);
                 }
                 return m_PopupControl;
@@ -85,6 +93,7 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             {
                 HtmlPage.Document.DetachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
             }
+
             EventHandler handler = Closed;
             if (handler != null)
             {
@@ -102,6 +111,7 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             {
                 HtmlPage.Document.AttachEvent("onkeypress", new EventHandler<HtmlEventArgs>(Document_OnKeyDown));
             }
+            
             EventHandler handler = Opened;
             if (handler != null)
             {
@@ -122,6 +132,8 @@ namespace Ranet.AgOlap.Controls.ContextMenu
         //    IsDropDownOpen = false;
         //}
 
+        public event EventHandler ItemClicked;
+        public event EventHandler Collapsed;
         public event EventHandler BeforeOpen;
 
         public bool IsDropDownOpen
@@ -148,6 +160,10 @@ namespace Ranet.AgOlap.Controls.ContextMenu
                 {
                     // Меню закрывается, значит таймер останавливаем
                     resTimer.Stop();
+
+                    if (CurrentSubMenu != null)
+                        CurrentSubMenu.IsDropDownOpen = false;
+
                     PopupControl.IsOpen = value;
                 }
             }
@@ -170,9 +186,86 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             if(item != null)
             {
                 itemsPanel.Children.Add(item);
+
                 item.ItemClick += new EventHandler(item_ItemClick);
+
+                item.MouseEnter += new MouseEventHandler(item_MouseEnter);
             }
         }
+
+        void item_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (CurrentSubMenu != null)
+            {
+                CurrentSubMenu.IsDropDownOpen = false;
+                CurrentSubMenu = null;
+            }
+            ShowSubmenu(sender as ContextMenuItem);
+        }
+
+        void ShowSubmenu(ContextMenuItem item)
+        {
+            if (item != null && item.HasSubMenu)
+            {
+                Rect p = AgControlBase.GetSLBounds(item);
+                item.SubMenu.SetLocation(new Point(p.Right, p.Top + 6));
+                item.SubMenu.Opened -= new EventHandler(SubMenu_Opened);
+                item.SubMenu.Opened += new EventHandler(SubMenu_Opened);
+                item.SubMenu.Closed -= new EventHandler(SubMenu_Closed);
+                item.SubMenu.Closed += new EventHandler(SubMenu_Closed);
+                item.SubMenu.MouseEnter -= new MouseEventHandler(SubMenu_MouseEnter);
+                item.SubMenu.MouseEnter += new MouseEventHandler(SubMenu_MouseEnter);
+                item.SubMenu.Collapsed -= new EventHandler(SubMenu_Collapsed);
+                item.SubMenu.Collapsed += new EventHandler(SubMenu_Collapsed);
+                item.SubMenu.ItemClicked -= new EventHandler(SubMenu_ItemClicked);
+                item.SubMenu.ItemClicked += new EventHandler(SubMenu_ItemClicked);
+
+                item.SubMenu.IsDropDownOpen = true;
+                return;
+            }
+        }
+
+        void SubMenu_ItemClicked(object sender, EventArgs e)
+        {
+            IsDropDownOpen = false;
+            EventHandler handler = this.ItemClicked;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
+        }
+
+        void SubMenu_Collapsed(object sender, EventArgs e)
+        {
+            if (!m_IsMouseOver)
+            {
+                IsDropDownOpen = false;
+
+                EventHandler handler = this.Collapsed;
+                if (handler != null)
+                {
+                    handler(this, EventArgs.Empty);
+                }
+            }
+        }
+
+        void SubMenu_MouseEnter(object sender, MouseEventArgs e)
+        {
+            resTimer.Stop();
+        }
+
+        void SubMenu_Opened(object sender, EventArgs e)
+        {
+            var subMenu = sender as CustomContextMenu;
+            CurrentSubMenu = subMenu;
+        }
+
+        void SubMenu_Closed(object sender, EventArgs e)
+        {
+            CurrentSubMenu = null;
+        }
+
+        internal CustomContextMenu CurrentSubMenu;
 
         public UIElementCollection Items
         {
@@ -190,12 +283,39 @@ namespace Ranet.AgOlap.Controls.ContextMenu
 
         void item_ItemClick(object sender, EventArgs e)
         {
+            var item = sender as ContextMenuItem;
+            if (item != null && item.HasSubMenu)
+            {
+                if (CurrentSubMenu != null)
+                {
+                    CurrentSubMenu.IsDropDownOpen = false;
+                    CurrentSubMenu = null;
+                }
+                else
+                {
+                    ShowSubmenu(item);
+                }
+                return;
+            }
+
             IsDropDownOpen = false;
+
+            EventHandler handler = this.ItemClicked;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
 
         private void resTimer_Completed(object sender, EventArgs e)
         {
             IsDropDownOpen = false;
+
+            EventHandler handler = this.Collapsed;
+            if (handler != null)
+            {
+                handler(this, EventArgs.Empty);
+            }
         }
     }
 }

@@ -32,14 +32,16 @@ namespace Ranet.AgOlap.Providers.MemberActions
 	public class HistoryManager<HistoryItem> where HistoryItem : class, IHistoryItem<HistoryItem>, new()
 	{
 		List<HistoryItem> m_History = new List<HistoryItem>();
-		HistoryItem m_CurrentHistoryItem=new HistoryItem();
+		HistoryItem m_CurrentHistoryItem = new HistoryItem();
 
 		public HistoryManager()
 		{
-		} 
+			ClearHistory();
+		}
 		public virtual void ClearHistory()
 		{
-		  m_History.Clear();
+			m_History.Clear();
+			m_History.Add(m_CurrentHistoryItem);
 		}
 
 		/// <summary>
@@ -48,10 +50,10 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		/// <param name="item"></param>
 		public void CutRight()
 		{
-			int indx = m_History.IndexOf(CurrentHistoryItem)+1;
+			int indx = m_History.IndexOf(CurrentHistoryItem) + 1;
 			if (indx < 1)
 				return;
-				
+
 			while (m_History.Count > indx)
 			{
 				m_History.RemoveAt(m_History.Count - 1);
@@ -59,11 +61,15 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		}
 		protected void AddHistoryItem(HistoryItem item)
 		{
-			if (item != null)
-			{
-				m_History.Add(item);
-				m_CurrentHistoryItem = item;
-			}
+			if (item == null)
+				return;
+
+			int indx = m_History.IndexOf(item);
+			if (indx >= 0)
+				return;
+
+			m_CurrentHistoryItem = item;
+			m_History.Add(m_CurrentHistoryItem);
 		}
 		public int HistorySize
 		{

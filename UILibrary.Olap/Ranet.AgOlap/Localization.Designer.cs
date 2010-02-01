@@ -565,6 +565,42 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Members Group Mode.
+        /// </summary>
+        public static string ContextMenu_DataReorganizationType {
+            get {
+                return ResourceManager.GetString("ContextMenu_DataReorganizationType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group to Hierarchy.
+        /// </summary>
+        public static string ContextMenu_DataReorganizationType_HitchToParent {
+            get {
+                return ResourceManager.GetString("ContextMenu_DataReorganizationType_HitchToParent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group Neighbors.
+        /// </summary>
+        public static string ContextMenu_DataReorganizationType_MergeNeighbors {
+            get {
+                return ResourceManager.GetString("ContextMenu_DataReorganizationType_MergeNeighbors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to None.
+        /// </summary>
+        public static string ContextMenu_DataReorganizationType_None {
+            get {
+                return ResourceManager.GetString("ContextMenu_DataReorganizationType_None", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delivery value.
         /// </summary>
         public static string ContextMenu_DeliveryValue {

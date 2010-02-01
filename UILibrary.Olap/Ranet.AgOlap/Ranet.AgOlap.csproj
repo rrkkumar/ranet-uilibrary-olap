@@ -131,6 +131,12 @@
       <DependentUpon>XapItemComboBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ContextMenu\CheckedContectMenuItem.cs" />
+    <Compile Include="Controls\ContextMenu\ContextMenuControl.xaml.cs">
+      <DependentUpon>ContextMenuControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ContextMenu\CustomContextMenu.xaml.cs">
+      <DependentUpon>CustomContextMenu.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
     <Compile Include="Controls\General\TooltipController.cs" />
@@ -298,6 +304,7 @@
     <Compile Include="Providers\DataSourceInfoArgs.cs" />
     <Compile Include="Providers\DataTableView.cs" />
     <Compile Include="Providers\MemberActions\AxisInfo.cs" />
+    <Compile Include="Providers\MemberActions\MemberActions.cs" />
     <Compile Include="Providers\MemberActions\DrillActionContainer.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -332,9 +339,6 @@
     <Compile Include="Controls\ContextMenu\ContextMenuProvider.cs" />
     <Compile Include="Controls\ContextMenu\ContextMenuSplitter.xaml.cs">
       <DependentUpon>ContextMenuSplitter.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ContextMenu\CustomContextMenu.xaml.cs">
-      <DependentUpon>CustomContextMenu.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CubeChoiceCtrl.cs" />
     <Compile Include="Controls\CubeBrowserCtrl.cs" />
@@ -540,6 +544,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\ContextMenu\ContextMenuControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\ContextMenu\ContextMenuItem.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -549,8 +557,8 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ContextMenu\CustomContextMenu.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
     <Page Include="Controls\General\BusyControl.xaml">
       <SubType>Designer</SubType>
@@ -860,6 +868,7 @@
     <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_0.png" />
     <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.ico" />
     <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.png" />
+    <Resource Include="Controls\Images\SubMenu.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>

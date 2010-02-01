@@ -1396,7 +1396,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         // Расширяем колонку с учетом заглубления в ней
                         double width = (DRILLDOWN_SPACE_WIDTH * drillDepth[column_index_in_area] + m_AnalyticInfo.GetEstimatedColumnSizeForRowsArea(column_index_in_area) + 10 + 10 * Scale) * Scale;    // 10-для красоты, 10* - на плюсики
                         if (drillDepth.ContainsKey(column_index_in_area))
-                            current_column.Width = new GridLength(Math.Round(Math.Max(current_column.Width.Value, width)));
+                            current_column.Width = new GridLength(Math.Round(Math.Max(DEFAULT_WIDTH * Scale, width)));
                         else
                             current_column.Width = new GridLength(Math.Round(DEFAULT_WIDTH * Scale));
 
@@ -2675,6 +2675,29 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             contextMenu.AddMenuItem(item);
             item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
+            #region Подменю для управления режимом реорганизации данных
+            CustomContextMenu subMenu1 = new CustomContextMenu();
+            item = new CheckedContectMenuItem(Localization.ContextMenu_DataReorganizationType_None);
+            item.Tag = ControlActionType.DataReorganizationType_None;
+            subMenu1.AddMenuItem(item);
+            item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+            item = new CheckedContectMenuItem(Localization.ContextMenu_DataReorganizationType_MergeNeighbors);
+            item.Tag = ControlActionType.DataReorganizationType_MergeNeighbors;
+            subMenu1.AddMenuItem(item);
+            item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+            item = new CheckedContectMenuItem(Localization.ContextMenu_DataReorganizationType_HitchToParent);
+            item.Tag = ControlActionType.DataReorganizationType_HitchToParent;
+            subMenu1.AddMenuItem(item);
+            item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+            item = new ContextMenuItem(Localization.ContextMenu_DataReorganizationType);
+            item.Tag = ControlActionType.DataReorganizationType;
+            item.SubMenu = subMenu1;
+            contextMenu.AddMenuItem(item);
+            #endregion
+
             item = new ContextMenuItem(Localization.ContextMenu_ShowMDX);
             item.Tag = ControlActionType.ShowMDX;
             item.Icon = UriResources.Images.Mdx16;
@@ -2714,9 +2737,12 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             ContextMenuItem item = sender as ContextMenuItem;
             if (item != null && item.Tag != null)
             {
-                if ((ControlActionType)(item.Tag) == ControlActionType.AutoWidth)
+                if (item.Tag is ControlActionType)
                 {
-                    AutoWidthColumns = !AutoWidthColumns;
+                    if ((ControlActionType)(item.Tag) == ControlActionType.AutoWidth)
+                    {
+                        AutoWidthColumns = !AutoWidthColumns;
+                    }
                 }
 
                 // Если меню для элемента

@@ -32,7 +32,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		internal readonly AxisInfo ColumnsActionChain;
 		internal readonly AxisInfo RowsActionChain;
 		public bool RotateAxes { get; set; }
-		public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject = null;
+		//public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject = null;
 
 		public HistoryItem4MdxQuery()
 		{
@@ -44,48 +44,48 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			ColumnsActionChain = old.ColumnsActionChain.Clone();
 			RowsActionChain = old.RowsActionChain.Clone();
 			RotateAxes=old.RotateAxes;
-			ConcretizeMdxObject=old.ConcretizeMdxObject;
+			//ConcretizeMdxObject=old.ConcretizeMdxObject;
 		}
-		public DrillActionContainer FindDrillActionContainer(IList<DrillActionContainer> actionChain, String memberId)
-		{
-			if (actionChain == null)
-				return null;
+		//public DrillActionContainer FindDrillActionContainer(IList<DrillActionContainer> actionChain, String memberId)
+		//{
+		//  if (actionChain == null)
+		//    return null;
 
-			foreach (DrillActionContainer container in actionChain)
-			{
-				if (container.MemberUniqueName == memberId)
-					return container;
-				DrillActionContainer child = FindDrillActionContainer(container.Children, memberId);
-				if (child != null)
-					return child;
-			}
-			return null;
-		}
-		public IList<DrillActionContainer> FindDrillActionContainersByHierarchy(IList<DrillActionContainer> actionChain, String hierarchyUniqueName)
-		{
-			IList<DrillActionContainer> list = new List<DrillActionContainer>();
-			if (actionChain == null)
-				return list;
+		//  foreach (DrillActionContainer container in actionChain)
+		//  {
+		//    if (container.MemberUniqueName == memberId)
+		//      return container;
+		//    DrillActionContainer child = FindDrillActionContainer(container.Children, memberId);
+		//    if (child != null)
+		//      return child;
+		//  }
+		//  return null;
+		//}
+		//public IList<DrillActionContainer> FindDrillActionContainersByHierarchy(IList<DrillActionContainer> actionChain, String hierarchyUniqueName)
+		//{
+		//  IList<DrillActionContainer> list = new List<DrillActionContainer>();
+		//  if (actionChain == null)
+		//    return list;
 
-			foreach (DrillActionContainer container in actionChain)
-			{
-				if (container.HierarchyUniqueName == hierarchyUniqueName && !list.Contains(container))
-					list.Add(container);
+		//  foreach (DrillActionContainer container in actionChain)
+		//  {
+		//    if (container.HierarchyUniqueName == hierarchyUniqueName && !list.Contains(container))
+		//      list.Add(container);
 
-				IList<DrillActionContainer> childList = FindDrillActionContainersByHierarchy(container.Children, hierarchyUniqueName);
-				if (childList != null)
-				{
-					foreach (DrillActionContainer childContainer in childList)
-					{
-						if (!list.Contains(childContainer))
-						{
-							list.Add(childContainer);
-						}
-					}
-				}
-			}
-			return list;
-		}
+		//    IList<DrillActionContainer> childList = FindDrillActionContainersByHierarchy(container.Children, hierarchyUniqueName);
+		//    if (childList != null)
+		//    {
+		//      foreach (DrillActionContainer childContainer in childList)
+		//      {
+		//        if (!list.Contains(childContainer))
+		//        {
+		//          list.Add(childContainer);
+		//        }
+		//      }
+		//    }
+		//  }
+		//  return list;
+		//}
 		public HistoryItem4MdxQuery Clone()
 		{
 			return new HistoryItem4MdxQuery(this);
@@ -107,7 +107,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 				if (select.Axes[0].Name.ToLower() == "1" || select.Axes[0].Name.ToLower() == "rows")
 					axis0_actions = RowsActionChain;
 
-				select.Axes[0] = axis0_actions.GetWrappedAxis(select.Axes[0], this.ConcretizeMdxObject);
+				select.Axes[0] = axis0_actions.GetWrappedAxis(select.Axes[0]/*, this.ConcretizeMdxObject*/);
 
 				if (select.Axes.Count <= 1)
 					return select;
@@ -116,7 +116,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 				if (select.Axes[1].Name.ToLower() == "0" || select.Axes[1].Name.ToLower() == "columns")
 					axis1_actions = ColumnsActionChain;
 
-				select.Axes[1] = axis1_actions.GetWrappedAxis(select.Axes[1], this.ConcretizeMdxObject);
+				select.Axes[1] = axis1_actions.GetWrappedAxis(select.Axes[1]/*, this.ConcretizeMdxObject*/);
 
 				// Переворот осей
 				if (RotateAxes)

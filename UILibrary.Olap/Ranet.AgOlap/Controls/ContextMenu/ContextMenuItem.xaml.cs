@@ -36,6 +36,7 @@ namespace Ranet.AgOlap.Controls.ContextMenu
     public partial class ContextMenuItem : UserControl
     {
         public event EventHandler ItemClick;
+        Image m_SubMenuIcon;
 
         public ContextMenuItem(String caption)
         {
@@ -69,6 +70,13 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             m_ShortcutText.Margin = new Thickness(0, 4, 4, 4);
             m_ShortcutText.Foreground = new SolidColorBrush(Colors.Black);
 
+            m_SubMenuIcon = new Image();
+            m_SubMenuIcon.Margin = new Thickness(4, 4, 2, 4);
+            m_SubMenuIcon.Width = 16;
+            m_SubMenuIcon.Height = 16;
+            m_SubMenuIcon.Visibility = Visibility.Collapsed;
+            m_SubMenuIcon.Source = UriResources.Images.SubMenu16;
+
             grdLayout.Children.Add(m_Icon);
             grdLayout.Children.Add(border);
             Grid.SetColumn(border, 1);
@@ -76,12 +84,38 @@ namespace Ranet.AgOlap.Controls.ContextMenu
             Grid.SetColumn(m_Text, 2);
             grdLayout.Children.Add(m_ShortcutText);
             Grid.SetColumn(m_ShortcutText, 3);
+            grdLayout.Children.Add(m_SubMenuIcon);
+            Grid.SetColumn(m_SubMenuIcon, 3);
+
             btnContent.Content = grdLayout;
 
             btnContent.HorizontalContentAlignment = HorizontalAlignment.Stretch;
 
             btnContent.Click += new RoutedEventHandler(btnContent_Click);
+
+            this.Loaded += new RoutedEventHandler(ContextMenuItem_Loaded);
         }
+
+        void ContextMenuItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (HasSubMenu)
+            {
+                m_ShortcutText.Visibility = Visibility.Collapsed;
+                m_SubMenuIcon.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                m_ShortcutText.Visibility = Visibility.Visible;
+                m_SubMenuIcon.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        public bool HasSubMenu
+        {
+            get { return SubMenu != null && SubMenu.Items.Count > 0; }
+        }
+
+        public CustomContextMenu SubMenu;
 
         Image m_Icon = null;
         TextBlock m_Text = null;

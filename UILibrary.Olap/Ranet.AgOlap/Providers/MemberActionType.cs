@@ -24,10 +24,10 @@ namespace Ranet.AgOlap.Providers
 {
     public enum MemberActionType
     {
-        Expand,
-        Collapse,
-        DrillDown,
-        DrillUp,
-        Default
+			 Default=0
+			,Expand=1
+      ,Collapse=2
+      ,DrillDown=3
+//      ,DrillUp=4
     }
 }

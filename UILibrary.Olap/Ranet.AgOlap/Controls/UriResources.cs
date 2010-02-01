@@ -1234,6 +1234,16 @@ namespace Ranet.AgOlap.Controls
 
             const string CONTEXT_MENU_CHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemChecked.png";
             const string CONTEXT_MENU_UNCHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemUnChecked.png";
+            
+            const string SUB_MENU_16 = "/Ranet.AgOlap;component/Controls/Images/SubMenu.png";
+
+            public static BitmapImage SubMenu16
+            {
+                get
+                {
+                    return UriResources.GetImage(SUB_MENU_16);
+                }
+            }
 
             public static BitmapImage ContexMenuUnChecked16
             {

@@ -29,7 +29,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 {
 	internal class AxisInfo
 	{
-		public readonly List<MdxActionBase> Actions = new List<MdxActionBase>();
+		public readonly List<MemberAction> Actions = new List<MemberAction>();
 		public bool HideEmpty { get; set; }
 		public SortDescriptor MeasuresSort;
 
@@ -55,7 +55,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		{
 			return new AxisInfo(this);
 		}
-		internal MdxAxis GetWrappedAxis(MdxAxis ax, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject)
+		internal MdxAxis GetWrappedAxis(MdxAxis ax /*, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject */)
 		{
 			MdxExpression axisExpression = ax.Expression;
 
@@ -105,7 +105,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			if (Actions.Count > 0)
 			{
 				var expression = ax.Expression;
-				axisExpression = this.GetWrappedExpression(expression, ConcretizeMdxObject);
+				axisExpression = this.GetWrappedExpression(expression/*, ConcretizeMdxObject*/);
 			}
 			axisExpression = SortExpression(axisExpression, MeasuresSort);
 
@@ -145,11 +145,12 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			}
 			return expr;
 		}
-		private MdxExpression GetWrappedExpression(MdxExpression expr, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject)
+		private MdxExpression GetWrappedExpression(MdxExpression expr/*, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject*/)
 		{
+		
 			foreach (var rootAction in this.Actions)
 			{
-				expr = (MdxExpression)rootAction.Process(expr, null);
+				expr = (MdxExpression)rootAction.Process(expr/*, null*/);
 			}
 			return expr;
 		}
