@@ -3673,11 +3673,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                             if (m_AnalyticInfo != null &&
                                member_item != null && member_item.PivotMember != null && member_item.PivotMember.Member != null)
                             {
-                                MinMaxDescriptor<CellInfo> minmax = m_AnalyticInfo.Cells_DisplayValueLength_MinMax[member_item.PivotMember.Member];
-                                double cell_width = DEFAULT_WIDTH;
+                                // Желаемая ширина элемента
                                 double member_width = Math.Round(DEFAULT_WIDTH * Scale);
                                 if (m_AnalyticInfo != null)
                                     member_width = m_AnalyticInfo.GetEstimatedColumnSizeForColumnsArea(memberIndex) + 10 + 10 * Scale;    // 10-для красоты, 10* - на плюсики
+                                // Желаемая ширина ячейки
+                                MinMaxDescriptor<CellInfo> minmax = null;
+                                if(m_AnalyticInfo.Cells_DisplayValueLength_MinMax.ContainsKey(member_item.PivotMember.Member))
+                                    minmax = m_AnalyticInfo.Cells_DisplayValueLength_MinMax[member_item.PivotMember.Member];
+                                double cell_width = DEFAULT_WIDTH;
                                 if (minmax != null && minmax.Max != null)
                                 {
                                     cell_width = StringExtensions.Measure(minmax.Max.DisplayValue, DefaultFontSize * Scale, null).Width + 10 + 5 * Scale; // 10-для красоты, 5* - отступ текста слева

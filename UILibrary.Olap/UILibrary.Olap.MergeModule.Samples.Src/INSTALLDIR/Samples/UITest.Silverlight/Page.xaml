@@ -192,6 +192,13 @@
 							<ComboBoxItem Content="ExpandCollapse" />
 							<ComboBoxItem Content="SortByProperty"/>
 						</ComboBox>
+						<TextBlock Grid.Row="21" Text="DrillDownMode:" />
+						<ComboBox Grid.Row="22" Name="cbDrillDownMode" SelectedIndex="0">
+							<ComboBoxItem Content="ByCurrentTupleShowSelf"/>
+							<ComboBoxItem Content="BySingleDimensionShowSelf"/>
+							<ComboBoxItem Content="ByCurrentTupleHideSelf" />
+							<ComboBoxItem Content="BySingleDimensionHideSelf"/>
+						</ComboBox>
 					</Grid>
 					<basics:GridSplitter x:Name="grsplSplitter" Grid.Row="0" Grid.Column="1" VerticalAlignment="Stretch" HorizontalAlignment="Center" Background="Aqua" Width="5"/>
 					<pivotgrid_controls:UpdateablePivotGridControl Grid.Column="2" x:Name="pivotGridControl" />

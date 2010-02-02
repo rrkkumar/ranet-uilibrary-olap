@@ -2058,6 +2058,12 @@ namespace Ranet.AgOlap.Controls
 			get { return m_DataManager; }
 			set { m_DataManager = value; }
 		}
+		public DrillDownMode m_DrillDownMode = DrillDownMode.BySingleDimensionHideSelf;
+		public DrillDownMode DrillDownMode
+		{
+			get { return m_DrillDownMode; }
+			set { m_DrillDownMode=value; }
+		}
 
 		IDataLoader m_OlapDataLoader = null;
 		public IDataLoader OlapDataLoader
@@ -2400,6 +2406,7 @@ namespace Ranet.AgOlap.Controls
 			ResetSettings();
 
 			m_DataManager = GetDataManager();
+			m_DataManager.DrillDownMode=this.DrillDownMode;
 
 			// Clear Pivot Grid
 			Initialize(null);
@@ -2990,7 +2997,13 @@ namespace Ranet.AgOlap.Controls
 		ExpandCollapse,
 		SortByProperty
 	}
-
+	public enum DrillDownMode
+	{
+		ByCurrentTupleShowSelf = 0,
+		BySingleDimensionShowSelf = 1,
+		ByCurrentTupleHideSelf = 2,
+		BySingleDimensionHideSelf = 3
+	}
 }
 
 

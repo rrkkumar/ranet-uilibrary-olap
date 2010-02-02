@@ -164,6 +164,7 @@ namespace Ranet.AgOlap.Controls
             Grid.SetRow(m_Waiting, 1);
 
             IsBusy = false;
+            //m_OlapDataLoader = GetDataLoader();
 
             Table_LayoutRoot.Children.Add(m_DataGrid);
             Grid.SetRow(m_DataGrid, 2);
@@ -221,7 +222,10 @@ namespace Ranet.AgOlap.Controls
 
         void m_ServerExplorer_CubeSelected(object sender, CustomEventArgs<string> e)
         {
-            
+            if (!string.IsNullOrEmpty(e.Args))
+            {
+                this.CubeName = e.Args;
+            }
         }
 
         /// <summary>
@@ -641,11 +645,11 @@ namespace Ranet.AgOlap.Controls
             }
             get
             {
-                if (m_OlapDataLoader == null)
-                {
+                //if (m_OlapDataLoader == null)
+                //{
                     m_OlapDataLoader = GetDataLoader();
                     m_OlapDataLoader.DataLoaded += new EventHandler<DataLoaderEventArgs>(Loader_DataLoaded);
-                }
+                //}
                 return m_OlapDataLoader;
             }
         }
@@ -683,9 +687,7 @@ namespace Ranet.AgOlap.Controls
         {
             return new OlapDataLoader(URL);
         }
-
-        public List<List<ShortMemberInfo>> DefaultTuples;
-
+      
         public bool ShowAllKPIs
         { 
             get; 

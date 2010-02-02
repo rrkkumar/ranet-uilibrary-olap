@@ -21,18 +21,25 @@
 using System;
 using System.Collections.Generic;
 using Ranet.Olap.Mdx;
+using Ranet.AgOlap.Controls;
 
 namespace Ranet.AgOlap.Providers.MemberActions
 {
 	public abstract class MemberAction
 	{
-		protected static MdxTupleExpression GenTuple(PerformMemberActionArgs args)
+		public readonly PerformMemberActionArgs args;
+		public MemberAction(PerformMemberActionArgs args)
 		{
-			var tuple = GenTupleBase(args);
+			this.args = args;
+		}
+
+		protected MdxTupleExpression GenTuple()
+		{
+			var tuple = GenTupleBase();
 			tuple.Members.Add(new MdxObjectReferenceExpression(args.Member.UniqueName));
 			return tuple;
 		}
-		protected static MdxTupleExpression GenTupleBaseCurrent(PerformMemberActionArgs args)
+		protected MdxTupleExpression GenTupleBaseCurrent()
 		{
 			var tuple = new MdxTupleExpression();
 			string lasthier = args.Member.HierarchyUniqueName;
@@ -48,7 +55,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			}
 			return tuple;
 		}
-		protected static MdxTupleExpression GenTupleBase(PerformMemberActionArgs args)
+		protected MdxTupleExpression GenTupleBase()
 		{
 			var tuple = new MdxTupleExpression();
 			string lasthier = args.Member.HierarchyUniqueName;
@@ -64,23 +71,54 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			}
 			return tuple;
 		}
+		public bool TuplesAreEqual(MemberAction Action)
+		{
+			if (Action == null)
+				return false;
+
+			if (args == null)
+				return false;
+
+			var args1 = Action.args;
+			if (args1 == null)
+				return false;
+
+			if (args.Member.UniqueName != args1.Member.UniqueName)
+				return false;
+
+			var a = args.Ascendants;
+			if (a == null)
+				return false;
+
+			var a1 = args1.Ascendants;
+			if (a1 == null)
+				return false;
+
+			if (a.Count != a1.Count)
+				return false;
+
+			for (int i = 0; i < a.Count; i++)
+			{
+				var mi = a[i];
+				var mi1 = a1[i];
+				if (mi.UniqueName != mi1.UniqueName)
+					return false;
+			}
+			return true;
+		}
 		public abstract MdxExpression Process(MdxExpression mdx);
 		public abstract MemberAction Clone();
 	}
 	public class MemberActionExpand : MemberAction
 	{
-		PerformMemberActionArgs args;
+		public MemberActionExpand(PerformMemberActionArgs args) : base(args) { }
 
-		public MemberActionExpand(PerformMemberActionArgs args)
-		{
-			this.args = args;
-		}
 		public override MdxExpression Process(MdxExpression expr)
 		{
 			if (expr == null)
-			 return null;
-			 
-			var tuple = GenTuple(args);
+				return null;
+
+			var tuple = GenTuple();
 			if (tuple.Members.Count == 1)
 			{
 				return new MdxFunctionExpression
@@ -97,8 +135,8 @@ namespace Ranet.AgOlap.Providers.MemberActions
 						("FILTER"
 						, expr
 						, new MdxBinaryExpression
-							(GenTupleBaseCurrent(args)
-							, GenTupleBase(args)
+							(GenTupleBaseCurrent()
+							, GenTupleBase()
 							, "IS"
 							)
 						)
@@ -115,16 +153,12 @@ namespace Ranet.AgOlap.Providers.MemberActions
 	}
 	public class MemberActionCollapse : MemberAction
 	{
-		PerformMemberActionArgs args;
+		public MemberActionCollapse(PerformMemberActionArgs args) : base(args) { }
 
-		public MemberActionCollapse(PerformMemberActionArgs args)
-		{
-			this.args = args;
-		}
 		public override MdxExpression Process(MdxExpression expr)
 		{
 			if (expr == null)
-			 return null;
+				return null;
 
 			MdxExpression filter = new MdxUnaryExpression
 							("NOT"
@@ -134,7 +168,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 								, new MdxObjectReferenceExpression(args.Member.HierarchyUniqueName + ".CURRENTMEMBER")
 								)
 							);
-			var tupleBase = GenTupleBase(args);
+			var tupleBase = GenTupleBase();
 			if (tupleBase.Members.Count > 0)
 			{
 				filter = new MdxBinaryExpression
@@ -142,8 +176,8 @@ namespace Ranet.AgOlap.Providers.MemberActions
 						, new MdxUnaryExpression
 							("NOT"
 							, new MdxBinaryExpression
-								(GenTupleBaseCurrent(args)
-								, GenTupleBase(args)
+								(GenTupleBaseCurrent()
+								, GenTupleBase()
 								, "IS"
 								)
 							)
@@ -164,17 +198,22 @@ namespace Ranet.AgOlap.Providers.MemberActions
 	}
 	public class MemberActionDrillDown : MemberAction
 	{
-		PerformMemberActionArgs args;
+		readonly DrillDownMode DrillDownMode;
+		public bool SingleDimension
+		{ get { return 0 != ((int)this.DrillDownMode & 1); } }
+		public bool HideSelf
+		{ get { return 0 != ((int)this.DrillDownMode & 2); } }
 
-		public MemberActionDrillDown(PerformMemberActionArgs args)
+		public MemberActionDrillDown(PerformMemberActionArgs args, DrillDownMode DrillDownMode)
+			: base(args)
 		{
-			this.args = args;
+			this.DrillDownMode = DrillDownMode;
 		}
 		public override MdxExpression Process(MdxExpression expr)
 		{
 			if (expr == null)
-			 return null;
-			
+				return null;
+
 			string uniqueName = args.Member.UniqueName;
 			string hierarchyUniqueName = args.Member.HierarchyUniqueName;
 
@@ -187,39 +226,86 @@ namespace Ranet.AgOlap.Providers.MemberActions
 					, new MdxObjectReferenceExpression(uniqueName)
 					)
 				);
-			MdxExpression filter = 
-					new MdxBinaryExpression
-					(	new MdxFunctionExpression
+			MdxExpression filter = new MdxFunctionExpression
 						("IsAncestor"
 						, new MdxObjectReferenceExpression(uniqueName)
 						, new MdxObjectReferenceExpression(hierarchyUniqueName + ".CURRENTMEMBER")
-						)
-					, new MdxBinaryExpression
-						( new MdxObjectReferenceExpression(uniqueName)
-						, new MdxObjectReferenceExpression(hierarchyUniqueName + ".CURRENTMEMBER")
-						, "IS"
-						)
-					, "OR"	
-					);
-			var tupleBase = GenTupleBase(args);
-			if (tupleBase.Members.Count > 0)
+						);
+
+			if (!HideSelf)
 			{
-				filter = new MdxBinaryExpression
+				filter =
+						new MdxBinaryExpression
 						(filter
 						, new MdxBinaryExpression
-								(GenTupleBaseCurrent(args)
-								, GenTupleBase(args)
-								, "IS"
-								)
-						, "AND"
+							(new MdxObjectReferenceExpression(uniqueName)
+							, new MdxObjectReferenceExpression(hierarchyUniqueName + ".CURRENTMEMBER")
+							, "IS"
+							)
+						, "OR"
 						);
+			}
+			if (!SingleDimension)
+			{
+				var tupleBase = GenTupleBase();
+				if (tupleBase.Members.Count > 0)
+				{
+					filter = new MdxBinaryExpression
+							(filter
+							, new MdxBinaryExpression
+									(GenTupleBaseCurrent()
+									, GenTupleBase()
+									, "IS"
+									)
+							, "AND"
+							);
+				}
 			}
 			return new MdxFunctionExpression("FILTER", drillDownExpr, filter);
 
 		}
 		public override MemberAction Clone()
 		{
-			return new MemberActionDrillDown(args);
+			return new MemberActionDrillDown(args, DrillDownMode);
 		}
+		//public MemberActionDrillDown ReturnMostRestrictive(MemberActionDrillDown Action)
+		//{
+		//  if(Action.args.Ascendants.Count>this.args.Ascendants.Count)
+		//    return Action;
+
+		//  return this;
+		//}
+		//public bool OutOfScope(MemberAction TestedAction)
+		//{
+		//  if(TestedAction==null)
+		//    return false;
+
+		//  if(args==null)
+		//    return false;
+
+		//  var a=args.Ascendants;
+		//  if(a==null)
+		//    return false;
+
+		//  var args1=TestedAction.args;
+		//  if(args1==null)
+		//    return false;
+		//  var a1=args1.Ascendants;
+		//  if(a1==null)
+		//    return false;
+
+		//  int i1=a1.Count;
+		//  for(int i=a.Count; i>=0;i--,i1--)
+		//  {
+		//    if(i1<0)
+		//      return false;
+
+		//    var mi = a[i];
+		//    var mi1=a1[i1];
+		//    if (mi.UniqueName!=mi1.UniqueName)
+		//      return true;
+		//  }
+		//  return false;
+		//}
 	}
 }

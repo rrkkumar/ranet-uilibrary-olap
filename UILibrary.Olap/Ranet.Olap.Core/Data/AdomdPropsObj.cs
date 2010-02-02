@@ -62,12 +62,14 @@ namespace Ranet.Olap.Core.Data
                                 return false;
                             if (p.Value == null)
                             {
-                                if (ps.props[i].Value == null)
-                                    return true;
-                                return false;
+                                if (ps.props[i].Value != null)
+                                   return false;
                             }
-                            if (!p.Value.Equals(ps.props[i].Value))
-                                return false;
+                            else
+                            {
+                                if (!p.Value.Equals(ps.props[i].Value))
+                                    return false;
+                            }
                             break;
                         }
                 }
@@ -133,12 +135,14 @@ namespace Ranet.Olap.Core.Data
                                 return false;
                             if (p.Value == null)
                             {
-                                if (ps.props[i].Value == null)
-                                    return true;
-                                return false;
+                                if (ps.props[i].Value != null)
+                                    return false;
                             }
-                            if (!p.Value.Equals(ps.props[i].Value))
-                                return false;
+                            else
+                            {
+                                if (!p.Value.Equals(ps.props[i].Value))
+                                    return false;
+                            }
                             break;
                         }
                 }
@@ -218,12 +222,14 @@ namespace Ranet.Olap.Core.Data
                                 return false;
                             if (p.Value == null)
                             {
-                                if (ps.props[i].Value == null)
-                                    return true;
-                                return false;
+                                if (ps.props[i].Value != null)
+                                    return false;
                             }
-                            if (!p.Value.Equals(ps.props[i].Value))
-                                return false;
+                            else
+                            {
+                                if (!p.Value.Equals(ps.props[i].Value))
+                                    return false;
+                            }
                             break; 
                         }
                     default:

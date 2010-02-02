@@ -29,7 +29,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 {
 	internal class AxisInfo
 	{
-		public readonly List<MemberAction> Actions = new List<MemberAction>();
+		readonly List<MemberAction> Actions = new List<MemberAction>();
 		public bool HideEmpty { get; set; }
 		public SortDescriptor MeasuresSort;
 
@@ -50,7 +50,30 @@ namespace Ranet.AgOlap.Providers.MemberActions
 				Actions.Add(cont.Clone());
 			}
 		}
+		public void AddMemberAction(MemberAction Action)
+		{
+			if (Actions.Count > 0)
+			{
+				var lastAction = Actions[Actions.Count - 1];
+				if (lastAction.TuplesAreEqual(Action)) // THE SAME member сell
+				{
+					// Два DrillDown подряд делать смысла нет (просто оставляем старый)
+					if ((lastAction is MemberActionDrillDown) && (Action is MemberActionDrillDown))
+						return;
 
+					//  Expand после Collapse просто отменяет Collapse
+					//  Collapse после Expand просто отменяет Expand
+					if (((lastAction is MemberActionExpand) && (Action is MemberActionCollapse))
+							|| ((lastAction is MemberActionCollapse) && (Action is MemberActionExpand))
+							)
+					{
+						Actions.RemoveAt(Actions.Count - 1);
+						return;
+					}
+				}
+			}
+			Actions.Add(Action);
+		}
 		public AxisInfo Clone()
 		{
 			return new AxisInfo(this);
@@ -145,18 +168,45 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			}
 			return expr;
 		}
-		private MdxExpression GetWrappedExpression(MdxExpression expr/*, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject*/)
+		//static MemberActionDrillDown GetMaxDrillAction(MemberActionDrillDown maxDrillDownAction, MemberActionDrillDown Action)
+		//{
+		//  if (Action == null)
+		//    return maxDrillDownAction;
+		//  if (maxDrillDownAction == null)
+		//    return Action;
+		//  return maxDrillDownAction.ReturnMostRestrictive(Action);
+		//}
+
+		//private MdxExpression GetWrappedExpression2(MdxExpression expr/*, Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject*/)
+		//{
+		//  MemberActionDrillDown maxDrillDownAction = null;
+
+		//  foreach (var Action in this.Actions)
+		//    maxDrillDownAction = GetMaxDrillAction(maxDrillDownAction, Action as MemberActionDrillDown);
+
+		//  if (maxDrillDownAction != null)
+		//    expr = maxDrillDownAction.Process(expr);
+
+		//  foreach (var Action in this.Actions)
+		//  {
+		//    if (Action is MemberActionDrillDown)
+		//      continue;
+
+		//    if (maxDrillDownAction != null)
+		//      if (maxDrillDownAction.OutOfScope(Action))
+		//        continue;
+
+		//    expr = Action.Process(expr);
+		//  }
+		//  return expr;
+		//}
+		private MdxExpression GetWrappedExpression(MdxExpression expr)
 		{
-		
-			foreach (var rootAction in this.Actions)
+			foreach (var Action in this.Actions)
 			{
-				expr = (MdxExpression)rootAction.Process(expr/*, null*/);
+				expr = Action.Process(expr);
 			}
 			return expr;
 		}
-
-
 	}
-
-
 }

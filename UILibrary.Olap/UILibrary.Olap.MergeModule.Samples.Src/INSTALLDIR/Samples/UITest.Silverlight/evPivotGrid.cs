@@ -36,6 +36,7 @@ namespace UILibrary.Olap.UITestApplication
 			pivotGridControl.MemberVisualizationType = (Ranet.Olap.Core.Data.MemberVisualizationTypes)cbMemberVisualizationType.SelectedIndex;
 			pivotGridControl.DataReorganizationType = (Ranet.Olap.Core.Providers.DataReorganizationTypes)cbDataReorganizationType.SelectedIndex;
 			pivotGridControl.DefaultMemberAction = (Ranet.AgOlap.Controls.MemberClickBehaviorTypes)cbDefaultMemberAction.SelectedIndex;
+			pivotGridControl.DrillDownMode = (Ranet.AgOlap.Controls.DrillDownMode)cbDrillDownMode.SelectedIndex;
 			pivotGridControl.IsUpdateable = ckbIsUpdateable.IsChecked.Value;
 			pivotGridControl.AutoWidthColumns = ckbAutoWidthColumns.IsChecked.Value;
 			pivotGridControl.ColumnsIsInteractive = ckbColumnsIsInteractive.IsChecked.Value;

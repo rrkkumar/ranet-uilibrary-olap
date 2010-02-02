@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.Olap.Core.Data;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Controls;
 
 namespace Ranet.AgOlap.Providers
 {
@@ -40,7 +41,9 @@ namespace Ranet.AgOlap.Providers
 
 	public class PivotQueryManager : HistoryManager<HistoryItem4MdxQuery>
 	{
-		string m_Query=string.Empty;
+		internal DrillDownMode DrillDownMode = DrillDownMode.BySingleDimensionHideSelf;
+		string m_Query = string.Empty;
+		
 		public string Query
 		{ get { return m_Query; } 
 			private set
@@ -186,6 +189,7 @@ namespace Ranet.AgOlap.Providers
 			}
 			return result;
 		}
+		
 		MemberAction CreateMemberAction(PerformMemberActionArgs args)
 		{
 			switch (args.Action)
@@ -195,7 +199,7 @@ namespace Ranet.AgOlap.Providers
 				case MemberActionType.Collapse:
 					return new MemberActionCollapse(args);
 				case MemberActionType.DrillDown:
-					return new MemberActionDrillDown(args);
+					return new MemberActionDrillDown(args,DrillDownMode);
 				default:
 					return null;
 			}
@@ -209,8 +213,7 @@ namespace Ranet.AgOlap.Providers
 				if(Action!=null)
 				{
 					AddCurrentStateToHistory();
-					var container = getAxisActions(args);
-					container.Add(Action);
+					this.CurrentHistoryItem.AddMemberAction(args.AxisIndex,Action);
 				}
 			}
 			return RefreshQuery();
@@ -283,36 +286,6 @@ namespace Ranet.AgOlap.Providers
 			return RefreshQuery();
 		}
 
-		IList<MemberAction> getAxisActions(PerformMemberActionArgs args)
-		{
-			IList<MemberAction> actions = null;
-			if (!this.CurrentHistoryItem.RotateAxes)
-			{
-				actions = args.AxisIndex == 0 ? this.CurrentHistoryItem.ColumnsActionChain.Actions : this.CurrentHistoryItem.RowsActionChain.Actions;
-			}
-			else
-			{
-				actions = args.AxisIndex == 1 ? this.CurrentHistoryItem.ColumnsActionChain.Actions : this.CurrentHistoryItem.RowsActionChain.Actions;
-			}
-			return actions;
-		}
-		static MdxTupleExpression GenTuple(PerformMemberActionArgs args)
-		{
-			var tuple = new MdxTupleExpression();
-			tuple.Members.Add(new MdxObjectReferenceExpression(args.Member.UniqueName));
-			string lasthier = args.Member.HierarchyUniqueName;
-			for (int i = 0; i < args.Ascendants.Count; i++)
-			{
-				var member = args.Ascendants[i];
-
-				if (lasthier != member.HierarchyUniqueName)
-				{
-					lasthier = member.HierarchyUniqueName;
-					tuple.Members.Insert(0, new MdxObjectReferenceExpression(member.UniqueName));
-				}
-			}
-			return tuple;
-		}
 		public virtual String ExportToExcel()
 		{
 			return String.Empty;

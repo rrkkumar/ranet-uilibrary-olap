@@ -46,51 +46,18 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			RotateAxes=old.RotateAxes;
 			//ConcretizeMdxObject=old.ConcretizeMdxObject;
 		}
-		//public DrillActionContainer FindDrillActionContainer(IList<DrillActionContainer> actionChain, String memberId)
-		//{
-		//  if (actionChain == null)
-		//    return null;
-
-		//  foreach (DrillActionContainer container in actionChain)
-		//  {
-		//    if (container.MemberUniqueName == memberId)
-		//      return container;
-		//    DrillActionContainer child = FindDrillActionContainer(container.Children, memberId);
-		//    if (child != null)
-		//      return child;
-		//  }
-		//  return null;
-		//}
-		//public IList<DrillActionContainer> FindDrillActionContainersByHierarchy(IList<DrillActionContainer> actionChain, String hierarchyUniqueName)
-		//{
-		//  IList<DrillActionContainer> list = new List<DrillActionContainer>();
-		//  if (actionChain == null)
-		//    return list;
-
-		//  foreach (DrillActionContainer container in actionChain)
-		//  {
-		//    if (container.HierarchyUniqueName == hierarchyUniqueName && !list.Contains(container))
-		//      list.Add(container);
-
-		//    IList<DrillActionContainer> childList = FindDrillActionContainersByHierarchy(container.Children, hierarchyUniqueName);
-		//    if (childList != null)
-		//    {
-		//      foreach (DrillActionContainer childContainer in childList)
-		//      {
-		//        if (!list.Contains(childContainer))
-		//        {
-		//          list.Add(childContainer);
-		//        }
-		//      }
-		//    }
-		//  }
-		//  return list;
-		//}
 		public HistoryItem4MdxQuery Clone()
 		{
 			return new HistoryItem4MdxQuery(this);
 		}
-		
+		public void AddMemberAction(int axisIndex,MemberAction Action)		
+		{
+			AxisInfo ai= (axisIndex == 0) ^ RotateAxes
+			 ? ColumnsActionChain
+			 : RowsActionChain;
+
+			ai.AddMemberAction(Action);			 
+		}
 		public MdxSelectStatement CreateWrappedStatement(MdxSelectStatement original)
 		{
 			if (original == null)
