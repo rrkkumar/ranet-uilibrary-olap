@@ -28,8 +28,10 @@ namespace UILibrary.Olap.UITestApplication
 	{
 		protected override void InitializePivotGrid(string query)
 		{
-			base.InitializePivotGrid(query);
 			//PivotGrid.DefaultMemberAction = Ranet.AgOlap.Controls.MemberClickBehaviorTypes.ExpandCollapse;
+			PivotGrid.ColumnTitleClickBehavior = Ranet.AgOlap.Controls.ColumnTitleClickBehavior.SortByValue;
+			PivotGrid.DrillDownMode = Ranet.AgOlap.Controls.DrillDownMode.ByCurrentTupleShowSelf;
+			base.InitializePivotGrid(query);
 		}
 		public string GetCurrentMdxQuery()
 		{

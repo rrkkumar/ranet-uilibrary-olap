@@ -385,6 +385,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Choice columns.
+        /// </summary>
+        public static string ColumnsHeader {
+            get {
+                return ResourceManager.GetString("ColumnsHeader", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;Create...&gt;.
         /// </summary>
         public static string ComboBoxItem_New {

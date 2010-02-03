@@ -63,21 +63,528 @@ namespace UILibrary.Olap.UITestApplication
 
 			//OlapWebServiceUrl = new Uri(new Uri(Ranet.AgOlap.Services.ServiceManager.BaseAddress), @"OlapWebService.asmx").AbsoluteUri;
 
-			MdxQuery = @"select  [Product].[Product Categories].[Category]  DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 0 ,[Date].[Calendar].[Calendar Year]   DIMENSION PROPERTIES PARENT_UNIQUE_NAME,KEY0 on 1 from [Adventure Works]
- where [Measures].[Sales Amount]
- CELL PROPERTIES BACK_COLOR, CELL_ORDINAL, FORE_COLOR, FONT_NAME, FONT_SIZE, FONT_FLAGS, FORMAT_STRING, VALUE, FORMATTED_VALUE, UPDATEABLE
+			MdxQuery = @"SELECT
+   { [Measures].[Internet Sales Amount]
+    , [Measures].[Internet Order Quantity]
+    }
+  DIMENSION PROPERTIES PARENT_UNIQUE_NAME , HIERARCHY_UNIQUE_NAME , CUSTOM_ROLLUP , UNARY_OPERATOR , KEY0 ON 0
+, NON EMPTY ( ( ( DRILLDOWNMEMBER
+        ( ( Hierarchize
+            ( CrossJoin
+              ( [Date].[Calendar].Levels ( 0 ).Members
+              , CrossJoin
+                ( [Product].[Product Categories].Levels ( 0 ).Members
+                , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                )
+              )
+            )
+          +
+            DRILLDOWNMEMBER
+            ( FILTER
+              ( Hierarchize
+                ( CrossJoin
+                  ( [Date].[Calendar].Levels ( 0 ).Members
+                  , CrossJoin
+                    ( [Product].[Product Categories].Levels ( 0 ).Members
+                    , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                    )
+                  )
+                )
+              , ( [Date].[Calendar].CURRENTMEMBER
+                IS
+                  [Date].[Calendar].[All Periods]
+                )
+              )
+            , [Product].[Product Categories].[All Products]
+            )
+          )
+        , [Date].[Calendar].[All Periods]
+        )
+      +
+        DRILLDOWNMEMBER
+        ( FILTER
+          ( DRILLDOWNMEMBER
+            ( ( Hierarchize
+                ( CrossJoin
+                  ( [Date].[Calendar].Levels ( 0 ).Members
+                  , CrossJoin
+                    ( [Product].[Product Categories].Levels ( 0 ).Members
+                    , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                    )
+                  )
+                )
+              +
+                DRILLDOWNMEMBER
+                ( FILTER
+                  ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  , ( [Date].[Calendar].CURRENTMEMBER
+                    IS
+                      [Date].[Calendar].[All Periods]
+                    )
+                  )
+                , [Product].[Product Categories].[All Products]
+                )
+              )
+            , [Date].[Calendar].[All Periods]
+            )
+          , ( ( [Date].[Calendar].CURRENTMEMBER
+              , [Product].[Product Categories].CURRENTMEMBER
+              )
+            IS
+              ( [Date].[Calendar].[Calendar Year].&[2002]
+              , [Product].[Product Categories].[All Products]
+              )
+            )
+          )
+        , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+        )
+      )
+    +
+      DRILLDOWNMEMBER
+      ( FILTER
+        ( ( DRILLDOWNMEMBER
+            ( ( Hierarchize
+                ( CrossJoin
+                  ( [Date].[Calendar].Levels ( 0 ).Members
+                  , CrossJoin
+                    ( [Product].[Product Categories].Levels ( 0 ).Members
+                    , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                    )
+                  )
+                )
+              +
+                DRILLDOWNMEMBER
+                ( FILTER
+                  ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  , ( [Date].[Calendar].CURRENTMEMBER
+                    IS
+                      [Date].[Calendar].[All Periods]
+                    )
+                  )
+                , [Product].[Product Categories].[All Products]
+                )
+              )
+            , [Date].[Calendar].[All Periods]
+            )
+          +
+            DRILLDOWNMEMBER
+            ( FILTER
+              ( DRILLDOWNMEMBER
+                ( ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  +
+                    DRILLDOWNMEMBER
+                    ( FILTER
+                      ( Hierarchize
+                        ( CrossJoin
+                          ( [Date].[Calendar].Levels ( 0 ).Members
+                          , CrossJoin
+                            ( [Product].[Product Categories].Levels ( 0 ).Members
+                            , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                            )
+                          )
+                        )
+                      , ( [Date].[Calendar].CURRENTMEMBER
+                        IS
+                          [Date].[Calendar].[All Periods]
+                        )
+                      )
+                    , [Product].[Product Categories].[All Products]
+                    )
+                  )
+                , [Date].[Calendar].[All Periods]
+                )
+              , ( ( [Date].[Calendar].CURRENTMEMBER
+                  , [Product].[Product Categories].CURRENTMEMBER
+                  )
+                IS
+                  ( [Date].[Calendar].[Calendar Year].&[2002]
+                  , [Product].[Product Categories].[All Products]
+                  )
+                )
+              )
+            , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+            )
+          )
+        , ( ( [Date].[Calendar].CURRENTMEMBER
+            , [Product].[Product Categories].CURRENTMEMBER
+            )
+          IS
+            ( [Date].[Calendar].[All Periods]
+            , [Product].[Product Categories].[All Products]
+            )
+          )
+        )
+      , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+      )
+    )
+  +
+    DRILLDOWNMEMBER
+    ( FILTER
+      ( ( ( DRILLDOWNMEMBER
+            ( ( Hierarchize
+                ( CrossJoin
+                  ( [Date].[Calendar].Levels ( 0 ).Members
+                  , CrossJoin
+                    ( [Product].[Product Categories].Levels ( 0 ).Members
+                    , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                    )
+                  )
+                )
+              +
+                DRILLDOWNMEMBER
+                ( FILTER
+                  ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  , ( [Date].[Calendar].CURRENTMEMBER
+                    IS
+                      [Date].[Calendar].[All Periods]
+                    )
+                  )
+                , [Product].[Product Categories].[All Products]
+                )
+              )
+            , [Date].[Calendar].[All Periods]
+            )
+          +
+            DRILLDOWNMEMBER
+            ( FILTER
+              ( DRILLDOWNMEMBER
+                ( ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  +
+                    DRILLDOWNMEMBER
+                    ( FILTER
+                      ( Hierarchize
+                        ( CrossJoin
+                          ( [Date].[Calendar].Levels ( 0 ).Members
+                          , CrossJoin
+                            ( [Product].[Product Categories].Levels ( 0 ).Members
+                            , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                            )
+                          )
+                        )
+                      , ( [Date].[Calendar].CURRENTMEMBER
+                        IS
+                          [Date].[Calendar].[All Periods]
+                        )
+                      )
+                    , [Product].[Product Categories].[All Products]
+                    )
+                  )
+                , [Date].[Calendar].[All Periods]
+                )
+              , ( ( [Date].[Calendar].CURRENTMEMBER
+                  , [Product].[Product Categories].CURRENTMEMBER
+                  )
+                IS
+                  ( [Date].[Calendar].[Calendar Year].&[2002]
+                  , [Product].[Product Categories].[All Products]
+                  )
+                )
+              )
+            , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+            )
+          )
+        +
+          DRILLDOWNMEMBER
+          ( FILTER
+            ( ( DRILLDOWNMEMBER
+                ( ( Hierarchize
+                    ( CrossJoin
+                      ( [Date].[Calendar].Levels ( 0 ).Members
+                      , CrossJoin
+                        ( [Product].[Product Categories].Levels ( 0 ).Members
+                        , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                        )
+                      )
+                    )
+                  +
+                    DRILLDOWNMEMBER
+                    ( FILTER
+                      ( Hierarchize
+                        ( CrossJoin
+                          ( [Date].[Calendar].Levels ( 0 ).Members
+                          , CrossJoin
+                            ( [Product].[Product Categories].Levels ( 0 ).Members
+                            , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                            )
+                          )
+                        )
+                      , ( [Date].[Calendar].CURRENTMEMBER
+                        IS
+                          [Date].[Calendar].[All Periods]
+                        )
+                      )
+                    , [Product].[Product Categories].[All Products]
+                    )
+                  )
+                , [Date].[Calendar].[All Periods]
+                )
+              +
+                DRILLDOWNMEMBER
+                ( FILTER
+                  ( DRILLDOWNMEMBER
+                    ( ( Hierarchize
+                        ( CrossJoin
+                          ( [Date].[Calendar].Levels ( 0 ).Members
+                          , CrossJoin
+                            ( [Product].[Product Categories].Levels ( 0 ).Members
+                            , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                            )
+                          )
+                        )
+                      +
+                        DRILLDOWNMEMBER
+                        ( FILTER
+                          ( Hierarchize
+                            ( CrossJoin
+                              ( [Date].[Calendar].Levels ( 0 ).Members
+                              , CrossJoin
+                                ( [Product].[Product Categories].Levels ( 0 ).Members
+                                , [Sales Reason].[Sales Reasons].Levels ( 0 ).Members
+                                )
+                              )
+                            )
+                          , ( [Date].[Calendar].CURRENTMEMBER
+                            IS
+                              [Date].[Calendar].[All Periods]
+                            )
+                          )
+                        , [Product].[Product Categories].[All Products]
+                        )
+                      )
+                    , [Date].[Calendar].[All Periods]
+                    )
+                  , ( ( [Date].[Calendar].CURRENTMEMBER
+                      , [Product].[Product Categories].CURRENTMEMBER
+                      )
+                    IS
+                      ( [Date].[Calendar].[Calendar Year].&[2002]
+                      , [Product].[Product Categories].[All Products]
+                      )
+                    )
+                  )
+                , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+                )
+              )
+            , ( ( [Date].[Calendar].CURRENTMEMBER
+                , [Product].[Product Categories].CURRENTMEMBER
+                )
+              IS
+                ( [Date].[Calendar].[All Periods]
+                , [Product].[Product Categories].[All Products]
+                )
+              )
+            )
+          , [Sales Reason].[Sales Reasons].[All Sales Reasons]
+          )
+        )
+      , ( [Date].[Calendar].CURRENTMEMBER
+        IS
+          [Date].[Calendar].[Calendar Year].&[2003]
+        )
+      )
+    , [Product].[Product Categories].[Category].&[1]
+    )
+  )
+  DIMENSION PROPERTIES PARENT_UNIQUE_NAME , HIERARCHY_UNIQUE_NAME , CUSTOM_ROLLUP , UNARY_OPERATOR , KEY0 ON 1
+FROM [Adventure Works]
+CELL PROPERTIES BACK_COLOR , CELL_ORDINAL , FORE_COLOR , FONT_NAME , FONT_SIZE , FONT_FLAGS , FORMAT_STRING , VALUE , FORMATTED_VALUE , UPDATEABLE
 ";
 
 			MdxDesignerLayout = @"<?xml version='1.0' encoding='utf-8'?>
 <MdxLayoutWrapper xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
+  <CubeName>Adventure Works</CubeName>
+  <SubCube />
   <Filters />
-  <Rows />
-  <Columns />
+  <Rows>
+    <AreaItemWrapper xsi:type='Hierarchy_AreaItemWrapper'>
+      <CustomProperties>
+        <PropertyInfo>
+          <Name>DIMENSION_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Date</Value>
+        </PropertyInfo>
+        <PropertyInfo>
+          <Name>CUBE_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Adventure Works</Value>
+        </PropertyInfo>
+      </CustomProperties>
+      <Caption>Date.Calendar</Caption>
+      <CompositeFilter>
+        <IsUsed>false</IsUsed>
+        <MembersFilter>
+          <IsUsed>false</IsUsed>
+          <SelectedInfo />
+          <FilterSet />
+        </MembersFilter>
+        <Filter>
+          <IsUsed>false</IsUsed>
+          <CurrentFilter>LabelFilter</CurrentFilter>
+          <TopFilter>
+            <FilterType>Top</FilterType>
+            <Count>10</Count>
+            <FilterTarget>Items</FilterTarget>
+            <MeasureUniqueName />
+          </TopFilter>
+          <ValueFilter>
+            <FilterType>Equal</FilterType>
+            <Num1>0</Num1>
+            <Num2>1</Num2>
+            <MeasureUniqueName />
+          </ValueFilter>
+          <LabelFilter>
+            <FilterType>Equal</FilterType>
+            <Text1 />
+            <Text2 />
+            <LevelPropertyName />
+          </LabelFilter>
+        </Filter>
+      </CompositeFilter>
+      <UniqueName>[Date].[Calendar]</UniqueName>
+    </AreaItemWrapper>
+    <AreaItemWrapper xsi:type='Hierarchy_AreaItemWrapper'>
+      <CustomProperties>
+        <PropertyInfo>
+          <Name>DIMENSION_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Product</Value>
+        </PropertyInfo>
+        <PropertyInfo>
+          <Name>CUBE_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Adventure Works</Value>
+        </PropertyInfo>
+      </CustomProperties>
+      <Caption>Product Categories</Caption>
+      <CompositeFilter>
+        <IsUsed>false</IsUsed>
+        <MembersFilter>
+          <IsUsed>false</IsUsed>
+          <SelectedInfo />
+          <FilterSet />
+        </MembersFilter>
+        <Filter>
+          <IsUsed>false</IsUsed>
+          <CurrentFilter>LabelFilter</CurrentFilter>
+          <TopFilter>
+            <FilterType>Top</FilterType>
+            <Count>10</Count>
+            <FilterTarget>Items</FilterTarget>
+            <MeasureUniqueName />
+          </TopFilter>
+          <ValueFilter>
+            <FilterType>Equal</FilterType>
+            <Num1>0</Num1>
+            <Num2>1</Num2>
+            <MeasureUniqueName />
+          </ValueFilter>
+          <LabelFilter>
+            <FilterType>Equal</FilterType>
+            <Text1 />
+            <Text2 />
+            <LevelPropertyName />
+          </LabelFilter>
+        </Filter>
+      </CompositeFilter>
+      <UniqueName>[Product].[Product Categories]</UniqueName>
+    </AreaItemWrapper>
+    <AreaItemWrapper xsi:type='Hierarchy_AreaItemWrapper'>
+      <CustomProperties>
+        <PropertyInfo>
+          <Name>DIMENSION_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Sales Reason</Value>
+        </PropertyInfo>
+        <PropertyInfo>
+          <Name>CUBE_CAPTION</Name>
+          <Value xsi:type='xsd:string'>Adventure Works</Value>
+        </PropertyInfo>
+      </CustomProperties>
+      <Caption>Sales Reasons</Caption>
+      <CompositeFilter>
+        <IsUsed>false</IsUsed>
+        <MembersFilter>
+          <IsUsed>false</IsUsed>
+          <SelectedInfo />
+          <FilterSet />
+        </MembersFilter>
+        <Filter>
+          <IsUsed>false</IsUsed>
+          <CurrentFilter>LabelFilter</CurrentFilter>
+          <TopFilter>
+            <FilterType>Top</FilterType>
+            <Count>10</Count>
+            <FilterTarget>Items</FilterTarget>
+            <MeasureUniqueName />
+          </TopFilter>
+          <ValueFilter>
+            <FilterType>Equal</FilterType>
+            <Num1>0</Num1>
+            <Num2>1</Num2>
+            <MeasureUniqueName />
+          </ValueFilter>
+          <LabelFilter>
+            <FilterType>Equal</FilterType>
+            <Text1 />
+            <Text2 />
+            <LevelPropertyName />
+          </LabelFilter>
+        </Filter>
+      </CompositeFilter>
+      <UniqueName>[Sales Reason].[Sales Reasons]</UniqueName>
+    </AreaItemWrapper>
+  </Rows>
+  <Columns>
+    <AreaItemWrapper xsi:type='Values_AreaItemWrapper'>
+      <CustomProperties />
+      <Caption>Values</Caption>
+    </AreaItemWrapper>
+  </Columns>
   <Data>
     <AreaItemWrapper xsi:type='Measure_AreaItemWrapper'>
       <CustomProperties />
       <Caption>Internet Sales Amount</Caption>
       <UniqueName>[Measures].[Internet Sales Amount]</UniqueName>
+    </AreaItemWrapper>
+    <AreaItemWrapper xsi:type='Measure_AreaItemWrapper'>
+      <CustomProperties />
+      <Caption>Internet Order Quantity</Caption>
+      <UniqueName>[Measures].[Internet Order Quantity]</UniqueName>
     </AreaItemWrapper>
   </Data>
   <CalculatedMembers />

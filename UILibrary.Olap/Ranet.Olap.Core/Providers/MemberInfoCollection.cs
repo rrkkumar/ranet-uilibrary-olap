@@ -216,6 +216,8 @@ namespace Ranet.Olap.Core.Providers
             index = Math.Max(0, index);
             // Если индекс слишком большой, то корректируем
             index = Math.Min(m_Members.Count, index);
+            member.Container = this;
+            member.MemberOrder = index;
             m_Members.Insert(index, member);
         }
 

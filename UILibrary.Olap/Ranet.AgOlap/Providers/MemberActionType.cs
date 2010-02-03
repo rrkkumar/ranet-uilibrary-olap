@@ -29,5 +29,6 @@ namespace Ranet.AgOlap.Providers
       ,Collapse=2
       ,DrillDown=3
 //      ,DrillUp=4
-    }
+			,SortByValue=5
+		}
 }

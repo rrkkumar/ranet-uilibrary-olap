@@ -283,6 +283,22 @@ namespace Ranet.Olap.Core.Data
             }
         }
 
+        /// <summary>
+        /// Member is calculated
+        /// </summary>
+        public bool IsCalculated
+        {
+            get
+            {
+                PropertyData prop = GetMemberProperty(KEY0_PROPERTY);
+                if (prop != null && prop.Value == null)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         private static MemberData m_Empty;
         public static MemberData Empty
         {

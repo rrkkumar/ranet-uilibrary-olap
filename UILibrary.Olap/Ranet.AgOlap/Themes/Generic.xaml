@@ -3419,17 +3419,30 @@
     <!-- End of ComboBox -->
     
     <!-- Checked ComboBox -->
-    <Style x:Key="CheckedListBoxItemStyle" TargetType="ListBoxItem">
+    <Style x:Key="CheckedItemStyle" TargetType="list:RanetCheckedItem">
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="ListBoxItem">
+                <ControlTemplate TargetType="list:RanetCheckedItem">
                     <Grid>
-                        <CheckBox IsChecked="{Binding Path=IsChecked, Mode=TwoWay}" Content="{Binding Path=Text}" ClickMode="Press"/>
+                        <CheckBox x:Name="checkBox" IsChecked="{Binding Path=IsChecked, Mode=TwoWay}" Content="{Binding Path=Text}" ClickMode="Press"/>
                     </Grid>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
     </Style>
+    
+    <Style x:Key="CheckedListBoxItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Grid>
+                        <CheckBox x:Name="checkBox" IsChecked="{Binding Path=IsChecked, Mode=TwoWay}" Content="{Binding Path=Text}" ClickMode="Press"/>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+   
     
     <Style TargetType="combo:CheckedComboBox">
         <Setter Property="Padding" Value="6,2,25,2"/>

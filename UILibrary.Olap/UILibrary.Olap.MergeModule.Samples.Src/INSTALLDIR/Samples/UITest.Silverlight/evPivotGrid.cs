@@ -19,8 +19,11 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Windows;
+using System.Windows.Media;
+using Ranet.AgOlap.Controls.PivotGrid.Conditions;
 
 namespace UILibrary.Olap.UITestApplication
 {
@@ -36,6 +39,7 @@ namespace UILibrary.Olap.UITestApplication
 			pivotGridControl.MemberVisualizationType = (Ranet.Olap.Core.Data.MemberVisualizationTypes)cbMemberVisualizationType.SelectedIndex;
 			pivotGridControl.DataReorganizationType = (Ranet.Olap.Core.Providers.DataReorganizationTypes)cbDataReorganizationType.SelectedIndex;
 			pivotGridControl.DefaultMemberAction = (Ranet.AgOlap.Controls.MemberClickBehaviorTypes)cbDefaultMemberAction.SelectedIndex;
+			pivotGridControl.ColumnTitleClickBehavior = (Ranet.AgOlap.Controls.ColumnTitleClickBehavior)cbColumnTitleClickBehavior.SelectedIndex;
 			pivotGridControl.DrillDownMode = (Ranet.AgOlap.Controls.DrillDownMode)cbDrillDownMode.SelectedIndex;
 			pivotGridControl.IsUpdateable = ckbIsUpdateable.IsChecked.Value;
 			pivotGridControl.AutoWidthColumns = ckbAutoWidthColumns.IsChecked.Value;
@@ -45,6 +49,17 @@ namespace UILibrary.Olap.UITestApplication
 			pivotGridControl.UseRowsAreaHint = ckbUseRowsAreaHint.IsChecked.Value;
 			pivotGridControl.UseCellsAreaHint = ckbUseCellsAreaHint.IsChecked.Value;
 			pivotGridControl.UseCellConditionsDesigner = ckbUseCellConditionsDesigner.IsChecked.Value;
+			if (!pivotGridControl.UseCellConditionsDesigner)
+			{
+				var conds = new CellConditionsDescriptor("[Measures].[Internet Sales Amount]");
+				var cellApp = new CellAppearanceObject(Colors.Cyan, Colors.Black, Colors.Black);
+				cellApp.Options.UseBackColor = true;
+				// cellApp.Options.UseBorderColor=true;
+				var cond = new CellCondition(CellConditionType.GreaterOrEqual, 1000000.0, 1000000.0, cellApp);
+				conds.Conditions.Add(cond);
+				pivotGridControl.CustomCellsConditions = new List<CellConditionsDescriptor>();
+				pivotGridControl.CustomCellsConditions.Add(conds);
+			}
 			pivotGridControl.Initialize();
 		}
 	}

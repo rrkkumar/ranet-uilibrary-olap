@@ -32,6 +32,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		internal readonly AxisInfo ColumnsActionChain;
 		internal readonly AxisInfo RowsActionChain;
 		public bool RotateAxes { get; set; }
+		
 		//public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject = null;
 
 		public HistoryItem4MdxQuery()
@@ -57,6 +58,14 @@ namespace Ranet.AgOlap.Providers.MemberActions
 			 : RowsActionChain;
 
 			ai.AddMemberAction(Action);			 
+		}
+		internal void SortByValue(int axisIndex,PerformMemberActionArgs args)
+		{
+			AxisInfo ai = (axisIndex == 0) ^ RotateAxes
+			 ? RowsActionChain
+			 : ColumnsActionChain;
+			
+			ai.SortByValue(args);
 		}
 		public MdxSelectStatement CreateWrappedStatement(MdxSelectStatement original)
 		{

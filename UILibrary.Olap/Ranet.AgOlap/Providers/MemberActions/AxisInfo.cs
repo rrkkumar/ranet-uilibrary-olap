@@ -50,6 +50,44 @@ namespace Ranet.AgOlap.Providers.MemberActions
 				Actions.Add(cont.Clone());
 			}
 		}
+		internal static string GetSortExpr(PerformMemberActionArgs args)
+		{
+			List<string> sortExpr = new List<string>();
+			
+			string lasthier = args.Member.HierarchyUniqueName;
+			for (int i = 0; i < args.Ascendants.Count; i++)
+			{
+				var member = args.Ascendants[i];
+
+				if (lasthier != member.HierarchyUniqueName)
+				{
+					lasthier = member.HierarchyUniqueName;
+					sortExpr.Insert(0, member.UniqueName);
+				}
+			}
+			sortExpr.Add(args.Member.UniqueName);
+			return "("+string.Join(",",sortExpr.ToArray())+")";
+		}
+		internal void SortByValue(PerformMemberActionArgs args)
+		{
+			var sortExpr = GetSortExpr(args);
+			
+			if (MeasuresSort == null)
+				MeasuresSort = new SortDescriptor();
+
+			if (MeasuresSort.SortBy != sortExpr)
+			{
+				MeasuresSort.SortBy = sortExpr;
+				MeasuresSort.Type = SortTypes.None;
+			}
+			if (MeasuresSort.Type == SortTypes.None)
+				MeasuresSort.Type = SortTypes.Ascending;
+			else if (MeasuresSort.Type == SortTypes.Ascending)
+				MeasuresSort.Type = SortTypes.Descending;
+			else if (MeasuresSort.Type == SortTypes.Descending)
+				MeasuresSort.Type = SortTypes.None;
+				
+		}
 		public void AddMemberAction(MemberAction Action)
 		{
 			if (Actions.Count > 0)
@@ -148,6 +186,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 		{
 			if (descr == null)
 				return expr;
+
 			if (!String.IsNullOrEmpty(descr.SortBy))
 			{
 				String orderType = String.Empty;

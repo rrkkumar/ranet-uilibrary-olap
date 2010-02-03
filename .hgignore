@@ -19,3 +19,4 @@ glob:UILibrary.Olap/UILibrary.Olap.WixInstaller/License.rtf
 glob:*/Bin/Debug/*
 glob:*/bin/Debug/*
 glob:*.Cache
+glob:UILibrary.Olap/UILibrary.Olap.MergeModule.Samples.Src/INSTALLDIR/Samples/UITest.Web/UserStorage/*

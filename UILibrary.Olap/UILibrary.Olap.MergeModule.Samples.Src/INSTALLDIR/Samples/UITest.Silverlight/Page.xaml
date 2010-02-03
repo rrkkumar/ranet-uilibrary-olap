@@ -160,13 +160,13 @@
 						</Grid.RowDefinitions>
 						<Button   Grid.Row="0" Content="Initialize PivotGrid&#xD;&#xA;(after any property changes)" Height="60" x:Name="initPivotGridButton"  Click="initPivotGridButton_Click" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
 						<CheckBox Grid.Row="1" Name="ckbAutoWidthColumns" IsChecked="true" Content="AutoWidthColumns" />
-						<CheckBox Grid.Row="2" Name="ckbColumnsIsInteractive" IsChecked="false" Content="ColumnsIsInteractive"/>
+						<CheckBox Grid.Row="2" Name="ckbColumnsIsInteractive" IsChecked="true" Content="ColumnsIsInteractive"/>
 						<CheckBox Grid.Row="3" Name="ckbRowsIsInteractive" IsChecked="true" Content="RowsIsInteractive"/>
 						<CheckBox Grid.Row="4" Name="ckbUseColumnsAreaHint" IsChecked="true" Content="UseColumnsAreaHint"/>
 						<CheckBox Grid.Row="5" Name="ckbUseRowsAreaHint" IsChecked="true" Content="UseRowsAreaHint"/>
 						<CheckBox Grid.Row="6" Name="ckbUseCellsAreaHint" IsChecked="true" Content="UseCellsAreaHint"/>
 						<CheckBox Grid.Row="7" Name="ckbUseCellConditionsDesigner" IsChecked="false" Content="UseCellConditionsDesigner"/>
-						<CheckBox Grid.Row="8" Name="ckbIsUpdateable" IsChecked="false" Content="IsUpdateable" />
+						<CheckBox Grid.Row="8" Name="ckbIsUpdateable" IsChecked="true" Content="IsUpdateable" />
 						<TextBlock Grid.Row="9" Text="MemberVisualizationType:" />
 						<ComboBox Grid.Row="10" Name="cbMemberVisualizationType" SelectedIndex="0">
 							<ComboBoxItem Content="Caption"/>
@@ -192,8 +192,17 @@
 							<ComboBoxItem Content="ExpandCollapse" />
 							<ComboBoxItem Content="SortByProperty"/>
 						</ComboBox>
-						<TextBlock Grid.Row="21" Text="DrillDownMode:" />
-						<ComboBox Grid.Row="22" Name="cbDrillDownMode" SelectedIndex="0">
+						<TextBlock Grid.Row="21" Text="ColumnTitleClickBehavior:" />
+						<ComboBox Grid.Row="22" Name="cbColumnTitleClickBehavior" SelectedIndex="5">
+							<ComboBoxItem Content="None"/>
+							<ComboBoxItem Content="DrillDown"/>
+							<ComboBoxItem Content="ExpandCollapse" />
+							<ComboBoxItem Content="SortByProperty"/>
+							<ComboBoxItem Content="SameAsRows"/>
+							<ComboBoxItem Content="SortByValue"/>
+						</ComboBox>
+						<TextBlock Grid.Row="24" Text="DrillDownMode:" />
+						<ComboBox Grid.Row="25" Name="cbDrillDownMode" SelectedIndex="0">
 							<ComboBoxItem Content="ByCurrentTupleShowSelf"/>
 							<ComboBoxItem Content="BySingleDimensionShowSelf"/>
 							<ComboBoxItem Content="ByCurrentTupleHideSelf" />

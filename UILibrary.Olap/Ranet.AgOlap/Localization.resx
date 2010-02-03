@@ -1139,4 +1139,7 @@ Please, recalculate data or cancel changes.</value>
   <data name="ContextMenu_DataReorganizationType_None" xml:space="preserve">
     <value>None</value>
   </data>
+  <data name="ColumnsHeader" xml:space="preserve">
+    <value>Choice columns</value>
+  </data>
 </root>

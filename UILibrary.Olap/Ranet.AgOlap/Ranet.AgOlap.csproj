@@ -139,6 +139,11 @@
     </Compile>
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <Compile Include="Controls\Gauge\NewRoundGauge.xaml.cs">
+      <DependentUpon>NewRoundGauge.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Gauge\TypeConverters.cs" />
+    <Compile Include="Controls\List\RanetCheckedListBox.cs" />
     <Compile Include="Controls\General\TooltipController.cs" />
     <Compile Include="Controls\PivotGrid\PivotDataAnalizer.cs" />
     <Compile Include="Controls\General\DataGrid\IconDataGridColumn.cs" />
@@ -557,6 +562,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ContextMenu\CustomContextMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\Gauge\NewRoundGauge.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>

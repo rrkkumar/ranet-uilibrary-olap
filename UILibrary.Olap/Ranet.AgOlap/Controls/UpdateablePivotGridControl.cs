@@ -708,14 +708,21 @@ namespace Ranet.AgOlap.Controls
 			// Определяем нужно ли выполнить экшен по умолчанию
 			if (args.Action == MemberActionType.Default)
 			{
-				switch (DefaultMemberAction)
+				var MemberAction = (ColumnTitleClickBehavior)(int)DefaultMemberAction;
+				if (args.Axis == 0)
+					if (this.ColumnTitleClickBehavior != ColumnTitleClickBehavior.SameAsRows)
+					{
+						MemberAction = this.ColumnTitleClickBehavior;
+					}
+					
+				switch (MemberAction)
 				{
-					case MemberClickBehaviorTypes.None:
+					case ColumnTitleClickBehavior.None:
 						return;
-					case MemberClickBehaviorTypes.DrillDown:
+					case ColumnTitleClickBehavior.DrillDown:
 						args.Action = MemberActionType.DrillDown;
 						break;
-					case MemberClickBehaviorTypes.ExpandCollapse:
+					case ColumnTitleClickBehavior.ExpandCollapse:
 						if (args.Member != null && args.Member.ChildCount > 0 && !args.Member.IsCalculated)
 						{
 							args.Action = MemberActionType.Expand;
@@ -724,7 +731,10 @@ namespace Ranet.AgOlap.Controls
 							break;
 						}
 						return;
-					case MemberClickBehaviorTypes.SortByProperty:
+					case ColumnTitleClickBehavior.SortByValue:
+						args.Action = MemberActionType.SortByValue;
+						break;
+					case ColumnTitleClickBehavior.SortByProperty:
 						if (args.Member != null && (args.Axis == 0 || args.Axis == 1))
 						{
 							SortDescriptor new_descr = new SortDescriptor();
@@ -2019,6 +2029,7 @@ namespace Ranet.AgOlap.Controls
 			if (e.Action == MemberActionType.Collapse ||
 					e.Action == MemberActionType.Expand ||
 					e.Action == MemberActionType.DrillDown
+				  || e.Action == MemberActionType.SortByValue
 				//                 || e.Action == MemberActionType.DrillUp
 					)
 			{
@@ -2062,7 +2073,7 @@ namespace Ranet.AgOlap.Controls
 		public DrillDownMode DrillDownMode
 		{
 			get { return m_DrillDownMode; }
-			set { m_DrillDownMode=value; }
+			set { m_DrillDownMode = value; }
 		}
 
 		IDataLoader m_OlapDataLoader = null;
@@ -2406,7 +2417,7 @@ namespace Ranet.AgOlap.Controls
 			ResetSettings();
 
 			m_DataManager = GetDataManager();
-			m_DataManager.DrillDownMode=this.DrillDownMode;
+			m_DataManager.DrillDownMode = this.DrillDownMode;
 
 			// Clear Pivot Grid
 			Initialize(null);
@@ -2960,6 +2971,7 @@ namespace Ranet.AgOlap.Controls
 		}
 
 		public MemberClickBehaviorTypes DefaultMemberAction = MemberClickBehaviorTypes.DrillDown;
+		public ColumnTitleClickBehavior ColumnTitleClickBehavior = ColumnTitleClickBehavior.SameAsRows;
 
 		public bool AutoWidthColumns
 		{
@@ -2992,10 +3004,19 @@ namespace Ranet.AgOlap.Controls
 
 	public enum MemberClickBehaviorTypes
 	{
-		None,
-		DrillDown,
-		ExpandCollapse,
-		SortByProperty
+		None = 0,
+		DrillDown = 1,
+		ExpandCollapse = 2,
+		SortByProperty = 3
+	}
+	public enum ColumnTitleClickBehavior
+	{
+		None = 0,
+		DrillDown = 1,
+		ExpandCollapse = 2,
+		SortByProperty = 3,
+		SameAsRows = 4,
+		SortByValue = 5
 	}
 	public enum DrillDownMode
 	{

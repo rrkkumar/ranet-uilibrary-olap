@@ -576,7 +576,8 @@ namespace Ranet.Olap.Core.Providers
                             //          CТОП ЦИКЛА
                             //      c) Если находим элемент, который является родителем для данного, то добавляем ТЕКУЩИЙ ОПИСАТЕЛЬ в коллекцию DrilledDownChildren родителя. 
                             //          СТОП ЦИКЛА
-                            //      d) Если ни 3b) ни 3c) не отработало, то ТЕКУЩИЙ ОПИСАТЕЛЬ добавляется в КОЛЛЕКЦИЮ с учетом номера уровня. Чтобы не получилось что перед ним есть элементы с большим по глубине номером уровня   
+                            //      d) Если ни 3b) ни 3c) не отработало, то ТЕКУЩИЙ ОПИСАТЕЛЬ добавляется в КОЛЛЕКЦИЮ с учетом номера уровня. Чтобы не получилось что перед ним есть элементы с большим по глубине номером уровня.
+                            //          НО если элемент вычисляемый, то уровень не учитываем, а добавляем его в конец КОЛЛЕКЦИИ.
                             //  
                             #endregion
 
@@ -655,15 +656,24 @@ namespace Ranet.Olap.Core.Providers
                             // Более глубокий элемент уровня не найден, значит добавляем хвост КОЛЛЕКЦИИ
                             if(!isOk)
                             {
-                                if (reverse_last_leveldepth_member != null && container.Contains(reverse_last_leveldepth_member))
-                                {
-                                    // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
-                                    container.Insert(container.IndexOf(reverse_last_leveldepth_member), prev_member_in_position);
-                                }
-                                else
+                                // Если Key0 == null то элемент вычисляемый
+                                if (member.IsCalculated)
                                 {
                                     // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
                                     container.Add(prev_member_in_position);
+                                }
+                                else
+                                {
+                                    if (reverse_last_leveldepth_member != null && container.Contains(reverse_last_leveldepth_member))
+                                    {
+                                        // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                        container.Insert(container.IndexOf(reverse_last_leveldepth_member), prev_member_in_position);
+                                    }
+                                    else
+                                    {
+                                        // ДОБАВЛЕНИЕ В ИЕРАРХИЮ
+                                        container.Add(prev_member_in_position);
+                                    }
                                 }
                             }
 
@@ -949,18 +959,22 @@ namespace Ranet.Olap.Core.Providers
         /// </summary>
         public SortTypes Type = SortTypes.None;
 
+        String m_SortBy = string.Empty;
         /// <summary>
         /// По чем производится сортировка
         /// </summary>
-        public String SortBy = string.Empty;
-        
-        public SortDescriptor Clone()
+        public virtual String SortBy
         {
-					var result=new SortDescriptor();
-					result.Type=this.Type;
-					result.SortBy = this.SortBy;
-					
-					return result;
+            get { return m_SortBy; }
+            set { m_SortBy = value; }
+        }
+
+        public virtual SortDescriptor Clone()
+        {
+            var result = new SortDescriptor();
+            result.Type = Type;
+            result.SortBy = SortBy;
+            return result;
         }
     }
 

@@ -1136,4 +1136,7 @@
   <data name="ContextMenu_DataReorganizationType_None" xml:space="preserve">
     <value>Нет</value>
   </data>
+  <data name="ColumnsHeader" xml:space="preserve">
+    <value>Выбор колонок</value>
+  </data>
 </root>

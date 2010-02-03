@@ -43,9 +43,10 @@ namespace Ranet.AgOlap.Providers
 	{
 		internal DrillDownMode DrillDownMode = DrillDownMode.BySingleDimensionHideSelf;
 		string m_Query = string.Empty;
-		
+
 		public string Query
-		{ get { return m_Query; } 
+		{
+			get { return m_Query; }
 			private set
 			{
 				ClearHistory();
@@ -53,17 +54,17 @@ namespace Ranet.AgOlap.Providers
 				{
 					m_OriginalStatement = provider.ParseMdx(value) as MdxSelectStatement;
 				}
-				if (m_OriginalStatement==null)
+				if (m_OriginalStatement == null)
 					return;
-					
-				m_Query=value;
-				if (m_OriginalStatement.Axes.Count<1)
+
+				m_Query = value;
+				if (m_OriginalStatement.Axes.Count < 1)
 					return;
-				CurrentHistoryItem.ColumnsActionChain.HideEmpty=m_OriginalStatement.Axes[0].NonEmpty;
+				CurrentHistoryItem.ColumnsActionChain.HideEmpty = m_OriginalStatement.Axes[0].NonEmpty;
 				if (m_OriginalStatement.Axes.Count < 2)
 					return;
 				CurrentHistoryItem.RowsActionChain.HideEmpty = m_OriginalStatement.Axes[1].NonEmpty;
-			} 
+			}
 		}
 		MdxSelectStatement m_OriginalStatement = null;
 		//		public Func<MdxObject, MdxActionContext, MdxObject> ConcretizeMdxObject { get; set; }
@@ -189,7 +190,7 @@ namespace Ranet.AgOlap.Providers
 			}
 			return result;
 		}
-		
+
 		MemberAction CreateMemberAction(PerformMemberActionArgs args)
 		{
 			switch (args.Action)
@@ -199,21 +200,26 @@ namespace Ranet.AgOlap.Providers
 				case MemberActionType.Collapse:
 					return new MemberActionCollapse(args);
 				case MemberActionType.DrillDown:
-					return new MemberActionDrillDown(args,DrillDownMode);
+					return new MemberActionDrillDown(args, DrillDownMode);
 				default:
 					return null;
 			}
-		
+
 		}
 		public String PerformMemberAction(PerformMemberActionArgs args)
 		{
 			if (args != null)
 			{
-				var Action=CreateMemberAction(args);
-				if(Action!=null)
+				var Action = CreateMemberAction(args);
+				if (Action != null)
 				{
 					AddCurrentStateToHistory();
-					this.CurrentHistoryItem.AddMemberAction(args.AxisIndex,Action);
+					this.CurrentHistoryItem.AddMemberAction(args.AxisIndex, Action);
+				}
+				else if (args.Action == MemberActionType.SortByValue)
+				{
+					AddCurrentStateToHistory();
+					this.CurrentHistoryItem.SortByValue(args.AxisIndex,args);
 				}
 			}
 			return RefreshQuery();

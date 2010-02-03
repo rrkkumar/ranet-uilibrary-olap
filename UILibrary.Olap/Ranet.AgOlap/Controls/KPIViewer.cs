@@ -38,6 +38,7 @@ using Ranet.AgOlap.Controls.General.DataGrid;
 using Ranet.Olap.Core.Providers;
 using Ranet.Olap.Core.Providers.ClientServer;
 using Ranet.AgOlap.Commands;
+using Ranet.AgOlap.Controls.List;
 
 namespace Ranet.AgOlap.Controls
 {
@@ -60,6 +61,8 @@ namespace Ranet.AgOlap.Controls
         private Dictionary<string, KpiView> m_KpiStorage;
         private List<KpiInfo> m_SourceKpis;
         private List<KpiView> m_sourceCollection;
+        private RanetCheckedListBox m_columnsList;
+        private Dictionary<string,bool> m_ColumnNames;
         
         double m_InputColumnWidth = 350;
         double m_MDXRowHeight = 200;
@@ -110,6 +113,7 @@ namespace Ranet.AgOlap.Controls
             Input_LayoutRoot.Margin = new Thickness(0, 0, 0, 0);
             Input_LayoutRoot.RowDefinitions.Add(new RowDefinition());
 
+            
             Input_Border = new Border() { Padding = new Thickness(3), BorderBrush = new SolidColorBrush(Colors.DarkGray), BorderThickness = new Thickness(1) };
             Input_Border.Margin = new Thickness(0, 0, 5, 0);
             Input_Border.Child = Input_LayoutRoot;
@@ -146,8 +150,34 @@ namespace Ranet.AgOlap.Controls
             m_ServerExplorer.CubeBrowser.DragCompleted += new EventHandler<DragNodeArgs<System.Windows.Controls.Primitives.DragCompletedEventArgs>>(CubeBrowser_DragCompleted);
             m_ServerExplorer.CubeSelected += new EventHandler<CustomEventArgs<string>>(m_ServerExplorer_CubeSelected);
 
+            StackPanel rowsPanel = new StackPanel() {Orientation = Orientation.Vertical};
+            TextBlock rowsHeader = new TextBlock() {Text = Localization.ColumnsHeader};            
+            m_columnsList = new RanetCheckedListBox();
+            m_ColumnNames = new Dictionary<string,bool>();
+            //m_ColumnNames.Add("Display Folder",false);
+            m_ColumnNames.Add("Kpi Name",true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Name" , IsChecked = true});
+            m_ColumnNames.Add("Kpi Value",true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Value", IsChecked = true });
+            m_ColumnNames.Add("Kpi Goal", true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Goal", IsChecked = true });
+            m_ColumnNames.Add("Kpi Variance", true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Variance", IsChecked = true });
+            m_ColumnNames.Add("Trend", true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Trend", IsChecked = true });
+            m_ColumnNames.Add("Status", true);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Status", IsChecked = true });
+            m_ColumnNames.Add("Kpi Weight", false);
+            m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Weight", IsChecked = false });
+            m_columnsList.SelectionChanged += new SelectionChangedEventHandler(m_columnsList_SelectionChanged);
+            
             Input_LayoutRoot.Children.Add(m_ServerExplorer);
             Grid.SetRow(m_ServerExplorer, 0);
+
+            rowsPanel.Children.Add(rowsHeader);
+            rowsPanel.Children.Add(m_columnsList);
+            Input_LayoutRoot.Children.Add(rowsPanel);
+            Grid.SetRow(rowsPanel, 1);
 
             // Заголовок
             Table_LayoutRoot = new Grid();
@@ -188,6 +218,30 @@ namespace Ranet.AgOlap.Controls
             //
 
             this.Content = LayoutRoot;
+        }
+
+        void m_columnsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            foreach (var item in e.AddedItems)
+            {
+                if (item is RanetCheckedItem)
+                {
+                    if (m_ColumnNames.ContainsKey((item as RanetCheckedItem).Text))
+                    {
+                        m_ColumnNames[(item as RanetCheckedItem).Text] = true;
+                    }
+                }
+            }
+            foreach (var item in e.RemovedItems)
+            {
+                if (item is RanetCheckedItem)
+                {
+                    if (m_ColumnNames.ContainsKey((item as RanetCheckedItem).Text))
+                    {
+                        m_ColumnNames[(item as RanetCheckedItem).Text] = false;
+                    }
+                }
+            }
         }
         
         public void ShowMetadataArea(bool show)
@@ -406,20 +460,31 @@ namespace Ranet.AgOlap.Controls
 
             this.KpiDataContainer.Grid.Columns.Clear();
             //Column "Name"
-            this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnName, Binding = new Binding("Caption") });
+            if (this.IsColumnVisible("Kpi Name"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnName, Binding = new Binding("Caption") });
             //Column "Value"
-            this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnValue, Binding = new Binding("KpiValue") });
+            if (this.IsColumnVisible("Kpi Value"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnValue, Binding = new Binding("KpiValue") });
             //Column "Goal"
-            this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnGoal, Binding = new Binding("KpiGoal") });
+            if (this.IsColumnVisible("Kpi Goal"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnGoal, Binding = new Binding("KpiGoal") });
             //Column "Variance"
-            this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnVariance, Binding = new Binding("KpiVariance") });
+            if (this.IsColumnVisible("Kpi Variance"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = Localization.KPIViewer_ColumnVariance, Binding = new Binding("KpiVariance") });
             //Column "Status"
             //this.KpiDataGrid.Columns.Add(new DataGridTextColumn() { Header = "Status", Binding = new Binding("StatusGraphic") });
-            this.KpiDataContainer.Grid.Columns.Add(new IconDataGridColumn() { Header = Localization.KPIViewer_ColumnStatus, Resource = "Status" });
+            if (this.IsColumnVisible("Status"))
+                this.KpiDataContainer.Grid.Columns.Add(new IconDataGridColumn() { Header = Localization.KPIViewer_ColumnStatus, Resource = "Status" });
             //Column "Trend"
             //this.KpiDataGrid.Columns.Add(new DataGridTextColumn() { Header = "Trend", Binding = new Binding("TrendGraphic") });
-            this.KpiDataContainer.Grid.Columns.Add(new IconDataGridColumn() { Header = Localization.KPIViewer_ColumnTrend, Resource = "Trend" });
-
+            if (this.IsColumnVisible("Trend"))
+                this.KpiDataContainer.Grid.Columns.Add(new IconDataGridColumn() { Header = Localization.KPIViewer_ColumnTrend, Resource = "Trend" });
+            // Column "Weight"
+            if (this.IsColumnVisible("Kpi Weight"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = "Weight", Binding = new Binding("KpiWeight") });
+            // Column "DisplayFolder"
+            if (this.IsColumnVisible("Display Folder"))
+                this.KpiDataContainer.Grid.Columns.Add(new DataGridTextColumn() { Header = "Display folder", Binding = new Binding("DisplayFolder") });
             if (!string.IsNullOrEmpty(this.GroupProperty))
             {
                 this.Tree.GroupDescriptions.Add(new PropertyGroupDescription(this.GroupProperty));
@@ -429,6 +494,15 @@ namespace Ranet.AgOlap.Controls
                       
             
         }      
+
+        private bool IsColumnVisible(string id)
+        {
+            if (this.m_ColumnNames.ContainsKey(id))
+            {
+                return m_ColumnNames[id];
+            }
+            return false;
+        }
 
         private List<KpiView> GetKpisList()
         {
@@ -719,6 +793,11 @@ namespace Ranet.AgOlap.Controls
         protected Border MetaDataArea
         {
             get { return this.Input_Border; }
+        }
+
+        protected RanetCheckedListBox ColumnsList
+        {
+            get { return this.m_columnsList; }
         }
         #endregion
     }
