@@ -22,54 +22,49 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 
-
 namespace Ranet.AgOlap.Controls.List
 {
-    public class RanetCheckedListBox : RanetListBox
+    public partial class RanetCheckedListBox : UserControl
     {
-        private const string ResourceUri = "/Ranet.AgOlap;component/Themes/Generic.xaml";
-
         public RanetCheckedListBox()
-        {
-            DefaultStyleKey = typeof(RanetListBox);
-            this.SelectionMode = System.Windows.Controls.SelectionMode.Multiple;
+        {            
+            InitializeComponent();
+
+            this.ListBox.SelectionMode = System.Windows.Controls.SelectionMode.Multiple;
             this.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
-            
-            ResourceDictionary dic = new ResourceDictionary();
-            dic.Source = new Uri(ResourceUri,UriKind.Relative);
-            this.ItemContainerStyle = dic["CheckedItemStyle"] as Style;
+            this.ListBox.ItemContainerStyle = Resources["CheckedItemStyle"] as Style;
 
-            m_DataSource = new ObservableObjectCollection();           
+            m_DataSource = new ObservableObjectCollection();
         }
 
-        protected override DependencyObject GetContainerForItemOverride()
-        {
-            RanetCheckedItem item = new RanetCheckedItem();
-            if (this.ItemContainerStyle != null)
-            {
-                item.Style = this.ItemContainerStyle;
-            }
-            return item;
-        }
+        //protected override DependencyObject GetContainerForItemOverride()
+        //{
+        //    RanetCheckedItem item = new RanetCheckedItem();
+        //    if (this.ItemContainerStyle != null)
+        //    {
+        //        item.Style = this.ItemContainerStyle;
+        //    }
+        //    return item;
+        //}
 
-        protected override bool IsItemItsOwnContainerOverride(object item)
-        {
-            return (item is RanetCheckedItem);
-        }
+        //protected override bool IsItemItsOwnContainerOverride(object item)
+        //{
+        //    return (item is RanetCheckedItem);
+        //}
 
         private ObservableObjectCollection m_DataSource;
         public ObservableObjectCollection DataSource
         {
             get { return m_DataSource; }
             set { m_DataSource = value; }
-        }           
+        }
 
         public void AddItem(RanetCheckedItem item)
         {
             if (this.m_DataSource != null)
             {
-                this.m_DataSource.Add(item.Text);      
-                this.Items.Add(item);
+                this.m_DataSource.Add(item.Text);
+                this.ListBox.Items.Add(item);
             }
         }
 
@@ -88,7 +83,7 @@ namespace Ranet.AgOlap.Controls.List
 
         public RanetCheckedItem()
         {
-            DefaultStyleKey = typeof(RanetCheckedItem);            
+            DefaultStyleKey = typeof(RanetCheckedItem);
         }
 
         static void ValueChangedCallback(object obj, DependencyPropertyChangedEventArgs args)
@@ -108,7 +103,7 @@ namespace Ranet.AgOlap.Controls.List
 
             (r as RanetCheckedItem).Text = args.NewValue.ToString();
         }
-        
+
         public bool IsChecked
         {
             get { return base.IsSelected; }
@@ -117,7 +112,8 @@ namespace Ranet.AgOlap.Controls.List
 
         public string Text
         {
-            get; set;
+            get;
+            set;
         }
 
         public override void OnApplyTemplate()

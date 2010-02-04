@@ -119,6 +119,18 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             
             m_Member = info;
 
+            m_LayoutRoot = new Grid();
+            m_LayoutRoot.Margin = new Thickness(2, 2 * Scale, 0, 0);
+            m_LayoutRoot.VerticalAlignment = VerticalAlignment.Top;
+            m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+            m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
+            ColumnDefinition column02 = new ColumnDefinition();
+            column02.MaxWidth = 0; /* чтобы при сжимании иконка надвигалась на текст макс. ширину будем далее задавать жестко*/
+            m_LayoutRoot.ColumnDefinitions.Add(column02);
+            m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+            // Колонка для отображения режима сортировки
+            m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
+
             if (IsInteractive)
             {
                 if (Member.ChildCount > 0 && !Member.IsCalculated && !Member.IsDublicate)
@@ -129,19 +141,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     expander.CheckedChanged += new EventHandler(expander_CheckedChanged);
                     UseExpandingCommands = true;
                     expander.Height = expander.Width = Math.Max(5, 9 * Scale);
-                    LayoutRoot.Children.Add(expander);
+                    m_LayoutRoot.Children.Add(expander);
                 }
                 else
                 {
                     ListMemberControl ctrl = new ListMemberControl();
                     ctrl.Opacity = 0.35;
                     ctrl.Height = ctrl.Width = Math.Max(5, 9 * Scale);
-                    LayoutRoot.Children.Add(ctrl);
+                    m_LayoutRoot.Children.Add(ctrl);
                 }
             }
 
             // Название элемента
-            LayoutRoot.Children.Add(CaptionText);
+            m_LayoutRoot.Children.Add(CaptionText);
             Grid.SetColumn(CaptionText, 1);
 
             // Визуализация DATAMEMBER, UNKNOWNMEMBER,CUSTOM_ROLLUP и UNARY_OPERATOR
@@ -258,14 +270,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                     image1.Width = Math.Max(8, 16 * Scale);
                     image1.Height = Math.Max(8, 16 * Scale);
                     image1.Source = custom_image;
-                    LayoutRoot.Children.Add(image1);
+                    m_LayoutRoot.Children.Add(image1);
                     Grid.SetColumn(image1, 3);
                 }
             }
 
             m_EllipsisText = new TextBlock() { Text = "..." };
             m_EllipsisText.FontSize = Owner.DefaultFontSize * Scale;
-            LayoutRoot.Children.Add(m_EllipsisText);
+            m_LayoutRoot.Children.Add(m_EllipsisText);
             m_EllipsisText.Margin = new Thickness(-1, 0, 0, 0);
             m_EllipsisText.TextAlignment = TextAlignment.Left;
             m_EllipsisText.VerticalAlignment = VerticalAlignment.Center;
@@ -273,8 +285,50 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             m_EllipsisText.Visibility = Visibility.Collapsed;
 
             this.SizeChanged += new SizeChangedEventHandler(MemberControl_SizeChanged);
-            this.Content = LayoutRoot;
+            this.Content = m_LayoutRoot;
             this.Click += new RoutedEventHandler(MemberControl_Click);
+
+            m_SortByValueImage = new Image() { Width = 16, Height = 16 };
+            m_SortByValueImage.Visibility = Visibility.Collapsed;
+            //var m_SortSelector = new SortTypeSelector() { VerticalAlignment = VerticalAlignment.Center, HorizontalAlignment = HorizontalAlignment.Center };
+            m_LayoutRoot.Children.Add(m_SortByValueImage);
+            Grid.SetColumn(m_SortByValueImage, 4); 
+        }
+
+        Image m_SortByValueImage;
+
+        protected virtual BitmapImage SortAsc_Image
+        {
+            get { return UriResources.Images.ColumnSortAsc16; }
+        }
+
+        protected virtual BitmapImage SortDesc_Image
+        {
+            get { return UriResources.Images.ColumnSortDesc16; }
+        }
+
+        SortTypes m_SortByValueType = SortTypes.None;
+        public SortTypes SortByValueType
+        {
+            get { return m_SortByValueType; }
+            set
+            {
+                m_SortByValueType = value;
+                switch (value)
+                {
+                    case SortTypes.None:
+                        m_SortByValueImage.Visibility = Visibility.Collapsed;
+                        break;
+                    case SortTypes.Ascending:
+                        m_SortByValueImage.Visibility = Visibility.Visible;
+                        m_SortByValueImage.Source = SortAsc_Image;
+                        break;
+                    case SortTypes.Descending:
+                        m_SortByValueImage.Visibility = Visibility.Visible;
+                        m_SortByValueImage.Source = SortDesc_Image;
+                        break;
+                }
+            }
         }
 
         void MemberControl_Click(object sender, RoutedEventArgs e)
@@ -321,9 +375,9 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         public void RotateCaption(bool rotate)
         {
             if (rotate)
-                LayoutRoot.Visibility = Visibility.Collapsed;
+                m_LayoutRoot.Visibility = Visibility.Collapsed;
             else
-                LayoutRoot.Visibility = Visibility.Visible;
+                m_LayoutRoot.Visibility = Visibility.Visible;
             //RootPanel.RenderTransform = new RotateTransform() { Angle = -90  /*CenterY = -20*/ };
             //RootPanel.HorizontalAlignment = HorizontalAlignment.Stretch;
             //RootPanel.VerticalAlignment = VerticalAlignment.Stretch;
@@ -404,47 +458,8 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             }
         }
 
-        //StackPanel m_RootPanel = null;
-        //public StackPanel RootPanel
-        //{
-        //    get
-        //    {
-        //        if (m_RootPanel == null)
-        //        {
-        //            m_RootPanel = new StackPanel();
-        //            m_RootPanel.Margin = new Thickness(2, 2, 5, 0);
-        //            m_RootPanel.VerticalAlignment = VerticalAlignment.Top;
-        //            m_RootPanel.Orientation = Orientation.Horizontal;
-        //        }
-        //        return m_RootPanel;
-        //    }
-        //}
-
-        Grid m_LayoutRoot = null;
-        public Grid LayoutRoot
-        {
-            get
-            {
-                if (m_LayoutRoot == null)
-                {
-                    m_LayoutRoot = new Grid();
-                    m_LayoutRoot.Margin = new Thickness(2, 2 * Scale, 0, 0);
-                    m_LayoutRoot.VerticalAlignment = VerticalAlignment.Top;
-                    m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                    m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition());
-                    ColumnDefinition column02 = new ColumnDefinition();
-                    column02.MaxWidth = 0; /* чтобы при сжимании иконка надвигалась на текст макс. ширину будем далее задавать жестко*/
-                    m_LayoutRoot.ColumnDefinitions.Add(column02);
-                    m_LayoutRoot.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Auto });
-                    //m_RootPanel.Orientation = Orientation.Horizontal;
-                }
-                return m_LayoutRoot;
-            }
-        }
-
-        //public RowDefinition Row = null;
-        //public ColumnDefinition Column = null;
-        
+        Grid m_LayoutRoot;
+       
         #region События
         public event MemberActionEventHandler ExecuteMemberAction;
         public void Raise_ExecuteMemberAction(MemberActionType action)

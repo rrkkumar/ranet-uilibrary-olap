@@ -218,14 +218,14 @@ namespace Ranet.Olap.Core.Providers
             get
             {
                 bool hasRollup = false;
-                IList<MemberInfo> tuple = new List<MemberInfo>();
+                List<MemberInfo> tuple = new List<MemberInfo>();
                 if (this.RowMember != null)
                 {
-                    this.RowMember.CollectAncestors(tuple);
+                    tuple.AddRange(this.RowMember.GetAncestors());
                 }
                 if (this.ColumnMember != null)
                 {
-                    this.ColumnMember.CollectAncestors(tuple);
+                    tuple.AddRange(this.ColumnMember.GetAncestors());
                 }
                 foreach (MemberInfo mv in tuple)
                 {

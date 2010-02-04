@@ -673,6 +673,15 @@ namespace Ranet.AgOlap {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sorting by Value.
+        /// </summary>
+        public static string ContextMenu_SortingByValue {
+            get {
+                return ResourceManager.GetString("ContextMenu_SortingByValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Property &apos;{0}&apos; for control is not initialized..
         /// </summary>
         public static string ControlPropertyNotInitialized_Message {
@@ -2390,6 +2399,15 @@ namespace Ranet.AgOlap {
         public static string ServerExplorerControl_Name {
             get {
                 return ResourceManager.GetString("ServerExplorerControl_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show all.
+        /// </summary>
+        public static string ShowAll_Check {
+            get {
+                return ResourceManager.GetString("ShowAll_Check", resourceCulture);
             }
         }
         

@@ -1139,4 +1139,10 @@
   <data name="ColumnsHeader" xml:space="preserve">
     <value>Выбор колонок</value>
   </data>
+  <data name="ShowAll_Check" xml:space="preserve">
+    <value>Показать все</value>
+  </data>
+  <data name="ContextMenu_SortingByValue" xml:space="preserve">
+    <value>Сортировка по значению</value>
+  </data>
 </root>

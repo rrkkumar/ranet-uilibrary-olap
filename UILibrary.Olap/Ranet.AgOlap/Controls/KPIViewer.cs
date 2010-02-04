@@ -99,6 +99,22 @@ namespace Ranet.AgOlap.Controls
             ToolTipService.SetToolTip(m_ShowMetadataArea, Localization.MdxDesigner_ShowQueryDesigner_ToolTip);
             m_ToolBar.AddItem(m_ShowMetadataArea);
 
+            RanetToggleButton showAllButton = new RanetToggleButton();
+            showAllButton.ClickMode = ClickMode.Press;
+            showAllButton.Content = UiHelper.CreateIcon(UriResources.GetImage("/Ranet.AgOlap;component/Controls/Images/OLAP/KPI/ShowAll.png"));
+            showAllButton.Checked += new RoutedEventHandler(showAllButton_Checked);
+            showAllButton.Unchecked += new RoutedEventHandler(showAllButton_Unchecked);
+            ToolTipService.SetToolTip(showAllButton,Localization.ShowAll_Check);
+            //showAllButton.Visibility = System.Windows.Visibility.Collapsed;
+            m_ToolBar.AddItem(showAllButton);
+
+            RanetToolBarButton m_ApplyChanges = new RanetToolBarButton();
+            m_ApplyChanges.ClickMode = ClickMode.Press;
+            m_ApplyChanges.Click += new RoutedEventHandler(m_ApplyChanges_Click);
+            m_ApplyChanges.Content = UiHelper.CreateIcon(UriResources.Images.Run16);
+            ToolTipService.SetToolTip(m_ApplyChanges, Localization.Apply);
+            m_ToolBar.AddItem(m_ApplyChanges);
+
             //showColumnChoice = new RanetToggleButton();
             //showColumnChoice.ClickMode = ClickMode.Press;
             //showColumnChoice.IsChecked = true;
@@ -151,7 +167,7 @@ namespace Ranet.AgOlap.Controls
             m_ServerExplorer.CubeSelected += new EventHandler<CustomEventArgs<string>>(m_ServerExplorer_CubeSelected);
 
             StackPanel rowsPanel = new StackPanel() {Orientation = Orientation.Vertical};
-            TextBlock rowsHeader = new TextBlock() {Text = Localization.ColumnsHeader};            
+            var cubesComboHeader = new HeaderControl(UriResources.Images.HideEmptyRows16, Localization.ColumnsHeader) { Margin = new Thickness(0, 0, 0, 3) };     
             m_columnsList = new RanetCheckedListBox();
             m_ColumnNames = new Dictionary<string,bool>();
             //m_ColumnNames.Add("Display Folder",false);
@@ -169,12 +185,12 @@ namespace Ranet.AgOlap.Controls
             m_columnsList.AddItem(new RanetCheckedItem() { Text = "Status", IsChecked = true });
             m_ColumnNames.Add("Kpi Weight", false);
             m_columnsList.AddItem(new RanetCheckedItem() { Text = "Kpi Weight", IsChecked = false });
-            m_columnsList.SelectionChanged += new SelectionChangedEventHandler(m_columnsList_SelectionChanged);
+            m_columnsList.ListBox.SelectionChanged += new SelectionChangedEventHandler(m_columnsList_SelectionChanged);
             
             Input_LayoutRoot.Children.Add(m_ServerExplorer);
             Grid.SetRow(m_ServerExplorer, 0);
 
-            rowsPanel.Children.Add(rowsHeader);
+            rowsPanel.Children.Add(cubesComboHeader);
             rowsPanel.Children.Add(m_columnsList);
             Input_LayoutRoot.Children.Add(rowsPanel);
             Grid.SetRow(rowsPanel, 1);
@@ -218,6 +234,21 @@ namespace Ranet.AgOlap.Controls
             //
 
             this.Content = LayoutRoot;
+        }
+
+        void showAllButton_Unchecked(object sender, RoutedEventArgs e)
+        {
+            this.ShowAllKPIs = false;
+        }
+
+        void showAllButton_Checked(object sender, RoutedEventArgs e)
+        {
+            this.ShowAllKPIs = true;
+        }
+
+        void m_ApplyChanges_Click(object sender, RoutedEventArgs e)
+        {
+            UpdateDataGrid(this.ShowAllKPIs);
         }
 
         void m_columnsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -422,26 +453,36 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
+        protected void UpdateDataGrid(bool showAll)
+        {
+            if (this.m_Initialized)
+            {
+                if (showAll)
+                {
+                    m_sourceCollection = GetKpisList();
+                    Tree = new PagedCollectionView(m_sourceCollection);
+                    //Tree.GroupDescriptions.Add(new PropertyGroupDescription("KpiStatus"));
+                    this.KpiDataContainer.Grid.ItemsSource = Tree;
+                    this.CustomizeDataGridProperties();
+                }
+                else
+                {
+                    Tree = new PagedCollectionView(m_sourceCollection);
+                    this.KpiDataContainer.Grid.ItemsSource = Tree;
+                    this.CustomizeDataGridProperties();
+                }
+            }
+
+        }
+
         void KpiViewer_KpisLoadCompleted(object sender, EventArgs e)
         {
             this.IsBusy = false;
             try
             {
-                //this.m_KpiStorage = new Dictionary<string, KpiView>();            
-                if (this.ShowAllKPIs)
-                {
-                    m_sourceCollection = GetKpisList();
-                    Tree = new PagedCollectionView(m_sourceCollection);                
-                    //Tree.GroupDescriptions.Add(new PropertyGroupDescription("KpiStatus"));
-                    this.KpiDataContainer.Grid.ItemsSource = Tree;
-                    this.CustomizeDataGridProperties();                
-                }
-                else
-                {
-                    Tree = new PagedCollectionView(m_sourceCollection); 
-                    this.KpiDataContainer.Grid.ItemsSource = Tree;
-                    this.CustomizeDataGridProperties();                
-                }
+                this.m_Initialized = true;
+                UpdateDataGrid(this.ShowAllKPIs);
+                //this.m_KpiStorage = new Dictionary<string, KpiView>();                            
             }
             catch (Exception ex)
             {

@@ -31,6 +31,7 @@ using System.Windows.Media.Animation;
 using System.Windows.Shapes;
 using Ranet.AgOlap.Controls.PivotGrid.Data;
 using Ranet.Olap.Core.Providers;
+using System.Windows.Media.Imaging;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
@@ -70,6 +71,16 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 return Owner.Rows_UseHint;
             }
+        }
+
+        protected override BitmapImage SortAsc_Image
+        {
+            get { return UriResources.Images.RowSortAsc16; }
+        }
+
+        protected override BitmapImage SortDesc_Image
+        {
+            get { return UriResources.Images.RowSortDesc16; }
         }
     }
 }

@@ -14,20 +14,50 @@ using Ranet.AgOlap.Controls.General.ItemControls;
 using Ranet.Olap.Core.Metadata;
 using Ranet.AgOlap.Controls.General.Tree;
 using Ranet.AgOlap.Controls.General;
+using Ranet.AgOlap.Controls.ValueCopy;
 
 namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 {
     public enum PivotTableSortTypes
     { 
         SortByProperty,
+        SortAxisByMeasure,
         SortByValue
     }
 
     public partial class SortPropertiesControl : UserControl
     {
+        public String CubeName
+        {
+            get { return tupleControl.CubeName; }
+            set { tupleControl.CubeName = value; }
+        }
+        public String ConnectionID
+        {
+            get { return tupleControl.ConnectionID; }
+            set { tupleControl.ConnectionID = value; }
+        }
+        public ILogService LogManager
+        {
+            get { return tupleControl.LogManager; }
+            set { tupleControl.LogManager = value; }
+        }
+
+        public event EventHandler<GetIDataLoaderArgs> GetOlapDataLoader;
+        void Raise_GetOlapDataLoader(GetIDataLoaderArgs args)
+        {
+            EventHandler<GetIDataLoaderArgs> handler = this.GetOlapDataLoader;
+            if (handler != null)
+            {
+                handler(this, args);
+            }
+        }
+
         public SortPropertiesControl()
         {
             InitializeComponent();
+
+            tupleControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(tupleControl_GetOlapDataLoader);
 
             lblSortType.Text = Localization.SortingDirection_Label;
             lblNone.Text = Localization.Sorting_None_Label;
@@ -50,9 +80,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             rbNone.Unchecked += new RoutedEventHandler(rbNone_Unchecked);
         }
 
+        void tupleControl_GetOlapDataLoader(object sender, GetIDataLoaderArgs e)
+        {
+            Raise_GetOlapDataLoader(e);
+        }
+
         void comboMeasure_IsEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            if (comboMeasure.IsEnabled && SortType == PivotTableSortTypes.SortByValue)
+            if (comboMeasure.IsEnabled && SortType == PivotTableSortTypes.SortAxisByMeasure)
             {
                 if (!m_MeasuresIsLoaded)
                 {
@@ -83,18 +118,25 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
         void rbNone_Unchecked(object sender, RoutedEventArgs e)
         {
-            if(SortType == PivotTableSortTypes.SortByValue)
-                comboMeasure.IsEnabled = true;
-            if (SortType == PivotTableSortTypes.SortByProperty)
-                comboProperty.IsEnabled = true;
+            switch (SortType)
+            {
+                case PivotTableSortTypes.SortAxisByMeasure:
+                    comboMeasure.IsEnabled = true;
+                    break;
+                case PivotTableSortTypes.SortByProperty:
+                    comboProperty.IsEnabled = true;
+                    break;
+                case PivotTableSortTypes.SortByValue:
+                    tupleControl.IsEnabled = true;
+                    break;
+            }
         }
 
         void rbNone_Checked(object sender, RoutedEventArgs e)
         {
-            if (SortType == PivotTableSortTypes.SortByProperty)
-                comboProperty.IsEnabled = false;
-            if (SortType == PivotTableSortTypes.SortByValue)
-                comboMeasure.IsEnabled = false;
+            comboProperty.IsEnabled = false;
+            comboMeasure.IsEnabled = false;
+            tupleControl.IsEnabled = false;
         }
 
         bool m_MeasuresIsLoaded = false;
@@ -126,11 +168,14 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             set
             {
                 m_SortType = value;
-                lblMeasure.Visibility = m_SortType == PivotTableSortTypes.SortByValue ? Visibility.Visible : Visibility.Collapsed;
-                comboMeasure.Visibility = m_SortType == PivotTableSortTypes.SortByValue ? Visibility.Visible : Visibility.Collapsed;
+                lblMeasure.Visibility = m_SortType == PivotTableSortTypes.SortAxisByMeasure ? Visibility.Visible : Visibility.Collapsed;
+                comboMeasure.Visibility = m_SortType == PivotTableSortTypes.SortAxisByMeasure ? Visibility.Visible : Visibility.Collapsed;
 
                 lblProperty.Visibility = m_SortType == PivotTableSortTypes.SortByProperty ? Visibility.Visible : Visibility.Collapsed;
                 comboProperty.Visibility = m_SortType == PivotTableSortTypes.SortByProperty ? Visibility.Visible : Visibility.Collapsed;
+
+                lblContext.Visibility = m_SortType == PivotTableSortTypes.SortByValue ? Visibility.Visible : Visibility.Collapsed;
+                tupleControl.Visibility = m_SortType == PivotTableSortTypes.SortByValue ? Visibility.Visible : Visibility.Collapsed;
             }
         }
 
@@ -140,17 +185,10 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             SortType = sortType;
             m_SortDescriptor = sortDescriptor;
 
+            // Инициализируем как сортируем
             if (sortDescriptor == null)
             {
                 rbNone.IsChecked = true;
-                if (sortType == PivotTableSortTypes.SortByValue)
-                {
-                    SelectMeasure(String.Empty);
-                }
-                if (sortType == PivotTableSortTypes.SortByProperty)
-                {
-                    SelectProperty(String.Empty);
-                }
             }
             else
             {
@@ -166,39 +204,81 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                         rbNone.IsChecked = true;
                         break;
                 }
+            }
 
-                if (sortType == PivotTableSortTypes.SortByProperty)
-                {
-                    SelectProperty(sortDescriptor.SortBy);
-                }
-                if (sortType == PivotTableSortTypes.SortByValue)
-                {
-                    SelectMeasure(sortDescriptor.SortBy);
-                }
+            // Инициализируем по чем сортируем
+            switch (sortType)
+            {
+                case PivotTableSortTypes.SortByProperty:
+                    SelectProperty(sortDescriptor != null ? sortDescriptor.SortBy : String.Empty);
+                    break;
+                case PivotTableSortTypes.SortAxisByMeasure:
+                    SelectMeasure(sortDescriptor != null ? sortDescriptor.SortBy : String.Empty);
+                    break;
+                case PivotTableSortTypes.SortByValue:
+                    InitializeTuple(sortDescriptor as SortByValueDescriptor);
+                    break;
             }
         }
 
         public SortDescriptor SortDescriptor
         {
             get {
-                var sortDescriptor = new SortDescriptor();
-                if (rbAscending.IsChecked.Value)
-                    sortDescriptor.Type = SortTypes.Ascending;
-                if (rbDescending.IsChecked.Value)
-                    sortDescriptor.Type = SortTypes.Descending;
+                SortDescriptor sortDescriptor = null;
 
-                if (SortType == PivotTableSortTypes.SortByProperty && sortDescriptor.Type != SortTypes.None)
+                switch (SortType)
                 {
-                    MemberPropertyItemControl property = comboProperty.SelectedItem as MemberPropertyItemControl;
-                    if (property != null && property.Info != null)
-                        sortDescriptor.SortBy = property.Info.UniqueName;
+                    case PivotTableSortTypes.SortByProperty:
+                        sortDescriptor = new SortDescriptor();
+                        if (!(rbNone.IsChecked.Value))
+                        {
+                            MemberPropertyItemControl property = comboProperty.SelectedItem as MemberPropertyItemControl;
+                            if (property != null && property.Info != null)
+                                sortDescriptor.SortBy = property.Info.UniqueName;
+                        }
+                        break;
+                    case PivotTableSortTypes.SortAxisByMeasure:
+                        sortDescriptor = new SortByMeasureDescriptor();
+                        if (!(rbNone.IsChecked.Value))
+                        {
+                            MeasureItemControl measure = comboMeasure.SelectedItem as MeasureItemControl;
+                            if (measure != null && measure.Info != null)
+                                sortDescriptor.SortBy = measure.Info.UniqueName;
+                        }
+                        break;
+                    case PivotTableSortTypes.SortByValue:
+                        sortDescriptor = new SortByValueDescriptor();
+                        if (!(rbNone.IsChecked.Value))
+                        {
+                            Dictionary<String, String> tuple = new Dictionary<string, string>();
+                            foreach (var item in tupleControl.Tuple)
+                            {
+                                if (!String.IsNullOrEmpty(item.MemberUniqueName) &&
+                                    !String.IsNullOrEmpty(item.HierarchyUniqueName))
+                                {
+                                    if (item.IsCustom)
+                                    {
+                                        (sortDescriptor as SortByValueDescriptor).MeasureUniqueName = item.MemberUniqueName;
+                                    }
+                                    else
+                                    {
+                                        if (!tuple.ContainsKey(item.HierarchyUniqueName))
+                                            tuple.Add(item.HierarchyUniqueName, item.MemberUniqueName);
+                                    }
+                                }
+                            }
+
+                            (sortDescriptor as SortByValueDescriptor).Tuple = tuple;
+                        }
+                        break;
                 }
 
-                if (SortType == PivotTableSortTypes.SortByValue && sortDescriptor.Type != SortTypes.None)
+                if (sortDescriptor != null)
                 {
-                    MeasureItemControl measure = comboMeasure.SelectedItem as MeasureItemControl;
-                    if (measure != null && measure.Info != null)
-                        sortDescriptor.SortBy = measure.Info.UniqueName;
+                    if (rbAscending.IsChecked.Value)
+                        sortDescriptor.Type = SortTypes.Ascending;
+                    if (rbDescending.IsChecked.Value)
+                        sortDescriptor.Type = SortTypes.Descending;
                 }
                 return sortDescriptor;
             }
@@ -226,6 +306,29 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             {
                 rbDescending.IsChecked = new bool?(true);
             }
+        }
+
+        void InitializeTuple(SortByValueDescriptor sortDescriptor)
+        {
+            var tuple = new List<TupleItem>();
+            if (sortDescriptor != null)
+            {
+                tuple = new List<TupleItem>();
+                foreach (var item in sortDescriptor.Tuple)
+                {
+                    var tuple_item = new TupleItem() { HierarchyUniqueName = item.Key, MemberUniqueName = item.Value };
+                    tuple.Add(tuple_item);
+                }
+                
+                // Если меры в тапле нет, то добавляем ее искусственно
+                if (!sortDescriptor.Tuple.ContainsKey("[Measures]"))
+                {
+                    var tuple_item = new TupleItem() { HierarchyUniqueName = "[Measures]", MemberUniqueName = sortDescriptor.MeasureUniqueName,  IsReadOnly = false, IsCustom = true };
+                    tuple.Add(tuple_item);
+                }
+            }
+
+            tupleControl.Initialize(tuple);
         }
 
         public void SelectMeasure(String uniqueName)

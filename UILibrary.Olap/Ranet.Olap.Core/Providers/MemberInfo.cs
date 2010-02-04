@@ -133,26 +133,49 @@ namespace Ranet.Olap.Core.Providers
             return null;
         }
 
-        public void CollectAncestors(IList<MemberInfo> list, bool ignoreSelf)
+        public List<MemberInfo> GetAncestors(bool ignoreSelf)
         {
-            if (list == null)
-                return;
+            List<MemberInfo> res = new List<MemberInfo>();
 
             if (!ignoreSelf)
             {
-                if (!list.Contains(this))
-                    list.Add(this);
+                res.Add(this);
             }
 
             if (this.Parent != null)
             {
-                this.Parent.CollectAncestors(list, false);
+                res.AddRange(this.Parent.GetAncestors(false));
             }
+            return res;
         }
 
-        public void CollectAncestors(IList<MemberInfo> list)
+        Dictionary<String, String> m_AxisTuple;
+        /// <summary>
+        /// Возвращает тапл элемента на оси. Ключ - уник. имя иерархии, Значение - уник. имя элемента
+        /// </summary>
+        /// <returns></returns>
+        public Dictionary<String, String> GetAxisTuple()
         {
-            CollectAncestors(list, false);
+            if (m_AxisTuple == null)
+            {
+                m_AxisTuple = new Dictionary<String, String>();
+
+                List<MemberInfo> tuple = GetAncestors();
+                m_AxisTuple = new Dictionary<String, String>();
+                foreach (var item in tuple)
+                {
+                    if (!m_AxisTuple.ContainsKey(item.HierarchyUniqueName))
+                    {
+                        m_AxisTuple.Add(item.HierarchyUniqueName, item.UniqueName);
+                    }
+                }
+            }
+            return m_AxisTuple;
+        }
+
+        public List<MemberInfo> GetAncestors()
+        {
+            return GetAncestors(false);
         }
 
         public void CollectAncestors(IDictionary<String, MemberInfo> list)

@@ -46,6 +46,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid
         ValueCopy,
         DrillThrough,
         SortingByProperty,
+        SortingAxisByMeasure,
         SortingByValue,
         ClearAxisSorting,
         AutoWidth,

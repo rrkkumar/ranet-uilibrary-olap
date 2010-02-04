@@ -108,6 +108,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
             get { return m_MembersBackground; }
         }
 
+        PivotQueryManager m_QueryManager = null;
+        public PivotQueryManager QueryManager
+        {
+            get { return m_QueryManager; }
+            set { m_QueryManager = value; }
+        }
+
         Brush m_CellsBorder = null;
         internal Brush CellsBorder
         {
@@ -1956,6 +1963,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             ColumnsArea_LovestMemberControls.Clear();
             
+            // Получаем сортировку по значению для противоположной оси
+            SortByValueDescriptor value_sort = null;
+            if (QueryManager != null)
+            {
+                value_sort = (AxisIsRotated == false ? QueryManager.Axis1_MeasuresSort : QueryManager.Axis0_MeasuresSort) as SortByValueDescriptor;
+            }
+
             int start_ColumnIndex = CellsArea_BeginColumnIndex;
             for (int column_indx = 0, layout_column_indx = start_ColumnIndex; layout_column_indx < ItemsLayoutRoot.ColumnDefinitions.Count; column_indx++, layout_column_indx++)
             {
@@ -1996,6 +2010,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     {
                                         ColumnsArea_LovestMemberControls.Add(member_Control);
 
+                                        // Определяем сортирована ли данная колонка
+                                        if (value_sort != null && value_sort.Type != SortTypes.None)
+                                        {
+                                            // Сортирована ли по данному элементу
+                                            if (value_sort.CompareByTuple(member_item.PivotMember.Member.GetAxisTuple()))
+                                            {
+                                                member_Control.SortByValueType = value_sort.Type;
+                                            }
+                                        }
                                         //if (m_Vertiacal_Splitters.ContainsKey(layout_column_indx))
                                         //{
                                         //    m_Vertiacal_Splitters[layout_column_indx].Tag = member_Control;
@@ -2085,6 +2108,13 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
 
             RowsArea_LovestMemberControls.Clear();
 
+            // Получаем сортировку по значению для противоположной оси
+            SortByValueDescriptor value_sort = null;
+            if (QueryManager != null)
+            {
+                value_sort = (AxisIsRotated == false ? QueryManager.Axis0_MeasuresSort : QueryManager.Axis1_MeasuresSort) as SortByValueDescriptor;
+            }
+
             int start_RowIndex = CellsArea_BeginRowIndex;
             for (int column_indx = 0; column_indx < layout.RowsLayout.Columns_Size; column_indx++)
             {
@@ -2124,6 +2154,15 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                     {
                                         RowsArea_LovestMemberControls.Add(member_Control);
 
+                                        // Определяем сортирована ли данная колонка
+                                        if (value_sort != null && value_sort.Type != SortTypes.None)
+                                        {
+                                            // Сортирована ли по данному элементу
+                                            if (value_sort.CompareByTuple(member_item.PivotMember.Member.GetAxisTuple()))
+                                            {
+                                                member_Control.SortByValueType = value_sort.Type;
+                                            }
+                                        }
                                         //if (m_Horizontal_Splitters.ContainsKey(layout_row_indx))
                                         //{
                                         //    m_Horizontal_Splitters[layout_row_indx].Tag = member_Control;
@@ -2425,6 +2464,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                                         }
                                     }
                                 }
+
+                                if (menu_item.Tag is ControlActionType)
+                                {
+                                    ControlActionType action = (ControlActionType)menu_item.Tag;
+                                    switch (action)
+                                    {
+                                        case ControlActionType.SortingByValue:
+                                            // Доступность пункта меню - Сортировка по значению
+                                            // Делаем доступным только для элементов последних линий
+                                            menu_item.IsEnabled = member_control.Member != null && member_control.Member.Children.Count == 0;
+                                            break;
+                                    }
+                                }
                             }
                         }
                     }
@@ -2604,14 +2656,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
                 item = new ContextMenuItem(Localization.ContextMenu_SortingByMeasure);
+                item.Tag = ControlActionType.SortingAxisByMeasure;
+                contextMenu.AddMenuItem(item);
+                item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+
+                item = new ContextMenuItem(Localization.ContextMenu_SortingByValue);
                 item.Tag = ControlActionType.SortingByValue;
                 contextMenu.AddMenuItem(item);
                 item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
-                item = new ContextMenuItem(Localization.ContextMenu_ClearAxisSorting);
-                item.Tag = ControlActionType.ClearAxisSorting;
-                contextMenu.AddMenuItem(item);
-                item.ItemClick += new EventHandler(ContextMenu_ItemClick);
+                //item = new ContextMenuItem(Localization.ContextMenu_ClearAxisSorting);
+                //item.Tag = ControlActionType.ClearAxisSorting;
+                //contextMenu.AddMenuItem(item);
+                //item.ItemClick += new EventHandler(ContextMenu_ItemClick);
 
                 contextMenu.AddMenuSplitter();
             }

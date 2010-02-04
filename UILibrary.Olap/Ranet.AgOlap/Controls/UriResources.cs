@@ -1231,11 +1231,49 @@ namespace Ranet.AgOlap.Controls
 
             const string SORT_AZ_16 = "/Ranet.AgOlap;component/Controls/Images/SortAZ.png";
             const string SORT_ZA_16 = "/Ranet.AgOlap;component/Controls/Images/SortZA.png";
+            const string SORT_NONE_16 = "/Ranet.AgOlap;component/Controls/Images/SortNone.png";
 
             const string CONTEXT_MENU_CHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemChecked.png";
             const string CONTEXT_MENU_UNCHECKED_16 = "/Ranet.AgOlap;component/Controls/Images/ContextMenuItemUnChecked.png";
             
             const string SUB_MENU_16 = "/Ranet.AgOlap;component/Controls/Images/SubMenu.png";
+
+            const string COLUMN_SORT_ASC_16 = "/Ranet.AgOlap;component/Controls/Images/Column_SortAsc.png";
+            const string COLUMN_SORT_DESC_16 = "/Ranet.AgOlap;component/Controls/Images/Column_SortDesc.png";
+            const string ROW_SORT_ASC_16 = "/Ranet.AgOlap;component/Controls/Images/Row_SortAsc.png";
+            const string ROW_SORT_DESC_16 = "/Ranet.AgOlap;component/Controls/Images/Row_SortDesc.png";
+
+            public static BitmapImage RowSortDesc16
+            {
+                get
+                {
+                    return UriResources.GetImage(ROW_SORT_DESC_16);
+                }
+            }
+
+            public static BitmapImage RowSortAsc16
+            {
+                get
+                {
+                    return UriResources.GetImage(ROW_SORT_ASC_16);
+                }
+            }
+
+            public static BitmapImage ColumnSortDesc16
+            {
+                get
+                {
+                    return UriResources.GetImage(COLUMN_SORT_DESC_16);
+                }
+            }
+
+            public static BitmapImage ColumnSortAsc16
+            {
+                get
+                {
+                    return UriResources.GetImage(COLUMN_SORT_ASC_16);
+                }
+            }
 
             public static BitmapImage SubMenu16
             {
@@ -1266,6 +1304,14 @@ namespace Ranet.AgOlap.Controls
                 get
                 {
                     return UriResources.GetImage(SORT_ZA_16);
+                }
+            }
+
+            public static BitmapImage SortNone16
+            {
+                get
+                {
+                    return UriResources.GetImage(SORT_NONE_16);
                 }
             }
 

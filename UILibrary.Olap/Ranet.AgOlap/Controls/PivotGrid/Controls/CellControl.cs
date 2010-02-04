@@ -194,8 +194,7 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
                 {
                     // Поиск условий, которые могут быть наложены на данную ячейку. 
                     // Перебираем всех предков по области столбцов и по их уникальному имени ищем
-                    IList<MemberInfo> column_ascendants = new List<MemberInfo>();
-                    this.Cell.ColumnMember.CollectAncestors(column_ascendants);
+                    IList<MemberInfo> column_ascendants = this.Cell.ColumnMember.GetAncestors();
                     // column_ascendants - коллекция предков снизу вверх
                     foreach (MemberInfo member in column_ascendants)
                     {

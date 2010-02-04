@@ -200,7 +200,7 @@ namespace Ranet.AgOlap.Providers.MemberActions
 					expr = new MdxFunctionExpression("ORDER",
 					new MdxExpression[] {
                                 expr,
-                                new MdxObjectReferenceExpression(descr.SortBy),
+                                new MdxObjectReferenceExpression(String.Format("({0})", descr.SortBy)),
                                 new MdxConstantExpression(orderType) 
                             });
 				}

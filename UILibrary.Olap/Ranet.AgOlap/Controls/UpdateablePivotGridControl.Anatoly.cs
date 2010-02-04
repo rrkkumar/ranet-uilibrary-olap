@@ -75,8 +75,7 @@ namespace Ranet.AgOlap.Controls
 			{
 				Ranet.Olap.Mdx.AxisCell result = null;
 				var axis = qContext.Axes[AxisInd];
-				var list = new List<MemberInfo>();
-				m.CollectAncestors(list);
+                var list = m.GetAncestors();
 				Ranet.Olap.Mdx.Tuple parentTuple = null;
 				Ranet.Olap.Mdx.Tuple parentTuple2 = null;
 				Ranet.Olap.Mdx.Hierarchy parentHier = null;

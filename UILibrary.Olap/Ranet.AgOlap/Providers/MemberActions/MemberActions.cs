@@ -232,19 +232,31 @@ namespace Ranet.AgOlap.Providers.MemberActions
 						, new MdxObjectReferenceExpression(hierarchyUniqueName + ".CURRENTMEMBER")
 						);
 
-			if (!HideSelf)
-			{
-				filter =
-						new MdxBinaryExpression
-						(filter
-						, new MdxBinaryExpression
+			MdxExpression isSelf = new MdxBinaryExpression
 							(new MdxObjectReferenceExpression(uniqueName)
 							, new MdxObjectReferenceExpression(hierarchyUniqueName + ".CURRENTMEMBER")
 							, "IS"
+							);
+
+			if (HideSelf)
+			{
+				isSelf =
+						new MdxBinaryExpression
+						(isSelf
+						, new MdxFunctionExpression
+							("IsLeaf"
+							, new MdxObjectReferenceExpression(uniqueName)
 							)
-						, "OR"
+						, "AND"
 						);
-			}
+			};
+
+			filter =
+					new MdxBinaryExpression
+					(filter
+					, isSelf
+					, "OR"
+					);
 			if (!SingleDimension)
 			{
 				var tupleBase = GenTupleBase();

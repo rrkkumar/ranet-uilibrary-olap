@@ -114,7 +114,6 @@
     <Compile Include="Commands\CommandHelper.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="Controls\Combo\CheckedComboBox.cs" />
-    <Compile Include="Controls\Combo\CheckedListBoxItem.cs" />
     <Compile Include="Controls\Combo\ColorPicker.xaml.cs">
       <DependentUpon>ColorPicker.xaml</DependentUpon>
     </Compile>
@@ -143,12 +142,19 @@
       <DependentUpon>NewRoundGauge.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Gauge\TypeConverters.cs" />
-    <Compile Include="Controls\List\RanetCheckedListBox.cs" />
     <Compile Include="Controls\General\TooltipController.cs" />
+    <Compile Include="Controls\List\RanetCheckedListBox.xaml.cs">
+      <DependentUpon>RanetCheckedListBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\PivotGrid\Controls\TupleControl.xaml.cs">
+      <DependentUpon>TupleControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\PivotGrid\PivotDataAnalizer.cs" />
     <Compile Include="Controls\General\DataGrid\IconDataGridColumn.cs" />
     <Compile Include="Controls\General\DataGrid\KpiDataGrid.cs" />
     <Compile Include="Controls\General\DataGrid\TreeViewColumn.cs" />
+    <Compile Include="Controls\PivotGrid\SortByMeasureDescriptor.cs" />
+    <Compile Include="Controls\PivotGrid\SortByValueDescriptor.cs" />
     <Compile Include="Controls\UpdateablePivotGridControl.Anatoly.cs" />
     <Compile Include="Controls\Data\RanetDataGrid.cs" />
     <Compile Include="Controls\DateSlicerCtrl.cs" />
@@ -169,7 +175,6 @@
     </Compile>
     <Compile Include="Controls\General\EditableComboBox.cs" />
     <Compile Include="Controls\General\ICloneable.cs" />
-    <Compile Include="Controls\General\ItemControls\CheckedItemControl.cs" />
     <Compile Include="Controls\General\ItemControls\ErrorItemControl.cs" />
     <Compile Include="Controls\General\ItemControls\MeasureGroupItemControl.cs" />
     <Compile Include="Controls\General\ItemControls\MeasureItemControl.cs" />
@@ -593,6 +598,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
+    <Page Include="Controls\List\RanetCheckedListBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
     <Page Include="Controls\MdxDesigner\CalculatedMembers\CalcMemberControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
@@ -634,6 +643,10 @@
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
     <Page Include="Controls\PivotGrid\Controls\SortPropertiesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Controls\PivotGrid\Controls\TupleControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
@@ -686,6 +699,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ValueCopy\CoordinatesControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+    </Page>
+    <Page Include="Themes\Gauges.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:MarkupCompilePass1</Generator>
     </Page>
@@ -814,6 +831,9 @@
     <Resource Include="Controls\Images\OLAP\KPI\cube_grey.png" />
     <Resource Include="Controls\Images\OLAP\KPI\cube_red.png" />
     <Resource Include="Controls\Images\OLAP\KPI\cube_yellow.png" />
+    <Resource Include="Controls\Images\Column_SortAsc.png" />
+    <Resource Include="Controls\Images\Column_SortDesc.png" />
+    <Resource Include="Controls\Images\OLAP\KPI\ShowAll.png" />
     <Content Include="Controls\Images\OLAP\KPI\Status\Cylinder_-1.ico" />
     <Resource Include="Controls\Images\OLAP\KPI\Status\Cylinder_-1.png" />
     <Content Include="Controls\Images\OLAP\KPI\Status\Cylinder_0.ico" />
@@ -878,6 +898,9 @@
     <Content Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.ico" />
     <Resource Include="Controls\Images\OLAP\KPI\Trend\Status Arrow - Descending_1.png" />
     <Resource Include="Controls\Images\SubMenu.png" />
+    <Resource Include="Controls\Images\Row_SortAsc.png" />
+    <Resource Include="Controls\Images\Row_SortDesc.png" />
+    <Resource Include="Controls\Images\SortNone.png" />
     <Content Include="ServiceReferences.ClientConfig" />
   </ItemGroup>
   <ItemGroup>

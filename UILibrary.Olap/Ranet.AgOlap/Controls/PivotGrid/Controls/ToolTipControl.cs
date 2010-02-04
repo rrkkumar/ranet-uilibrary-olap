@@ -104,20 +104,19 @@ namespace Ranet.AgOlap.Controls.PivotGrid.Controls
         {
             if (member != null && member.Member != null)
             {
-                 // Текст подсказки
-                 IList<MemberInfo> anc = new List<MemberInfo>();
-                 member.Member.CollectAncestors(anc);
-                    StringBuilder sb = new StringBuilder();
-                    foreach (MemberInfo mv in anc)
-                    {
-                        sb.AppendLine(mv.Caption + " : " + mv.UniqueName);
-                    }
-                    String tupleToStr = sb.ToString();
-                    tupleToStr = tupleToStr.TrimEnd('\n');
-                    tupleToStr = tupleToStr.TrimEnd('\r');
+                // Текст подсказки
+                IList<MemberInfo> anc = member.Member.GetAncestors();
+                StringBuilder sb = new StringBuilder();
+                foreach (MemberInfo mv in anc)
+                {
+                    sb.AppendLine(mv.Caption + " : " + mv.UniqueName);
+                }
+                String tupleToStr = sb.ToString();
+                tupleToStr = tupleToStr.TrimEnd('\n');
+                tupleToStr = tupleToStr.TrimEnd('\r');
 
-                    Caption = member.Member.Caption;
-                    Text = tupleToStr;
+                Caption = member.Member.Caption;
+                Text = tupleToStr;
             }
             else
             {
