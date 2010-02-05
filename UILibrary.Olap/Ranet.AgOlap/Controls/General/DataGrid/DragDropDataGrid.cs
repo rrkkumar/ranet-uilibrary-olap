@@ -24,6 +24,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media;
+using Ranet.AgOlap.Controls.Data;
 using Ranet.AgOlap.Controls.MdxDesigner;
 using Ranet.Olap.Core.Providers;
 using Ranet.AgOlap.Controls.General.Tree;
@@ -32,21 +33,21 @@ namespace Ranet.AgOlap.Controls.General.DataGrid
 {
     public class DragGridItemArgs<T> : EventArgs
     {
-        public readonly KpiDataGrid Item;
+        public readonly DragDropDataGrid Item;
         public readonly T Args;
 
-        public DragGridItemArgs(KpiDataGrid item, T args)
+        public DragGridItemArgs(DragDropDataGrid item, T args)
         {
             Item = item;
             Args = args;
         }
     }
 
-    public class KpiDataGrid : DragDropControl
+    public class DragDropDataGrid : DragDropControl
     {
         private Grid LayoutRoot;
-        private System.Windows.Controls.DataGrid m_Grid = new System.Windows.Controls.DataGrid();
-        public KpiDataGrid()
+        private RanetDataGrid m_Grid = new RanetDataGrid();
+        public DragDropDataGrid()
         {
             LayoutRoot = new Grid();
             LayoutRoot.Children.Add(m_Grid);
@@ -72,44 +73,9 @@ namespace Ranet.AgOlap.Controls.General.DataGrid
                     }
                 }
             }
-        }
+        }     
 
-        //public void AddRow(KpiView row)
-        //{        
-        //    if (row != null)
-        //    {
-        //        this.DragStarted += new EventHandler<DragGridItemArgs<DragStartedEventArgs>>(KpiDataGrid_DragStarted);
-        //        this.DragDelta += new EventHandler<DragGridItemArgs<DragDeltaEventArgs>>(KpiDataGrid_DragDelta);
-        //        this.DragCompleted += new EventHandler<DragGridItemArgs<DragCompletedEventArgs>>(KpiDataGrid_DragCompleted);               
-        //    }
-        //}    
-    
-        public void AddRow(KpiView row)
-        {
-            if (row != null)
-            {
-                this.DragStarted += new DragStartedEventHandler(KpiDataGrid_DragStarted);
-                this.DragDelta += new DragDeltaEventHandler(KpiDataGrid_DragDelta);
-                this.DragCompleted += new DragCompletedEventHandler(KpiDataGrid_DragCompleted);
-            }
-        }
-
-        void KpiDataGrid_DragCompleted(object sender, DragCompletedEventArgs e)
-        {
-            
-        }
-
-        void KpiDataGrid_DragDelta(object sender, DragDeltaEventArgs e)
-        {
-            
-        }
-
-        void KpiDataGrid_DragStarted(object sender, DragStartedEventArgs e)
-        {
-            
-        }
-
-        public System.Windows.Controls.DataGrid Grid
+        public RanetDataGrid Grid
         {
             get { return this.m_Grid; }
         }

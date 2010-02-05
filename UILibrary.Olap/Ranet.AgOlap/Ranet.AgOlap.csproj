@@ -138,6 +138,8 @@
     </Compile>
     <Compile Include="Controls\ContextMenu\MouseRightClick.cs" />
     <Compile Include="Controls\ContextMenu\MouseRightClickEventArgs.cs" />
+    <None Include="Controls\Gauge\Gauge.cs" />
+    <None Include="Controls\Gauge\GaugeBase.cs" />
     <Compile Include="Controls\Gauge\NewRoundGauge.xaml.cs">
       <DependentUpon>NewRoundGauge.xaml</DependentUpon>
     </Compile>
@@ -151,7 +153,7 @@
     </Compile>
     <Compile Include="Controls\PivotGrid\PivotDataAnalizer.cs" />
     <Compile Include="Controls\General\DataGrid\IconDataGridColumn.cs" />
-    <Compile Include="Controls\General\DataGrid\KpiDataGrid.cs" />
+    <Compile Include="Controls\General\DataGrid\DragDropDataGrid.cs" />
     <Compile Include="Controls\General\DataGrid\TreeViewColumn.cs" />
     <Compile Include="Controls\PivotGrid\SortByMeasureDescriptor.cs" />
     <Compile Include="Controls\PivotGrid\SortByValueDescriptor.cs" />

@@ -56,7 +56,7 @@ namespace Ranet.AgOlap.Controls
         private BusyControl m_Waiting;
 
         private ServerExplorerCtrl m_ServerExplorer;
-        private KpiDataGrid m_DataGrid;
+        private DragDropDataGrid m_DataGrid;
         private PagedCollectionView Tree;
         private Dictionary<string, KpiView> m_KpiStorage;
         private List<KpiInfo> m_SourceKpis;
@@ -74,7 +74,7 @@ namespace Ranet.AgOlap.Controls
             ScrollViewer Scroll = new ScrollViewer();
             Scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Auto;
             Scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto;
-            m_DataGrid = new KpiDataGrid();
+            m_DataGrid = new DragDropDataGrid();
             m_DataGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch;
             m_DataGrid.VerticalAlignment = VerticalAlignment.Top;
             LayoutRoot = new Grid();
@@ -105,7 +105,7 @@ namespace Ranet.AgOlap.Controls
             showAllButton.Checked += new RoutedEventHandler(showAllButton_Checked);
             showAllButton.Unchecked += new RoutedEventHandler(showAllButton_Unchecked);
             ToolTipService.SetToolTip(showAllButton,Localization.ShowAll_Check);
-            //showAllButton.Visibility = System.Windows.Visibility.Collapsed;
+            showAllButton.Visibility = System.Windows.Visibility.Collapsed;
             m_ToolBar.AddItem(showAllButton);
 
             RanetToolBarButton m_ApplyChanges = new RanetToolBarButton();
@@ -233,17 +233,22 @@ namespace Ranet.AgOlap.Controls
             //Grid.SetColumn(Output_HorzSplitter, 0);            
             //
 
-            this.Content = LayoutRoot;
+            this.Content = LayoutRoot;            
         }
 
         void showAllButton_Unchecked(object sender, RoutedEventArgs e)
         {
             this.ShowAllKPIs = false;
+            this.m_sourceCollection = new List<KpiView>();
+            if (this.CustomizeSettingsImmediately)
+                this.UpdateDataGrid(this.ShowAllKPIs);
         }
 
         void showAllButton_Checked(object sender, RoutedEventArgs e)
         {
             this.ShowAllKPIs = true;
+            if (this.CustomizeSettingsImmediately)
+                this.UpdateDataGrid(this.ShowAllKPIs);
         }
 
         void m_ApplyChanges_Click(object sender, RoutedEventArgs e)
@@ -273,6 +278,8 @@ namespace Ranet.AgOlap.Controls
                     }
                 }
             }
+            if (this.CustomizeSettingsImmediately)
+                this.UpdateDataGrid(this.ShowAllKPIs);
         }
         
         public void ShowMetadataArea(bool show)
@@ -792,6 +799,10 @@ namespace Ranet.AgOlap.Controls
             }
         }
 
+        public bool CustomizeSettingsImmediately
+        {
+            get; set;
+        }
 
         public string GroupProperty
         {
@@ -826,7 +837,7 @@ namespace Ranet.AgOlap.Controls
         {
             get { return this.m_ToolBar; }
         }
-        protected KpiDataGrid KpiDataContainer
+        protected DragDropDataGrid KpiDataContainer
         {
             get { return m_DataGrid; }
         }

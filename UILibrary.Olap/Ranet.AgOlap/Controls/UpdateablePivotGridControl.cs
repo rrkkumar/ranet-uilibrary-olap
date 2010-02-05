@@ -748,8 +748,12 @@ namespace Ranet.AgOlap.Controls
 						}
 						return;
 					case ColumnTitleClickBehavior.SortByValue:
+						if (args.Member.Children.Count > 0)
+							return;
+
 						args.Action = MemberActionType.SortByValue;
 						break;
+
 					case ColumnTitleClickBehavior.SortByProperty:
 						if (args.Member != null && (args.Axis == 0 || args.Axis == 1))
 						{
