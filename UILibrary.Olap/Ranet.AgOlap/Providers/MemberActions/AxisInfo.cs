@@ -24,6 +24,7 @@ using System.Linq;
 using System.Text;
 using Ranet.Olap.Mdx;
 using Ranet.Olap.Core.Providers;
+using Ranet.AgOlap.Controls.PivotGrid;
 
 namespace Ranet.AgOlap.Providers.MemberActions
 {
@@ -50,36 +51,41 @@ namespace Ranet.AgOlap.Providers.MemberActions
 				Actions.Add(cont.Clone());
 			}
 		}
-		internal static string GetSortExpr(PerformMemberActionArgs args)
-		{
-			List<string> sortExpr = new List<string>();
+		//internal static string GetSortExpr(PerformMemberActionArgs args)
+		//{
+		//  List<string> sortExpr = new List<string>();
 			
-			string lasthier = args.Member.HierarchyUniqueName;
-			for (int i = 0; i < args.Ascendants.Count; i++)
-			{
-				var member = args.Ascendants[i];
+		//  string lasthier = args.Member.HierarchyUniqueName;
+		//  for (int i = 0; i < args.Ascendants.Count; i++)
+		//  {
+		//    var member = args.Ascendants[i];
 
-				if (lasthier != member.HierarchyUniqueName)
-				{
-					lasthier = member.HierarchyUniqueName;
-					sortExpr.Insert(0, member.UniqueName);
-				}
-			}
-			sortExpr.Add(args.Member.UniqueName);
-			return "("+string.Join(",",sortExpr.ToArray())+")";
-		}
+		//    if (lasthier != member.HierarchyUniqueName)
+		//    {
+		//      lasthier = member.HierarchyUniqueName;
+		//      sortExpr.Insert(0, member.UniqueName);
+		//    }
+		//  }
+		//  sortExpr.Add(args.Member.UniqueName);
+		//  return "("+string.Join(",",sortExpr.ToArray())+")";
+		//}
 		internal void SortByValue(PerformMemberActionArgs args)
 		{
-			var sortExpr = GetSortExpr(args);
-			
-			if (MeasuresSort == null)
-				MeasuresSort = new SortDescriptor();
-
-			if (MeasuresSort.SortBy != sortExpr)
+			var tuple = args.Member.GetAxisTuple();
+			var measuresSort=MeasuresSort as SortByValueDescriptor;
+			if (measuresSort == null)
 			{
-				MeasuresSort.SortBy = sortExpr;
-				MeasuresSort.Type = SortTypes.None;
+				measuresSort = new SortByValueDescriptor();
+				measuresSort.Tuple=tuple;
+				MeasuresSort = measuresSort;
+				
 			}
+			else if (!measuresSort.CompareByTuple(tuple))
+			{
+				measuresSort.Tuple = tuple;
+				measuresSort.Type = SortTypes.None;
+			}
+			
 			if (MeasuresSort.Type == SortTypes.None)
 				MeasuresSort.Type = SortTypes.Ascending;
 			else if (MeasuresSort.Type == SortTypes.Ascending)

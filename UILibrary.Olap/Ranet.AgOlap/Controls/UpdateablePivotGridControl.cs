@@ -376,73 +376,73 @@ namespace Ranet.AgOlap.Controls
 						{
 							if (menu_item.Tag is ControlActionType)
 							{
-                                ControlActionType action = (ControlActionType)menu_item.Tag;
-                                switch (action)
-                                {
-                                    case ControlActionType.SortingByProperty:
-                                        // Иконка для пункта меню - Сортировка по свойству
-                                        var property_sort = GetAxisPropertySort(member_control);
-                                        switch (property_sort != null ? property_sort.Type : SortTypes.None)
-                                        {
-                                            case SortTypes.Ascending:
-                                                menu_item.Icon = UriResources.Images.SortAZ16;
-                                                break;
-                                            case SortTypes.Descending:
-                                                menu_item.Icon = UriResources.Images.SortZA16;
-                                                break;
-                                            default:
-                                                menu_item.Icon = null;
-                                                break;
-                                        }
-                                        break;
-                                    case ControlActionType.SortingAxisByMeasure:
-                                        // Иконка для пункта меню - Сортировка по значению
-                                        var measure_sort = GetAxisByMeasureSort(member_control) as SortByMeasureDescriptor;
-                                        switch (measure_sort != null ? measure_sort.Type : SortTypes.None)
-                                        {
-                                            case SortTypes.Ascending:
-                                                menu_item.Icon = UriResources.Images.SortAZ16;
-                                                break;
-                                            case SortTypes.Descending:
-                                                menu_item.Icon = UriResources.Images.SortZA16;
-                                                break;
-                                            default:
-                                                menu_item.Icon = null;
-                                                break;
-                                        }
-                                        break;
-                                    case ControlActionType.SortingByValue:
-                                        menu_item.Icon = null;
-                                        if (member_control is ColumnMemberControl || member_control is RowMemberControl)
-                                        {
-                                            var value_sort = GetAxisSort(member_control is ColumnMemberControl ? AreaType.RowsArea : AreaType.ColumnsArea) as SortByValueDescriptor;
-                                            if (value_sort != null && member_control.Member != null && value_sort.CompareByTuple(member_control.Member.GetAxisTuple()))
-                                            {
-                                                switch (value_sort.Type)
-                                                {
-                                                    case SortTypes.Ascending:
-                                                        menu_item.Icon = UriResources.Images.SortAZ16;
-                                                        break;
-                                                    case SortTypes.Descending:
-                                                        menu_item.Icon = UriResources.Images.SortZA16;
-                                                        break;
-                                                    default:
-                                                        menu_item.Icon = null;
-                                                        break;
-                                                }
-                                            }
-                                        }
-                                        break;
-                                    case ControlActionType.ClearAxisSorting:
-                                        // Доступность пункта меню - Удалить сортировку
-                                        var property_sort1 = GetAxisPropertySort(member_control);
-                                        var measure_sort1 = GetAxisByMeasureSort(member_control);
-                                        SortTypes property_sort_type = property_sort1 != null ? property_sort1.Type : SortTypes.None;
-                                        SortTypes measure_sort_type = measure_sort1 != null ? measure_sort1.Type : SortTypes.None;
+								ControlActionType action = (ControlActionType)menu_item.Tag;
+								switch (action)
+								{
+									case ControlActionType.SortingByProperty:
+										// Иконка для пункта меню - Сортировка по свойству
+										var property_sort = GetAxisPropertySort(member_control);
+										switch (property_sort != null ? property_sort.Type : SortTypes.None)
+										{
+											case SortTypes.Ascending:
+												menu_item.Icon = UriResources.Images.SortAZ16;
+												break;
+											case SortTypes.Descending:
+												menu_item.Icon = UriResources.Images.SortZA16;
+												break;
+											default:
+												menu_item.Icon = null;
+												break;
+										}
+										break;
+									case ControlActionType.SortingAxisByMeasure:
+										// Иконка для пункта меню - Сортировка по значению
+										var measure_sort = GetAxisByMeasureSort(member_control) as SortByMeasureDescriptor;
+										switch (measure_sort != null ? measure_sort.Type : SortTypes.None)
+										{
+											case SortTypes.Ascending:
+												menu_item.Icon = UriResources.Images.SortAZ16;
+												break;
+											case SortTypes.Descending:
+												menu_item.Icon = UriResources.Images.SortZA16;
+												break;
+											default:
+												menu_item.Icon = null;
+												break;
+										}
+										break;
+									case ControlActionType.SortingByValue:
+										menu_item.Icon = null;
+										if (member_control is ColumnMemberControl || member_control is RowMemberControl)
+										{
+											var value_sort = GetAxisSort(member_control is ColumnMemberControl ? AreaType.RowsArea : AreaType.ColumnsArea) as SortByValueDescriptor;
+											if (value_sort != null && member_control.Member != null && value_sort.CompareByTuple(member_control.Member.GetAxisTuple()))
+											{
+												switch (value_sort.Type)
+												{
+													case SortTypes.Ascending:
+														menu_item.Icon = UriResources.Images.SortAZ16;
+														break;
+													case SortTypes.Descending:
+														menu_item.Icon = UriResources.Images.SortZA16;
+														break;
+													default:
+														menu_item.Icon = null;
+														break;
+												}
+											}
+										}
+										break;
+									case ControlActionType.ClearAxisSorting:
+										// Доступность пункта меню - Удалить сортировку
+										var property_sort1 = GetAxisPropertySort(member_control);
+										var measure_sort1 = GetAxisByMeasureSort(member_control);
+										SortTypes property_sort_type = property_sort1 != null ? property_sort1.Type : SortTypes.None;
+										SortTypes measure_sort_type = measure_sort1 != null ? measure_sort1.Type : SortTypes.None;
 
-                                        menu_item.IsEnabled = property_sort_type != SortTypes.None || measure_sort_type != SortTypes.None;
-                                        break;
-                                }
+										menu_item.IsEnabled = property_sort_type != SortTypes.None || measure_sort_type != SortTypes.None;
+										break;
+								}
 							}
 						}
 					}
@@ -730,7 +730,7 @@ namespace Ranet.AgOlap.Controls
 					{
 						MemberAction = this.ColumnTitleClickBehavior;
 					}
-					
+
 				switch (MemberAction)
 				{
 					case ColumnTitleClickBehavior.None:
@@ -868,8 +868,8 @@ namespace Ranet.AgOlap.Controls
 		}
 
 		ModalDialog m_SortDialog;
-        ModalDialog m_SortByValueDialog;
-        SortPropertiesControl m_SortByValueSettingsControl;
+		ModalDialog m_SortByValueDialog;
+		SortPropertiesControl m_SortByValueSettingsControl;
 		SortPropertiesControl m_SortSettingsControl;
 
 		void MembersArea_PerformControlAction(object sender, ControlActionEventArgs<MemberControl> e)
@@ -903,9 +903,9 @@ namespace Ranet.AgOlap.Controls
 				case ControlActionType.SortingAxisByMeasure:
 					ShowSortPropertiesDialog(PivotTableSortTypes.SortAxisByMeasure, e.UserData);
 					break;
-                case ControlActionType.SortingByValue:
-                    ShowSortPropertiesDialog(PivotTableSortTypes.SortByValue, e.UserData);
-                    break;
+				case ControlActionType.SortingByValue:
+					ShowSortPropertiesDialog(PivotTableSortTypes.SortByValue, e.UserData);
+					break;
 				case ControlActionType.ClearAxisSorting:
 					if (m_CellSetProvider != null)
 					{
@@ -971,130 +971,130 @@ namespace Ranet.AgOlap.Controls
 
 		void ShowSortPropertiesDialog(PivotTableSortTypes sortType, MemberControl member)
 		{
-            ModalDialog dlg;
-            SortPropertiesControl sortControl;
-            if (sortType == PivotTableSortTypes.SortByValue)
-            {
-                // Сортировку по значению делаем отдельным диалогом чтобы не думать о сохранении размеров
-                if (m_SortByValueDialog == null)
-                {
-                    m_SortByValueDialog = new ModalDialog() { Width = 500, Height = 400, MinHeight = 250, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
-                    m_SortByValueDialog.Caption = Localization.SortingSettingsDialog_Caption;
-                    m_SortByValueDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
-                    Panel panel1 = GetRootPanel(this);
-                    if (panel1 != null)
-                    {
-                        panel1.Children.Add(m_SortByValueDialog.Dialog.PopUpControl);
-                    }
-                }
+			ModalDialog dlg;
+			SortPropertiesControl sortControl;
+			if (sortType == PivotTableSortTypes.SortByValue)
+			{
+				// Сортировку по значению делаем отдельным диалогом чтобы не думать о сохранении размеров
+				if (m_SortByValueDialog == null)
+				{
+					m_SortByValueDialog = new ModalDialog() { Width = 500, Height = 400, MinHeight = 250, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
+					m_SortByValueDialog.Caption = Localization.SortingSettingsDialog_Caption;
+					m_SortByValueDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
+					Panel panel1 = GetRootPanel(this);
+					if (panel1 != null)
+					{
+						panel1.Children.Add(m_SortByValueDialog.Dialog.PopUpControl);
+					}
+				}
 
-                if (m_SortByValueSettingsControl == null)
-                {
-                    m_SortByValueSettingsControl = new SortPropertiesControl();
-                    m_SortByValueSettingsControl.CubeName = m_CSDescr != null ? m_CSDescr.CubeName : String.Empty;
-                    m_SortByValueSettingsControl.ConnectionID = m_CSDescr != null ? m_CSDescr.Connection.ConnectionID : String.Empty;
-                    m_SortByValueSettingsControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
-                    m_SortByValueSettingsControl.LogManager = this.LogManager;
+				if (m_SortByValueSettingsControl == null)
+				{
+					m_SortByValueSettingsControl = new SortPropertiesControl();
+					m_SortByValueSettingsControl.CubeName = m_CSDescr != null ? m_CSDescr.CubeName : String.Empty;
+					m_SortByValueSettingsControl.ConnectionID = m_CSDescr != null ? m_CSDescr.Connection.ConnectionID : String.Empty;
+					m_SortByValueSettingsControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
+					m_SortByValueSettingsControl.LogManager = this.LogManager;
 
-                    m_SortByValueSettingsControl.LoadMeasures += new EventHandler<CustomEventArgs<EventArgs>>(m_SortSettingsControl_LoadMeasures);
-                    m_SortByValueDialog.Content = m_SortByValueSettingsControl;
-                }
-                sortControl = m_SortByValueSettingsControl;
-                dlg = m_SortByValueDialog;
-            }
-            else
-            {
-                if (m_SortDialog == null)
-                {
-                    m_SortDialog = new ModalDialog() { Width = 400, Height = 250, MinHeight = 215, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
-                    m_SortDialog.Caption = Localization.SortingSettingsDialog_Caption;
-                    m_SortDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
-                    Panel panel1 = GetRootPanel(this);
-                    if (panel1 != null)
-                    {
-                        panel1.Children.Add(m_SortDialog.Dialog.PopUpControl);
-                    }
-                }
+					m_SortByValueSettingsControl.LoadMeasures += new EventHandler<CustomEventArgs<EventArgs>>(m_SortSettingsControl_LoadMeasures);
+					m_SortByValueDialog.Content = m_SortByValueSettingsControl;
+				}
+				sortControl = m_SortByValueSettingsControl;
+				dlg = m_SortByValueDialog;
+			}
+			else
+			{
+				if (m_SortDialog == null)
+				{
+					m_SortDialog = new ModalDialog() { Width = 400, Height = 250, MinHeight = 215, MinWidth = 180, DialogStyle = ModalDialogStyles.OKCancel };
+					m_SortDialog.Caption = Localization.SortingSettingsDialog_Caption;
+					m_SortDialog.DialogOk += new EventHandler<DialogResultArgs>(SortProperties_DialogOk);
+					Panel panel1 = GetRootPanel(this);
+					if (panel1 != null)
+					{
+						panel1.Children.Add(m_SortDialog.Dialog.PopUpControl);
+					}
+				}
 
-                if (m_SortSettingsControl == null)
-                {
-                    m_SortSettingsControl = new SortPropertiesControl();
-                    m_SortSettingsControl.CubeName = m_CSDescr != null ? m_CSDescr.CubeName : String.Empty;
-                    m_SortSettingsControl.ConnectionID = m_CSDescr != null ? m_CSDescr.Connection.ConnectionID : String.Empty;
-                    m_SortSettingsControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
-                    m_SortSettingsControl.LogManager = this.LogManager;
+				if (m_SortSettingsControl == null)
+				{
+					m_SortSettingsControl = new SortPropertiesControl();
+					m_SortSettingsControl.CubeName = m_CSDescr != null ? m_CSDescr.CubeName : String.Empty;
+					m_SortSettingsControl.ConnectionID = m_CSDescr != null ? m_CSDescr.Connection.ConnectionID : String.Empty;
+					m_SortSettingsControl.GetOlapDataLoader += new EventHandler<GetIDataLoaderArgs>(CopyControl_GetMetadataLoader);
+					m_SortSettingsControl.LogManager = this.LogManager;
 
-                    m_SortSettingsControl.LoadMeasures += new EventHandler<CustomEventArgs<EventArgs>>(m_SortSettingsControl_LoadMeasures);
-                    m_SortDialog.Content = m_SortSettingsControl;
-                }
-                sortControl = m_SortSettingsControl;
-                dlg = m_SortDialog;
-            }
+					m_SortSettingsControl.LoadMeasures += new EventHandler<CustomEventArgs<EventArgs>>(m_SortSettingsControl_LoadMeasures);
+					m_SortDialog.Content = m_SortSettingsControl;
+				}
+				sortControl = m_SortSettingsControl;
+				dlg = m_SortDialog;
+			}
 
-            if (dlg == null || sortControl == null)
-                return;
+			if (dlg == null || sortControl == null)
+				return;
 
-            dlg.Tag = sortControl;
+			dlg.Tag = sortControl;
 			sortControl.Tag = member;
 
 			SortDescriptor sort = null;
-            switch (sortType)
-            {
-                case PivotTableSortTypes.SortByProperty:
-                    if (m_CellSetProvider != null &&
-                            member != null &&
-                            member.Member != null)
-                    {
-                        sort = GetAxisPropertySort(member);
-                    }
-                    break;
-                case PivotTableSortTypes.SortAxisByMeasure:
-                    sort = GetAxisByMeasureSort(member);
-                    break;
-                case PivotTableSortTypes.SortByValue:
-                    // Получаем сортировку для противоположной оси. Если это сортировка по значению, то проверяем чтобы это была сортировка для данного элемента. Если нет, то создается новый дескриптор
-                    if(member is ColumnMemberControl || member is RowMemberControl)
-                    {
-                        var value_sort = GetAxisSort(member is ColumnMemberControl ? AreaType.RowsArea : AreaType.ColumnsArea) as SortByValueDescriptor;
-                        if (value_sort != null && member != null && member.Member != null && value_sort.CompareByTuple(member.Member.GetAxisTuple()))
-                        { 
-                            sort = value_sort;
-                        }
-                    }
+			switch (sortType)
+			{
+				case PivotTableSortTypes.SortByProperty:
+					if (m_CellSetProvider != null &&
+									member != null &&
+									member.Member != null)
+					{
+						sort = GetAxisPropertySort(member);
+					}
+					break;
+				case PivotTableSortTypes.SortAxisByMeasure:
+					sort = GetAxisByMeasureSort(member);
+					break;
+				case PivotTableSortTypes.SortByValue:
+					// Получаем сортировку для противоположной оси. Если это сортировка по значению, то проверяем чтобы это была сортировка для данного элемента. Если нет, то создается новый дескриптор
+					if (member is ColumnMemberControl || member is RowMemberControl)
+					{
+						var value_sort = GetAxisSort(member is ColumnMemberControl ? AreaType.RowsArea : AreaType.ColumnsArea) as SortByValueDescriptor;
+						if (value_sort != null && member != null && member.Member != null && value_sort.CompareByTuple(member.Member.GetAxisTuple()))
+						{
+							sort = value_sort;
+						}
+					}
 
-                    if (sort == null)
-                    {
-                        sort = new SortByValueDescriptor();
-                        if (member != null && member.Member != null)
-                        {
-                            (sort as SortByValueDescriptor).Tuple = member.Member.GetAxisTuple();
-                        }
-                    }
-                    break;
-            }
+					if (sort == null)
+					{
+						sort = new SortByValueDescriptor();
+						if (member != null && member.Member != null)
+						{
+							(sort as SortByValueDescriptor).Tuple = member.Member.GetAxisTuple();
+						}
+					}
+					break;
+			}
 
 			sortControl.Initialize(sortType, sort);
 			ShowDialog(dlg);
 		}
 
-        SortDescriptor GetAxisByMeasureSort(MemberControl member)
-        {
-            if (member is ColumnMemberControl)
-                return GetAxisSort(AreaType.ColumnsArea);
-            if (member is RowMemberControl)
-                return GetAxisSort(AreaType.RowsArea);
-            return null;
-        }
+		SortDescriptor GetAxisByMeasureSort(MemberControl member)
+		{
+			if (member is ColumnMemberControl)
+				return GetAxisSort(AreaType.ColumnsArea);
+			if (member is RowMemberControl)
+				return GetAxisSort(AreaType.RowsArea);
+			return null;
+		}
 
-        void SetAxisByMeasureSort(MemberControl member, SortDescriptor sort)
-        {
-            if (member is ColumnMemberControl)
-                SetAxisSort(AreaType.ColumnsArea, sort);
-            if (member is RowMemberControl)
-                SetAxisSort(AreaType.RowsArea, sort);
-        }
+		void SetAxisByMeasureSort(MemberControl member, SortDescriptor sort)
+		{
+			if (member is ColumnMemberControl)
+				SetAxisSort(AreaType.ColumnsArea, sort);
+			if (member is RowMemberControl)
+				SetAxisSort(AreaType.RowsArea, sort);
+		}
 
-        SortDescriptor GetAxisSort(AreaType area)
+		SortDescriptor GetAxisSort(AreaType area)
 		{
 			if (DataManager != null)
 			{
@@ -1110,18 +1110,18 @@ namespace Ranet.AgOlap.Controls
 			return null;
 		}
 
-        void SetAxisSort(AreaType area, SortDescriptor sort)
+		void SetAxisSort(AreaType area, SortDescriptor sort)
 		{
 			if (DataManager != null)
 			{
-                if (area == AreaType.ColumnsArea)
+				if (area == AreaType.ColumnsArea)
 				{
 					if (PivotGrid.AxisIsRotated == false)
 						DataManager.Axis0_MeasuresSort = sort;
 					else
 						DataManager.Axis1_MeasuresSort = sort;
 				}
-                if (area == AreaType.RowsArea)
+				if (area == AreaType.RowsArea)
 				{
 					if (PivotGrid.AxisIsRotated == false)
 						DataManager.Axis1_MeasuresSort = sort;
@@ -1133,14 +1133,14 @@ namespace Ranet.AgOlap.Controls
 
 		void m_SortSettingsControl_LoadMeasures(object sender, CustomEventArgs<EventArgs> e)
 		{
-            SortPropertiesControl sortControl = sender as SortPropertiesControl;
-            if (sortControl != null && m_CellSetProvider != null &&
-    			m_CellSetProvider.CellSet_Description != null &&
-				!String.IsNullOrEmpty(m_CellSetProvider.CellSet_Description.CubeName))
+			SortPropertiesControl sortControl = sender as SortPropertiesControl;
+			if (sortControl != null && m_CellSetProvider != null &&
+		m_CellSetProvider.CellSet_Description != null &&
+	!String.IsNullOrEmpty(m_CellSetProvider.CellSet_Description.CubeName))
 			{
 				LogManager.LogInformation(this, this.Name + String.Format(" - Loading cube '{0}' measures", m_CellSetProvider.CellSet_Description.CubeName));
 				MetadataQuery args = CommandHelper.CreateGetCubeMetadataArgs(Connection, m_CellSetProvider.CellSet_Description.CubeName, MetadataQueryType.GetMeasures);
-                OlapDataLoader.LoadData(args, sortControl);
+				OlapDataLoader.LoadData(args, sortControl);
 			}
 			else
 			{
@@ -1150,33 +1150,33 @@ namespace Ranet.AgOlap.Controls
 
 		void SortProperties_DialogOk(object sender, DialogResultArgs e)
 		{
-            // Сортировка по свойству применяется к той оси, на которой вызывалось меню
-            // Сортировка по мере применяется к той оси, на которой вызывалось меню
-            // Сортировка по значению применяется к противоположной оси
-            
-            // Если устанавливается сортировка по свойству:
-            //  - На противоположной оси отменяется сортировка по значению
+			// Сортировка по свойству применяется к той оси, на которой вызывалось меню
+			// Сортировка по мере применяется к той оси, на которой вызывалось меню
+			// Сортировка по значению применяется к противоположной оси
 
-            // Если устанавливается сортировка по значению:
-            //  - На противоположной оси отменяются все сортировки по свойству
+			// Если устанавливается сортировка по свойству:
+			//  - На противоположной оси отменяется сортировка по значению
 
-            var dlg = sender as ModalDialog;
-            if (dlg == null)
-                return;
-            var sortControl = dlg.Tag as SortPropertiesControl;
-            if (sortControl == null)
-                return;
+			// Если устанавливается сортировка по значению:
+			//  - На противоположной оси отменяются все сортировки по свойству
 
-            if (sortControl.SortType == PivotTableSortTypes.SortAxisByMeasure &&
-                    sortControl.SortDescriptor.Type != SortTypes.None &&
-                    String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
+			var dlg = sender as ModalDialog;
+			if (dlg == null)
+				return;
+			var sortControl = dlg.Tag as SortPropertiesControl;
+			if (sortControl == null)
+				return;
+
+			if (sortControl.SortType == PivotTableSortTypes.SortAxisByMeasure &&
+							sortControl.SortDescriptor.Type != SortTypes.None &&
+							String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
 			{
 				MessageBox.Show(Localization.SortingPropertiesDialog_MeasureNotSelected_Message, Localization.Warning, MessageBoxButton.OK);
 				e.Cancel = true;
 				return;
 			}
 
-            MemberControl member = sortControl.Tag as MemberControl;
+			MemberControl member = sortControl.Tag as MemberControl;
 			if (member != null && member.Member != null)
 			{
 				int axisNum = -1;
@@ -1188,16 +1188,16 @@ namespace Ranet.AgOlap.Controls
 				if (m_CellSetProvider != null && axisNum != -1)
 				{
 					// Сортировка по свойству
-                    if (sortControl.SortType == PivotTableSortTypes.SortByProperty)
+					if (sortControl.SortType == PivotTableSortTypes.SortByProperty)
 					{
-                        // Если на противоположной оси нет сортировки по значению
+						// Если на противоположной оси нет сортировки по значению
 
-                        m_CellSetProvider.Sort(axisNum, member.Member.HierarchyUniqueName, sortControl.SortDescriptor);
+						m_CellSetProvider.Sort(axisNum, member.Member.HierarchyUniqueName, sortControl.SortDescriptor);
 						try
 						{
 							IsWaiting = true;
-                            // Отменяем сортировку по значению для противоположной оси
-                            SetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea, null);
+							// Отменяем сортировку по значению для противоположной оси
+							SetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea, null);
 							PivotGrid.Initialize(m_CellSetProvider);
 						}
 						finally
@@ -1207,18 +1207,18 @@ namespace Ranet.AgOlap.Controls
 					}
 
 					// Сортировка по значению
-                    if (sortControl.SortType == PivotTableSortTypes.SortAxisByMeasure)
+					if (sortControl.SortType == PivotTableSortTypes.SortAxisByMeasure)
 					{
 						if (DataManager != null)
 						{
-                            // Новая сортировка для оси
+							// Новая сортировка для оси
 							SortDescriptor descr = null;
-                            if (sortControl.SortDescriptor.Type != SortTypes.None &&
-                                         !String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
-                                descr = sortControl.SortDescriptor;
-                            if (GetAxisByMeasureSort(member) != null || descr != null)
+							if (sortControl.SortDescriptor.Type != SortTypes.None &&
+													 !String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
+								descr = sortControl.SortDescriptor;
+							if (GetAxisByMeasureSort(member) != null || descr != null)
 							{
-                                SetAxisByMeasureSort(member, descr);
+								SetAxisByMeasureSort(member, descr);
 
 								// Сортируем новым запросом
 								RunServiceCommand(ServiceCommandType.Refresh);
@@ -1226,22 +1226,22 @@ namespace Ranet.AgOlap.Controls
 						}
 					}
 
-                    if (sortControl.SortType == PivotTableSortTypes.SortByValue)
-                    { 
-                        // Новая сортировка для противоположной оси
-                        SortDescriptor descr = null;
-                        if (sortControl.SortDescriptor.Type != SortTypes.None &&
-                                     !String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
-                            descr = sortControl.SortDescriptor;
-                        // Проверяем сортировку противоположной оси
-                        if (GetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea) != null || descr != null)
-                        {
-                            SetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea, descr);
+					if (sortControl.SortType == PivotTableSortTypes.SortByValue)
+					{
+						// Новая сортировка для противоположной оси
+						SortDescriptor descr = null;
+						if (sortControl.SortDescriptor.Type != SortTypes.None &&
+												 !String.IsNullOrEmpty(sortControl.SortDescriptor.SortBy))
+							descr = sortControl.SortDescriptor;
+						// Проверяем сортировку противоположной оси
+						if (GetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea) != null || descr != null)
+						{
+							SetAxisSort(axisNum == 0 ? AreaType.RowsArea : AreaType.ColumnsArea, descr);
 
-                            // Сортируем новым запросом
-                            RunServiceCommand(ServiceCommandType.Refresh);
-                        }
-                    }
+							// Сортируем новым запросом
+							RunServiceCommand(ServiceCommandType.Refresh);
+						}
+					}
 				}
 			}
 		}
@@ -2174,11 +2174,11 @@ namespace Ranet.AgOlap.Controls
 			if (e.Action == MemberActionType.Collapse ||
 					e.Action == MemberActionType.Expand ||
 					e.Action == MemberActionType.DrillDown
-				  || e.Action == MemberActionType.SortByValue
+					|| e.Action == MemberActionType.SortByValue
 				//                 || e.Action == MemberActionType.DrillUp
 					)
 			{
-                List<MemberInfo> full_tuple = e.Member.GetAncestors(true);
+				List<MemberInfo> full_tuple = e.Member.GetAncestors(true);
 
 				PerformMemberActionArgs args = CommandHelper.CreatePerformMemberActionArgs(
 						e.Member, e.Axis, e.Action, full_tuple);
@@ -2207,11 +2207,11 @@ namespace Ranet.AgOlap.Controls
 			}
 		}
 
-        public PivotQueryManager DataManager
-        {
-            get { return PivotGrid.QueryManager; }
-            set { PivotGrid.QueryManager = value; }
-        }
+		public PivotQueryManager DataManager
+		{
+			get { return PivotGrid.QueryManager; }
+			set { PivotGrid.QueryManager = value; }
+		}
 
 		public DrillDownMode m_DrillDownMode = DrillDownMode.BySingleDimensionHideSelf;
 		public DrillDownMode DrillDownMode
@@ -2443,7 +2443,7 @@ namespace Ranet.AgOlap.Controls
 				if (sortControl != null)
 				{
 					List<MeasureInfo> list = XmlSerializationUtility.XmlStr2Obj<List<MeasureInfo>>(e.Result.Content);
-                    sortControl.InitializeMeasuresList(list);
+					sortControl.InitializeMeasuresList(list);
 				}
 
 				//MemberInfoWrapper<MemberChoiceQuery> member_args = e.UserState as MemberInfoWrapper<MemberChoiceQuery>;
