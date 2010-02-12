@@ -15,8 +15,8 @@ partial class ProductInfo
 	public const string AssemblyCopyright = "Copyright (C) 2009 Galaktika Corporation ZAO";
 	public const string AssemblyTrademark = "Ranet";
 	public const string AssemblyCompany = "Galaktika";
-	public const string AssemblyFileVersion = "0.1.10000.0";
-	public const string AssemblyVersion = "0.1.*";
-	public const string MajorMinorVersion = "0.1";
+	public const string AssemblyFileVersion = "1.3.10000.0";
+	public const string AssemblyVersion = "1.3.*";
+	public const string MajorMinorVersion = "1.3";
 }
 #pragma warning restore 0436
