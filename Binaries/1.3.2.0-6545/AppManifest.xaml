@@ -1,0 +1,22 @@
+﻿<Deployment xmlns="http://schemas.microsoft.com/client/2007/deployment" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" EntryPointAssembly="UILibrary.Olap.UITestApplication" EntryPointType="UILibrary.Olap.UITestApplication.App" RuntimeVersion="3.0.40624.0">
+  <Deployment.Parts>
+    <AssemblyPart x:Name="UILibrary.Olap.UITestApplication" Source="UILibrary.Olap.UITestApplication.dll" />
+    <AssemblyPart x:Name="Ranet.AgOlap.Core" Source="Ranet.AgOlap.Core.dll" />
+    <AssemblyPart x:Name="Ranet.AgOlap" Source="Ranet.AgOlap.dll" />
+    <AssemblyPart x:Name="Ranet.AgOlap.Mdx" Source="Ranet.AgOlap.Mdx.dll" />
+    <AssemblyPart x:Name="Ranet.SampleApplications.MdxFormatter.SilverLight" Source="Ranet.SampleApplications.MdxFormatter.SilverLight.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls" Source="System.Windows.Controls.dll" />
+    <AssemblyPart x:Name="System.Reactive" Source="System.Reactive.dll" />
+    <AssemblyPart x:Name="System.Windows.Data" Source="System.Windows.Data.dll" />
+    <AssemblyPart x:Name="System.Xml.Linq" Source="System.Xml.Linq.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls.Data.Input" Source="System.Windows.Controls.Data.Input.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls.Toolkit" Source="System.Windows.Controls.Toolkit.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls.Data" Source="System.Windows.Controls.Data.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls.Layout.Toolkit" Source="System.Windows.Controls.Layout.Toolkit.dll" />
+    <AssemblyPart x:Name="System.Windows.Controls.Input.Toolkit" Source="System.Windows.Controls.Input.Toolkit.dll" />
+    <AssemblyPart x:Name="Ranet.AgZipLib" Source="Ranet.AgZipLib.dll" />
+    <AssemblyPart x:Name="System.ComponentModel.DataAnnotations" Source="System.ComponentModel.DataAnnotations.dll" />
+    <AssemblyPart x:Name="System.Xml.Serialization" Source="System.Xml.Serialization.dll" />
+    <AssemblyPart x:Name="Jayrock.AgJson" Source="Jayrock.AgJson.dll" />
+  </Deployment.Parts>
+</Deployment>
