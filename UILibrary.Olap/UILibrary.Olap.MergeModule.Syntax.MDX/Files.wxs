@@ -4,10 +4,10 @@
 >
 	<Fragment Id='Files.wxs'>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C401' Guid='3323cb7c-a6a3-48b9-8968-c1bda98922fe'>
+			<Component Id='C1' Guid='8010b365-0aa9-482d-8ae4-a22fd7b8b0ca'>
 				<File
-					Id='I401'
-					Name='N401'
+					Id='I1'
+					Name='N1'
 					KeyPath='yes'
 					LongName='AND.png'
 					Source='INSTALLDIR\Syntax.MDX\AND.png'
@@ -18,10 +18,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C402' Guid='8cbb0efb-4d96-44af-9915-fd1e6276bf54'>
+			<Component Id='C2' Guid='83985336-9152-48d1-b688-0b9474cd528c'>
 				<File
-					Id='I402'
-					Name='N402'
+					Id='I2'
+					Name='N2'
 					KeyPath='yes'
 					LongName='AS.png'
 					Source='INSTALLDIR\Syntax.MDX\AS.png'
@@ -32,10 +32,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C403' Guid='a6daa42c-8bcd-4987-b1bf-3f7bed71111f'>
+			<Component Id='C3' Guid='190de731-272e-4052-aac1-e0f046250a30'>
 				<File
-					Id='I403'
-					Name='N403'
+					Id='I3'
+					Name='N3'
 					KeyPath='yes'
 					LongName='axis_name.png'
 					Source='INSTALLDIR\Syntax.MDX\axis_name.png'
@@ -46,10 +46,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C404' Guid='cab454ad-6d30-4f56-9aaa-2dca33c7eade'>
+			<Component Id='C4' Guid='acf0abff-608a-4340-b6e5-e548f2643d4b'>
 				<File
-					Id='I404'
-					Name='N404'
+					Id='I4'
+					Name='N4'
 					KeyPath='yes'
 					LongName='axis_specification.png'
 					Source='INSTALLDIR\Syntax.MDX\axis_specification.png'
@@ -60,10 +60,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C405' Guid='b6b3e375-a81b-4d7b-8c12-2a1d01a33055'>
+			<Component Id='C5' Guid='fb3272e6-d219-48f3-b6ba-bb2e1788d4a3'>
 				<File
-					Id='I405'
-					Name='N405'
+					Id='I5'
+					Name='N5'
 					KeyPath='yes'
 					LongName='BY.png'
 					Source='INSTALLDIR\Syntax.MDX\BY.png'
@@ -74,10 +74,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C406' Guid='4871dcd4-360e-45e0-b767-146982412e09'>
+			<Component Id='C6' Guid='57878aff-269b-4cf6-b7a4-302afc03c3d3'>
 				<File
-					Id='I406'
-					Name='N406'
+					Id='I6'
+					Name='N6'
 					KeyPath='yes'
 					LongName='CALCULATED.png'
 					Source='INSTALLDIR\Syntax.MDX\CALCULATED.png'
@@ -88,10 +88,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C407' Guid='d84ed150-9f6d-4eda-9025-d818bff73dca'>
+			<Component Id='C7' Guid='28d527da-a548-4943-b9e9-2d1168a9be74'>
 				<File
-					Id='I407'
-					Name='N407'
+					Id='I7'
+					Name='N7'
 					KeyPath='yes'
 					LongName='CALCULATION.png'
 					Source='INSTALLDIR\Syntax.MDX\CALCULATION.png'
@@ -102,10 +102,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C408' Guid='724e232f-49e4-49ac-92c2-7fbc3ec871a9'>
+			<Component Id='C8' Guid='911b4d05-ab34-49b8-9298-9cbfd0b74efb'>
 				<File
-					Id='I408'
-					Name='N408'
+					Id='I8'
+					Name='N8'
 					KeyPath='yes'
 					LongName='CASE.png'
 					Source='INSTALLDIR\Syntax.MDX\CASE.png'
@@ -116,10 +116,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C409' Guid='42136ff1-e32e-49e3-8507-e4f56ee337c7'>
+			<Component Id='C9' Guid='a34a8c37-d528-41f7-bfcd-0fbfb4dc2bd6'>
 				<File
-					Id='I409'
-					Name='N409'
+					Id='I9'
+					Name='N9'
 					KeyPath='yes'
 					LongName='CELL.png'
 					Source='INSTALLDIR\Syntax.MDX\CELL.png'
@@ -130,10 +130,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C410' Guid='e0a25f7c-00d0-47ef-82ba-99d05a81945c'>
+			<Component Id='C10' Guid='ac6a73c4-725c-477c-abff-8fb199b384a6'>
 				<File
-					Id='I410'
-					Name='N410'
+					Id='I10'
+					Name='N10'
 					KeyPath='yes'
 					LongName='CELL_ORDINAL.png'
 					Source='INSTALLDIR\Syntax.MDX\CELL_ORDINAL.png'
@@ -144,10 +144,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C411' Guid='8725b59e-8d50-4f39-b627-9e37acf607fa'>
+			<Component Id='C11' Guid='5cc31470-c42c-42f4-802f-7399c6d5df79'>
 				<File
-					Id='I411'
-					Name='N411'
+					Id='I11'
+					Name='N11'
 					KeyPath='yes'
 					LongName='cell_property.png'
 					Source='INSTALLDIR\Syntax.MDX\cell_property.png'
@@ -158,10 +158,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C412' Guid='180e30e8-4f80-4996-ace8-f5d1535bef63'>
+			<Component Id='C12' Guid='6bbf8a35-72e9-4a6c-8a2a-034d51dde867'>
 				<File
-					Id='I412'
-					Name='N412'
+					Id='I12'
+					Name='N12'
 					KeyPath='yes'
 					LongName='COMMENT.png'
 					Source='INSTALLDIR\Syntax.MDX\COMMENT.png'
@@ -172,10 +172,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C413' Guid='a16b0ce7-06cd-4343-81f8-39470bf38ef1'>
+			<Component Id='C13' Guid='3e8f3614-b517-4334-a808-b874c33d5d96'>
 				<File
-					Id='I413'
-					Name='N413'
+					Id='I13'
+					Name='N13'
 					KeyPath='yes'
 					LongName='compound_id.png'
 					Source='INSTALLDIR\Syntax.MDX\compound_id.png'
@@ -186,10 +186,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C414' Guid='44cd9c1b-415a-40fd-a43d-ce538668cc97'>
+			<Component Id='C14' Guid='e623b99e-3827-444f-9290-d6ddae9a8510'>
 				<File
-					Id='I414'
-					Name='N414'
+					Id='I14'
+					Name='N14'
 					KeyPath='yes'
 					LongName='condition.png'
 					Source='INSTALLDIR\Syntax.MDX\condition.png'
@@ -200,10 +200,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C415' Guid='05faad8a-14ca-49d2-9880-7b2b67bee3b7'>
+			<Component Id='C15' Guid='9dd78e86-be52-47db-a2a9-62c00403bbee'>
 				<File
-					Id='I415'
-					Name='N415'
+					Id='I15'
+					Name='N15'
 					KeyPath='yes'
 					LongName='CREATE.png'
 					Source='INSTALLDIR\Syntax.MDX\CREATE.png'
@@ -214,10 +214,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C416' Guid='7a4d18b9-1df7-447d-80db-f404fd58511d'>
+			<Component Id='C16' Guid='4a036ea2-8502-46f3-b9de-e05ce1f1f787'>
 				<File
-					Id='I416'
-					Name='N416'
+					Id='I16'
+					Name='N16'
 					KeyPath='yes'
 					LongName='CUBE.png'
 					Source='INSTALLDIR\Syntax.MDX\CUBE.png'
@@ -228,10 +228,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C417' Guid='3580f33c-c806-4a04-bea2-78b9267232ba'>
+			<Component Id='C17' Guid='32446878-4b38-4bd9-88ed-3042f0e2379d'>
 				<File
-					Id='I417'
-					Name='N417'
+					Id='I17'
+					Name='N17'
 					KeyPath='yes'
 					LongName='cube_name.png'
 					Source='INSTALLDIR\Syntax.MDX\cube_name.png'
@@ -242,10 +242,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C418' Guid='fbbf9ce2-c1b2-4a64-ac1a-74dc8b19203c'>
+			<Component Id='C18' Guid='451bd86a-678c-43ba-8be6-a83341e4aecc'>
 				<File
-					Id='I418'
-					Name='N418'
+					Id='I18'
+					Name='N18'
 					KeyPath='yes'
 					LongName='cube_specification.png'
 					Source='INSTALLDIR\Syntax.MDX\cube_specification.png'
@@ -256,10 +256,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C419' Guid='e885b7c0-4390-4e02-9224-a6e456ca121e'>
+			<Component Id='C19' Guid='a02679f0-08df-4792-8b1b-d1d61c9a49af'>
 				<File
-					Id='I419'
-					Name='N419'
+					Id='I19'
+					Name='N19'
 					KeyPath='yes'
 					LongName='DIMENSION.png'
 					Source='INSTALLDIR\Syntax.MDX\DIMENSION.png'
@@ -270,10 +270,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C420' Guid='571b91d8-616d-4a36-88dc-a4d44766f4a6'>
+			<Component Id='C20' Guid='7b0b5c52-159a-41e3-97b6-67f57f5173bf'>
 				<File
-					Id='I420'
-					Name='N420'
+					Id='I20'
+					Name='N20'
 					KeyPath='yes'
 					LongName='ELSE.png'
 					Source='INSTALLDIR\Syntax.MDX\ELSE.png'
@@ -284,10 +284,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C421' Guid='fc8b7bda-1a45-495b-a691-3d0b35162058'>
+			<Component Id='C21' Guid='02597f00-4d98-400f-b0bd-435d3b95aecf'>
 				<File
-					Id='I421'
-					Name='N421'
+					Id='I21'
+					Name='N21'
 					KeyPath='yes'
 					LongName='EMPTY.png'
 					Source='INSTALLDIR\Syntax.MDX\EMPTY.png'
@@ -298,10 +298,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C422' Guid='e7ec2a9c-2d1e-4d23-9ad4-7170bea7ae16'>
+			<Component Id='C22' Guid='c365d657-ca16-4add-b895-2cebf2ba2ebc'>
 				<File
-					Id='I422'
-					Name='N422'
+					Id='I22'
+					Name='N22'
 					KeyPath='yes'
 					LongName='END.png'
 					Source='INSTALLDIR\Syntax.MDX\END.png'
@@ -312,10 +312,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C423' Guid='dcd80964-9743-421e-bf02-8dc893edd34a'>
+			<Component Id='C23' Guid='3e864e2b-276f-499d-aec5-fc855c2cc76d'>
 				<File
-					Id='I423'
-					Name='N423'
+					Id='I23'
+					Name='N23'
 					KeyPath='yes'
 					LongName='expression.png'
 					Source='INSTALLDIR\Syntax.MDX\expression.png'
@@ -326,10 +326,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C424' Guid='9f6ed766-b657-45c1-a4f2-58fdd448ad63'>
+			<Component Id='C24' Guid='f985e58f-38eb-4025-bd0e-1f909b4b592c'>
 				<File
-					Id='I424'
-					Name='N424'
+					Id='I24'
+					Name='N24'
 					KeyPath='yes'
 					LongName='expressions_list.png'
 					Source='INSTALLDIR\Syntax.MDX\expressions_list.png'
@@ -340,10 +340,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C425' Guid='911aa189-17b7-4962-8816-0604a8b8baac'>
+			<Component Id='C25' Guid='773bd514-20ae-4320-91e1-d4a24f857215'>
 				<File
-					Id='I425'
-					Name='N425'
+					Id='I25'
+					Name='N25'
 					KeyPath='yes'
 					LongName='expression_add.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_add.png'
@@ -354,10 +354,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C426' Guid='9ff467f3-0a2d-48a1-bfc0-584719282e90'>
+			<Component Id='C26' Guid='46158b42-6e6d-47a8-890a-329782fc33aa'>
 				<File
-					Id='I426'
-					Name='N426'
+					Id='I26'
+					Name='N26'
 					KeyPath='yes'
 					LongName='expression_and.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_and.png'
@@ -368,10 +368,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C427' Guid='f6c477ba-56e7-4c39-b702-a2c79358a51f'>
+			<Component Id='C27' Guid='68e5cbb2-2ded-496b-b8a5-5faf3c5bf707'>
 				<File
-					Id='I427'
-					Name='N427'
+					Id='I27'
+					Name='N27'
 					KeyPath='yes'
 					LongName='expression_case.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_case.png'
@@ -382,10 +382,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C428' Guid='f68c49d8-1bb7-4b0e-bd29-2dfab623098c'>
+			<Component Id='C28' Guid='ed21cb06-1a72-4c38-8733-c7bc5b2d6b73'>
 				<File
-					Id='I428'
-					Name='N428'
+					Id='I28'
+					Name='N28'
 					KeyPath='yes'
 					LongName='expression_compare.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_compare.png'
@@ -396,10 +396,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C429' Guid='cccfafa7-30c5-4316-9801-f20b64664d02'>
+			<Component Id='C29' Guid='d123adbc-7b8b-4218-9d24-d25e476ce58e'>
 				<File
-					Id='I429'
-					Name='N429'
+					Id='I29'
+					Name='N29'
 					KeyPath='yes'
 					LongName='expression_function.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_function.png'
@@ -410,10 +410,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C430' Guid='7eb298b2-c354-43a4-8101-16e733959588'>
+			<Component Id='C30' Guid='5799e012-8d9e-4837-9a6e-31d4ca78f720'>
 				<File
-					Id='I430'
-					Name='N430'
+					Id='I30'
+					Name='N30'
 					KeyPath='yes'
 					LongName='expression_mult.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_mult.png'
@@ -424,10 +424,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C431' Guid='25e91805-b284-4840-af32-60d1340d3f64'>
+			<Component Id='C31' Guid='da0f4336-ceb3-446c-8e02-250bc00fdf06'>
 				<File
-					Id='I431'
-					Name='N431'
+					Id='I31'
+					Name='N31'
 					KeyPath='yes'
 					LongName='expression_or_xor.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_or_xor.png'
@@ -438,10 +438,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C432' Guid='fe9e86f3-c625-456b-9ae1-5ec4f66b94ef'>
+			<Component Id='C32' Guid='ec961980-2ea7-4f8b-a860-dd06385d4f37'>
 				<File
-					Id='I432'
-					Name='N432'
+					Id='I32'
+					Name='N32'
 					KeyPath='yes'
 					LongName='expression_power.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_power.png'
@@ -452,10 +452,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C433' Guid='111a6f2f-75f3-463e-b23a-ea06176956b9'>
+			<Component Id='C33' Guid='7c7eb38a-801e-4cea-87b2-83606d2a157e'>
 				<File
-					Id='I433'
-					Name='N433'
+					Id='I33'
+					Name='N33'
 					KeyPath='yes'
 					LongName='expression_property.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_property.png'
@@ -466,10 +466,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C434' Guid='0546ecd6-5f84-4645-976f-c5a204a9ced6'>
+			<Component Id='C34' Guid='3b28008d-e1bc-4f16-a872-41432fee221c'>
 				<File
-					Id='I434'
-					Name='N434'
+					Id='I34'
+					Name='N34'
 					KeyPath='yes'
 					LongName='expression_range_is.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_range_is.png'
@@ -480,10 +480,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C435' Guid='43d889b0-6446-4bcd-8cce-507b10ecb9d8'>
+			<Component Id='C35' Guid='784de9ec-737e-45b4-9abc-3803d53de875'>
 				<File
-					Id='I435'
-					Name='N435'
+					Id='I35'
+					Name='N35'
 					KeyPath='yes'
 					LongName='expression_simple.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_simple.png'
@@ -494,10 +494,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C436' Guid='54995bc0-0bb6-4063-8422-55e9e7adeb2c'>
+			<Component Id='C36' Guid='30827331-625a-4d3a-a002-a28f4ec1f7c1'>
 				<File
-					Id='I436'
-					Name='N436'
+					Id='I36'
+					Name='N36'
 					KeyPath='yes'
 					LongName='expression_unary.png'
 					Source='INSTALLDIR\Syntax.MDX\expression_unary.png'
@@ -508,10 +508,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C437' Guid='f6d3d85a-577a-4f86-b89a-78d92b0d0c28'>
+			<Component Id='C37' Guid='0e1ab9f1-31f0-4199-8eeb-6ed8f9061bbe'>
 				<File
-					Id='I437'
-					Name='N437'
+					Id='I37'
+					Name='N37'
 					KeyPath='yes'
 					LongName='FLOAT.png'
 					Source='INSTALLDIR\Syntax.MDX\FLOAT.png'
@@ -522,10 +522,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C438' Guid='898e4a89-32d9-44b6-bdbb-e70bd2e81e6d'>
+			<Component Id='C38' Guid='e6b71a04-e784-4e17-a350-a32611a9f8eb'>
 				<File
-					Id='I438'
-					Name='N438'
+					Id='I38'
+					Name='N38'
 					KeyPath='yes'
 					LongName='FOR.png'
 					Source='INSTALLDIR\Syntax.MDX\FOR.png'
@@ -536,10 +536,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C439' Guid='adee3bac-6252-46ad-8a02-243020622f74'>
+			<Component Id='C39' Guid='9adedbe9-093d-4794-b2ca-a8e541682312'>
 				<File
-					Id='I439'
-					Name='N439'
+					Id='I39'
+					Name='N39'
 					KeyPath='yes'
 					LongName='FORMATTED_VALUE.png'
 					Source='INSTALLDIR\Syntax.MDX\FORMATTED_VALUE.png'
@@ -550,10 +550,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C440' Guid='ed54b02d-c770-4a0f-bbf0-9648b86b02ab'>
+			<Component Id='C40' Guid='53189023-eaad-4692-bc4c-22803b0bc13a'>
 				<File
-					Id='I440'
-					Name='N440'
+					Id='I40'
+					Name='N40'
 					KeyPath='yes'
 					LongName='FROM.png'
 					Source='INSTALLDIR\Syntax.MDX\FROM.png'
@@ -564,10 +564,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C441' Guid='46fad00f-4f82-42b5-aca1-d769c003108f'>
+			<Component Id='C41' Guid='2b9c0603-1f84-4089-ad89-5c182264242e'>
 				<File
-					Id='I441'
-					Name='N441'
+					Id='I41'
+					Name='N41'
 					KeyPath='yes'
 					LongName='GLOBAL.png'
 					Source='INSTALLDIR\Syntax.MDX\GLOBAL.png'
@@ -578,10 +578,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C442' Guid='0fcbc16e-074d-454d-8283-0c1f8b393f51'>
+			<Component Id='C42' Guid='4b4266f8-74ec-4c91-a3a8-1395908ffb5b'>
 				<File
-					Id='I442'
-					Name='N442'
+					Id='I42'
+					Name='N42'
 					KeyPath='yes'
 					LongName='ID.png'
 					Source='INSTALLDIR\Syntax.MDX\ID.png'
@@ -592,10 +592,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C443' Guid='8821d848-103d-4e4c-b9b4-4cfa1e636276'>
+			<Component Id='C43' Guid='47116391-44da-4359-be57-fa11df2c9feb'>
 				<File
-					Id='I443'
-					Name='N443'
+					Id='I43'
+					Name='N43'
 					KeyPath='yes'
 					LongName='identifier.png'
 					Source='INSTALLDIR\Syntax.MDX\identifier.png'
@@ -606,10 +606,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C444' Guid='c672dbb1-e218-4bf4-aee5-a06159c21016'>
+			<Component Id='C44' Guid='d63d934e-98ad-4416-86cb-dbdbbbd5f1ac'>
 				<File
-					Id='I444'
-					Name='N444'
+					Id='I44'
+					Name='N44'
 					KeyPath='yes'
 					LongName='INTEGER.png'
 					Source='INSTALLDIR\Syntax.MDX\INTEGER.png'
@@ -620,10 +620,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C445' Guid='d15cc673-c194-4847-99d4-2caacd77a9dd'>
+			<Component Id='C45' Guid='dae81e11-31ad-405e-9a47-a528ca4ab20e'>
 				<File
-					Id='I445'
-					Name='N445'
+					Id='I45'
+					Name='N45'
 					KeyPath='yes'
 					LongName='IS.png'
 					Source='INSTALLDIR\Syntax.MDX\IS.png'
@@ -634,10 +634,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C446' Guid='63f0b40c-f8e1-4a7a-9bf9-0e3a91ac367b'>
+			<Component Id='C46' Guid='1c24c9b8-1fdd-4874-bf28-8c7334918dae'>
 				<File
-					Id='I446'
-					Name='N446'
+					Id='I46'
+					Name='N46'
 					KeyPath='yes'
 					LongName='keyword.png'
 					Source='INSTALLDIR\Syntax.MDX\keyword.png'
@@ -648,10 +648,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C447' Guid='704fe779-5a54-4289-b245-a1f45cade234'>
+			<Component Id='C47' Guid='3dd88e36-6877-415b-a894-27968e9a0fb5'>
 				<File
-					Id='I447'
-					Name='N447'
+					Id='I47'
+					Name='N47'
 					KeyPath='yes'
 					LongName='LINE_COMMENT.png'
 					Source='INSTALLDIR\Syntax.MDX\LINE_COMMENT.png'
@@ -662,10 +662,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C448' Guid='21c7f03b-c98e-4536-803e-65af39b01036'>
+			<Component Id='C48' Guid='f60c0295-c36f-4507-95ee-64f4f7b42ca3'>
 				<File
-					Id='I448'
-					Name='N448'
+					Id='I48'
+					Name='N48'
 					KeyPath='yes'
 					LongName='mdx_statement.png'
 					Source='INSTALLDIR\Syntax.MDX\mdx_statement.png'
@@ -676,10 +676,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C449' Guid='36cdfa7c-09cc-49f9-90ee-09580213671d'>
+			<Component Id='C49' Guid='20168cd8-8adf-4ea4-b40b-026e999779b2'>
 				<File
-					Id='I449'
-					Name='N449'
+					Id='I49'
+					Name='N49'
 					KeyPath='yes'
 					LongName='mdx_statement_single.png'
 					Source='INSTALLDIR\Syntax.MDX\mdx_statement_single.png'
@@ -690,10 +690,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C450' Guid='480e2d8c-9236-4d58-a438-cf4b26285405'>
+			<Component Id='C50' Guid='de14038e-7fe2-47fc-9482-2a32e5ced3ae'>
 				<File
-					Id='I450'
-					Name='N450'
+					Id='I50'
+					Name='N50'
 					KeyPath='yes'
 					LongName='MEMBER.png'
 					Source='INSTALLDIR\Syntax.MDX\MEMBER.png'
@@ -704,10 +704,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C451' Guid='48adb2cd-0e43-4625-87ad-b0359156b037'>
+			<Component Id='C51' Guid='91ec9137-abcc-40a1-a154-05bce1a3cfa8'>
 				<File
-					Id='I451'
-					Name='N451'
+					Id='I51'
+					Name='N51'
 					KeyPath='yes'
 					LongName='member_name.png'
 					Source='INSTALLDIR\Syntax.MDX\member_name.png'
@@ -718,10 +718,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C452' Guid='2085a3df-eb13-4776-bbd9-990cec081776'>
+			<Component Id='C52' Guid='7b1255e3-7b50-4044-ba1c-5996ee1fd936'>
 				<File
-					Id='I452'
-					Name='N452'
+					Id='I52'
+					Name='N52'
 					KeyPath='yes'
 					LongName='NON.png'
 					Source='INSTALLDIR\Syntax.MDX\NON.png'
@@ -732,10 +732,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C453' Guid='46ebcd99-8235-4f31-9b0d-828cf5908a48'>
+			<Component Id='C53' Guid='46472680-22ae-4914-87ad-99590b4cfc07'>
 				<File
-					Id='I453'
-					Name='N453'
+					Id='I53'
+					Name='N53'
 					KeyPath='yes'
 					LongName='NOT.png'
 					Source='INSTALLDIR\Syntax.MDX\NOT.png'
@@ -746,10 +746,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C454' Guid='e792cbbb-1396-4a69-9d37-f49cd0dd304a'>
+			<Component Id='C54' Guid='6755b881-cbf8-4103-8f22-4db77ca78117'>
 				<File
-					Id='I454'
-					Name='N454'
+					Id='I54'
+					Name='N54'
 					KeyPath='yes'
 					LongName='ON.png'
 					Source='INSTALLDIR\Syntax.MDX\ON.png'
@@ -760,10 +760,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C455' Guid='20d1b1f0-1e16-4b7b-b403-c685ecc141b6'>
+			<Component Id='C55' Guid='a7a1bc27-3fa0-43ba-9ec8-2e2f35ee5151'>
 				<File
-					Id='I455'
-					Name='N455'
+					Id='I55'
+					Name='N55'
 					KeyPath='yes'
 					LongName='OR.png'
 					Source='INSTALLDIR\Syntax.MDX\OR.png'
@@ -774,10 +774,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C456' Guid='dc4d675f-98bd-4634-bed6-a667c49d4625'>
+			<Component Id='C56' Guid='e72773ed-c6a8-4dd9-a0df-08a9f96cfde2'>
 				<File
-					Id='I456'
-					Name='N456'
+					Id='I56'
+					Name='N56'
 					KeyPath='yes'
 					LongName='PROPERTIES.png'
 					Source='INSTALLDIR\Syntax.MDX\PROPERTIES.png'
@@ -788,10 +788,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C457' Guid='4cd086dc-e5c9-4ad0-89cd-6d49ae86cdd2'>
+			<Component Id='C57' Guid='a431faca-4315-4921-8391-6049beefc608'>
 				<File
-					Id='I457'
-					Name='N457'
+					Id='I57'
+					Name='N57'
 					KeyPath='yes'
 					LongName='property.png'
 					Source='INSTALLDIR\Syntax.MDX\property.png'
@@ -802,10 +802,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C458' Guid='93ddbd06-d7dc-4d8f-b9a9-ffc8e7c2e836'>
+			<Component Id='C58' Guid='ecf1438e-7f0b-430a-b4cc-cb23fbdeb39b'>
 				<File
-					Id='I458'
-					Name='N458'
+					Id='I58'
+					Name='N58'
 					KeyPath='yes'
 					LongName='property_definition.png'
 					Source='INSTALLDIR\Syntax.MDX\property_definition.png'
@@ -816,10 +816,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C459' Guid='c7c14226-24fc-49f9-9a20-28751cbca952'>
+			<Component Id='C59' Guid='aeb8c162-5aa7-41f6-bb1f-6801f150ab19'>
 				<File
-					Id='I459'
-					Name='N459'
+					Id='I59'
+					Name='N59'
 					KeyPath='yes'
 					LongName='provider_specific_cell_property.png'
 					Source='INSTALLDIR\Syntax.MDX\provider_specific_cell_property.png'
@@ -830,10 +830,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C460' Guid='d165a816-c7d3-46da-a408-43310eb9cc53'>
+			<Component Id='C60' Guid='40f00535-53b5-4963-a90e-5c58e4a588c9'>
 				<File
-					Id='I460'
-					Name='N460'
+					Id='I60'
+					Name='N60'
 					KeyPath='yes'
 					LongName='QUOTED_ID.png'
 					Source='INSTALLDIR\Syntax.MDX\QUOTED_ID.png'
@@ -844,10 +844,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C461' Guid='b2761c07-4665-4ee1-808b-df025082283c'>
+			<Component Id='C61' Guid='16148a9b-cea0-4eb4-bd53-7ba8fb7587f1'>
 				<File
-					Id='I461'
-					Name='N461'
+					Id='I61'
+					Name='N61'
 					KeyPath='yes'
 					LongName='quoted_identifier.png'
 					Source='INSTALLDIR\Syntax.MDX\quoted_identifier.png'
@@ -858,10 +858,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C462' Guid='bd53eb5b-0eee-45a4-8aeb-7388b63a298b'>
+			<Component Id='C62' Guid='90fa9033-937d-4777-95c0-55e9405c9a14'>
 				<File
-					Id='I462'
-					Name='N462'
+					Id='I62'
+					Name='N62'
 					KeyPath='yes'
 					LongName='RANET_EXPRESSION.png'
 					Source='INSTALLDIR\Syntax.MDX\RANET_EXPRESSION.png'
@@ -872,10 +872,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C463' Guid='298a0e58-60d7-455e-965a-c1e8ee6de1b2'>
+			<Component Id='C63' Guid='4c9d41bb-bfa2-4640-aaea-432cbb7004c1'>
 				<File
-					Id='I463'
-					Name='N463'
+					Id='I63'
+					Name='N63'
 					KeyPath='yes'
 					LongName='SELECT.png'
 					Source='INSTALLDIR\Syntax.MDX\SELECT.png'
@@ -886,10 +886,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C464' Guid='d4fe7f21-faad-4dec-9ee8-d96d4af27a00'>
+			<Component Id='C64' Guid='767bb1b7-d4be-42d2-9d5a-9438c9e2895a'>
 				<File
-					Id='I464'
-					Name='N464'
+					Id='I64'
+					Name='N64'
 					KeyPath='yes'
 					LongName='select_statement.png'
 					Source='INSTALLDIR\Syntax.MDX\select_statement.png'
@@ -900,10 +900,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C465' Guid='252cba9c-4243-4ab0-9c51-398768673d68'>
+			<Component Id='C65' Guid='722050d2-d902-4fcd-a30e-7418a99c07eb'>
 				<File
-					Id='I465'
-					Name='N465'
+					Id='I65'
+					Name='N65'
 					KeyPath='yes'
 					LongName='select_statement_subcube.png'
 					Source='INSTALLDIR\Syntax.MDX\select_statement_subcube.png'
@@ -914,10 +914,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C466' Guid='794f970a-474f-4b8e-9b98-63aecb316b28'>
+			<Component Id='C66' Guid='5c1480a3-bebe-4647-90c8-b2df3f691d20'>
 				<File
-					Id='I466'
-					Name='N466'
+					Id='I66'
+					Name='N66'
 					KeyPath='yes'
 					LongName='SESSION.png'
 					Source='INSTALLDIR\Syntax.MDX\SESSION.png'
@@ -928,10 +928,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C467' Guid='866e1693-9791-456a-8b0c-074860e3f59b'>
+			<Component Id='C67' Guid='6685ae5f-d369-4eab-923b-beae16fdc920'>
 				<File
-					Id='I467'
-					Name='N467'
+					Id='I67'
+					Name='N67'
 					KeyPath='yes'
 					LongName='SET.png'
 					Source='INSTALLDIR\Syntax.MDX\SET.png'
@@ -942,10 +942,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C468' Guid='5963a85e-5d31-49b8-9af7-028059ae0dae'>
+			<Component Id='C68' Guid='8ed5a520-2d54-4d16-abb1-b7df23e3cddb'>
 				<File
-					Id='I468'
-					Name='N468'
+					Id='I68'
+					Name='N68'
 					KeyPath='yes'
 					LongName='set_name.png'
 					Source='INSTALLDIR\Syntax.MDX\set_name.png'
@@ -956,10 +956,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C469' Guid='8f4e4271-ef8a-4c0f-8c6d-d8a5bc9ce724'>
+			<Component Id='C69' Guid='173209ed-d063-4e5a-b9cb-7df68dcfd61c'>
 				<File
-					Id='I469'
-					Name='N469'
+					Id='I69'
+					Name='N69'
 					KeyPath='yes'
 					LongName='STRING.png'
 					Source='INSTALLDIR\Syntax.MDX\STRING.png'
@@ -970,10 +970,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C470' Guid='57d15ef1-5215-4dae-b9ad-e07c7cecc23b'>
+			<Component Id='C70' Guid='d1504708-c76f-4dea-83a7-1e82c2bfd4c2'>
 				<File
-					Id='I470'
-					Name='N470'
+					Id='I70'
+					Name='N70'
 					KeyPath='yes'
 					LongName='THEN.png'
 					Source='INSTALLDIR\Syntax.MDX\THEN.png'
@@ -984,10 +984,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C471' Guid='3a1dc579-2dc9-4415-b35c-1fc03f4ee102'>
+			<Component Id='C71' Guid='bd9d7fe4-f224-43a3-9060-3138d0d9d394'>
 				<File
-					Id='I471'
-					Name='N471'
+					Id='I71'
+					Name='N71'
 					KeyPath='yes'
 					LongName='unquoted_identifier.png'
 					Source='INSTALLDIR\Syntax.MDX\unquoted_identifier.png'
@@ -998,10 +998,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C472' Guid='a0b5c998-8c7b-4b0a-a35e-5b395321e903'>
+			<Component Id='C72' Guid='2aa80c0a-c37b-4e62-a1a9-f83a347a7f1d'>
 				<File
-					Id='I472'
-					Name='N472'
+					Id='I72'
+					Name='N72'
 					KeyPath='yes'
 					LongName='UPDATE.png'
 					Source='INSTALLDIR\Syntax.MDX\UPDATE.png'
@@ -1012,10 +1012,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C473' Guid='f94b0bb5-6a8d-4300-8a24-512f100785a5'>
+			<Component Id='C73' Guid='769fae72-4557-469d-ac38-2f34d4ad0be4'>
 				<File
-					Id='I473'
-					Name='N473'
+					Id='I73'
+					Name='N73'
 					KeyPath='yes'
 					LongName='update_statement.png'
 					Source='INSTALLDIR\Syntax.MDX\update_statement.png'
@@ -1026,10 +1026,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C474' Guid='41f7caa8-3b84-46a4-ad94-c860885f5e2d'>
+			<Component Id='C74' Guid='f150ee8b-36e9-412d-9c44-4defdee9acf5'>
 				<File
-					Id='I474'
-					Name='N474'
+					Id='I74'
+					Name='N74'
 					KeyPath='yes'
 					LongName='USE_EQUAL_ALLOCATION.png'
 					Source='INSTALLDIR\Syntax.MDX\USE_EQUAL_ALLOCATION.png'
@@ -1040,10 +1040,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C475' Guid='cef0bb2e-a512-406d-b321-99ea5b9d5aee'>
+			<Component Id='C75' Guid='96157103-0f97-4ecf-b3c9-8ce8a03ed345'>
 				<File
-					Id='I475'
-					Name='N475'
+					Id='I75'
+					Name='N75'
 					KeyPath='yes'
 					LongName='USE_EQUAL_INCREMENT.png'
 					Source='INSTALLDIR\Syntax.MDX\USE_EQUAL_INCREMENT.png'
@@ -1054,10 +1054,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C476' Guid='cda095fd-0765-42f2-94fa-5c8431c6d902'>
+			<Component Id='C76' Guid='85cb48f6-4b5b-4395-a36f-f8fc59574de4'>
 				<File
-					Id='I476'
-					Name='N476'
+					Id='I76'
+					Name='N76'
 					KeyPath='yes'
 					LongName='USE_WEIGHTED_ALLOCATION.png'
 					Source='INSTALLDIR\Syntax.MDX\USE_WEIGHTED_ALLOCATION.png'
@@ -1068,10 +1068,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C477' Guid='950774da-3694-4ae5-8ce6-358ae830bde8'>
+			<Component Id='C77' Guid='2478b63c-7f7b-4dd8-8400-8235c46ba5b1'>
 				<File
-					Id='I477'
-					Name='N477'
+					Id='I77'
+					Name='N77'
 					KeyPath='yes'
 					LongName='USE_WEIGHTED_INCREMENT.png'
 					Source='INSTALLDIR\Syntax.MDX\USE_WEIGHTED_INCREMENT.png'
@@ -1082,10 +1082,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C478' Guid='36a55374-afcd-4a50-a087-686d595632d3'>
+			<Component Id='C78' Guid='1688a8e1-467e-4be1-9e2f-ecbf0114ad8a'>
 				<File
-					Id='I478'
-					Name='N478'
+					Id='I78'
+					Name='N78'
 					KeyPath='yes'
 					LongName='VALUE.png'
 					Source='INSTALLDIR\Syntax.MDX\VALUE.png'
@@ -1096,10 +1096,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C479' Guid='7c0d9996-6224-4b52-9364-14e0f5c174ae'>
+			<Component Id='C79' Guid='4b0bbe60-645e-4ece-b3ff-b101210398ec'>
 				<File
-					Id='I479'
-					Name='N479'
+					Id='I79'
+					Name='N79'
 					KeyPath='yes'
 					LongName='VISUAL.png'
 					Source='INSTALLDIR\Syntax.MDX\VISUAL.png'
@@ -1110,10 +1110,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C480' Guid='1b73ac7b-3462-4343-8a97-fe592223fdc0'>
+			<Component Id='C80' Guid='536abdf8-9787-4a19-b6ba-f44223454e53'>
 				<File
-					Id='I480'
-					Name='N480'
+					Id='I80'
+					Name='N80'
 					KeyPath='yes'
 					LongName='weight_value_expression.png'
 					Source='INSTALLDIR\Syntax.MDX\weight_value_expression.png'
@@ -1124,10 +1124,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C481' Guid='98fbb047-ca12-4446-b113-cccfcdd3905f'>
+			<Component Id='C81' Guid='572f8532-8b43-49e7-a45b-3e5dae71e2d1'>
 				<File
-					Id='I481'
-					Name='N481'
+					Id='I81'
+					Name='N81'
 					KeyPath='yes'
 					LongName='WHEN.png'
 					Source='INSTALLDIR\Syntax.MDX\WHEN.png'
@@ -1138,10 +1138,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C482' Guid='64217811-a555-440b-bc11-0accd957006f'>
+			<Component Id='C82' Guid='1761cc76-ec92-40d4-ae39-48805286014f'>
 				<File
-					Id='I482'
-					Name='N482'
+					Id='I82'
+					Name='N82'
 					KeyPath='yes'
 					LongName='when_clause.png'
 					Source='INSTALLDIR\Syntax.MDX\when_clause.png'
@@ -1152,10 +1152,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C483' Guid='b3f6a949-280e-4b97-8f83-90837635b232'>
+			<Component Id='C83' Guid='093c1d44-ff0c-4706-940f-2edea971776c'>
 				<File
-					Id='I483'
-					Name='N483'
+					Id='I83'
+					Name='N83'
 					KeyPath='yes'
 					LongName='WHERE.png'
 					Source='INSTALLDIR\Syntax.MDX\WHERE.png'
@@ -1166,10 +1166,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C484' Guid='0ab8a6ca-9bda-4108-950b-5934caf8fed5'>
+			<Component Id='C84' Guid='0b2f9497-4cf6-4eec-ac64-9d89c77cb6e4'>
 				<File
-					Id='I484'
-					Name='N484'
+					Id='I84'
+					Name='N84'
 					KeyPath='yes'
 					LongName='WITH.png'
 					Source='INSTALLDIR\Syntax.MDX\WITH.png'
@@ -1180,10 +1180,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C485' Guid='eb4bd08b-a0c0-4ffd-961b-15377d7d67f4'>
+			<Component Id='C85' Guid='aff11504-6a44-41fb-94a8-2accfc3a7c41'>
 				<File
-					Id='I485'
-					Name='N485'
+					Id='I85'
+					Name='N85'
 					KeyPath='yes'
 					LongName='with_clause_single.png'
 					Source='INSTALLDIR\Syntax.MDX\with_clause_single.png'
@@ -1194,10 +1194,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C486' Guid='5e15ad1e-d74a-43c0-a3c7-22b3c3cb36a3'>
+			<Component Id='C86' Guid='e2cd114c-3163-4b90-9e5e-6eff12a435e5'>
 				<File
-					Id='I486'
-					Name='N486'
+					Id='I86'
+					Name='N86'
 					KeyPath='yes'
 					LongName='WS.png'
 					Source='INSTALLDIR\Syntax.MDX\WS.png'
@@ -1208,10 +1208,10 @@
 			</Component>
 		</DirectoryRef>
 		<DirectoryRef Id='INSTALLDIR_Syntax.MDX'>
-			<Component Id='C487' Guid='217e018a-c8aa-43a1-8993-8bcb063d2902'>
+			<Component Id='C87' Guid='a97a6017-96e4-4251-8f69-6ea0549d1cc7'>
 				<File
-					Id='I487'
-					Name='N487'
+					Id='I87'
+					Name='N87'
 					KeyPath='yes'
 					LongName='XOR.png'
 					Source='INSTALLDIR\Syntax.MDX\XOR.png'
@@ -1222,93 +1222,93 @@
 			</Component>
 		</DirectoryRef>
 		<ComponentGroup Id='all'>
-			<ComponentRef Id='C401'/>
-			<ComponentRef Id='C402'/>
-			<ComponentRef Id='C403'/>
-			<ComponentRef Id='C404'/>
-			<ComponentRef Id='C405'/>
-			<ComponentRef Id='C406'/>
-			<ComponentRef Id='C407'/>
-			<ComponentRef Id='C408'/>
-			<ComponentRef Id='C409'/>
-			<ComponentRef Id='C410'/>
-			<ComponentRef Id='C411'/>
-			<ComponentRef Id='C412'/>
-			<ComponentRef Id='C413'/>
-			<ComponentRef Id='C414'/>
-			<ComponentRef Id='C415'/>
-			<ComponentRef Id='C416'/>
-			<ComponentRef Id='C417'/>
-			<ComponentRef Id='C418'/>
-			<ComponentRef Id='C419'/>
-			<ComponentRef Id='C420'/>
-			<ComponentRef Id='C421'/>
-			<ComponentRef Id='C422'/>
-			<ComponentRef Id='C423'/>
-			<ComponentRef Id='C424'/>
-			<ComponentRef Id='C425'/>
-			<ComponentRef Id='C426'/>
-			<ComponentRef Id='C427'/>
-			<ComponentRef Id='C428'/>
-			<ComponentRef Id='C429'/>
-			<ComponentRef Id='C430'/>
-			<ComponentRef Id='C431'/>
-			<ComponentRef Id='C432'/>
-			<ComponentRef Id='C433'/>
-			<ComponentRef Id='C434'/>
-			<ComponentRef Id='C435'/>
-			<ComponentRef Id='C436'/>
-			<ComponentRef Id='C437'/>
-			<ComponentRef Id='C438'/>
-			<ComponentRef Id='C439'/>
-			<ComponentRef Id='C440'/>
-			<ComponentRef Id='C441'/>
-			<ComponentRef Id='C442'/>
-			<ComponentRef Id='C443'/>
-			<ComponentRef Id='C444'/>
-			<ComponentRef Id='C445'/>
-			<ComponentRef Id='C446'/>
-			<ComponentRef Id='C447'/>
-			<ComponentRef Id='C448'/>
-			<ComponentRef Id='C449'/>
-			<ComponentRef Id='C450'/>
-			<ComponentRef Id='C451'/>
-			<ComponentRef Id='C452'/>
-			<ComponentRef Id='C453'/>
-			<ComponentRef Id='C454'/>
-			<ComponentRef Id='C455'/>
-			<ComponentRef Id='C456'/>
-			<ComponentRef Id='C457'/>
-			<ComponentRef Id='C458'/>
-			<ComponentRef Id='C459'/>
-			<ComponentRef Id='C460'/>
-			<ComponentRef Id='C461'/>
-			<ComponentRef Id='C462'/>
-			<ComponentRef Id='C463'/>
-			<ComponentRef Id='C464'/>
-			<ComponentRef Id='C465'/>
-			<ComponentRef Id='C466'/>
-			<ComponentRef Id='C467'/>
-			<ComponentRef Id='C468'/>
-			<ComponentRef Id='C469'/>
-			<ComponentRef Id='C470'/>
-			<ComponentRef Id='C471'/>
-			<ComponentRef Id='C472'/>
-			<ComponentRef Id='C473'/>
-			<ComponentRef Id='C474'/>
-			<ComponentRef Id='C475'/>
-			<ComponentRef Id='C476'/>
-			<ComponentRef Id='C477'/>
-			<ComponentRef Id='C478'/>
-			<ComponentRef Id='C479'/>
-			<ComponentRef Id='C480'/>
-			<ComponentRef Id='C481'/>
-			<ComponentRef Id='C482'/>
-			<ComponentRef Id='C483'/>
-			<ComponentRef Id='C484'/>
-			<ComponentRef Id='C485'/>
-			<ComponentRef Id='C486'/>
-			<ComponentRef Id='C487'/>
+			<ComponentRef Id='C1'/>
+			<ComponentRef Id='C2'/>
+			<ComponentRef Id='C3'/>
+			<ComponentRef Id='C4'/>
+			<ComponentRef Id='C5'/>
+			<ComponentRef Id='C6'/>
+			<ComponentRef Id='C7'/>
+			<ComponentRef Id='C8'/>
+			<ComponentRef Id='C9'/>
+			<ComponentRef Id='C10'/>
+			<ComponentRef Id='C11'/>
+			<ComponentRef Id='C12'/>
+			<ComponentRef Id='C13'/>
+			<ComponentRef Id='C14'/>
+			<ComponentRef Id='C15'/>
+			<ComponentRef Id='C16'/>
+			<ComponentRef Id='C17'/>
+			<ComponentRef Id='C18'/>
+			<ComponentRef Id='C19'/>
+			<ComponentRef Id='C20'/>
+			<ComponentRef Id='C21'/>
+			<ComponentRef Id='C22'/>
+			<ComponentRef Id='C23'/>
+			<ComponentRef Id='C24'/>
+			<ComponentRef Id='C25'/>
+			<ComponentRef Id='C26'/>
+			<ComponentRef Id='C27'/>
+			<ComponentRef Id='C28'/>
+			<ComponentRef Id='C29'/>
+			<ComponentRef Id='C30'/>
+			<ComponentRef Id='C31'/>
+			<ComponentRef Id='C32'/>
+			<ComponentRef Id='C33'/>
+			<ComponentRef Id='C34'/>
+			<ComponentRef Id='C35'/>
+			<ComponentRef Id='C36'/>
+			<ComponentRef Id='C37'/>
+			<ComponentRef Id='C38'/>
+			<ComponentRef Id='C39'/>
+			<ComponentRef Id='C40'/>
+			<ComponentRef Id='C41'/>
+			<ComponentRef Id='C42'/>
+			<ComponentRef Id='C43'/>
+			<ComponentRef Id='C44'/>
+			<ComponentRef Id='C45'/>
+			<ComponentRef Id='C46'/>
+			<ComponentRef Id='C47'/>
+			<ComponentRef Id='C48'/>
+			<ComponentRef Id='C49'/>
+			<ComponentRef Id='C50'/>
+			<ComponentRef Id='C51'/>
+			<ComponentRef Id='C52'/>
+			<ComponentRef Id='C53'/>
+			<ComponentRef Id='C54'/>
+			<ComponentRef Id='C55'/>
+			<ComponentRef Id='C56'/>
+			<ComponentRef Id='C57'/>
+			<ComponentRef Id='C58'/>
+			<ComponentRef Id='C59'/>
+			<ComponentRef Id='C60'/>
+			<ComponentRef Id='C61'/>
+			<ComponentRef Id='C62'/>
+			<ComponentRef Id='C63'/>
+			<ComponentRef Id='C64'/>
+			<ComponentRef Id='C65'/>
+			<ComponentRef Id='C66'/>
+			<ComponentRef Id='C67'/>
+			<ComponentRef Id='C68'/>
+			<ComponentRef Id='C69'/>
+			<ComponentRef Id='C70'/>
+			<ComponentRef Id='C71'/>
+			<ComponentRef Id='C72'/>
+			<ComponentRef Id='C73'/>
+			<ComponentRef Id='C74'/>
+			<ComponentRef Id='C75'/>
+			<ComponentRef Id='C76'/>
+			<ComponentRef Id='C77'/>
+			<ComponentRef Id='C78'/>
+			<ComponentRef Id='C79'/>
+			<ComponentRef Id='C80'/>
+			<ComponentRef Id='C81'/>
+			<ComponentRef Id='C82'/>
+			<ComponentRef Id='C83'/>
+			<ComponentRef Id='C84'/>
+			<ComponentRef Id='C85'/>
+			<ComponentRef Id='C86'/>
+			<ComponentRef Id='C87'/>
 		</ComponentGroup>
 	</Fragment>
 </Wix>

@@ -74,8 +74,31 @@ PivotGrid provides two modes of editing data:
     * Direct editing
     * Using cache 
 
+Before using please read Readme file: http://code.google.com/p/ranet-uilibrary-olap/wiki/Readme
 Ranet.UILibrary.OLAP video tutorial: http://www.youtube.com/watch?v=dDNa3D8RO4Y
 
-You can find more info about project owner at
+You can find more info about project owner at http://galaktika.ru/en/
+    
+Commercial license and technical support for this product is available.
 
-    * http://galaktika.ru/en/
+Call or email at the information shown below:
+
+US, Canada and EU
+
+Galantis, Inc
+3555 Harbor Gateway South, Suite B, Costa Mesa, CA 92626
+Office: +1-206-420-3807
+Fax: +1-206-420-3807
+Cell: +1-714-408-3200
+Ron Clevenger
+RonClevenger@galantis.com
+
+Russia, Belarus, Ukraine, etc
+
+Galaktika Corporation
+http://www.galaktika.ru
+FE TopSoft
+Office: 375-17-294-9999, 375-17-294-9988, ext.1519
+Cell: +375-29-770-2114
+Anatoly Volodko
+Anatoly.V.Volodko@galaktika.by

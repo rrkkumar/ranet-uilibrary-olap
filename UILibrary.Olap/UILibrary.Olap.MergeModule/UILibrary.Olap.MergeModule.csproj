@@ -202,12 +202,12 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.rtf">
+    <Content Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.rtf">
       <Link>INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.rtf</Link>
-    </None>
-    <None Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
+    </Content>
+    <Content Include="..\!ProductInfo\Licenses\Ranet.UILibrary.Olap.License.ru.rtf">
       <Link>INSTALLDIR\Licenses\Ranet.UILibrary.Olap.License.ru.rtf</Link>
-    </None>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
