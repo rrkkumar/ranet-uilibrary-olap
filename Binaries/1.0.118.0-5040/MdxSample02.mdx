@@ -1,8 +1,0 @@
-UPDATE CUBE [Adventure Works]
-SET 
-Iif(<%SUIP.Variables.VPTS.enumMy%> = 0
-, [Measures].[Sales Amount]
-, [Measures].[Sales]
-)
-= 1
-
