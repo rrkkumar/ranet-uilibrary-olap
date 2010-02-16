@@ -1,3 +1,7 @@
+February 16, 2010
+
+  * MdxDesigner: Fix for the issue where when an element is clicked, the mouse wheel stops working until the cursor leaves and re-enters the scrolling zone. http://code.google.com/p/ranet-uilibrary-olap/issues/detail?id=8  
+  
 February 11, 2010
 
   * Branched to Ranet.UILibrary.OLAP-1.3
